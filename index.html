@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="18">
+<meta name="divas-version" content="19">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -706,12 +706,10 @@ dialog{border-color:#e7cdda;border-radius:23px;background:#fffdfd;box-shadow:0 2
   #toast{bottom:calc(74px + env(safe-area-inset-bottom));font-size:11px}.context-guide{left:8px;right:8px;bottom:8px;padding:8px 9px;border-radius:15px}.coach-copy{gap:7px}.coach-copy strong{font-size:11px}.coach-copy p{font-size:10px}.coach-symbol{flex-basis:27px;height:27px;font-size:14px}.coach-links{margin:6px 0 0 34px;gap:5px}.coach-links button{min-height:26px;font-size:10px;padding:4px 7px}
   #helpDialog{left:8px;right:8px;bottom:calc(70px + env(safe-area-inset-bottom));width:auto;max-height:60dvh;border-radius:22px}
   #helpDialog .dialog-body{max-height:calc(60dvh - 55px);padding:12px}#helpDialog .help-search input{font-size:16px}.help-shortcuts{gap:5px}.help-choice{min-height:38px}.helper-note{font-size:9px}
-  body:has(#panelBody textarea:focus) #mobileBar,body:has(#panelBody input:focus) #mobileBar{display:none}
-  body:has(#panelBody textarea:focus) #sidePanel,body:has(#panelBody input:focus) #sidePanel{height:min(35dvh,210px);max-height:50%}
 }
 @media(max-width:380px){.project-grid{grid-template-columns:1fr}.project-thumb{height:205px}.header-actions #redoBtn{display:none}.task-art{padding:12px}.task-art strong{font-size:21px}.profile-disc{width:102px;height:102px}.canvas-tools #zoomValue{display:none}.panel-heading strong{max-width:150px}}
 @media(max-width:760px) and (max-height:580px){#sidePanel{height:38dvh;max-height:45%}.canvas-column{min-height:120px}.canvas-tools .check{display:none}#helpDialog{max-height:72dvh}#helpDialog .dialog-body{max-height:calc(72dvh - 55px)}}
-@media(max-width:760px) and (max-height:480px) and (min-width:560px){#workspace{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:8px}#sidePanel,#sidePanel.expanded{height:100%;max-height:100%;margin:0}#panelTabs{display:grid}#mobileBar{display:none}.canvas-focus{display:none!important}#helpDialog{bottom:8px}}
+@media(max-width:760px) and (max-height:480px) and (min-width:560px){#workspace{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:8px}#sidePanel,#sidePanel.expanded{height:100%;max-height:100%;margin:0}#panelTabs{display:grid}#mobileBar{display:none}#helpDialog{bottom:8px}}
 @media(prefers-reduced-motion:no-preference){.context-guide{animation:coach-in .18s ease-out}@keyframes coach-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}}
 
 
@@ -719,7 +717,6 @@ dialog{border-color:#e7cdda;border-radius:23px;background:#fffdfd;box-shadow:0 2
 .ui-icon{width:20px;height:20px;display:inline-block;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 #mobileBar .ui-icon{width:22px;height:22px}.layer>button{display:grid;place-items:center}.layer.is-locked [data-action="lock"]{color:#976925;background:#f5e9d5}.layer.is-hidden [data-action="visible"]{color:#9c5a7c;background:#f4e7ee}
 @media(max-width:760px){.coach-copy p{font-size:11px}.coach-copy strong{font-size:12px}}
-@media(max-width:760px){body:has(#panelBody textarea:focus) .canvas-column,body:has(#panelBody input:focus) .canvas-column{min-height:90px}}
 .resource-entry{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;background:linear-gradient(110deg,#fae3ef,#fcf0db);border-color:#e6c6d6;font-size:13px;color:#91335e;min-height:48px;margin:0 0 14px}.resource-entry span{font-size:10px;white-space:nowrap;font-weight:500}
 #catalogDialog{width:min(880px,96vw)}.catalog-filters{display:flex;flex-wrap:wrap;gap:8px}.catalog-filters input{flex:1;min-width:200px}.catalog-filters select{width:auto;max-width:230px}.resource-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.resource-card{padding:8px;text-align:left;min-width:0;background:#fffafc;overflow:hidden;border-radius:17px}.resource-thumb{display:flex;align-items:center;justify-content:center;height:135px;background:conic-gradient(#e9dde5 25%,#fff5fa 0 50%,#e9dde5 0 75%,#fff5fa 0) 0 0/16px 16px;border-radius:11px;overflow:hidden}.resource-thumb img{max-width:100%;width:100%;height:100%;object-fit:contain;padding:10px}.resource-thumb.is-background img{object-fit:cover;padding:0}.resource-card strong{display:block;font-size:12px;margin:8px 2px 4px;overflow-wrap:anywhere;line-height:1.3}.resource-card small{display:block;font-size:10px;color:var(--muted);margin:0 2px 4px;overflow-wrap:anywhere}.catalog-notice{padding:11px 13px;background:#fcf0dc;border:1px solid #e7cea6;color:#7b5b35;border-radius:12px;font-size:12px}
 #resourceManager{width:min(1100px,96vw);height:min(870px,92dvh)}#resourceManager[open],#removalDialog[open]{display:flex;flex-direction:column;overflow:hidden}#resourceManager>.dialog-body,#removalDialog>.dialog-body{flex:1;min-height:0;max-height:none}#resourceManager>.dialog-head,#resourceManager>.dialog-footer,#removalDialog>.dialog-head,#removalDialog>.dialog-footer{flex-shrink:0}.creator-intro{margin-bottom:17px}.creator-step{display:inline-block;padding:5px 9px;border-radius:30px;background:#f7e5ee;color:#9b446e;font-size:11px;margin:0 5px 5px 0}.creator-intro p{font-size:12px;color:var(--muted);margin:5px 0;max-width:760px}.resource-upload{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}.resource-upload>.field{flex:1;min-width:170px;margin:0}.resource-upload>button{min-height:43px}.creator-workspace{display:grid;grid-template-columns:minmax(0,1fr) 245px;align-items:start;gap:16px}.creator-workspace:has(#resourceEdit[hidden]){grid-template-columns:1fr}.creator-workspace .resource-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.creator-workspace:has(#resourceEdit[hidden]) .resource-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.creator-workspace .resource-thumb{height:110px}.resource-edit{padding:15px;background:#f9edf3;border:1px solid #e4c4d5;border-radius:17px;position:sticky;top:0}.resource-edit h3{font-size:14px;margin:0 0 15px;overflow-wrap:anywhere}.resource-edit .row button{font-size:11px;padding:8px}.resource-edit .check{font-size:11px}.creator-more{margin:20px 0 5px}.creator-more summary{cursor:pointer;font-size:12px;color:#955875;margin-bottom:12px}.creator-more button{font-size:11px}.creator-footer{align-items:center;justify-content:space-between;gap:12px;background:#fffafc}.creator-footer .help{max-width:400px;margin:0 0 6px}.creator-footer .check{font-size:11px}.creator-footer>.row{justify-content:flex-end}.creator-footer button{font-size:12px;min-height:42px}
@@ -860,11 +857,82 @@ html[data-theme="dark"] #toast{background:#f0e2eb;color:#321c2a;box-shadow:0 8px
 .background-handle.rotation:after{display:none}.background-handle.rotation:before{content:"";position:absolute;width:1.5px;height:23px;background:#d55a9c;left:50%;top:100%}
 .background-frame-lock{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);pointer-events:auto;min-height:32px;padding:5px 12px;font-size:11px;line-height:1.2;white-space:nowrap;background:var(--panel)!important;color:var(--text)!important;border:1px solid var(--pink);box-shadow:0 2px 7px #0002;border-radius:20px}
 @media(pointer:coarse){.background-handle{width:38px;height:38px}.background-handle:after{width:14px;height:14px}.background-frame-lock{min-height:40px}.background-handle.rotation{line-height:38px}}
+
+/* v19 · el lienzo conserva su espacio al mostrar pistas y acciones. */
+.editor-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px;flex:none}
+.editor-toolbar .project-toolbar{flex:1;min-width:260px;margin:0;height:36px}
+.editor-toolbar .save-toolbar{margin:0;height:44px;min-height:44px;gap:6px}
+.editor-toolbar .save-status{max-width:190px;text-align:left;height:100%;display:flex;align-items:center;gap:4px}
+.editor-toolbar .save-status #projectSaveState{flex:1;min-width:0;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3}
+#workspace{grid-template-columns:66px minmax(0,1fr) 320px;gap:10px;padding:10px}
+#toolRail{display:flex;flex-direction:column;gap:7px;padding:8px 4px;background:var(--panel);border:1px solid var(--line);border-radius:18px}
+#toolRail button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:62px;padding:8px 2px;border-color:transparent;background:transparent;font-size:9px}
+#toolRail button.active{background:var(--panel2);border-color:var(--pink)}
+#toolRail .ui-icon{width:22px;height:22px}
+#workspace.panel-hidden{grid-template-columns:66px minmax(0,1fr)}
+#workspace.panel-hidden #sidePanel{display:none}
+#sidePanel #panelTabs{display:none}
+#sidePanel #panelTabs button{font-size:10px;letter-spacing:0;padding:6px 1px;min-width:0;overflow:hidden}
+#sidePanel .panel-heading{padding:10px 12px}
+#panelSubtitle{display:none}
+#panelBody{padding:14px}
+#viewport{padding:12px}
+#sidePanel .context-guide{position:relative;inset:auto;width:auto;max-width:none;margin:8px 10px 0;flex:0 0 auto;padding:10px;border-radius:12px;box-shadow:none}
+.context-guide .coach-copy{gap:8px}
+.context-guide .coach-symbol{font-size:17px;width:22px;flex:0 0 22px}
+.context-guide strong{font-size:12px}.context-guide p{font-size:11px;margin:3px 0 0;line-height:1.4}
+.context-guide .coach-close{min-width:32px;min-height:32px;width:32px;height:32px}
+#selectionStrip{display:flex;position:absolute;z-index:8;align-items:center;gap:1px;max-width:calc(100% - 16px);width:max-content;margin:0;padding:3px;background:var(--panel);border:1px solid var(--line);border-radius:13px;box-shadow:0 5px 20px #0002}
+#selectionStrip[hidden]{display:none}#selectionStrip.is-dragging{visibility:hidden}
+#selectionStrip button{display:flex;align-items:center;justify-content:center;flex:0 0 40px;height:40px;min-height:40px;padding:7px;border:0;border-radius:9px;background:transparent;color:var(--text)}
+#selectionStrip .selection-name{display:block;flex:0 1 auto;max-width:120px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;padding:0 9px}
+#selectionStrip .selection-delete{color:#c43a60}#selectionStrip button:hover{background:var(--panel2)}
+#selectionStrip .ui-icon{width:18px;height:18px}
+html[data-theme="dark"] #selectionStrip .selection-delete{color:var(--danger)}
+.canvas-tools .canvas-prompt{font-size:10px}.canvas-tools{flex-wrap:nowrap}
+.canvas-tools .canvas-focus{margin-left:auto;white-space:nowrap}#showToolsButton{white-space:nowrap}
+.editor-open #guestNotice{font-size:10px;margin:3px 10px 0;padding:5px 10px}
+.editor-open #guestNotice button{font-size:10px;min-height:28px;padding:4px 9px}
+@media(max-width:1100px) and (min-width:761px){.editor-toolbar{gap:3px}.editor-toolbar .save-toolbar{width:100%}.canvas-prompt{display:none}}
+@media(max-width:760px){
+  #workspace,#workspace.panel-hidden{display:flex;gap:0;padding:6px 8px}
+  #toolRail{display:none}
+  .editor-toolbar{display:block;margin-bottom:4px}.editor-toolbar .project-toolbar{min-width:0;height:30px;min-height:30px}
+  .editor-toolbar .save-toolbar{height:40px;min-height:40px;gap:5px;padding:0}.editor-toolbar .save-toolbar button{min-height:30px;padding:5px 8px}
+  .editor-toolbar .save-status{flex:1;max-width:none;font-size:9px}
+  #sidePanel{height:min(34dvh,290px);max-height:46%}
+  #sidePanel .panel-heading{padding:6px 10px}.panel-controls button{min-width:36px;min-height:36px}
+  #sidePanel .context-guide{margin:5px 8px 0;padding:7px 9px}
+  .context-guide strong{font-size:11px}.context-guide p{font-size:10px}
+  .context-guide .coach-symbol{display:none}
+  #selectionStrip button{flex-basis:42px;height:44px;min-height:44px}
+  #selectionStrip .selection-name{max-width:78px;flex:0 1 auto;padding:0 6px;font-size:10px}
+  .canvas-tools .canvas-prompt{display:none}.canvas-tools .canvas-focus{display:block;font-size:10px}
+  #workspace:has(#sidePanel:not(.mobile-open)) .canvas-focus{display:block}
+  .editor-open #guestNotice{margin:2px 8px;padding:4px 8px}.editor-open #guestNotice span{font-size:9px}
+}
+@media(max-width:760px) and (max-height:480px) and (min-width:560px){
+  #workspace{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:8px}
+  #workspace.panel-hidden{display:block}#workspace.panel-hidden .canvas-column{height:100%}
+  #sidePanel,#sidePanel.expanded{height:100%;max-height:100%}#sidePanel #panelTabs{display:grid}
+}
+
+/* Composición: controles contextuales y selección explícita para el teléfono. */
+.selection-actions{margin:10px 0;gap:7px}.selection-actions button{min-height:42px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.property>fieldset{border:0;padding:0;margin:8px 0}.composition fieldset{border:0;padding:0;margin:8px 0}.composition .align-tools{margin:10px 0;gap:6px}.align-tools button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;padding:5px}.align-tools button>span{font-size:21px;line-height:1}.align-tools small{font-size:10px}
+.piece-picker{display:grid;gap:6px;margin-top:10px}.piece-picker button{display:flex;align-items:center;gap:10px;min-height:44px;text-align:left}.piece-picker span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layer .pick-piece{flex:0 0 40px;min-width:40px;height:44px;padding:0;font-size:20px}.pick-piece[aria-pressed="true"]{background:var(--accent);color:var(--text)}
+#selectionModeBar{position:absolute;z-index:10;left:50%;top:8px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:4px 4px 4px 12px;border:1px solid var(--line);border-radius:13px;box-shadow:0 5px 20px #0002;background:var(--panel);color:var(--text);white-space:nowrap;font-size:12px}
+#selectionModeBar[hidden]{display:none}#selectionModeBar button{min-height:40px;padding:4px 13px;font-weight:700}
+@media(max-width:760px){.layer:has(.pick-piece) .layer-thumb{display:none}.selection-actions button{min-height:44px}.composition .grid2 button{font-size:11px;min-height:44px}}
+
 </style>
 </head>
 <body>
 
 <svg class="icon-defs" aria-hidden="true" width="0" height="0" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"></path></symbol>
   <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></symbol>
   <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="m3 3 18 18M10 5.2c.7-.1 1.3-.2 2-.2 6.5 0 10 7 10 7a20 20 0 0 1-3.1 3.8M6.2 6.2A22 22 0 0 0 2 12s3.5 7 10 7c1.5 0 2.8-.4 4-1M10 10a3 3 0 0 0 4 4"></path></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"></path></symbol>
@@ -873,6 +941,7 @@ html[data-theme="dark"] #toast{background:#f0e2eb;color:#321c2a;box-shadow:0 8px
   <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8" cy="8" r="1.5"></circle><path d="m3 17 5-5 4 4 4-7 5 8"></path></symbol>
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.8 6.2L21 12l-6.2 2.8L12 21l-2.8-6.2L3 12l6.2-2.8Z"></path></symbol>
   <symbol id="i-background" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v18M12 3a9 9 0 0 1 0 18Z" fill="currentColor"></path></symbol>
+  <symbol id="i-multi" viewBox="0 0 24 24"><rect x="3" y="3" width="12" height="12" rx="2" stroke-dasharray="3 2"></rect><rect x="9" y="9" width="12" height="12" rx="2"></rect></symbol>
   <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 10 5-10 5L2 8Zm-9 10 9 4.5 9-4.5M3 17l9 4.5 9-4.5"></path></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"></path></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14A8.6 8.6 0 0 1 10 3.5 8.7 8.7 0 1 0 20.5 14Z"></path></symbol>
@@ -912,7 +981,7 @@ html[data-theme="dark"] #toast{background:#f0e2eb;color:#321c2a;box-shadow:0 8px
         <button data-action="format">Cambiar formato del lienzo</button>
         <button data-action="helpGestures">Ayuda Divas</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v18 · Fondos adaptables</p>
+        <p class="help" id="appVersion">Divas Editor · v20 · Grupos y alineación</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -999,14 +1068,17 @@ html[data-theme="dark"] #toast{background:#f0e2eb;color:#321c2a;box-shadow:0 8px
 </section>
 
 <main id="workspace" hidden>
+  <nav id="toolRail" aria-label="Herramientas de edición"></nav>
   <section class="canvas-column">
-    <div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
+    <div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
     <div class="save-toolbar"><button data-action="home" class="quiet">‹ Proyectos</button><button id="saveProgressButton" class="primary" data-action="saveLocal">Guardar avance</button><button data-action="saveDetails" class="save-status"><span id="projectSaveState" role="status" aria-live="polite">Cambios pendientes</span><span aria-hidden="true"> ⓘ</span></button></div>
+    </div>
     <div id="saveFeedback" class="save-feedback" role="status" hidden><p id="saveFeedbackText"></p><div class="row"><button data-action="saveLocal">Reintentar</button><button data-action="saveCopy">Guardar como copia</button><button data-action="save">Descargar respaldo</button><button class="quiet" data-action="dismissSaveFeedback">Ocultar aviso</button></div></div>
     <div id="activeToolBar" class="active-tool" hidden><div><strong id="activeToolName"></strong><span id="activeToolDescription"> · Arrastra sobre la imagen</span></div><button id="activeToolFinish" data-action="tool" data-value="mover">Terminar</button></div>
-    <div id="selectionStrip" class="selection-strip" hidden></div>
     <div id="layoutNotice" class="layout-notice" hidden></div>
     <div id="canvasSurface" class="canvas-surface">
+    <div id="selectionModeBar" hidden role="status"></div>
+    <div id="selectionStrip" class="selection-strip" hidden></div>
     <div id="viewport">
       <div id="transformSpace"><div id="stage">
         <canvas id="backgroundBleed" width="1" height="1" aria-hidden="true" hidden></canvas>
@@ -1023,7 +1095,6 @@ html[data-theme="dark"] #toast{background:#f0e2eb;color:#321c2a;box-shadow:0 8px
         </div>
       </div></div>
     </div>
-    <div id="contextGuide" class="context-guide" role="region" aria-label="Pista de edición" aria-live="polite" hidden></div>
     </div>
     <div class="canvas-tools">
       <span id="canvasPrompt" class="canvas-prompt">Toca lo que quieres cambiar</span>
@@ -1032,7 +1103,7 @@ html[data-theme="dark"] #toast{background:#f0e2eb;color:#321c2a;box-shadow:0 8px
       <span id="zoomValue">50%</span>
       <button data-action="format" id="formatLabel" title="Cambiar formato">1:1</button>
       <label id="profileGuideToggle" class="check"><input id="showCircle" type="checkbox">Recorte circular</label>
-      <button class="canvas-focus mobile-only" data-action="focusCanvas" title="Cerrar controles y ampliar el diseño">Solo lienzo ↗</button>
+      <button id="showToolsButton" data-action="showPanel" hidden>Herramientas</button><button class="canvas-focus" data-action="focusCanvas" title="Desmarcar y ocultar controles">Vista limpia ↗</button>
     </div>
     <div class="canvas-footer">
       <span id="canvasSize">1080 × 1080 px</span>
@@ -1050,9 +1121,10 @@ html[data-theme="dark"] #toast{background:#f0e2eb;color:#321c2a;box-shadow:0 8px
         <button id="selectionMenuBtn" class="quiet" data-action="layerMenu" aria-label="Acciones de la capa seleccionada" title="Duplicar, ocultar y ordenar" hidden>•••</button>
         <button class="quiet" data-action="contextHelp" aria-label="Ver una pista de esta herramienta" title="Ayuda de esta herramienta">?</button>
         <button id="expandPanelBtn" class="quiet mobile-only" data-action="expandPanel" aria-label="Ampliar panel" aria-expanded="false">↥</button>
-        <button class="quiet mobile-only" data-action="closePanel" aria-label="Cerrar panel y ver el lienzo" title="Cerrar panel">×</button>
+        <button class="quiet" data-action="closePanel" aria-label="Cerrar panel y ver el lienzo" title="Cerrar panel">×</button>
       </div>
     </div>
+    <div id="contextGuide" class="context-guide" role="region" aria-label="Pista de edición" aria-live="polite" hidden></div>
     <nav id="panelTabs"></nav>
     <div id="panelBody"></div>
 
@@ -1336,10 +1408,11 @@ const PALETTES={
   noche:{nombre:"Noche elegante",a:"#251c31",b:"#56354f",texto:"#fff0f8",acento:"#d8b276"},
   perla:{nombre:"Perla y champán",a:"#fffaf2",b:"#e7d3c0",texto:"#684834",acento:"#bf965d"}
 };
+const previewResources=new Map();
 const resources=new Map(),fontResources=new Map(),bitmapCache=new Map(),textMetrics=new Map();
 const S={
   doc:null,template:null,recovery:null,opened:false,view:"projects",
-  mode:"avanzado",tab:"textos",selected:null,tool:"mover",backgroundFree:null,frameView:null,backgroundLockHint:null,
+  mode:"avanzado",tab:"textos",panelHidden:false,selected:null,multiIds:[],multiAnchor:null,isolation:null,selecting:false,alignTo:"selection",tool:"mover",backgroundFree:null,frameView:null,backgroundLockHint:null,
   drag:null,work:null,pointer:null,snapX:false,snapY:false,
   fit:true,zoom:.5,queued:false,undo:[],redo:[],group:null,
   revision:0,savedRevision:0,saving:false,busy:false,
@@ -1372,8 +1445,230 @@ function notify(text){
   toastTimer=setTimeout(()=>$("toast").hidden=true,4200);
 }
 function selectedLayer(){return S.doc?.capas.find(p=>p.id===S.selected)||null;}
+/* Selección múltiple y grupos planos: las capas conservan su identidad y profundidad. */
+function membersFor(p){
+  if(!p)return [];
+  return p.grupo&&S.isolation!==p.id?S.doc.capas.filter(x=>x.grupo===p.grupo):[p];
+}
+function selectedLayers(){
+  const p=selectedLayer();if(!p)return [];
+  if(S.multiAnchor===p.id&&S.multiIds.includes(p.id)){
+    const ids=new Set(S.multiIds);return S.doc.capas.filter(x=>ids.has(x.id));
+  }
+  return membersFor(p);
+}
+function setSelectedPieces(list){
+  const ids=new Set(list.map(p=>p.id));
+  S.multiIds=S.doc.capas.filter(p=>ids.has(p.id)).map(p=>p.id);
+  S.selected=ids.has(S.selected)?S.selected:S.multiIds[0]||null;S.multiAnchor=S.selected;
+  S.isolation=null;S.cell=null;S.tool="mover";S.backgroundFree=null;S.group=null;
+}
+function normalizeGroups(d){
+  const groups=new Map();
+  for(const p of d.capas){
+    if(p.rol==="fondo"){delete p.grupo;delete p.grupoNombre;}
+    if(p.grupo){if(!groups.has(p.grupo))groups.set(p.grupo,[]);groups.get(p.grupo).push(p);}
+  }
+  for(const items of groups.values())for(const p of items){
+    if(items.length<2){delete p.grupo;delete p.grupoNombre;}
+    else p.grupoNombre=String(items[0].grupoNombre||"Grupo").slice(0,60);
+  }
+}
+function wholeGroup(){
+  const list=selectedLayers(),id=list[0]?.grupo;
+  return id&&list.every(p=>p.grupo===id)&&S.doc.capas.filter(p=>p.grupo===id).length===list.length?id:null;
+}
+function selectionLabel(){return wholeGroup()?(selectedLayers()[0].grupoNombre||"Grupo")+" · "+selectedLayers().length:selectedLayers().length+" piezas";}
+function piecesBounds(list){
+  const boxes=list.map(boundsOf);
+  const left=Math.min(...boxes.map(b=>b.left)),right=Math.max(...boxes.map(b=>b.right)),top=Math.min(...boxes.map(b=>b.top)),bottom=Math.max(...boxes.map(b=>b.bottom));
+  return {left,right,top,bottom,x:(left+right)/2,y:(top+bottom)/2,w:Math.max(2,right-left),h:Math.max(2,bottom-top)};
+}
+function selectionFrame(){
+  const list=selectedLayers();if(list.length<2)return list[0]||null;
+  if(S.drag?.members&&S.drag.frame)return S.drag.frame;
+  return {...piecesBounds(list),id:S.selected,rot:0,tipo:"seleccion",multiple:true,bloqueado:list.some(p=>p.bloqueado),oculto:list.every(p=>p.oculto)};
+}
+function toggleSelection(id){
+  const p=S.doc.capas.find(p=>p.id===id);if(!p)return;
+  if(p.rol==="fondo"){notify("El fondo se ajusta por separado desde Fondo.");return;}
+  finishBrush();closeLayerMenu();
+  const current=selectedLayers().filter(p=>p.rol!=="fondo"),unit=membersFor(p),ids=new Set(unit.map(p=>p.id));
+  const remove=unit.every(p=>current.some(x=>x.id===p.id));
+  setSelectedPieces(remove?current.filter(p=>!ids.has(p.id)):[...current,...unit]);
+  if(S.tab!=="capas")S.tab=selectedLayers().length?"ajustes":"capas";
+  renderPanel();draw();
+}
+function toggleMultiMode(){
+  finishBrush();closeLayerMenu();S.selecting=!S.selecting;S.tool="mover";
+  if(S.selecting){
+    if(selectedLayer()?.rol==="fondo")selectLayer(null);
+    S.tab="capas";
+  }else if(selectedLayers().length)S.tab="ajustes";
+  setPanelVisible(true);renderPanel();draw();
+}
+function selectAllPieces(){
+  const eligible=S.doc.capas.filter(p=>p.rol!=="fondo"&&!p.oculto&&!p.bloqueado&&membersFor(p).every(x=>!x.bloqueado));
+  const list=eligible.flatMap(membersFor);setSelectedPieces(list);
+  S.tab=list.length?"ajustes":"capas";setPanelVisible(true);renderPanel();draw();
+  if(!list.length)notify("No hay piezas visibles y desbloqueadas para seleccionar.");
+}
+function groupSelection(){
+  const list=selectedLayers();if(list.length<2){notify("Selecciona al menos dos piezas para agrupar.");return;}
+  if(list.some(p=>p.bloqueado||p.rol==="fondo")){notify("Desbloquea las piezas antes de agrupar. El fondo se ajusta por separado.");return;}
+  if(wholeGroup()){notify("Estas piezas ya forman un grupo.");return;}
+  commit(()=>{const id=uid();list.forEach(p=>{p.grupo=id;p.grupoNombre="Mi grupo";});normalizeGroups(S.doc);S.isolation=null;});
+  S.selecting=false;setTab("ajustes");notify("Grupo creado. Arrastra una pieza para moverlas juntas.");
+}
+function ungroupSelection(){
+  const list=selectedLayers(),ids=new Set(list.map(p=>p.grupo).filter(Boolean));
+  if(!ids.size)return;
+  if(S.doc.capas.some(p=>ids.has(p.grupo)&&p.bloqueado)){notify("Desbloquea el grupo para separar sus piezas.");return;}
+  commit(()=>{for(const p of S.doc.capas)if(ids.has(p.grupo)){delete p.grupo;delete p.grupoNombre;}S.isolation=null;});
+  notify("Piezas separadas. Conservan su posición y tamaño.");
+}
+function groupUnits(list,ignoreIsolation=false){
+  const units=new Map();for(const p of list){const key=p.grupo&&(ignoreIsolation||S.isolation!==p.id)?"g:"+p.grupo:"p:"+p.id;if(!units.has(key))units.set(key,[]);units.get(key).push(p);}return [...units.values()];
+}
+function translatePieces(list,dx,dy){
+  if(!list.length)return;
+  dx=clamp(dx,-32768-Math.min(...list.map(p=>p.x)),32768-Math.max(...list.map(p=>p.x)));
+  dy=clamp(dy,-32768-Math.min(...list.map(p=>p.y)),32768-Math.max(...list.map(p=>p.y)));
+  list.forEach(p=>{p.x+=dx;p.y+=dy;if(p.rol==="fondo")p.ajusteFondo="manual";});
+}
+function alignSelection(kind,reference=S.alignTo){
+  const list=selectedLayers();if(!list.length||list.some(p=>p.bloqueado))return;
+  const units=groupUnits(list),b=reference==="canvas"||units.length===1?{left:0,right:sizeOf().ancho,top:0,bottom:sizeOf().alto,x:sizeOf().ancho/2,y:sizeOf().alto/2}:piecesBounds(list);
+  if(!["left","right","top","bottom","centerX","centerY"].includes(kind))return;
+  commit(()=>{for(const unit of units){
+    const box=piecesBounds(unit);let dx=0,dy=0;
+    if(kind==="left"||kind==="right")dx=b[kind]-box[kind];
+    if(kind==="top"||kind==="bottom")dy=b[kind]-box[kind];
+    if(kind==="centerX")dx=b.x-box.x;if(kind==="centerY")dy=b.y-box.y;
+    translatePieces(unit,dx,dy);
+  }});
+}
+function distributeSelection(axis){
+  if(!["x","y"].includes(axis))return;
+  const list=selectedLayers(),units=groupUnits(list);if(units.length<3||list.some(p=>p.bloqueado))return;
+  const lo=axis==="x"?"left":"top",hi=axis==="x"?"right":"bottom",length=axis==="x"?"w":"h";
+  const sorted=units.map(items=>({items,b:piecesBounds(items)})).sort((a,b)=>a.b[lo]-b.b[lo]);
+  const gap=(sorted.at(-1).b[hi]-sorted[0].b[lo]-sorted.reduce((sum,u)=>sum+u.b[length],0))/(sorted.length-1);
+  if(gap<-.01){notify("Separa un poco las piezas de los extremos para repartirlas sin superponerlas.");return;}
+  commit(()=>{let at=sorted[0].b[lo];for(const unit of sorted){const delta=at-unit.b[lo];translatePieces(unit.items,axis==="x"?delta:0,axis==="y"?delta:0);at+=unit.b[length]+gap;}});
+}
+const GROUP_SCALE_PROPS={w:[2,8192],h:[2,8192],tamano:[1,1000],espaciado:[-30,100],glowRadio:[0,500],sombraY:[-500,500],grosor:[0,100],desenfoque:[0,100],contornoTexto:[0,30],bordeImagen:[0,100],minTamano:[1,200]};
+function groupScaleRange(list){
+  let min=.001,max=100;
+  for(const p of list)for(const [key,[lo,hi]] of Object.entries(GROUP_SCALE_PROPS)){
+    const value=p[key];if(!value)continue;
+    if(value>0){min=Math.max(min,Math.max(0,lo)/value);max=Math.min(max,hi/value);}
+    else max=Math.min(max,lo/value);
+  }
+  return [Math.min(min,max),max];
+}
+function applyGroupTransform(originals,frame,next,scale=1,angle=0){
+  const a=angle*Math.PI/180;
+  for(const old of originals){
+    const p=S.doc.capas.find(p=>p.id===old.id);if(!p)continue;
+    for(const key of Object.keys(GROUP_SCALE_PROPS))p[key]=old[key];
+    if(p.tabla)p.tabla.grosor=old.tabla.grosor;
+    scaleLayer(p,scale);
+    const x=(old.x-frame.x)*scale,y=(old.y-frame.y)*scale;
+    p.x=next.x+x*Math.cos(a)-y*Math.sin(a);p.y=next.y+x*Math.sin(a)+y*Math.cos(a);p.rot=((old.rot+angle+180)%360+360)%360-180;
+  }
+}
+function scaleSelection(ratio){
+  const list=selectedLayers();if(!list.length||list.some(p=>p.bloqueado)||!Number.isFinite(ratio))return;
+  const bounds=piecesBounds(list),scale=clamp(ratio,...groupScaleRange(list)),originals=list.map(copy);
+  if(Math.abs(scale-1)<.00001){notify("La selección alcanzó su límite de tamaño.");return;}
+  commit(()=>applyGroupTransform(originals,bounds,bounds,scale));
+}
+function rotateSelection(angle){
+  const list=selectedLayers();if(!list.length||list.some(p=>p.bloqueado)||!Number.isFinite(angle))return;
+  const bounds=piecesBounds(list),originals=list.map(copy);commit(()=>applyGroupTransform(originals,bounds,bounds,1,angle));
+}
+function transformSelectionDrag(d,q,event){
+  const frame=d.frame,start=d.start;
+  if(d.kind==="move"){
+    frame.x=q.x-d.dx;frame.y=q.y-d.dy;snapPosition(frame,event);
+    applyGroupTransform(d.members,start,frame);
+  }else if(d.kind==="rotate"){
+    let angle=Math.atan2(q.y-start.y,q.x-start.x)*180/Math.PI+90;
+    if(event.shiftKey)angle=Math.round(angle/15)*15;
+    frame.rot=((angle+540)%360)-180;applyGroupTransform(d.members,start,frame,1,frame.rot);
+  }else if(d.kind==="resize"){
+    const dx=q.x-d.anchor.x,dy=q.y-d.anchor.y;
+    const ratio=clamp((d.sx*dx*start.w+d.sy*dy*start.h)/(start.w**2+start.h**2),...groupScaleRange(d.members));
+    frame.w=start.w*ratio;frame.h=start.h*ratio;frame.x=d.anchor.x+d.sx*frame.w/2;frame.y=d.anchor.y+d.sy*frame.h/2;
+    applyGroupTransform(d.members,start,frame,ratio);
+  }
+}
+function adaptGroupUnits(d,groups,next,old){
+  for(const list of groups){
+    if(list.length<2)continue;
+    if(list.some(p=>p.bloqueado)){for(const before of list)Object.assign(d.capas.find(p=>p.id===before.id),before);continue;}
+    const b=piecesBounds(list),scale=clamp(Math.min(Math.sqrt(next.ancho/old.ancho*next.alto/old.alto),next.ancho*.94/b.w,next.alto*.94/b.h),...groupScaleRange(list));
+    const x=clamp(b.x*next.ancho/old.ancho,b.w*scale/2,next.ancho-b.w*scale/2),y=clamp(b.y*next.alto/old.alto,b.h*scale/2,next.alto-b.h*scale/2);
+    for(const before of list){
+      const p=d.capas.find(p=>p.id===before.id);Object.assign(p,copy(before));scaleLayer(p,scale);p.x=x+(before.x-b.x)*scale;p.y=y+(before.y-b.y)*scale;
+    }
+  }
+}
+function changeSelectionFlag(button,key){
+  const p=S.doc.capas.find(p=>p.id===button.dataset.id),list=button.dataset.scope==="selection"?selectedLayers():membersFor(p);
+  if(list.length<2)return false;
+  const value=key==="bloqueado"?!list.some(p=>p.bloqueado):!list.every(p=>p.oculto);
+  commit(()=>list.forEach(p=>p[key]=value));closeLayerMenu();
+  notify(key==="bloqueado"?(value?"Selección bloqueada. Usa el candado para desbloquear.":"Selección desbloqueada."):(value?"Selección oculta. Puedes mostrarla desde Capas.":"Selección visible."));return true;
+}
+function selectionActionsHTML(){
+  const list=selectedLayers(),locked=list.some(p=>p.bloqueado),group=wholeGroup();
+  return `<div class="selection-actions grid2">
+    <button data-action="${group?'ungroupPieces':'groupPieces'}" ${locked||list.length<2?'disabled':''}>${uiIcon('layers')}${group?'Desagrupar':'Agrupar'}</button>
+    <button data-action="duplicate">${uiIcon('copy')}Duplicar selección</button>
+    <button data-action="lock" data-scope="selection" data-id="${esc(S.selected)}">${uiIcon(locked?'unlock':'lock')}${locked?'Desbloquear':'Bloquear'}</button>
+    <button data-action="visible" data-scope="selection" data-id="${esc(S.selected)}">${uiIcon('eye')}${list.every(p=>p.oculto)?'Mostrar':'Ocultar'}</button>
+    <button data-action="up" ${locked?'disabled':''}>Subir</button><button data-action="down" ${locked?'disabled':''}>Bajar</button>
+    <button class="danger" data-action="delete" ${locked?'disabled':''}>Eliminar selección</button><button data-action="multiSelect">${S.selecting?'Listo':'Cambiar selección'}</button>
+  </div>`;
+}
+function compositionHTML(open=false){
+  const list=selectedLayers(),units=groupUnits(list),locked=list.some(p=>p.bloqueado),reference=units.length<2?"canvas":S.alignTo;
+  return `<details class="property composition" ${open?'open':''}><summary>Alinear y distribuir</summary>
+    <fieldset ${locked?'disabled':''}>
+      ${field('Alinear respecto a',`<select id="alignReference" ${units.length<2?'disabled':''}><option value="selection" ${reference==='selection'?'selected':''}>Piezas seleccionadas</option><option value="canvas" ${reference==='canvas'?'selected':''}>Lienzo completo</option></select>`)}
+      <div class="grid3 align-tools">${[['left','Izquierda','⇤'],['centerX','Centro horizontal','↔'],['right','Derecha','⇥'],['top','Arriba','↥'],['centerY','Centro vertical','↕'],['bottom','Abajo','↧']].map(([value,label,icon])=>`<button data-action="alignPieces" data-value="${value}" title="${label}"><span aria-hidden="true">${icon}</span><small>${label}</small></button>`).join('')}</div>
+      <div class="grid2"><button data-action="distributePieces" data-value="x" ${units.length<3?'disabled':''}>Espacios horizontales</button><button data-action="distributePieces" data-value="y" ${units.length<3?'disabled':''}>Espacios verticales</button></div>
+      <p class="help">${units.length<3?'Selecciona tres piezas o grupos para igualar los espacios.':'Iguala los espacios conservando las piezas de los extremos.'}</p>
+    </fieldset></details>`;
+}
+function multiPropertiesHTML(){
+  const list=selectedLayers(),group=wholeGroup(),locked=list.some(p=>p.bloqueado);
+  return `${S.selecting?'<p class="help">Toca para añadir o quitar piezas. Pulsa Listo para moverlas.</p>':'<p class="help">Arrastra el conjunto. Esquinas: tamaño. Control superior: giro.</p>'}
+    ${group?field('Nombre del grupo',`<input data-group-name maxlength="60" value="${esc(list[0].grupoNombre||'Grupo')}">`):''}
+    ${locked?'<p class="help">Hay piezas bloqueadas. Desbloquea la selección para ajustarla.</p>':''}
+    <div class="grid2"><button class="${group?'':'primary'}" data-action="${group?'ungroupPieces':'groupPieces'}" ${locked?'disabled':''}>${group?'Desagrupar':'Agrupar'}</button><button data-action="multiSelect">${S.selecting?'Listo':'Cambiar selección'}</button></div>
+    ${compositionHTML(true)}
+    <details class="property"><summary>Tamaño y giro del conjunto</summary><fieldset ${locked?'disabled':''}><div class="grid2"><button data-action="scalePieces" data-value="0.9">Reducir 10 %</button><button data-action="scalePieces" data-value="1.1">Ampliar 10 %</button><button data-action="rotatePieces" data-value="-15">Girar −15°</button><button data-action="rotatePieces" data-value="15">Girar +15°</button></div></fieldset></details>
+    <details class="property"><summary>Editar una pieza por separado</summary><div class="piece-picker">${list.map(p=>`<button data-action="editPiece" data-id="${esc(p.id)}">${uiIcon(p.tipo==='texto'?'text':p.tipo==='imagen'?'image':'spark')}<span>${esc(p.nombre)}</span></button>`).join('')}</div></details>
+    <details class="property"><summary>Orden y acciones</summary>${selectionActionsHTML()}</details>`;
+}
+
 function imageSize(im){return {w:im.naturalWidth||im.width,h:im.naturalHeight||im.height};}
 function sourceImage(p){return S.work?.id===p.id?S.work.canvas:resources.get(p.src);}
+function previewImage(p){
+  const im=sourceImage(p);if(!im||S.work?.id===p.id)return im;
+  const d=imageSize(im);if(Math.max(d.w,d.h)<=2048)return im;
+  const old=previewResources.get(p.src);
+  if(old?.im===im){previewResources.delete(p.src);previewResources.set(p.src,old);return old.canvas;}
+  const k=2048/Math.max(d.w,d.h),out=document.createElement("canvas");
+  out.width=Math.max(1,Math.round(d.w*k));out.height=Math.max(1,Math.round(d.h*k));
+  const c=out.getContext("2d");c.imageSmoothingQuality="high";c.drawImage(im,0,0,out.width,out.height);
+  previewResources.set(p.src,{im,canvas:out});while(previewResources.size>6)previewResources.delete(previewResources.keys().next().value);
+  return out;
+}
+function rasterScale(p,factor){return Math.min(factor,8192/Math.max(p.w,p.h),Math.sqrt(32000000/(p.w*p.h)));}
 function sizeOf(d=S.doc){return d?.lienzo||FORMATS["1:1"];}
 function formatKey(d=S.doc){
   const s=sizeOf(d);
@@ -1440,6 +1735,7 @@ async function history(direction){
   if(tutorialProgress)S.doc.asistente.tutorial=tutorialProgress;
   else delete S.doc.asistente.tutorial;
   S.selected=S.doc.capas.some(p=>p.id===S.selected)?S.selected:null;
+  S.multiIds=[];S.multiAnchor=null;S.isolation=null;
   S.drag=null;S.group=null;S.cell=null;S.tool="mover";
   await hydrate(S.doc);markChanged();refresh();
 }
@@ -1511,13 +1807,9 @@ async function hydrate(d){
 async function importAsset(file){
   if(!/^image\/(png|jpeg|webp)$/.test(file.type))throw new Error("Usa PNG, JPG o WEBP.");
   if(file.size>20*1024*1024)throw new Error("Usa una imagen menor de 20 MB.");
-  const im=await loadImage(await readData(file)),d=imageSize(im);
-  const scale=Math.min(1,2048/Math.max(d.w,d.h));
-  const out=document.createElement("canvas");
-  out.width=Math.max(1,Math.round(d.w*scale));out.height=Math.max(1,Math.round(d.h*scale));
-  const c=out.getContext("2d");c.imageSmoothingQuality="high";
-  c.drawImage(im,0,0,out.width,out.height);
-  const src=out.toDataURL("image/png");resources.set(src,out);
+  const src=await readData(file),im=await loadImage(src),d=imageSize(im);
+  if(!d.w||!d.h||Math.max(d.w,d.h)>16384||d.w*d.h>48000000){resources.delete(src);throw new Error("Esta imagen es demasiado grande. Usa hasta 48 megapíxeles y 16.384 px por lado.");}
+  // El original se conserva; solo la vista de trabajo usa una copia ligera.
   return {src,original:src,nombre:file.name.replace(/\.[^.]+$/,"")};
 }
 function normalizeProject(raw){
@@ -1589,6 +1881,9 @@ function normalizeProject(raw){
     ["nombre","texto","rol","campo","ejemplo"].forEach(k=>{
       if(typeof r[k]==="string")p[k]=r[k].slice(0,k==="texto"||k==="ejemplo"?2000:100);
     });
+    if(typeof r.grupo==="string"&&/^[\w-]{1,90}$/.test(r.grupo)&&p.rol!=="fondo"){
+      p.grupo=r.grupo;p.grupoNombre=String(r.grupoNombre||"Grupo").slice(0,60);
+    }
     if(fonts.has(r.fuente))p.fuente=r.fuente;
     if(!p.rol){
       if(p.id==="marca")p.rol="logo";
@@ -1621,6 +1916,7 @@ function normalizeProject(raw){
     }
     d.capas.push(p);
   }
+  normalizeGroups(d);
   return d;
 }
 function download(blob,name){
@@ -1645,6 +1941,7 @@ async function activateDocument(d,{remember=true,project=null,savePrevious=true,
   P.current=project?{id:project.id,nombre:project.nombre,manual:project.manual,creado:project.creado,modificado:project.modificado}:
     {id:newProjectId(),nombre:d.proyecto?.nombre||suggestProjectName(d),manual:!!d.proyecto?.nombre,creado:now,modificado:now};
   resetSaveRetry();P.versions.set(P.current.id,project?.version||0);P.exportedKey=null;P.saveError="";P.saveErrorKind=null;P.localRevision=-1;P.lastSavedAt=project?.modificado||0;S.revision=0;S.savedRevision=0;
+  S.multiIds=[];S.multiAnchor=null;S.isolation=null;S.selecting=false;
   S.doc=d;S.selected=null;S.cell=null;S.drag=null;S.group=null;S.tool="mover";S.backgroundFree=null;S.frameView=null;S.backgroundLockHint=null;
   S.opened=true;S.fit=true;
   if(project?.editor){
@@ -1988,10 +2285,12 @@ function resizeDocument(d,next,mode="adaptar"){
   if(old.ancho===next.ancho&&old.alto===next.alto)return;
   if(mode===true)mode="encajar";if(mode===false)mode="mantener";
   if(mode==="adaptar"){
+    const groups=groupUnits(d.capas.filter(p=>p.grupo),true).map(unit=>unit.map(copy));
     if(isMission(d))applyMissionLayout(d,next,old);
     else d.capas.forEach(p=>{
       if(p.rol==="fondo")fitBackgroundToFormat(p,next,old);else if(!p.bloqueado)adaptFreeLayer(p,next,old);
     });
+    adaptGroupUnits(d,groups,next,old);
     d.lienzo={...next};return;
   }
   const s=mode==="encajar"?Math.min(next.ancho/old.ancho,next.alto/old.alto):1;
@@ -2270,16 +2569,16 @@ function drawBackgroundFrame(c,p,im,w,h){
     if(right>x&&bottom>y)c.drawImage(im,g.sx[col],g.sy[row],g.sx[col+1]-g.sx[col],g.sy[row+1]-g.sy[row],x,y,right-x,bottom-y);
   }
 }
-function backgroundFrameBitmap(p,im){
+function backgroundFrameBitmap(p,im,quality=0){
   if(!p.marcoFondo||p.rol!=="fondo")return im;
-  const scale=Math.min(1,2048/Math.max(p.w,p.h));
+  const scale=quality?rasterScale(p,quality):Math.min(1,2048/Math.max(p.w,p.h));
   const w=Math.max(2,Math.round(p.w*scale)),h=Math.max(2,Math.round(p.h*scale)),key=[p.id,w,h,p.marcoProteccion].join("|");
-  const old=backgroundFrameCache.get(key);
+  const old=quality?null:backgroundFrameCache.get(key);
   if(!S.work&&old?.im===im)return old.canvas;
   const out=document.createElement("canvas");out.width=w;out.height=h;
   const c=out.getContext("2d");c.imageSmoothingEnabled=true;c.imageSmoothingQuality="high";
   drawBackgroundFrame(c,p,im,w,h);
-  if(!S.work){
+  if(!S.work&&!quality){
     backgroundFrameCache.delete(key);backgroundFrameCache.set(key,{im,canvas:out});
     while(backgroundFrameCache.size>4)backgroundFrameCache.delete(backgroundFrameCache.keys().next().value);
   }
@@ -2289,18 +2588,18 @@ function imagePath(c,p,w,h){
   if(p.imagenForma==="circular"){c.beginPath();c.ellipse(0,0,w/2,h/2,0,0,Math.PI*2);}
   else rounded(c,-w/2,-h/2,w,h,p.imagenForma==="redondeada"?Math.min(w,h)*p.esquinas/100:0);
 }
-function imageBitmap(p,im){
+function imageBitmap(p,im,quality=0){
   if(p.imagenForma==="original"&&!p.placa)return im;
-  const factor=Math.min(2,2048/Math.max(p.w,p.h));
+  const factor=quality?rasterScale(p,quality):Math.min(2,2048/Math.max(p.w,p.h));
   const w=Math.max(2,Math.round(p.w*factor)),h=Math.max(2,Math.round(p.h*factor));
   const signature=[w,h,p.imagenForma,p.esquinas,p.placa,p.placaColor].join("|");
-  const old=bitmapCache.get(p.id);
+  const old=quality?null:bitmapCache.get(p.id);
   if(!S.work&&old?.src===p.src&&old.im===im&&old.signature===signature)return old.canvas;
   const out=document.createElement("canvas");out.width=w;out.height=h;
   const c=out.getContext("2d");c.translate(w/2,h/2);imagePath(c,p,w,h);c.clip();
   if(p.placa){c.fillStyle=p.placaColor;c.fillRect(-w/2,-h/2,w,h);}
   c.drawImage(im,-w/2,-h/2,w,h);
-  if(!S.work)bitmapCache.set(p.id,{src:p.src,im,signature,canvas:out});
+  if(!S.work&&!quality){bitmapCache.set(p.id,{src:p.src,im,signature,canvas:out});while(bitmapCache.size>8)bitmapCache.delete(bitmapCache.keys().next().value);}
   return out;
 }
 function decoration(c,p,factor){
@@ -2320,7 +2619,7 @@ function decoration(c,p,factor){
   }
   c.restore();
 }
-function drawLayer(c,p,factor=1,track=true){
+function drawLayer(c,p,factor=1,track=true,fullQuality=false){
   if(p.oculto||p.opacidad<=0)return;
   c.save();c.translate(p.x,p.y);c.rotate(p.rot*Math.PI/180);
   c.globalAlpha=p.opacidad;c.globalCompositeOperation=p.mezcla;
@@ -2338,8 +2637,8 @@ function drawLayer(c,p,factor=1,track=true){
     c.shadowColor=rgba(p.glowColor,p.glow/100);c.shadowBlur=p.glowRadio*factor;c.shadowOffsetY=p.sombraY*factor;
   }
   if(p.tipo==="imagen"){
-    const im=sourceImage(p);
-    if(im)c.drawImage(imageBitmap(p,backgroundFrameBitmap(p,im)),-p.w/2,-p.h/2,p.w,p.h);
+    const im=fullQuality?sourceImage(p):previewImage(p),quality=fullQuality?factor:0;
+    if(im)c.drawImage(imageBitmap(p,backgroundFrameBitmap(p,im,quality),quality),-p.w/2,-p.h/2,p.w,p.h);
     else{
       c.shadowColor="transparent";c.strokeStyle="#a77b9670";c.lineWidth=1.5;c.setLineDash([7,7]);
       rounded(c,-p.w/2,-p.h/2,p.w,p.h,12);c.stroke();c.setLineDash([]);
@@ -2372,7 +2671,13 @@ function handles(p){
   return arr;
 }
 function drawSelection(c){
-  const p=selectedLayer(),w=sizeOf().ancho,h=sizeOf().alto;
+  const p=selectionFrame(),w=sizeOf().ancho,h=sizeOf().alto;
+  if(selectedLayers().length>1){
+    c.save();c.lineWidth=1/S.zoom;c.strokeStyle="#a4477a88";c.setLineDash([3/S.zoom,4/S.zoom]);
+    for(const piece of selectedLayers().filter(p=>!p.oculto)){
+      c.beginPath();handles(piece).slice(0,4).forEach((q,i)=>i?c.lineTo(q.x,q.y):c.moveTo(q.x,q.y));c.closePath();c.stroke();
+    }c.restore();
+  }
   if(p&&!p.oculto&&p.rol!=="fondo"&&S.tool==="mover"){
     const points=handles(p);
     c.save();c.lineWidth=1.5/S.zoom;c.strokeStyle=p.bloqueado?"#a2733f":"#a4477a";c.fillStyle="#fff";
@@ -2403,7 +2708,7 @@ function drawSelection(c){
     c.strokeStyle="#82456e";c.lineWidth=1/S.zoom;c.stroke();c.restore();
   }
 }
-function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false}={}){
+function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQuality=false}={}){
   const {ancho:W,alto:H}=sizeOf();
   c.save();c.setTransform(1,0,0,1,0,0);
   c.globalAlpha=1;c.globalCompositeOperation="source-over";c.filter="none";
@@ -2419,7 +2724,7 @@ function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false}={}){
     g.addColorStop(0,S.doc.fondo.color1);g.addColorStop(1,S.doc.fondo.tipo==="solido"?S.doc.fondo.color1:S.doc.fondo.color2);
     c.fillStyle=g;c.fillRect(0,0,W,H);
   }
-  S.doc.capas.forEach(p=>{if(p.rol!=="fondo"||S.doc.fondo.tipo==="imagen")drawLayer(c,p,factor,track);});
+  S.doc.capas.forEach(p=>{if(p.rol!=="fondo"||S.doc.fondo.tipo==="imagen")drawLayer(c,p,factor,track,fullQuality);});
   if(controls){drawSelection(c);}
   c.restore();
 }
@@ -2427,7 +2732,7 @@ function draw(){
   if(S.queued||!S.opened)return;
   S.queued=true;
   requestAnimationFrame(()=>{
-    S.queued=false;render(ctx,{controls:true,track:true});updateCanvasPrompt();updateTextFeedback();
+    S.queued=false;render(ctx,{controls:true,track:true});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();
   });
 }
 function syncGeometry(){
@@ -2484,7 +2789,7 @@ function applyZoom(value){
 function fitCanvas(){
   if(!S.fit||$("workspace").hidden||S.drag||canvasPress||touchPointers.size)return;
   const vp=$("viewport"),view=backgroundViewBounds(),padding=view.id?60:0;
-  const width=vp.clientWidth-24-padding*2,height=vp.clientHeight-24-H.reserve-padding*2;
+  const width=vp.clientWidth-24-padding*2,height=vp.clientHeight-24-padding*2;
   if(width<48||height<48)return; // No guardar un zoom mínimo durante cambios transitorios de distribución.
   const zoom=clamp(Math.min(width/view.w,height/view.h),.05,2),margin=padding/zoom;
   S.frameView={id:view.id,left:view.left-margin,top:view.top-margin,w:view.w+2*margin,h:view.h+2*margin};
@@ -2528,16 +2833,25 @@ function refresh(){
 function updateInteractionHint(){
   $("interactionHint").textContent=matchMedia("(max-width:760px)").matches
     ?"Arrastra para mover · Mantén pulsado para más"
-    :"Arrastra · Esquinas: tamaño · Clic derecho: acciones · Alt + clic: capa inferior";
+    :"Arrastra · Mayús + clic: seleccionar varias · Alt + clic: capa inferior";
+}
+function setPanelVisible(visible){
+  S.panelHidden=!visible;
+  $("workspace").classList.toggle("panel-hidden",!visible);
+  $("sidePanel").classList.toggle("mobile-open",visible);
+  $("showToolsButton").hidden=visible;
+  if(!visible)dismissHint();
+  requestAnimationFrame(()=>{if(S.fit)fitCanvas();positionSelectionToolbar();});
 }
 function setTab(tab,open=true){
   if(!["fondo","ajustes"].includes(tab))S.backgroundFree=null;
   if(tab!=="capas")S.backgroundLockHint=null;
   dismissHint();finishBrush();S.tool="mover";closeLayerMenu();
-  if(open)$("sidePanel").classList.add("mobile-open");
+  if(open)setPanelVisible(true);
   S.tab=tab;renderPanel();
 }
-function selectLayer(id,{open=false}={}){
+function selectLayer(id,{open=false,single=false}={}){
+  S.isolation=single?id:null;S.multiIds=[];S.multiAnchor=null;
   const changed=S.selected!==id,previous=selectedLayer();
   if(id!==S.backgroundFree)S.backgroundFree=null;
   finishBrush();S.selected=id;S.group=null;
@@ -2546,7 +2860,7 @@ function selectLayer(id,{open=false}={}){
   S.tab=p?(p.rol==="fondo"?(p.bloqueado?"capas":"fondo"):"ajustes"):
     S.tab==="ajustes"?tabForLayer(previous):S.tab;
   S.backgroundLockHint=p?.rol==="fondo"&&p.bloqueado?p.id:null;
-  if(open)$("sidePanel").classList.add("mobile-open");
+  if(open)setPanelVisible(true);
   if(open&&S.backgroundLockHint)requestAnimationFrame(()=>{
     if(S.tab!=="capas"||S.backgroundLockHint!==id)return;
     const row=[...$("panelBody").querySelectorAll("[data-layer]")].find(el=>el.dataset.layer===id);
@@ -2558,8 +2872,9 @@ function selectLayer(id,{open=false}={}){
 }
 function clearSelection({closePanel=false}={}){
   finishBrush();dismissHint();closeHelp();closeLayerMenu();
+  S.selecting=false;S.multiIds=[];S.multiAnchor=null;S.isolation=null;
   S.cell=null;S.pointer=null;S.tool="mover";S.snapX=S.snapY=false;S.guides={x:null,y:null};lastTap=null;
-  if(closePanel)$("sidePanel").classList.remove("mobile-open");
+  if(closePanel)setPanelVisible(false);
   selectLayer(null);
 }
 function simpleTextsHTML(){
@@ -2625,14 +2940,17 @@ function createHTML(){
 }
 function layersHTML(){
   return `<h3 class="section-title">Capas · de delante hacia atrás</h3>
-    <p class="help">Cada pieza del diseño está aquí. Mantén pulsada una fila para ver sus acciones.</p>`+
+    <div class="grid2"><button class="${S.selecting?'active':''}" data-action="multiSelect" aria-pressed="${S.selecting}">${S.selecting?'Listo':'Seleccionar varias'}</button><button data-action="selectAllPieces">Seleccionar visibles</button></div>
+    <p class="help">${S.selecting?'Marca las piezas en esta lista o tócalas en el lienzo. Después pulsa Listo.':'Mantén pulsado para más acciones. Las piezas con el mismo nombre de grupo se mueven juntas.'}</p>
+    ${selectedLayers().length>1?selectionActionsHTML():''}`+
     (selectedLayer()?`<div class="grid3"><button data-action="up">Subir</button><button data-action="down">Bajar</button><button data-action="duplicate">Duplicar</button></div>`:"")+`<div class="layer-list">`+
     [...S.doc.capas].reverse().map(p=>`
-      <div class="layer ${S.selected===p.id?"selected":""} ${p.oculto?"is-hidden":""} ${p.bloqueado?"is-locked":""} ${S.backgroundLockHint===p.id&&p.bloqueado?"lock-attention":""}" data-layer="${esc(p.id)}" draggable="${!matchMedia("(pointer:coarse)").matches}">
+      <div class="layer ${selectedLayers().some(x=>x.id===p.id)?"selected":""} ${p.oculto?"is-hidden":""} ${p.bloqueado?"is-locked":""} ${S.backgroundLockHint===p.id&&p.bloqueado?"lock-attention":""}" data-layer="${esc(p.id)}" draggable="${!S.selecting&&!matchMedia("(pointer:coarse)").matches}">
+        ${S.selecting?`<button class="pick-piece" data-action="togglePiece" data-id="${esc(p.id)}" aria-label="${selectedLayers().some(x=>x.id===p.id)?'Quitar':'Añadir'} ${esc(p.nombre)} de la selección" aria-pressed="${selectedLayers().some(x=>x.id===p.id)}" ${p.rol==='fondo'?'disabled':''}>${selectedLayers().some(x=>x.id===p.id)?'✓':'+'}</button>`:''}
         ${p.src?`<img class="layer-thumb" src="${p.src}" alt="">`:`<div class="layer-thumb layer-icon" aria-hidden="true">${p.tipo==="texto"?"T":p.tipo==="tabla"?"▦":"✦"}</div>`}
-        <button class="layer-name" data-action="select" data-id="${esc(p.id)}" data-stay="true"><strong>${esc(p.nombre)}</strong><small>${p.oculto?"Oculta":p.rol==="fondo"&&S.doc.fondo.tipo!=="imagen"?"Inactiva":"Visible"} · ${p.bloqueado?"Bloqueada":"Se puede mover"}${p.rol==="fondo"?" · Fondo":""}</small></button>
-        <button data-action="visible" data-id="${esc(p.id)}" aria-label="${p.oculto?"Mostrar":"Ocultar"} ${esc(p.nombre)}" aria-pressed="${p.oculto}" title="${p.oculto?"Mostrar":"Ocultar"}">${uiIcon(p.oculto?"eye-off":"eye")}</button>
-        <button ${S.backgroundLockHint===p.id&&p.bloqueado?'class="lock-cue" aria-describedby="backgroundLockHint"':""} data-action="lock" data-id="${esc(p.id)}" aria-label="${p.bloqueado?"Desbloquear":"Bloquear"} ${esc(p.nombre)}" aria-pressed="${p.bloqueado}" title="${p.bloqueado?"Desbloquear":"Bloquear"}">${uiIcon(p.bloqueado?"lock":"unlock")}</button>
+        <button class="layer-name" data-action="select" data-id="${esc(p.id)}" data-stay="true"><strong>${esc(p.nombre)}</strong><small>${p.oculto?"Oculta":p.rol==="fondo"&&S.doc.fondo.tipo!=="imagen"?"Inactiva":"Visible"} · ${p.bloqueado?"Bloqueada":"Se puede mover"}${p.rol==="fondo"?" · Fondo":""}${p.grupo?` · Grupo: ${esc(p.grupoNombre||"Grupo")}`:""}</small></button>
+        <button data-action="visible" data-id="${esc(p.id)}" aria-label="${p.oculto?"Mostrar":"Ocultar"} ${esc(p.grupo?"grupo "+(p.grupoNombre||"Grupo"):p.nombre)}" aria-pressed="${p.oculto}" title="${p.oculto?"Mostrar":"Ocultar"}">${uiIcon(p.oculto?"eye-off":"eye")}</button>
+        <button ${S.backgroundLockHint===p.id&&p.bloqueado?'class="lock-cue" aria-describedby="backgroundLockHint"':""} data-action="lock" data-id="${esc(p.id)}" aria-label="${p.bloqueado?"Desbloquear":"Bloquear"} ${esc(p.grupo?"grupo "+(p.grupoNombre||"Grupo"):p.nombre)}" aria-pressed="${p.bloqueado}" title="${p.bloqueado?"Desbloquear":"Bloquear"}">${uiIcon(p.bloqueado?"lock":"unlock")}</button>
         ${S.backgroundLockHint===p.id&&p.bloqueado?'<p class="lock-explanation" id="backgroundLockHint" role="status">Toca este candado para ajustar tu fondo ↑</p>':""}
       </div>`).join("")+
     `</div><button class="wide" data-action="helpGestures">Ver gestos y ayuda</button>`;
@@ -2760,6 +3078,7 @@ function geometryHTML(){
     <div class="grid2"><button data-action="centerX">Centrar horizontal</button><button data-action="centerY">Centrar vertical</button></div>`;
 }
 function propertiesHTML(){
+  if(selectedLayers().length>1)return multiPropertiesHTML();
   if(selectedLayer()?.rol==="fondo")return backgroundHTML();
   const p=selectedLayer();if(!p)return simpleTextsHTML();
   let essential="",advanced="";
@@ -2796,13 +3115,16 @@ function propertiesHTML(){
         selectProp("Distribución","distribucion",[["anillo","Contorno"],["libre","Libre"]]):""}`;
   }
   if(p.tipo==="texto")essential+=resourceSuggestionsHTML("textos",p.id);
-  return `${p.bloqueado?`<div class="selection-card"><strong>🔒 Capa bloqueada</strong><small>Desbloquéala para moverla o cambiar sus propiedades.</small><button data-action="lock" data-id="${esc(p.id)}">Desbloquear capa</button></div>`:""}
+  return `${p.grupo?`<button class="wide" data-action="backToGroup">${uiIcon("layers")} Volver al grupo</button>`:""}
+    ${p.bloqueado?`<div class="selection-card"><strong>🔒 Capa bloqueada</strong><small>Desbloquéala para moverla o cambiar sus propiedades.</small><button data-action="lock" data-id="${esc(p.id)}">Desbloquear capa</button></div>`:""}
     ${p.oculto?`<p class="help">Esta capa está oculta. <button data-action="visible" data-id="${esc(p.id)}">Mostrar capa</button></p>`:""}
     <fieldset class="editable-properties" ${p.bloqueado?"disabled":""}>${essential}
       <details class="property" data-advanced><summary>✧ Más ajustes · posición y efectos</summary>${geometryHTML()}${advanced}${effectsHTML()}
         <div class="grid2"><button data-action="copyStyle">Copiar estilo</button><button data-action="pasteStyle" ${!S.styleCopy?"disabled":""}>Pegar estilo</button></div>
       </details>
     </fieldset>
+    <button class="wide" data-action="multiSelect" aria-pressed="${S.selecting}">${uiIcon("multi")} ${S.selecting?"Terminar selección":"Seleccionar varias"}</button>
+    ${compositionHTML()}
     <details class="property" data-layer-actions><summary>Orden y acciones de la capa</summary><div class="grid3"><button data-action="duplicate">Duplicar</button><button data-action="up">Subir</button><button data-action="down">Bajar</button></div>
       <div class="grid3" style="margin-top:7px"><button data-action="lock" data-id="${esc(p.id)}">${p.bloqueado?"Desbloquear":"Bloquear"}</button><button data-action="visible" data-id="${esc(p.id)}">${p.oculto?"Mostrar":"Ocultar"}</button><button class="danger" data-action="delete">Eliminar</button></div>
     </details>`;
@@ -2814,17 +3136,20 @@ function renderPanel(){
   const html={textos:simpleTextsHTML,logos:simpleLogosHTML,figuras:shapesHTML,fondo:backgroundHTML,
     capas:layersHTML,ajustes:propertiesHTML,crear:createHTML,estilo:simpleStyleHTML};
   if(!html[S.tab])S.tab="textos";
-  const p=selectedLayer(),active=S.tab==="ajustes"?tabForLayer(p):S.tab==="crear"?"figuras":S.tab==="estilo"?"fondo":S.tab;
+  const p=selectedLayer(),active=S.tab==="ajustes"?(selectedLayers().length>1?"capas":tabForLayer(p)):S.tab==="crear"?"figuras":S.tab==="estilo"?"fondo":S.tab;
+  const icons={textos:"text",logos:"image",figuras:"spark",fondo:"background",capas:"layers"};
+  $("toolRail").innerHTML=tabs.map(([id,name])=>`<button data-action="tab" data-value="${id}" title="${name}" aria-pressed="${active===id&&!S.panelHidden}" class="${active===id&&!S.panelHidden?"active":""}">${uiIcon(icons[id])}<span>${name}</span></button>`).join("");
   $("panelTabs").innerHTML=tabs.map(([id,name])=>`<button data-action="tab" data-value="${id}" class="${active===id?"active":""}" aria-pressed="${active===id}">${name}</button>`).join("");
   document.querySelectorAll('#mobileBar [data-tab]').forEach(el=>{el.classList.toggle("active",el.dataset.tab===active&&$("sidePanel").classList.contains("mobile-open"));el.setAttribute("aria-pressed",String(el.dataset.tab===active));});
-  $("panelTitle").textContent=S.tab==="ajustes"&&p?(p.bloqueado?"🔒 ":"")+p.nombre:tabs.find(([id])=>id===active)?.[1]||"Tu diseño";
+  $("panelTitle").textContent=selectedLayers().length>1&&S.tab==="ajustes"?selectionLabel():S.tab==="ajustes"&&p?(p.bloqueado?"🔒 ":"")+p.nombre:tabs.find(([id])=>id===active)?.[1]||"Tu diseño";
   $("panelSubtitle").textContent=S.tab==="ajustes"?"Mantén pulsada la pieza para ver sus acciones":"Toca una opción y mira el resultado.";
-  const samePanel=S.lastPanelTab===S.tab&&S.lastPanelId===S.selected;
+  const panelKey=selectedLayers().map(p=>p.id).join(":")+":"+(wholeGroup()||"")+":"+(S.isolation||"")+":"+S.selecting;
+  const samePanel=S.lastPanelTab===S.tab&&S.lastPanelId===S.selected&&S.lastPanelKey===panelKey;
   const scroll=$("panelBody").scrollTop,openDetails=samePanel?[...$("panelBody").querySelectorAll("details")].map((el,i)=>el.open?i:-1).filter(i=>i>=0):[];
   $("panelBody").innerHTML=html[S.tab]();
   const details=$("panelBody").querySelectorAll("details");for(const i of openDetails)if(details[i])details[i].open=true;
-  $("panelBody").scrollTop=S.lastPanelTab===S.tab&&S.lastPanelId===S.selected?scroll:0;
-  S.lastPanelTab=S.tab;S.lastPanelId=S.selected;
+  $("panelBody").scrollTop=samePanel?scroll:0;
+  S.lastPanelTab=S.tab;S.lastPanelId=S.selected;S.lastPanelKey=panelKey;
   document.querySelectorAll("[data-mini]").forEach(el=>{
     const p=layer(el.dataset.mini,{w:100,h:85,color:"#d7b57a",color2:"#fff1d6",cantidad:40,metalico:true});
     const c=el.getContext("2d");c.translate(70,35);c.scale(.65,.65);drawShape(c,p);
@@ -2845,29 +3170,57 @@ function ensureTextRoom(p){
   if(p.ajusteTexto!=="envolver")p.w=Math.min(sizeOf().ancho*.95,Math.max(p.w,width+8));
   p.h=Math.min(sizeOf().alto*.92,Math.max(p.h,lines.length*p.tamano*1.18+8));ctx.restore();
 }
-function updateSelectionUI(){
-  const p=selectedLayer(),strip=$("selectionStrip");strip.hidden=!p;
-  $("selectionMenuBtn").hidden=!p;
-  if(!p)return;
-  strip.innerHTML=`<button data-action="select" data-id="${esc(p.id)}" title="Editar ${esc(p.nombre)}">${p.bloqueado?"🔒 ":""}${p.oculto?"○ ":""}${esc(p.nombre)} · Editar</button>
-    <button data-action="lock" data-id="${esc(p.id)}" aria-label="${p.bloqueado?"Desbloquear":"Bloquear"} capa seleccionada">${uiIcon(p.bloqueado?"lock":"unlock")}</button>
-    <button data-action="layerMenu" aria-label="Más acciones de la capa" title="Duplicar, ocultar y cambiar orden">•••</button>
-    <button data-action="deselect" aria-label="Quitar selección">×</button>`;
+function positionSelectionToolbar(){
+  const p=selectionFrame(),strip=$("selectionStrip");if(!p||strip.hidden)return;
+  strip.classList.toggle("is-dragging",!!S.drag||!!S.work);
+  const surface=$("canvasSurface").getBoundingClientRect(),stage=canvas.getBoundingClientRect(),b=boundsOf(p);
+  const width=strip.offsetWidth||Math.min(340,surface.width-16),height=strip.offsetHeight||44;
+  const x=stage.left-surface.left+(b.left+b.right)*S.zoom/2-width/2;
+  const top=stage.top-surface.top+b.top*S.zoom,bottom=stage.top-surface.top+b.bottom*S.zoom;
+  const maxX=Math.max(8,surface.width-width-8),maxY=Math.max(4,surface.height-height-4);
+  const points=handles(p).map(h=>({x:stage.left-surface.left+h.x*S.zoom,y:stage.top-surface.top+h.y*S.zoom}));
+  const obstacles=p.rol==="fondo"?[...$("backgroundFrame").querySelectorAll("button")].filter(el=>!el.hidden).map(el=>{const r=el.getBoundingClientRect();return {left:r.left-surface.left,top:r.top-surface.top,right:r.right-surface.left,bottom:r.bottom-surface.top};}):[];
+  const freeBands=points.flatMap(h=>[[x,h.y+12],[x,h.y-height-12]]);
+  const choices=[[x,top-height-56],[x,bottom+16],[8,4],[maxX,4],[8,maxY],[maxX,maxY],...freeBands,[8,maxY/2],[maxX,maxY/2]].map(([left,y])=>({left:clamp(left,8,maxX),top:clamp(y,4,maxY)}));
+  const score=r=>obstacles.filter(b=>r.left<b.right+8&&r.left+width>b.left-8&&r.top<b.bottom+8&&r.top+height>b.top-8).length*100000+points.filter(h=>h.x>=r.left-8&&h.x<=r.left+width+8&&h.y>=r.top-8&&h.y<=r.top+height+8).length*10000+
+    Math.max(0,Math.min(r.top+height,bottom)-Math.max(r.top,top));
+  const best=choices.reduce((best,r)=>score(r)<score(best)?r:best);
+  strip.style.left=best.left+"px";strip.style.top=best.top+"px";
 }
+function updateSelectionUI(){
+  const list=selectedLayers(),p=selectedLayer(),strip=$("selectionStrip"),multi=list.length>1,locked=list.some(p=>p.bloqueado),label=multi?selectionLabel():p?.nombre;
+  const mode=$("selectionModeBar");mode.hidden=!S.selecting;mode.innerHTML=S.selecting?`<span>Selecciona · ${list.length}</span><button data-action="multiSelect">Listo</button>`:"";
+  strip.hidden=!p||S.selecting;$("selectionMenuBtn").hidden=!p;
+  if(!p)return;
+  strip.innerHTML=`<button class="selection-name" data-action="${multi?'selectionProperties':'select'}" data-id="${esc(p.id)}" title="Editar ${esc(label)}">${esc(label)}</button>
+    <button data-action="duplicate" aria-label="${multi?'Duplicar selección':'Duplicar capa'}" title="Duplicar">${uiIcon("copy")}</button>
+    <button data-action="lock" data-scope="selection" data-id="${esc(p.id)}" aria-label="${locked?'Desbloquear':'Bloquear'} ${multi?'selección':'capa seleccionada'}" title="${locked?'Desbloquear':'Bloquear'}">${uiIcon(locked?"lock":"unlock")}</button>
+    <button class="selection-delete" data-action="delete" aria-label="${multi?'Eliminar selección':'Eliminar capa'}" title="${locked?'Desbloquea para eliminar':'Eliminar · puedes deshacer'}" ${locked?'disabled':''}>${uiIcon("trash")}</button>
+    <button data-action="layerMenu" aria-label="Más acciones de la ${multi?'selección':'capa'}" title="Agrupar, ocultar y cambiar orden">•••</button>
+    <button data-action="deselect" aria-label="Quitar selección" title="Desmarcar">×</button>`;
+  requestAnimationFrame(positionSelectionToolbar);
+}
+$("viewport").addEventListener("scroll",positionSelectionToolbar,{passive:true});
 function closeLayerMenu(){
   $("layerMenu").hidden=true;
 }
 function openLayerMenu(id,x,y){
-  if(!id)return;finishBrush();S.selected=id;S.drag=null;
+  if(!id)return;finishBrush();if(!selectedLayers().some(p=>p.id===id))selectLayer(id);S.drag=null;
   const p=selectedLayer();if(!p)return;
   updateSelectionUI();draw();
   const menu=$("layerMenu"),i=S.doc.capas.indexOf(p);
+  if(selectedLayers().length>1){
+    menu.innerHTML=`<div class="layer-menu-head"><strong>${esc(selectionLabel())}</strong><button data-action="closeLayerMenu" aria-label="Cerrar acciones">×</button></div>${selectionActionsHTML()}<button class="wide" data-action="selectionProperties">Alinear y ajustar</button>`;
+    dismissHint();menu.hidden=false;const r=menu.getBoundingClientRect();
+    menu.style.left=clamp(x-r.width/2,12,window.innerWidth-r.width-12)+"px";menu.style.top=clamp(y+8,12,window.innerHeight-r.height-12)+"px";
+    menu.querySelector('button')?.focus({preventScroll:true});return;
+  }
   menu.innerHTML=`<div class="layer-menu-head"><strong>${esc(p.nombre)}</strong><button class="quiet" data-action="closeLayerMenu" aria-label="Cerrar acciones">×</button></div>
     <p class="help">${p.bloqueado?"🔒 Bloqueada":"Se puede mover"} · ${p.oculto?"Oculta":"Visible"}</p>
     <div class="grid2"><button data-action="lock" data-id="${esc(p.id)}">${p.bloqueado?"🔓 Desbloquear":"🔒 Bloquear"}</button><button data-action="visible" data-id="${esc(p.id)}">${p.oculto?"◉ Mostrar":"○ Ocultar"}</button>
     <button data-action="duplicate">Duplicar</button><button data-action="select" data-id="${esc(p.id)}">Editar</button>
     <button data-action="up" ${p.bloqueado||i===S.doc.capas.length-1?"disabled":""}>Subir una capa</button><button data-action="down" ${p.bloqueado||i===0?"disabled":""}>Bajar una capa</button>
-    <button class="danger" data-action="delete" ${p.bloqueado?"disabled":""}>Eliminar</button><button data-action="helpGestures">Ver gestos</button></div>`;
+    <button class="danger" data-action="delete" ${p.bloqueado?"disabled":""}>Eliminar</button><button data-action="multiSelect">Seleccionar varias</button></div>`;
   dismissHint();menu.hidden=false;
   const r=menu.getBoundingClientRect();
   menu.style.left=clamp(x-r.width/2,12,window.innerWidth-r.width-12)+"px";
@@ -2941,7 +3294,6 @@ function persistHelpPrefs(){try{localStorage.setItem(HELP_PREF_KEY,JSON.stringif
 function clearHelpHighlight(){document.querySelectorAll('.help-highlight').forEach(el=>el.classList.remove('help-highlight'));H.target=null;}
 function releaseHintSpace(){
   H.reserve=0;$("canvasSurface").style.setProperty("--coach-space","0px");
-  requestAnimationFrame(fitCanvas);
 }
 function dismissHint({keepSpace=false}={}){
   const had=!!H.active;H.active=null;$("contextGuide").hidden=true;clearHelpHighlight();
@@ -2978,15 +3330,14 @@ function showHint(key,{manual=false}={}){
   if(!topic||S.view!=="editor"||!S.opened||document.querySelector("dialog[open]"))return;
   if(!manual&&(!H.enabled||H.seen.includes(key)))return;
   if(!H.seen.includes(key)){H.seen.push(key);persistHelpPrefs();}
+  if(manual)setPanelVisible(true);
   H.active=key;
   const title=key==="texto"&&semanticRole(selectedLayer()||{})==="titulo"?"Tu título empieza aquí":topic.label;
-  $("contextGuide").innerHTML=`<div class="coach-copy"><span class="coach-symbol" aria-hidden="true">${esc(topic.icon)}</span><div><strong>${esc(title)}</strong><p>${esc(topic.text)}</p></div><button class="coach-close" data-action="dismissHint" aria-label="Cerrar esta pista">×</button></div>${topic.related.length?`<div class="coach-links">${topic.related.map(k=>`<button data-action="helpTopic" data-value="${k}">${esc(HELP_LABELS[k])} <span aria-hidden="true">↗</span></button>`).join("")}</div>`:""}`;
+  $("contextGuide").innerHTML=`<div class="coach-copy"><span class="coach-symbol" aria-hidden="true">${esc(topic.icon)}</span><div><strong>${esc(title)}</strong><p>${esc(helpTopicText(key))}</p></div><button class="coach-close" data-action="dismissHint" aria-label="Cerrar esta pista">×</button></div>`;
   $("contextGuide").hidden=false;updateCanvasPrompt();
   requestAnimationFrame(()=>{
     if(H.active!==key)return;
-    H.reserve=$("contextGuide").offsetHeight+16;
-    $("canvasSurface").style.setProperty("--coach-space",H.reserve+"px");
-    highlightHelp(key,{reveal:true});fitCanvas();
+    H.reserve=0;highlightHelp(key,{reveal:true});
   });
 }
 function layerHintKey(){const p=selectedLayer();if(p?.rol==="fondo")return "fondoimagen";return p?.bloqueado?"bloquear":p?.tipo==="texto"?"texto":p?.tipo==="imagen"?"imagen":p?.tipo==="tabla"?"tabla":"pieza";}
@@ -3037,19 +3388,23 @@ function matchHelpQuery(input){
   ];
   return rules.find(([,pattern])=>pattern.test(q))?.[0]||null;
 }
+function helpTopicText(key){
+  if(key==="guardar")return A.member?"Guardar avance confirma la copia en tu cuenta. Revisa el estado junto al botón antes de salir.":"Tu avance queda en este navegador. Guarda y descarga un respaldo para llevarlo a otro dispositivo.";
+  return HELP_TOPICS[key]?.text||"";
+}
 function answerHelp(query){
   H.query=String(query).slice(0,180);H.answer=matchHelpQuery(H.query);
   const el=$("helpAnswer");el.hidden=false;
   if(!H.answer){el.innerHTML='<strong>Vamos a ubicarlo</strong><p>Prueba con «cambiar tamaño del título» o elige una herramienta de abajo.</p>';return;}
   const topic=HELP_TOPICS[H.answer],ready=S.opened&&S.view==="editor";
-  el.innerHTML=`<strong>${esc(topic.icon)} ${esc(topic.label)}</strong><p>${esc(topic.text)}</p><button class="primary" data-action="${ready?"helpTopic":"newDesign"}" ${ready?`data-value="${H.answer}"`:""}>${ready?"Mostrarme dónde ↗":"Crear un diseño"}</button>`;
+  el.innerHTML=`<strong>${esc(topic.icon)} ${esc(topic.label)}</strong><p>${esc(helpTopicText(H.answer))}</p><button class="primary" data-action="${ready?"helpTopic":"newDesign"}" ${ready?`data-value="${H.answer}"`:""}>${ready?"Mostrarme dónde ↗":"Crear un diseño"}</button>`;
 }
 async function revealHelp(key){
   const topic=HELP_TOPICS[key];if(!topic)return;
   if(!S.opened||S.view!=="editor"){
     H.query=HELP_LABELS[key];H.answer=key;
     if(!$("helpDialog").open)openHelp();
-    $("helpAnswer").hidden=false;$("helpAnswer").innerHTML=`<strong>${esc(topic.label)}</strong><p>${esc(topic.text)}</p><button class="primary" data-action="newDesign">Crear un diseño</button>`;return;
+    $("helpAnswer").hidden=false;$("helpAnswer").innerHTML=`<strong>${esc(topic.label)}</strong><p>${esc(helpTopicText(key))}</p><button class="primary" data-action="newDesign">Crear un diseño</button>`;return;
   }
   dismissHint();closeHelp();closeLayerMenu();
   let p=selectedLayer();
@@ -3085,11 +3440,7 @@ async function revealHelp(key){
   else if(topic.context==="zoom"){$("sidePanel").classList.remove("mobile-open");S.fit=true;fitCanvas();}
   showHint(key,{manual:true});
 }
-new ResizeObserver(()=>{
-  if(!H.active)return;
-  const space=$("contextGuide").offsetHeight+16;
-  if(space!==H.reserve){H.reserve=space;$("canvasSurface").style.setProperty("--coach-space",space+"px");fitCanvas();}
-}).observe($("contextGuide"));
+
 function updateToolBanner(){
   const background=!!freeBackground(),active=background||["borrar","recuperar"].includes(S.tool);
   $("activeToolBar").hidden=!active;
@@ -3145,7 +3496,7 @@ function snapPosition(p,event){
   if(event.altKey)return;
   const s=sizeOf(),b=boundsOf(p),xTargets=[0,s.ancho/2,s.ancho],yTargets=[0,s.alto/2,s.alto];
   for(const other of S.doc.capas){
-    if(other.id===p.id||other.oculto||other.decorativa||other.rol==="fondo")continue;
+    if(other.id===p.id||(p.multiple&&selectedLayers().some(x=>x.id===other.id))||other.oculto||other.decorativa||other.rol==="fondo")continue;
     const box=boundsOf(other);xTargets.push(other.x,box.left,box.right);yTargets.push(other.y,box.top,box.bottom);
   }
   function nearest(anchors,targets){
@@ -3172,7 +3523,12 @@ function canvasPointerDown(event){
     }
     if(canvasGesture)return;
   }
-  const q=point(event),p=selectedLayer();
+  const q=point(event),p=selectionFrame();
+  if(S.selecting||event.shiftKey){
+    const target=hitStack(q)[0];
+    canvasPress={id:target?.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handled:true,multiId:target?.id};
+    canvas.setPointerCapture(event.pointerId);return;
+  }
   if(["borrar","recuperar"].includes(S.tool)){
     if(p?.tipo==="imagen"&&p.src&&!p.bloqueado&&hit(p,q)){startBrush(p,q);canvas.setPointerCapture(event.pointerId);}return;
   }
@@ -3180,7 +3536,7 @@ function canvasPointerDown(event){
     const control=event.target.closest?.("[data-background-handle]");
     const h=control&&p.rol==="fondo"?handles(p)[Number(control.dataset.backgroundHandle)]:handles(p).find(h=>Math.hypot(h.x-q.x,h.y-q.y)<(event.pointerType==="touch"?17:11)/S.zoom);
     if(h){
-      S.drag={kind:h.kind,id:p.id,start:copy(p),sx:h.sx,sy:h.sy,saved:false,
+      S.drag={kind:h.kind,id:p.id,start:copy(p),members:p.multiple?selectedLayers().map(copy):null,frame:p.multiple?copy(p):null,sx:h.sx,sy:h.sy,saved:false,
         anchor:h.kind==="resize"?world(p,-h.sx*p.w/2,-h.sy*p.h/2):null};
       canvasPress={id:p.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handle:true};
       canvas.setPointerCapture(event.pointerId);return;
@@ -3189,10 +3545,11 @@ function canvasPointerDown(event){
   const stack=hitStack(q);
   const found=event.altKey&&stack.length?stack[(stack.findIndex(x=>x.id===S.selected)+1)%stack.length]:stack[0];
   if(!found){selectLayer(null);canvasPress={id:null,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handled:false};canvas.setPointerCapture(event.pointerId);return;}
-  selectLayer(found.id);
-  if(found.tipo==="tabla"){S.cell=tableCellAt(found,q);renderPanel();draw();}
+  if(!selectedLayers().some(p=>p.id===found.id))selectLayer(found.id);
+  const targetFrame=selectionFrame();
+  if(selectedLayers().length===1&&found.tipo==="tabla"){S.cell=tableCellAt(found,q);renderPanel();draw();}
   canvasPress={id:found.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handled:false};
-  if(!found.bloqueado)S.drag={kind:"move",id:found.id,dx:q.x-found.x,dy:q.y-found.y,start:copy(found),saved:false};
+  if(!targetFrame.bloqueado)S.drag={kind:"move",id:targetFrame.id,dx:q.x-targetFrame.x,dy:q.y-targetFrame.y,start:copy(targetFrame),members:targetFrame.multiple?selectedLayers().map(copy):null,frame:targetFrame.multiple?copy(targetFrame):null,saved:false};
   canvas.setPointerCapture(event.pointerId);
   if(event.pointerType!=="mouse")pressTimer=setTimeout(()=>{
     if(!canvasPress||canvasPress.moved)return;
@@ -3224,6 +3581,11 @@ canvas.addEventListener("pointermove",event=>{
     if(!canvasPress.moved||canvasPress.handled)return;
   }
   if(!S.drag){if(S.tool!=="mover")draw();return;}
+  if(S.drag.members){
+    if(S.drag.members.some(old=>!S.doc.capas.some(p=>p.id===old.id&&!p.bloqueado)))return;
+    if(!S.drag.saved){snapshot();S.drag.saved=true;}
+    transformSelectionDrag(S.drag,q,event);markChanged();draw();return;
+  }
   const p=S.doc.capas.find(x=>x.id===S.drag.id);if(!p||p.bloqueado)return;
   const d=S.drag;
   if(!d.saved){snapshot();d.saved=true;}
@@ -3255,19 +3617,20 @@ function endPointer(event){
   cancelPressTimer();touchPointers.delete(event.pointerId);
   if(canvasGesture){if(!touchPointers.size)canvasGesture=null;canvasPress=null;S.drag=null;}
   const press=canvasPress;
+  if(press?.multiId&&press.pointerId===event.pointerId&&event.type==="pointerup"&&!press.moved)toggleSelection(press.multiId);
   if(press?.pointerId===event.pointerId){
     if(event.type==="pointerup"&&!press.moved&&!press.handled&&!press.handle){
       if(press.id){
         const bg=S.doc.capas.find(p=>p.id===press.id)?.rol==="fondo";
-        selectLayer(press.id,{open:true});
-        if(bg)requestAnimationFrame(fitCanvas);else offerLayerHint();
+        if(selectedLayers().length>1){S.tab="ajustes";setPanelVisible(true);renderPanel();}else selectLayer(press.id,{open:true,single:S.isolation===press.id});
+        if(bg)requestAnimationFrame(fitCanvas);else if(selectedLayers().length===1)offerLayerHint();
       }
       else {
         const bg=backgroundLayer();
         if(bg&&!bg.oculto&&S.doc.fondo.tipo==="imagen")selectLayer(bg.id,{open:true});
         else setTab("fondo");
       }
-      if(lastTap?.id===press.id&&Date.now()-lastTap.time<350){
+      if(selectedLayers().length===1&&lastTap?.id===press.id&&Date.now()-lastTap.time<350){
         const p=selectedLayer();if(p?.tipo==="texto"&&!p.bloqueado){const input=document.querySelector('[data-prop="texto"]');input?.focus();input?.select();}
         if(p?.tipo==="tabla"&&!p.bloqueado)openTable();
       }
@@ -3295,6 +3658,7 @@ canvas.addEventListener("contextmenu",event=>{
   if(p)openLayerMenu(p.id,event.clientX,event.clientY);
 });
 canvas.addEventListener("dblclick",()=>{
+  if(S.selecting||selectedLayers().length>1)return;
   const p=selectedLayer();if(!p||p.bloqueado||S.tool!=="mover")return;
   if(p.tipo==="tabla")openTable();
   if(p.tipo==="imagen"&&p.rol!=="fondo")openAssetPicker(p.id);
@@ -3316,34 +3680,38 @@ function addLayer(p){
   setTab("ajustes");offerLayerHint();
 }
 function duplicateLayer(){
-  const p=selectedLayer();if(!p)return;
-  if(S.doc.capas.length>=200){notify("Este proyecto ya tiene 200 capas.");return;}
+  const list=selectedLayers();if(!list.length)return;
+  if(S.doc.capas.length+list.length>200){notify("La copia superaría el límite de 200 capas.");return;}
   commit(()=>{
-    const clone=copy(p);clone.id=uid();clone.x+=24;clone.y+=24;
-    clone.nombre=p.nombre+" · copia";clone.bloqueado=false;
-    S.doc.capas.splice(S.doc.capas.indexOf(p)+1,0,clone);S.selected=clone.id;
+    const groups=new Map(),clones=list.map(p=>{
+      const clone=copy(p);clone.id=uid();clone.x+=24;clone.y+=24;clone.nombre=p.nombre+" · copia";clone.bloqueado=false;
+      if(clone.rol==="fondo"){clone.rol="";clone.decorativa=false;clone.marcoFondo=false;}
+      if(clone.grupo){if(!groups.has(clone.grupo))groups.set(clone.grupo,uid());clone.grupo=groups.get(clone.grupo);clone.grupoNombre=(clone.grupoNombre||"Grupo")+" · copia";}
+      return clone;
+    });
+    // Insertar cada copia junto a su origen conserva su relación con las otras capas.
+    list.forEach((p,i)=>S.doc.capas.splice(S.doc.capas.indexOf(p)+1,0,clones[i]));
+    normalizeGroups(S.doc);setSelectedPieces(clones);
   });
 }
 function deleteLayer(){
-  const p=selectedLayer();if(!p)return;
-  if(p.bloqueado){notify("Desbloquea la capa para eliminarla.");return;}
-  commit(()=>{S.doc.capas=S.doc.capas.filter(x=>x.id!==p.id);S.selected=null;S.cell=null;});
+  const list=selectedLayers();if(!list.length)return;
+  if(list.some(p=>p.bloqueado)){notify("Desbloquea la selección para eliminarla.");return;}
+  commit(()=>{const ids=new Set(list.map(p=>p.id));S.doc.capas=S.doc.capas.filter(p=>!ids.has(p.id));S.selected=null;S.multiIds=[];S.multiAnchor=null;S.isolation=null;S.cell=null;normalizeGroups(S.doc);});
+  closeLayerMenu();
 }
 function reorder(step){
-  const p=selectedLayer();if(!p)return;
-  const i=S.doc.capas.indexOf(p),j=clamp(i+step,0,S.doc.capas.length-1);
-  if(i!==j){commit(()=>{S.doc.capas.splice(i,1);S.doc.capas.splice(j,0,p);});notify(step>0?"Capa movida hacia delante.":"Capa movida hacia atrás.");}
-  else notify(step>0?"Esta capa ya está delante de todas.":"Esta capa ya está detrás de todas.");
+  const list=selectedLayers();if(!list.length||list.some(p=>p.bloqueado))return;
+  const ids=new Set(list.map(p=>p.id)),old=S.doc.capas,arr=[...old];
+  if(step>0){for(let i=arr.length-2;i>=0;i--)if(ids.has(arr[i].id)&&!ids.has(arr[i+1].id))[arr[i],arr[i+1]]=[arr[i+1],arr[i]];}
+  else{for(let i=1;i<arr.length;i++)if(ids.has(arr[i].id)&&!ids.has(arr[i-1].id))[arr[i],arr[i-1]]=[arr[i-1],arr[i]];}
+  if(arr.some((p,i)=>p!==old[i])){commit(()=>S.doc.capas=arr);notify(step>0?"Selección movida hacia delante.":"Selección movida hacia atrás.");}
+  else notify(step>0?"La selección ya está delante de todas.":"La selección ya está detrás de todas.");
 }
 
-/* =========================================================
-   7. IMÁGENES, BORRADO DE FONDO Y PINCELES
-   ========================================================= */
-
+/* Recursos e imágenes */
 let brushSize=45,brushHardness=65;
-
-/* Recursos sugeridos por tipo de elemento, sin duplicar capas al reemplazar. */
-const K={intent:null,request:0,category:'logos',season:'todas',query:''};
+const K={intent:null,request:0,category:"logos",season:"todas",query:""};
 function resourceChoices(category,target=null){
   const role=S.doc.capas.find(p=>p.id===target)?.rol;
   return C.items.filter(a=>availableAsset(a)&&(category==='todos'||a.category===category)&&(category==='textos'?a.kind==='text':a.kind==='image'))
@@ -3419,7 +3787,9 @@ async function applySuggestedResource(id,intent){
   if(row.kind==='text'){
     if(intent.kind!=='replace')throw new Error('Selecciona un texto antes de aplicar el estilo.');
     const p=S.doc.capas.find(p=>p.id===intent.id);if(p?.tipo!=='texto')throw new Error('Selecciona un texto.');
-    commit(()=>{Object.assign(p,safeTextStyle(row.style));ensureTextRoom(p);});$('assetDialog').close();
+    const prepared=await prepareResourceStyle(row.style,intent.doc,intent.epoch);assertAssetContext(intent);
+    if(p.bloqueado)throw new Error('Desbloquea el texto para aplicar el estilo.');
+    commit(()=>{installStyleFont(prepared);Object.assign(p,prepared.style);ensureTextRoom(p);});$('assetDialog').close();
   }else await applyPickedAsset({src:await privateImage(row),nombre:row.name},intent);
   notify('Aplicado. Puedes deshacerlo con ↶.');
 }
@@ -3801,10 +4171,10 @@ function outputCanvas(type,factor){
   if(type==="perfil"){
     const a=cropArea();out.width=out.height=Math.round(a.side*factor);
     c.save();c.beginPath();c.arc(out.width/2,out.height/2,out.width/2,0,Math.PI*2);c.clip();
-    render(c,{factor,offsetX:a.x,offsetY:a.y});c.restore();
+    render(c,{factor,offsetX:a.x,offsetY:a.y,fullQuality:factor>=1});c.restore();
   }else{
     out.width=Math.round(s.ancho*factor);out.height=Math.round(s.alto*factor);
-    render(c,{factor});
+    render(c,{factor,fullQuality:factor>=1});
     if(type==="jpg"){
       c.save();c.globalCompositeOperation="destination-over";c.fillStyle="#fff";
       c.fillRect(0,0,out.width,out.height);c.restore();
@@ -3887,9 +4257,21 @@ const STYLE_KEYS=[
 async function action(name,button){
   const p=selectedLayer(),v=button?.dataset.value;
   const protectedActions=["fontStep","alignText","centerX","centerY","up","down","pasteStyle","imagePreset","restoreImage","cover","removeBackground","tool","editTable"];
-  if(p?.bloqueado&&protectedActions.includes(name)){notify("Desbloquea la capa para cambiarla.");return;}
+  if(selectedLayers().some(p=>p.bloqueado)&&protectedActions.includes(name)){notify("Desbloquea la capa para cambiarla.");return;}
   if(!["helpTopic","dismissHint","helpGestures","contextHelp","resetHints"].includes(name))dismissHint();
   switch(name){
+    case "multiSelect":toggleMultiMode();break;
+    case "selectAllPieces":selectAllPieces();break;
+    case "togglePiece":toggleSelection(button.dataset.id);break;
+    case "groupPieces":groupSelection();closeLayerMenu();break;
+    case "ungroupPieces":ungroupSelection();closeLayerMenu();break;
+    case "selectionProperties":S.selecting=false;setTab("ajustes");break;
+    case "editPiece":S.selecting=false;selectLayer(button.dataset.id,{open:true,single:true});break;
+    case "backToGroup":if(p)selectLayer(p.id,{open:true});break;
+    case "alignPieces":alignSelection(v);break;
+    case "distributePieces":distributeSelection(v);break;
+    case "scalePieces":scaleSelection(Number(v));break;
+    case "rotatePieces":rotateSelection(Number(v));break;
     case "account":await run(openAccount);break;
     case "accountView":setAccountView(v);break;
     case "checkApproval":await run(checkApproval);break;
@@ -3962,11 +4344,12 @@ async function action(name,button){
     case "tab":setTab(v);if(v!=="fondo")showHint({logos:"imagenes"}[v]||v);break;
     case "mobile":{
       const tab=button.dataset.tab;
-      if(S.tab===tab&&$("sidePanel").classList.contains("mobile-open")){$("sidePanel").classList.remove("mobile-open");renderPanel();break;}
+      if(S.tab===tab&&$("sidePanel").classList.contains("mobile-open")){setPanelVisible(false);renderPanel();break;}
       setTab(tab);if(tab!=="fondo")showHint({logos:"imagenes"}[tab]||tab);break;
     }
     case "focusCanvas":clearSelection({closePanel:true});S.fit=true;requestAnimationFrame(fitCanvas);break;
-    case "closePanel":$("sidePanel").classList.remove("mobile-open");renderPanel();break;
+    case "showPanel":setPanelVisible(true);renderPanel();break;
+    case "closePanel":setPanelVisible(false);renderPanel();break;
     case "expandPanel":{
       const expanded=$("sidePanel").classList.toggle("expanded");
       $("expandPanelBtn").textContent=expanded?"↧":"↥";
@@ -3975,6 +4358,7 @@ async function action(name,button){
     }
     case "select":{
       closeLayerMenu();const stay=button.dataset.stay==="true",tab=S.tab;
+      if(S.selecting){toggleSelection(button.dataset.id);break;}
       selectLayer(button.dataset.id,{open:true});if(stay){S.tab=tab;renderPanel();}else offerLayerHint();break;
     }
     case "deselect":clearSelection();break;
@@ -4061,10 +4445,12 @@ async function action(name,button){
       addLayer(l);break;
     }
     case "visible":{
+      if(changeSelectionFlag(button,"oculto"))break;
       const q=S.doc.capas.find(x=>x.id===button.dataset.id);
       if(q){commit(()=>q.oculto=!q.oculto);notify(q.oculto?`«${q.nombre}» oculta. Puedes mostrarla en Capas o deshacer.`:`«${q.nombre}» visible de nuevo.`);}break;
     }
     case "lock":{
+      if(changeSelectionFlag(button,"bloqueado"))break;
       const q=S.doc.capas.find(x=>x.id===button.dataset.id);
       if(q){
         S.backgroundLockHint=null;
@@ -4103,8 +4489,8 @@ async function action(name,button){
     case "delete":deleteLayer();break;
     case "up":reorder(1);break;
     case "down":reorder(-1);break;
-    case "centerX":if(p)commit(()=>p.x=sizeOf().ancho/2);break;
-    case "centerY":if(p)commit(()=>p.y=sizeOf().alto/2);break;
+    case "centerX":alignSelection("centerX","canvas");break;
+    case "centerY":alignSelection("centerY","canvas");break;
     case "copyStyle":
       if(p){S.styleCopy={};STYLE_KEYS.forEach(k=>S.styleCopy[k]=p[k]);renderPanel();notify("Estilo copiado. Selecciona otra pieza para pegarlo.");}break;
     case "pasteStyle":if(p&&S.styleCopy)commit(()=>Object.assign(p,copy(S.styleCopy)));break;
@@ -4146,6 +4532,11 @@ function handleEditorInput(event){
   const el=event.target;
   if(removalInput(el))return;
   if(el.closest("#resourceEdit")){C.formDirty=true;$("resourceEditStatus").textContent="Cambios por guardar";return;}
+  if(el.matches("[data-group-name]")){
+    const list=selectedLayers(),id=wholeGroup();if(!id)return;
+    beginEdit("groupName:"+id);list.forEach(p=>p.grupoNombre=el.value.slice(0,60));markChanged();updateSelectionUI();$("panelTitle").textContent=selectionLabel();return;
+  }
+  if(el.id==="alignReference"){S.alignTo=el.value;return;}
   if(el.id==="autoHints"){H.enabled=el.checked;persistHelpPrefs();return;}
   if(el.closest("#panelBody"))dismissHint();
   if(el.matches("[data-text-id]")){
@@ -4165,7 +4556,7 @@ function handleEditorInput(event){
     markChanged();syncNumericFields();draw();return;
   }
   if(el.matches("[data-prop]")){
-    const p=selectedLayer();if(!p||p.bloqueado)return;
+    const p=selectedLayer();if(!p||p.bloqueado||selectedLayers().length>1)return;
     const key=el.dataset.prop;
     let value=el.type==="checkbox"?el.checked:["range","number"].includes(el.type)?Number(el.value):el.value;
     if(typeof value==="number"&&(!Number.isFinite(value)||el.value===""))return;
@@ -4213,6 +4604,7 @@ document.addEventListener("change",event=>{
   if(removalInput(el))return;
   if(el.matches("[data-prop],[data-bg],[data-background-adjust],[data-table],[data-cell-r]")||el.closest("#resourceEdit")||["autoHints","brushSize","brushHardness"].includes(el.id))handleEditorInput(event);
   if(el.matches("[data-background-format]"))action("format",{dataset:{value:el.value}}).catch(error=>notify(error.message));
+  if(el.id==="alignReference")S.alignTo=el.value;
   if(el.id==="newFormat"||el.name==="resizeMode")previewFormat();
   if(el.id==="showCircle")syncGeometry();
   if(el.id==="keepRatio")keepRatio=el.checked;
@@ -4255,9 +4647,13 @@ $("imageInput").onchange=event=>run(async()=>{
 }).finally(()=>event.target.value="");
 $("fontInput").onchange=event=>run(async()=>{
   const file=event.target.files[0];if(!file)return;
+  const doc=S.doc,epoch=A.epoch;
+  if(!doc||!S.opened)throw new Error("Abre un proyecto antes de cargar una fuente.");
+  if(doc.fuentes.length>=25)throw new Error("Este proyecto ya tiene 25 fuentes cargadas.");
   if(file.size>6*1024*1024)throw new Error("Usa una fuente menor de 6 MB.");
   const f={nombre:"DivasFuente_"+uid(),etiqueta:file.name.replace(/\.[^.]+$/,"").slice(0,70),datos:await readData(file)};
-  await loadFont(f);
+  fontFileInfo(f);await loadFont(f);
+  if(doc!==S.doc||epoch!==A.epoch)throw new Error("El proyecto cambió. Carga la fuente de nuevo.");
   commit(()=>{
     S.doc.fuentes.push(f);
     const p=selectedLayer();if(p&&!p.bloqueado&&["texto","tabla"].includes(p.tipo))p.fuente=f.nombre;
@@ -4294,6 +4690,7 @@ $("stage").addEventListener("drop",event=>{
 });
 $("panelBody").addEventListener("dragstart",event=>{
   const row=event.target.closest("[data-layer]");if(!row)return;
+  if(S.selecting){event.preventDefault();return;}
   event.dataTransfer.setData("application/x-divas-layer",row.dataset.layer);
 });
 $("panelBody").addEventListener("dragover",event=>{
@@ -4304,20 +4701,21 @@ $("panelBody").addEventListener("drop",event=>{
   event.preventDefault();
   const id=event.dataTransfer.getData("application/x-divas-layer");
   if(!id||id===row.dataset.layer)return;
-  if(S.doc.capas.find(p=>p.id===id)?.bloqueado){notify("Desbloquea la capa para cambiar su orden.");return;}
+  const moving=selectedLayers().some(p=>p.id===id)?selectedLayers():membersFor(S.doc.capas.find(p=>p.id===id));
+  if(moving.some(p=>p.bloqueado)){notify("Desbloquea las piezas para cambiar su orden.");return;}
+  if(moving.some(p=>p.id===row.dataset.layer))return;
   const above=event.clientY<row.getBoundingClientRect().top+row.offsetHeight/2;
   commit(()=>{
-    const index=S.doc.capas.findIndex(p=>p.id===id);if(index<0)return;
-    const p=S.doc.capas.splice(index,1)[0];
+    const ids=new Set(moving.map(p=>p.id));S.doc.capas=S.doc.capas.filter(p=>!ids.has(p.id));
     const target=S.doc.capas.findIndex(p=>p.id===row.dataset.layer);
-    S.doc.capas.splice(target+(above?1:0),0,p);
+    S.doc.capas.splice(target+(above?1:0),0,...moving);
   });
 });
 /* Mantener pulsado abre acciones; desplazar una fila nunca bloquea ni oculta. */
 let rowPress=null,rowTimer=null;
 $("panelBody").addEventListener("pointerdown",event=>{
   const row=event.target.closest("[data-layer]");
-  if(!row||event.target.closest('[data-action="visible"],[data-action="lock"]'))return;
+  if(S.selecting||!row||event.target.closest('[data-action="visible"],[data-action="lock"],[data-action="togglePiece"]'))return;
   clearTimeout(rowTimer);
   rowPress={id:row.dataset.layer,x:event.clientX,y:event.clientY,pointerId:event.pointerId,moved:false,handled:false};
   if(event.pointerType!=="mouse")rowTimer=setTimeout(()=>{
@@ -4373,15 +4771,17 @@ document.addEventListener("keydown",event=>{
   if(ctrl&&key==="z"){event.preventDefault();history(event.shiftKey?"redo":"undo").catch(e=>notify(e.message));return;}
   if(ctrl&&key==="y"){event.preventDefault();history("redo").catch(e=>notify(e.message));return;}
   if(ctrl&&key==="s"){event.preventDefault();manualSave();return;}
+  if(ctrl&&key==="a"){event.preventDefault();selectAllPieces();return;}
+  if(ctrl&&key==="g"){event.preventDefault();if(event.shiftKey)ungroupSelection();else groupSelection();return;}
   if(ctrl&&key==="d"){event.preventDefault();duplicateLayer();return;}
   if(event.key==="Escape"){clearSelection({closePanel:true});return;}
   if(["Delete","Backspace"].includes(event.key)){event.preventDefault();deleteLayer();return;}
   const arrows={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
-  const p=selectedLayer();
-  if(arrows[event.key]&&p&&!p.bloqueado){
-    event.preventDefault();beginEdit("teclado:"+p.id);
+  const p=selectedLayer(),list=selectedLayers();
+  if(arrows[event.key]&&p&&!list.some(p=>p.bloqueado)){
+    event.preventDefault();beginEdit("teclado:"+list.map(p=>p.id).join(":"));
     const step=event.shiftKey?10:1;
-    p.x+=arrows[event.key][0]*step;p.y+=arrows[event.key][1]*step;
+    translatePieces(list,arrows[event.key][0]*step,arrows[event.key][1]*step);
     markChanged();syncNumericFields();draw();
   }
 });
@@ -4599,7 +4999,7 @@ async function openAccount(){if(A.ready)await A.ready;if(A.user&&!A.ownAuth)awai
 function clearCloudMemory(){
   clearMemberSecrets();K.intent=null;K.request++;$('assetAgencyGrid').innerHTML='';$('assetPickerSearch').value='';$('assetPickerStatus').textContent='';
   C.observer?.disconnect();C.observer=null;C.cache.clear();C.thumbs.clear();C.items=[];C.collections=[];C.members=[];C.published={items:[],brandLogo:''};C.editId=null;C.formDirty=false;
-  resources.clear();bitmapCache.clear();backgroundFrameCache.clear();textMetrics.clear();fontResources.clear();
+  resources.clear();previewResources.clear();bitmapCache.clear();backgroundFrameCache.clear();textMetrics.clear();fontResources.clear();
   document.querySelectorAll('canvas').forEach(out=>out.getContext('2d').clearRect(0,0,out.width,out.height));
   $('projectName').textContent='Mi diseño · ✎';$('resourceName').value='';$('resourceEditName').textContent='Editar recurso';$('resourceEditStatus').textContent='';$('creatorStatus').textContent='';
   $('catalogGrid').innerHTML='';$('creatorGrid').innerHTML='';$('resourceEdit').hidden=true;$('memberList').innerHTML='';$('seasonList').innerHTML='';$('assetLibrary').innerHTML='';
@@ -4735,29 +5135,74 @@ async function openCatalog(category='todos'){
   C.category=Object.hasOwn(CATEGORIES,category)?category:'todos';C.collection='todas';C.search='';$('catalogSearch').value='';
   $('resourceManager').close();$('accountDialog').close();renderCatalog();showDialog('catalogDialog');
 }
-function safeTextStyle(raw={}){
+function safeTextStyle(raw={},fonts=S.doc?.fuentes||[]){
   const p=layer('texto');const keys=['color','color2','fuente','peso','tamano','espaciado','alineacion','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraY'];
   const out={};for(const k of keys)if(Object.hasOwn(raw,k))out[k]=raw[k];
-  if(!FONT_LIST.includes(out.fuente))out.fuente='Georgia';
-  const d=emptyDocument();d.capas=[{...p,...out,texto:'Tu título'}];const clean=normalizeProject(d).capas[0];return Object.fromEntries(keys.map(k=>[k,clean[k]]));
+  if(!FONT_LIST.includes(out.fuente)&&!fonts.some(f=>f.nombre===out.fuente))out.fuente='Georgia';
+  const d=emptyDocument();d.fuentes=copy(fonts);d.capas=[{...p,...out,texto:'Tu título'}];const clean=normalizeProject(d).capas[0];return Object.fromEntries(keys.map(k=>[k,clean[k]]));
 }
+const FONT_BUCKET='divas-fonts';
+function fontFileInfo(font){
+  const bytes=new Uint8Array(fontBuffer(font.datos));
+  if(bytes.length>6*1024*1024||bytes.length<12)throw new Error('La fuente debe pesar menos de 6 MB.');
+  const tag=String.fromCharCode(...bytes.slice(0,4));
+  const ext=tag==='wOF2'?'woff2':tag==='wOFF'?'woff':tag==='OTTO'?'otf':tag==='true'||(bytes[0]===0&&bytes[1]===1&&bytes[2]===0&&bytes[3]===0)?'ttf':null;
+  if(!ext)throw new Error('Carga una fuente TTF, OTF, WOFF o WOFF2 válida.');
+  return {bytes,ext,mime:'font/'+ext};
+}
+function validFontAsset(asset){
+  return asset&&/^DivasFuente_[a-zA-Z0-9_-]+$/.test(asset.nombre)&&typeof asset.path==='string'&&/^[0-9a-f-]{36}\/[0-9a-f-]{36}\.(ttf|otf|woff2?)$/i.test(asset.path);
+}
+async function prepareResourceStyle(raw={},doc=S.doc,epoch=A.epoch){
+  let font=null;const style=copy(raw);
+  if(raw.fontAsset){
+    if(!validFontAsset(raw.fontAsset)||raw.fuente!==raw.fontAsset.nombre)throw new Error('Este estilo tiene una fuente inválida. Pide al administrador que lo vuelva a guardar.');
+    const blob=await cloudResult(A.client.storage.from(FONT_BUCKET).download(raw.fontAsset.path));
+    if(!blob||blob.size>6*1024*1024)throw new Error('No se pudo cargar la fuente del estilo.');
+    font={nombre:raw.fontAsset.nombre,etiqueta:String(raw.fontAsset.etiqueta||'Fuente de la agencia').slice(0,80),datos:await readData(blob)};
+    fontFileInfo(font);
+    if(doc!==S.doc||epoch!==A.epoch)throw new Error('El diseño o la sesión cambió. Aplica el estilo de nuevo.');
+    const same=doc.fuentes.find(f=>f.datos.split(',')[1]===font.datos.split(',')[1]);
+    if(same){style.fuente=same.nombre;font=null;}
+    else{
+      if(doc.fuentes.length>=25)throw new Error('Este proyecto ya tiene 25 fuentes cargadas.');
+      // Una familia nueva evita alterar textos de otros documentos o fuentes homónimas.
+      font.nombre='DivasFuente_'+uid();style.fuente=font.nombre;await loadFont(font);
+    }
+  }else if(!FONT_LIST.includes(style.fuente)&&!doc.fuentes.some(f=>f.nombre===style.fuente)){
+    if(style.fuente)throw new Error('Falta la fuente de este estilo. Pide al administrador que lo vuelva a guardar.');
+  }
+  if(doc!==S.doc||epoch!==A.epoch)throw new Error('El diseño o la sesión cambió. Aplica el estilo de nuevo.');
+  return {style:safeTextStyle(style,[...doc.fuentes,...(font?[font]:[])]),font};
+}
+function installStyleFont(prepared){if(prepared.font&&!S.doc.fuentes.some(f=>f.nombre===prepared.font.nombre))S.doc.fuentes.push(prepared.font);}
 async function insertResource(id){
-  requireMember();const epoch=A.epoch,doc=S.doc;
-  const a=C.items.find(a=>a.id===id);if(!a||!availableAsset(a))throw new Error('Este recurso aún no está publicado.');
+  requireMember();const epoch=A.epoch,doc=S.doc,selection=S.selected;
   if(!S.opened||S.view!=='editor'){notify('Crea o abre un diseño para usar este recurso.');return;}
-  const checked=await cloudResult(A.client.from('divas_assets').select('*').eq('id',id).maybeSingle());if(!checked?.published)throw new Error('Este recurso ya no está disponible.');
-  const src=a.kind==='image'?await privateImage(checked):null;
-  if(epoch!==A.epoch||doc!==S.doc)return;
-  const s=sizeOf(),selection=S.selected;
-  if(S.doc.capas.length>=200&&a.category!=='fondos')throw new Error('Este proyecto ya tiene 200 capas.');
+  const a=await cloudResult(A.client.from('divas_assets').select('*').eq('id',id).maybeSingle());
+  if(!a||!availableAsset(a))throw new Error('Este recurso ya no está disponible.');
+  const collection=await cloudResult(A.client.from('divas_collections').select('*').eq('id',a.collection_id).maybeSingle());
+  if(!collection||!visibleCollection(collection))throw new Error('Esta colección no está disponible ahora.');
+  const src=a.kind==='image'?await privateImage(a):null;
+  const prepared=a.kind==='text'?await prepareResourceStyle(a.style,doc,epoch):null;
+  if(epoch!==A.epoch||doc!==S.doc||selection!==S.selected)throw new Error('La selección cambió. Aplica el recurso de nuevo.');
+  const s=sizeOf();
   if(a.kind==='text'){
-    const p=selectedLayer(),style=safeTextStyle(a.style);
-    if(p?.tipo==='texto'){if(p.bloqueado)throw new Error('Desbloquea el texto para aplicar el estilo.');commit(()=>{Object.assign(p,style);ensureTextRoom(p);});}
-    else addLayer(layer('texto',{...style,texto:'Tu título',nombre:a.name,x:s.ancho/2,y:s.alto/2,w:s.ancho*.75,h:s.alto*.18}));
+    const p=selectedLayer();
+    if(p?.tipo==='texto'){
+      if(p.bloqueado)throw new Error('Desbloquea el texto para aplicar el estilo.');
+      commit(()=>{installStyleFont(prepared);Object.assign(p,prepared.style);ensureTextRoom(p);});
+    }else{
+      if(S.doc.capas.length>=200)throw new Error('Este proyecto ya tiene 200 capas.');
+      const text=layer('texto',{...prepared.style,texto:'Tu título',nombre:a.name,x:s.ancho/2,y:s.alto/2,w:s.ancho*.75,h:s.alto*.18});
+      commit(()=>{installStyleFont(prepared);S.doc.capas.push(text);S.selected=text.id;});setTab('ajustes');offerLayerHint();
+    }
   }else{
     const im=await loadImage(src),d=imageSize(im),background=a.category==='fondos';
-    if(background){if(S.doc.capas.length>=200&&!S.doc.capas.some(p=>p.rol==='fondo'))throw new Error('Este proyecto ya tiene 200 capas.');const f=Math.min(s.ancho/d.w,s.alto/d.h);commit(()=>{S.doc.capas=S.doc.capas.filter(p=>p.rol!=='fondo');S.doc.capas.unshift(layer('imagen',{nombre:a.name,rol:'fondo',decorativa:true,bloqueado:true,src,original:src,x:s.ancho/2,y:s.alto/2,w:d.w*f,h:d.h*f}));S.doc.fondo.tipo='imagen';S.doc.fondo.transparente=false;S.selected=S.doc.capas.some(p=>p.id===selection)?selection:null;});setTab('fondo');}
-    else {const f=Math.min(s.ancho*.4/d.w,s.alto*.4/d.h,1);addLayer(layer('imagen',{nombre:a.name,src,original:src,x:s.ancho/2,y:s.alto/2,w:d.w*f,h:d.h*f}));}
+    if(epoch!==A.epoch||doc!==S.doc)throw new Error('El diseño cambió. Aplica el recurso de nuevo.');
+    if(S.doc.capas.length>=200&&(!background||!S.doc.capas.some(p=>p.rol==='fondo')))throw new Error('Este proyecto ya tiene 200 capas.');
+    if(background){const f=Math.min(s.ancho/d.w,s.alto/d.h);commit(()=>{S.doc.capas=S.doc.capas.filter(p=>p.rol!=='fondo');S.doc.capas.unshift(layer('imagen',{nombre:a.name,rol:'fondo',decorativa:true,bloqueado:true,src,original:src,x:s.ancho/2,y:s.alto/2,w:d.w*f,h:d.h*f}));S.doc.fondo.tipo='imagen';S.doc.fondo.transparente=false;S.selected=S.doc.capas.some(p=>p.id===selection)?selection:null;});setTab('fondo');}
+    else{const f=Math.min(s.ancho*.4/d.w,s.alto*.4/d.h,1);addLayer(layer('imagen',{nombre:a.name,src,original:src,x:s.ancho/2,y:s.alto/2,w:d.w*f,h:d.h*f}));}
   }
   $('catalogDialog').close();notify('Recurso aplicado. Puedes deshacerlo con ↶.');
 }
@@ -4788,10 +5233,10 @@ async function uploadResources(files){
   const selected=[...files];if(!selected.length)return;if(selected.length>20)throw new Error('Sube hasta 20 imágenes por vez.');
   for(let i=0;i<selected.length;i++){
     $('creatorStatus').textContent=`Subiendo ${i+1} de ${selected.length}…`;
-    const asset=await importAsset(selected[i]),id=uuid(),path=id+'/'+uuid()+'.png',thumb=id+'/'+uuid()+'.png';
-    const [file,thumbnail]=await Promise.all([imageBlob(asset.src),imageBlob(asset.src,320)]);if(file.size>12*1024*1024)throw new Error('Reduce esta imagen a menos de 12 MB: '+selected[i].name);
+    const asset=await importAsset(selected[i]),id=uuid(),mime=selected[i].type,ext=mime==='image/jpeg'?'jpg':mime.split('/')[1],path=id+'/'+uuid()+'.'+ext,thumb=id+'/'+uuid()+'.png';
+    const file=selected[i],thumbnail=await imageBlob(asset.src,320);if(file.size>12*1024*1024)throw new Error('El archivo original supera los 12 MB permitidos en la biblioteca: '+selected[i].name);
     try{
-      await cloudResult(A.client.storage.from(CLOUD.bucket).upload(path,file,{contentType:'image/png',upsert:false}));
+      await cloudResult(A.client.storage.from(CLOUD.bucket).upload(path,file,{contentType:mime,upsert:false}));
       await cloudResult(A.client.storage.from(CLOUD.bucket).upload(thumb,thumbnail,{contentType:'image/png',upsert:false}));
       await cloudResult(A.client.from('divas_assets').insert({id,name:asset.nombre.slice(0,80),category:$('uploadResourceCategory').value,collection_id:collection,kind:'image',object_path:path,thumb_path:thumb,published:false}));C.editId=id;
     }catch(error){const check=await Promise.resolve(A.client.from('divas_assets').select('id').eq('id',id).maybeSingle()).catch(()=>({error:true}));if(!check.error&&!check.data)await A.client.storage.from(CLOUD.bucket).remove([path,thumb]).catch(()=>{});await refreshCloudCatalog();throw error;}
@@ -4799,15 +5244,32 @@ async function uploadResources(files){
   await refreshCloudCatalog();notify('Imágenes subidas como borrador. Elige cuáles publicar.');
 }
 async function captureTextStyle(){
-  requireMember(true);const p=selectedLayer();if(p?.tipo!=='texto')throw new Error('Selecciona un texto del lienzo antes de guardar su estilo.');
+  requireMember(true);const p=selectedLayer(),doc=S.doc,epoch=A.epoch;
+  if(p?.tipo!=='texto')throw new Error('Selecciona un texto del lienzo antes de guardar su estilo.');
+  const style=safeTextStyle(p),font=copy(doc.fuentes.find(f=>f.nombre===p.fuente)),name=('Estilo · '+p.nombre).slice(0,80);
   await saveResourceMetadata();const collection=$('uploadResourceCollection').value;if(!collection)throw new Error('Elige una colección.');
-  const id=uuid();await cloudResult(A.client.from('divas_assets').insert({id,name:('Estilo · '+p.nombre).slice(0,80),category:'textos',collection_id:collection,kind:'text',style:safeTextStyle(p),published:false}));C.editId=id;await refreshCloudCatalog();notify('Estilo editable guardado como borrador.');
+  const id=uuid();let path=null;
+  try{
+    if(font){
+      const info=fontFileInfo(font);path=id+'/'+uuid()+'.'+info.ext;
+      try{await cloudResult(A.client.storage.from(FONT_BUCKET).upload(path,new Blob([info.bytes],{type:info.mime}),{contentType:info.mime,upsert:false}));}
+      catch(error){throw new Error('No se pudo guardar la fuente privada. Comprueba tu conexión y que hayas ejecutado 07-divas-fuentes.sql. '+(error.message||''));}
+      style.fontAsset={path,nombre:font.nombre,etiqueta:font.etiqueta,mime:info.mime};
+    }
+    if(doc!==S.doc||epoch!==A.epoch)throw new Error('El diseño o la sesión cambió. Guarda el estilo de nuevo.');
+    await cloudResult(A.client.from('divas_assets').insert({id,name,category:'textos',collection_id:collection,kind:'text',style,published:false}));
+  }catch(error){
+    if(path&&epoch===A.epoch){const check=await Promise.resolve(A.client.from('divas_assets').select('id').eq('id',id).maybeSingle()).catch(()=>({error:true}));if(!check.error&&!check.data)await A.client.storage.from(FONT_BUCKET).remove([path]).catch(()=>{});}
+    throw error;
+  }
+  C.editId=id;await refreshCloudCatalog();notify('Estilo editable guardado como borrador'+(font?', con su fuente personalizada.':'.'));
 }
 async function deleteResource(){
   requireMember(true);const a=C.items.find(a=>a.id===C.editId);if(!a)return;
   if(!confirm(`¿Eliminar «${a.name}» del catálogo? Los diseños ya guardados conservarán su copia.`))return;
   await cloudResult(A.client.from('divas_assets').delete().eq('id',a.id).select('id').single());C.editId=null;C.formDirty=false;
   if(a.object_path){const {error}=await A.client.storage.from(CLOUD.bucket).remove([a.object_path,a.thumb_path]);if(error)notify('Recurso retirado del catálogo. No se pudo limpiar su archivo privado.');}
+  if(validFontAsset(a.style?.fontAsset)){const {error}=await A.client.storage.from(FONT_BUCKET).remove([a.style.fontAsset.path]);if(error)notify('Estilo retirado. No se pudo limpiar su fuente privada.');}
   await refreshCloudCatalog();
 }
 async function adminTab(name){
@@ -5133,6 +5595,7 @@ function suggestProjectName(d=S.doc){
 function projectName(){return P.current?.manual?P.current.nombre:suggestProjectName();}
 function safeProjectFileName(name){return String(name||"divas-proyecto").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9_-]+/gi,"-").replace(/^-+|-+$/g,"").slice(0,70)||"divas-proyecto";}
 function updateShell(){
+  document.body.classList.toggle("editor-open",S.view==="editor");
   $("downloadBtn").disabled=!S.opened||S.view!=="editor";updateHistory();updateProjectToolbar();
   document.title=S.view==="editor"?projectName()+" · Divas Agency":"Divas Agency · Mis proyectos";
 }
