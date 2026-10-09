@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="19">
+<meta name="divas-version" content="21">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -926,6 +926,24 @@ html[data-theme="dark"] #selectionStrip .selection-delete{color:var(--danger)}
 #selectionModeBar[hidden]{display:none}#selectionModeBar button{min-height:40px;padding:4px 13px;font-weight:700}
 @media(max-width:760px){.layer:has(.pick-piece) .layer-thumb{display:none}.selection-actions button{min-height:44px}.composition .grid2 button{font-size:11px;min-height:44px}}
 
+/* Plantillas: revisión breve, comparación visual y acciones siempre accesibles. */
+#templatesDialog{width:min(900px,calc(100vw - 24px))}#importDialog{width:min(820px,calc(100vw - 24px))}
+.template-entry{margin-bottom:16px;text-align:left}.template-admin{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}.template-admin .help{flex-basis:100%;margin:0}
+.template-card .resource-thumb{aspect-ratio:1/1;height:auto;min-height:140px;background:var(--bg)}.template-card .resource-thumb img{object-fit:contain;width:100%;height:100%;padding:8px}
+.import-compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:start}.import-compare figure{margin:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg)}
+.import-compare img{display:block;max-height:360px;object-fit:contain;width:100%;padding:8px}.import-compare figcaption{padding:8px 12px;font-size:12px;text-align:center;color:var(--muted)}
+.import-summary{font-size:14px;line-height:1.6}.import-settings{border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0}.import-settings legend{font-weight:650;padding:0 6px}
+#importReport ul{padding-left:20px;font-size:13px;line-height:1.5}.import-actions{display:flex;flex-wrap:wrap;gap:8px}.import-actions button{flex:1 1 155px}.admin-tabs{flex-wrap:wrap}
+body.is-processing #importDialog .dialog-head button,body.is-processing #templatesDialog .dialog-head button{pointer-events:none;opacity:.4}
+@media(max-width:600px){#importDialog,#templatesDialog{max-height:calc(100dvh - 16px);margin:auto}.import-compare{grid-template-columns:1fr 1fr;gap:8px}.import-compare figure:only-child{grid-column:1/-1}.import-compare img{max-height:270px;padding:4px}.import-settings{padding:12px}.import-settings .grid2{grid-template-columns:1fr}.import-actions button{font-size:13px;min-height:44px;padding:8px 12px}.template-admin button{flex:1 1 155px}#templateGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#templateGrid strong{overflow-wrap:anywhere}.template-card .resource-thumb{min-height:110px}}
+
+
+#templatesDialog[open],#importDialog[open]{display:flex;flex-direction:column;max-height:calc(100dvh - 24px)}
+#templatesDialog>.dialog-body,#importDialog>.dialog-body{flex:1 1 auto;min-height:0;max-height:none}
+#templatesDialog>.dialog-head,#importDialog>.dialog-head,#templatesDialog>.dialog-footer,#importDialog>.dialog-footer{flex:0 0 auto}
+#importActions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));max-height:38dvh;overflow-y:auto}
+#importDialog input,#importDialog select,#templatesDialog input,#templatesDialog select{font-size:16px}
+@media(max-width:600px){#importActions{grid-template-columns:repeat(2,minmax(0,1fr))}#importActions .primary{grid-column:1/-1}#importActions button{min-width:0;line-height:1.3}#importActions #importNext{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -981,7 +999,7 @@ html[data-theme="dark"] #selectionStrip .selection-delete{color:var(--danger)}
         <button data-action="format">Cambiar formato del lienzo</button>
         <button data-action="helpGestures">Ayuda Divas</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v20 · Grupos y alineación</p>
+        <p class="help" id="appVersion">Divas Editor · v21 · Plantillas editables</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -994,7 +1012,7 @@ html[data-theme="dark"] #selectionStrip .selection-delete{color:var(--danger)}
   <div class="projects-inner">
     <div class="projects-top">
       <div><div class="eyebrow">Tu espacio creativo</div><h1 id="projectsTitle">Mis proyectos</h1><p id="projectStorageDescription">Tus proyectos locales se guardan en este navegador.</p></div>
-      <div class="projects-actions"><button class="primary" data-action="newDesign">+ Crear diseño</button><button data-action="open">Importar proyecto</button></div>
+      <div class="projects-actions"><button class="primary" data-action="newDesign">+ Crear diseño</button><button data-action="open">Importar PXZ / proyecto</button><button data-action="templates">Plantillas de agencia</button></div>
     </div>
     <div class="row"><button data-action="agency">Logo e identidad de agencia</button><button data-action="helpGestures">Ayuda Divas</button></div>
     <p id="storageNotice" class="storage-notice" role="status" hidden></p>
@@ -1185,12 +1203,12 @@ html[data-theme="dark"] #selectionStrip .selection-delete{color:var(--danger)}
 
 <dialog id="catalogDialog" aria-labelledby="catalogTitle">
   <div class="dialog-head"><div><h2 id="catalogTitle">Recursos de la agencia</h2><p class="help">Colecciones oficiales · acceso privado</p></div><button data-action="closeDialog">Cerrar</button></div>
-  <div class="dialog-body"><div class="catalog-filters"><input id="catalogSearch" type="search" placeholder="Busca un fondo, logo o adorno…" aria-label="Buscar recursos"><select id="catalogCategory" aria-label="Categoría"><option value="todos">Todo</option><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option></select><select id="catalogCollection" aria-label="Temporada"></select></div><p id="catalogCount" class="help" role="status"></p><div id="catalogGrid" class="resource-grid"></div></div>
+  <div class="dialog-body"><button class="wide template-entry" data-action="templates">✧ Plantillas editables · empieza con un diseño completo</button><div class="catalog-filters"><input id="catalogSearch" type="search" placeholder="Busca un fondo, logo o adorno…" aria-label="Buscar recursos"><select id="catalogCategory" aria-label="Categoría"><option value="todos">Todo</option><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option></select><select id="catalogCollection" aria-label="Temporada"></select></div><p id="catalogCount" class="help" role="status"></p><div id="catalogGrid" class="resource-grid"></div></div>
 </dialog>
 <dialog id="resourceManager" aria-labelledby="creatorTitle">
   <div class="dialog-head"><div><h2 id="creatorTitle">Tu agencia</h2><p class="help">Sube una vez. Publica para tus emisoras.</p></div><button data-action="closeCreator">Cerrar</button></div>
   <div class="dialog-body">
-    <nav class="admin-tabs" aria-label="Administración"><button data-action="adminTab" data-value="resources" class="active">Recursos</button><button data-action="adminTab" data-value="seasons">Temporadas</button><button data-action="adminTab" data-value="members">Cuentas</button></nav>
+    <nav class="admin-tabs" aria-label="Administración"><button data-action="templates" data-value="admin">Plantillas</button><button data-action="adminTab" data-value="resources" class="active">Recursos</button><button data-action="adminTab" data-value="seasons">Temporadas</button><button data-action="adminTab" data-value="members">Cuentas</button></nav>
     <section id="adminResources"><div class="resource-upload"><div class="field"><label for="uploadResourceCategory">Categoría</label><select id="uploadResourceCategory"><option value="fondos">Fondos</option><option value="figuras">Figuras y adornos</option><option value="logos">Logos</option></select></div><div class="field"><label for="uploadResourceCollection">Colección</label><select id="uploadResourceCollection"></select></div><button class="primary" data-action="uploadResources">+ Subir imágenes</button><button data-action="captureTextStyle">Guardar estilo del texto seleccionado</button></div><p class="help">Los archivos se suben como borrador. Publícalos cuando estén listos.</p><div class="creator-workspace"><div id="creatorGrid" class="resource-grid"></div><form id="resourceEdit" class="resource-edit" hidden><h3 id="resourceEditName">Editar recurso</h3><div class="field"><label for="resourceName">Nombre</label><input id="resourceName" type="text" maxlength="80" required></div><div class="field"><label for="resourceCollection">Colección</label><select id="resourceCollection"></select></div><div class="field"><label for="resourceCategory">Categoría</label><select id="resourceCategory"><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option></select></div><label class="check"><input id="resourceVisible" type="checkbox">Publicado para las emisoras</label><label class="check"><input id="resourceBrand" type="checkbox">Logo oficial de la cabecera</label><p class="help">Solo puede haber un logo oficial publicado.</p><p id="resourceEditStatus" class="help" role="status"></p><div class="row"><button type="submit" class="primary">Guardar cambios</button><button type="button" class="danger" data-action="deleteResource">Eliminar</button></div></form></div></section>
     <section id="adminSeasons" hidden><div class="creator-workspace"><div id="seasonList" class="season-list"></div><form id="seasonForm" class="resource-edit"><h3 id="seasonFormTitle">Nueva temporada</h3><input id="seasonId" type="hidden"><div class="field"><label for="seasonName">Nombre</label><input id="seasonName" required maxlength="60" placeholder="Halloween 2026"></div><div class="field"><label for="seasonStart">Mostrar desde · opcional</label><input id="seasonStart" type="date"></div><div class="field"><label for="seasonEnd">Mostrar hasta · opcional</label><input id="seasonEnd" type="date"></div><label class="check"><input id="seasonPublished" type="checkbox">Visible para las emisoras</label><p class="help">Las fechas usan el calendario UTC del servidor. Deja ambas vacías para mantenerla disponible.</p><div class="row"><button class="primary" type="submit">Guardar temporada</button><button type="button" data-action="newSeason">Nueva</button></div></form></div></section>
     <section id="adminMembers" hidden>
@@ -1202,6 +1220,25 @@ html[data-theme="dark"] #selectionStrip .selection-delete{color:var(--danger)}
   </div>
   <div class="dialog-footer"><button data-action="refreshCatalog">Actualizar</button><button class="primary" data-action="previewCatalog">Ver como emisora</button></div>
 </dialog>
+<dialog id="templatesDialog" aria-labelledby="templateTitle">
+  <div class="dialog-head"><div><h2 id="templateTitle">Plantillas de agencia</h2><p class="help">Diseños completos · acceso privado</p></div><button data-action="closeDialog" aria-label="Cerrar plantillas">×</button></div>
+  <div class="dialog-body">
+    <div id="templateAdminActions" class="template-admin" hidden><button class="primary" data-action="templateUpload">+ Subir PXZ / Divas</button><button id="templateCurrentButton" data-action="templateCurrent">Publicar lienzo actual</button><p class="help">Revisa cada archivo, elige su colección y publícalo. Tus emisoras reciben una copia editable.</p></div>
+    <div class="catalog-filters"><input id="templateSearch" type="search" placeholder="Buscar un diseño…" aria-label="Buscar plantillas"><select id="templateCollection" aria-label="Colección de plantillas"></select></div>
+    <p id="templateStatus" class="cloud-status" role="status" aria-live="polite"></p><div id="templateGrid" class="resource-grid"></div>
+  </div>
+  <div class="dialog-footer"><button data-action="templateRefresh">Actualizar</button><button id="templateManage" data-action="templates" data-value="admin">Administrar plantillas</button></div>
+</dialog>
+<dialog id="importDialog" aria-labelledby="importTitle">
+  <div class="dialog-head"><div><h2 id="importTitle">Revisa tu diseño</h2><p class="help">El archivo original no se modifica.</p></div><button data-action="closeDialog" aria-label="Cerrar importación">×</button></div>
+  <div class="dialog-body">
+    <div id="importCompare" class="import-compare"></div><div id="importReport"></div>
+    <fieldset id="importSettings" class="import-settings" hidden><legend>Plantilla de la agencia</legend><div class="grid2"><div class="field"><label for="importName">Nombre</label><input id="importName" maxlength="80" required></div><div class="field"><label for="importCollection">Colección</label><select id="importCollection"></select></div></div><label class="check"><input id="importPublished" type="checkbox" checked>Publicar para las cuentas aprobadas</label><p class="help">Desmárcalo para guardar un borrador. La colección también debe estar publicada y dentro de sus fechas.</p></fieldset>
+    <p id="importStatus" class="cloud-status" role="status" aria-live="polite"></p>
+  </div>
+  <div id="importActions" class="dialog-footer import-actions" hidden><button id="importOpen" class="primary" data-action="importOpen">Abrir como proyecto</button><button id="importPublish" data-action="importPublish" hidden>Guardar en plantillas</button><button id="templateSave" data-action="templateSave" hidden>Guardar cambios</button><button id="templateDelete" class="danger" data-action="templateDelete" hidden>Eliminar plantilla</button><button id="importNext" data-action="importSkip" hidden>Siguiente archivo</button></div>
+</dialog>
+
 <input id="resourceFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
 
 <dialog id="removalDialog" aria-labelledby="removalTitle">
@@ -1333,7 +1370,8 @@ html[data-theme="dark"] #selectionStrip .selection-delete{color:var(--danger)}
 
 <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
 <input id="brandInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
-<input id="projectInput" type="file" accept=".json" hidden>
+<input id="projectInput" type="file" accept=".json,.pxz" multiple hidden>
+<input id="templateInput" type="file" accept=".pxz,.json" multiple hidden>
 <input id="fontInput" type="file" accept=".ttf,.otf,.woff,.woff2" hidden>
 <input id="csvInput" type="file" accept=".csv,.tsv,.txt" hidden>
 
@@ -1557,7 +1595,7 @@ function distributeSelection(axis){
   if(gap<-.01){notify("Separa un poco las piezas de los extremos para repartirlas sin superponerlas.");return;}
   commit(()=>{let at=sorted[0].b[lo];for(const unit of sorted){const delta=at-unit.b[lo];translatePieces(unit.items,axis==="x"?delta:0,axis==="y"?delta:0);at+=unit.b[length]+gap;}});
 }
-const GROUP_SCALE_PROPS={w:[2,8192],h:[2,8192],tamano:[1,1000],espaciado:[-30,100],glowRadio:[0,500],sombraY:[-500,500],grosor:[0,100],desenfoque:[0,100],contornoTexto:[0,30],bordeImagen:[0,100],minTamano:[1,200]};
+const GROUP_SCALE_PROPS={w:[2,8192],h:[2,8192],tamano:[1,1000],espaciado:[-30,100],glowRadio:[0,500],sombraY:[-500,500],sombraX:[-500,500],grosor:[0,100],desenfoque:[0,100],contornoTexto:[0,30],bordeImagen:[0,100],minTamano:[1,200]};
 function groupScaleRange(list){
   let min=.001,max=100;
   for(const p of list)for(const [key,[lo,hi]] of Object.entries(GROUP_SCALE_PROPS)){
@@ -1672,7 +1710,7 @@ function rasterScale(p,factor){return Math.min(factor,8192/Math.max(p.w,p.h),Mat
 function sizeOf(d=S.doc){return d?.lienzo||FORMATS["1:1"];}
 function formatKey(d=S.doc){
   const s=sizeOf(d);
-  return Object.keys(FORMATS).find(k=>FORMATS[k].ancho===s.ancho&&FORMATS[k].alto===s.alto)||"1:1";
+  return Object.keys(FORMATS).find(k=>FORMATS[k].ancho===s.ancho&&FORMATS[k].alto===s.alto)||"original";
 }
 function rgba(hex,alpha){
   const n=parseInt(hex.slice(1),16);
@@ -1683,7 +1721,7 @@ function layer(tipo,extra={}){
     id:uid(),tipo,nombre:tipo,x:540,y:540,w:200,h:200,rot:0,
     opacidad:1,oculto:false,bloqueado:false,decorativa:false,
     color:"#b983a0",color2:"#fff4dc",grosor:1.5,radio:12,
-    glow:0,glowRadio:30,glowColor:"#ecc0da",sombraY:0,
+    glow:0,glowRadio:30,glowColor:"#ecc0da",sombraY:0,sombraX:0,
     desenfoque:0,mezcla:"source-over",
     texto:"",fuente:"Arial",peso:"400",tamano:40,espaciado:0,alineacion:"center",
     brillo:100,contraste:100,saturacion:100,src:"",original:"",
@@ -1693,7 +1731,7 @@ function layer(tipo,extra={}){
     cantidad:70,semilla:21,distribucion:"anillo",
     acabadoTexto:"solido",contornoTexto:0,colorContorno:"#a16c35",
     rol:"",campo:"",requerido:false,pendiente:false,ejemplo:"",
-    ajusteTexto:"ajustar",minTamano:12,ajusteFondo:"completa",marcoFondo:false,marcoProteccion:32,...extra
+    ajusteTexto:"ajustar",minTamano:12,interlineado:1.18,cursiva:false,subrayado:false,ajusteFondo:"completa",marcoFondo:false,marcoProteccion:32,...extra
   };
 }
 function emptyDocument(){
@@ -1741,7 +1779,7 @@ async function history(direction){
 }
 function closeMenus(){$("mainMenu").open=false;}
 function showDialog(id){dismissHint();closeHelp();closeMenus();closeLayerMenu();const d=$(id);if(!d.open)d.showModal();}
-function closeDialog(button){button.closest("dialog")?.close();}
+function closeDialog(button){const d=button.closest("dialog");if(S.busy&&["importDialog","templatesDialog"].includes(d?.id))return;d?.close();}
 $("formatDialog").addEventListener("close",()=>{if(S.opened)renderPanel();});
 function busy(value){
   S.busy=value;
@@ -1820,7 +1858,9 @@ function normalizeProject(raw){
   const d=emptyDocument(),f=raw.fondo||{},size=raw.lienzo;
   if(typeof raw.proyecto?.nombre==="string")d.proyecto={nombre:raw.proyecto.nombre.trim().slice(0,80)};
   const validSize=Object.values(FORMATS).find(s=>s.ancho===size?.ancho&&s.alto===size?.alto);
-  d.lienzo={...(validSize||FORMATS["1:1"])};
+  const custom=size&&Number.isInteger(size.ancho)&&Number.isInteger(size.alto)&&size.ancho>=16&&size.alto>=16&&Math.max(size.ancho,size.alto)<=8192&&size.ancho*size.alto<=32000000;
+  if(size&&!validSize&&!custom)throw new Error("El lienzo admite de 16 a 8.192 px por lado y hasta 32 megapíxeles.");
+  d.lienzo=validSize?{...validSize}:custom?{ancho:size.ancho,alto:size.alto}:{...FORMATS["1:1"]};
   d.fondo={
     tipo:["solido","degradado","imagen"].includes(f.tipo)?f.tipo:
       raw.capas.some(p=>p?.rol==="fondo"&&!p.oculto)?"imagen":f.color1===f.color2?"solido":"degradado",
@@ -1849,17 +1889,17 @@ function normalizeProject(raw){
   const limits={
     x:[-32768,32768],y:[-32768,32768],w:[2,8192],h:[2,8192],rot:[-3600,3600],
     opacidad:[0,1],grosor:[0,100],radio:[0,50],glow:[0,100],glowRadio:[0,500],
-    sombraY:[-500,500],desenfoque:[0,100],tamano:[1,1000],espaciado:[-30,100],
+    sombraY:[-500,500],sombraX:[-500,500],interlineado:[.3,4],desenfoque:[0,100],tamano:[1,1000],espaciado:[-30,100],
     brillo:[0,400],contraste:[0,400],saturacion:[0,400],esquinas:[0,50],
     bordeImagen:[0,100],intensidadDecoracion:[0,1],sombraBase:[0,100],
     cantidad:[1,350],semilla:[1,999999],contornoTexto:[0,30],minTamano:[1,200],marcoProteccion:[15,42]
   };
   const enums={
     peso:["400","600","700"],alineacion:["left","center","right"],
-    mezcla:["source-over","screen","multiply","soft-light","overlay"],
+    mezcla:["source-over","screen","multiply","soft-light","overlay","darken","lighten","color-dodge","color-burn","hard-light","difference","exclusion","hue","saturation","color","luminosity"],
     imagenForma:["original","redondeada","circular"],
     decoracion:["ninguna","aura","orbita"],distribucion:["anillo","libre"],
-    acabadoTexto:["solido","dorado","rosa"],ajusteTexto:["ajustar","envolver"],
+    acabadoTexto:["solido","dorado","rosa","importado"],ajusteTexto:["ajustar","envolver","original"],
     ajusteFondo:["completa","manual","cubrir","adaptar"]
   };
   for(const r of raw.capas){
@@ -1876,7 +1916,7 @@ function normalizeProject(raw){
     ].forEach(k=>p[k]=color(r[k],p[k]));
     [
       "oculto","bloqueado","decorativa","metalico","placa","bordeMetalico",
-      "requerido","pendiente","marcoFondo"
+      "requerido","pendiente","marcoFondo","cursiva","subrayado"
     ].forEach(k=>{if(typeof r[k]==="boolean")p[k]=r[k];});
     ["nombre","texto","rol","campo","ejemplo"].forEach(k=>{
       if(typeof r[k]==="string")p[k]=r[k].slice(0,k==="texto"||k==="ejemplo"?2000:100);
@@ -1885,6 +1925,10 @@ function normalizeProject(raw){
       p.grupo=r.grupo;p.grupoNombre=String(r.grupoNombre||"Grupo").slice(0,60);
     }
     if(fonts.has(r.fuente))p.fuente=r.fuente;
+    if(r.degradadoTexto&&Array.isArray(r.degradadoTexto.stops)){
+      const stops=r.degradadoTexto.stops.slice(0,32).filter(x=>x&&/^#[a-f0-9]{6}([a-f0-9]{2})?$/i.test(x.color)&&Number.isFinite(x.position)&&x.position>=0&&x.position<=1).map(x=>({color:x.color,position:x.position})).sort((a,b)=>a.position-b.position);
+      if(stops.length>1)p.degradadoTexto={angulo:finite(r.degradadoTexto.angulo,0,-3600,3600),stops};
+    }
     if(!p.rol){
       if(p.id==="marca")p.rol="logo";
       if(/^app[123]$/.test(p.id))p.rol=p.id;
@@ -2252,7 +2296,7 @@ function syncBackgroundFields(){
 }
 function scaleLayer(p,s){
   p.w*=s;p.h*=s;
-  ["tamano","espaciado","glowRadio","sombraY","grosor","desenfoque","contornoTexto","bordeImagen","minTamano"]
+  ["tamano","espaciado","glowRadio","sombraY","sombraX","grosor","desenfoque","contornoTexto","bordeImagen","minTamano"]
     .forEach(k=>{if(typeof p[k]==="number")p[k]*=s;});
   if(p.tabla)p.tabla.grosor*=s;
 }
@@ -2402,7 +2446,9 @@ function drawText(c,p,track=true){
   const text=String(p.texto||"");
   if(!text)return;
   let size=Math.max(1,p.tamano),spacing=p.espaciado||0,lines,overflow=false;
-  const font=n=>`${p.peso||"400"} ${n}px "${p.fuente||"Arial"}"`;
+  const font=n=>`${p.cursiva?"italic ":""}${p.peso||"400"} ${n}px "${p.fuente||"Arial"}"`;
+  const lineFactor=p.interlineado||1.18;
+  if(p.ajusteTexto==="original"){drawImportedText(c,p,font);return;}
 
   if(p.ajusteTexto==="envolver"){
     const minimum=Math.min(size,p.minTamano||18);
@@ -2410,16 +2456,16 @@ function drawText(c,p,track=true){
       c.font=font(size);
       lines=wrapLines(c,text,p.w,spacing);
       const width=Math.max(1,...lines.map(t=>measure(c,t,spacing)));
-      if((width<=p.w&&lines.length*size*1.18<=p.h)||size<=minimum)break;
+      if((width<=p.w&&lines.length*size*lineFactor<=p.h)||size<=minimum)break;
       size=Math.max(minimum,size-1);
     }
     c.font=font(size);
-    overflow=lines.length*size*1.18>p.h+.5 ||
+    overflow=lines.length*size*lineFactor>p.h+.5 ||
       lines.some(t=>measure(c,t,spacing)>p.w+.5);
   }else{
     c.font=font(size);lines=text.split("\n");
     const width=Math.max(1,...lines.map(t=>measure(c,t,spacing)));
-    const fit=Math.min(1,p.w/width,p.h/(lines.length*size*1.18));
+    const fit=Math.min(1,p.w/width,p.h/(lines.length*size*lineFactor));
     size*=fit;spacing*=fit;
   }
 
@@ -2429,14 +2475,15 @@ function drawText(c,p,track=true){
     c.beginPath();c.rect(-p.w/2,-p.h/2,p.w,p.h);c.clip();
   }
   c.font=font(size);c.textAlign="left";c.textBaseline="middle";
-  if(p.acabadoTexto==="dorado")c.fillStyle=gold(c,p.w,p.h);
+  if(p.acabadoTexto==="importado"&&p.degradadoTexto)c.fillStyle=importedTextFill(c,p);
+  else if(p.acabadoTexto==="dorado")c.fillStyle=gold(c,p.w,p.h);
   else if(p.acabadoTexto==="rosa"){
     const g=c.createLinearGradient(0,-p.h/2,0,p.h/2);
     g.addColorStop(0,p.color2);g.addColorStop(1,p.color);c.fillStyle=g;
   }else c.fillStyle=p.color;
   c.strokeStyle=p.colorContorno;c.lineJoin="round";
   c.lineWidth=Math.max(.01,p.contornoTexto||0);
-  const lh=size*1.18;
+  const lh=size*lineFactor;
   lines.forEach((line,i)=>{
     const width=measure(c,line,spacing);
     let x=p.alineacion==="left"?-p.w/2:p.alineacion==="right"?p.w/2-width:-width/2;
@@ -2445,6 +2492,7 @@ function drawText(c,p,track=true){
       if(p.contornoTexto>0)c.strokeText(ch,x,y);
       c.fillText(ch,x,y);x+=c.measureText(ch).width+spacing;
     }
+    if(p.subrayado)c.fillRect(x-width-spacing,y+size*.4,width,Math.max(1,size*.04));
   });
   c.restore();
 }
@@ -2634,7 +2682,7 @@ function drawLayer(c,p,factor=1,track=true,fullQuality=false){
   if(p.tipo==="imagen")filters.push(`brightness(${p.brillo}%)`,`contrast(${p.contraste}%)`,`saturate(${p.saturacion}%)`);
   c.filter=filters.join(" ")||"none";
   if(p.glow>0){
-    c.shadowColor=rgba(p.glowColor,p.glow/100);c.shadowBlur=p.glowRadio*factor;c.shadowOffsetY=p.sombraY*factor;
+    c.shadowColor=rgba(p.glowColor,p.glow/100);c.shadowBlur=p.glowRadio*factor;c.shadowOffsetY=p.sombraY*factor;c.shadowOffsetX=(p.sombraX||0)*factor;
   }
   if(p.tipo==="imagen"){
     const im=fullQuality?sourceImage(p):previewImage(p),quality=fullQuality?factor:0;
@@ -2739,7 +2787,7 @@ function syncGeometry(){
   const s=sizeOf();
   if(canvas.width!==s.ancho||canvas.height!==s.alto){canvas.width=s.ancho;canvas.height=s.alto;}
   $("canvasSize").textContent=s.ancho+" × "+s.alto+" px";
-  $("formatLabel").textContent=formatKey()==="banner"?"Banner · 1428 × 400":formatKey();
+  $("formatLabel").textContent=formatKey()==="banner"?"Banner · 1428 × 400":formatKey()==="original"?"Original · "+s.ancho+" × "+s.alto:formatKey();
   const diameter=Math.min(s.ancho,s.alto);
   $("circleGuide").style.width=diameter/s.ancho*100+"%";
   $("circleGuide").style.height=diameter/s.alto*100+"%";
@@ -2983,7 +3031,7 @@ function backgroundAdjustHTML(bg){
 function backgroundHTML(){
   const f=S.doc.fondo,bg=backgroundLayer();
   return `${f.tipo==="imagen"&&bg?.src?`<h3 class="section-title">Encuadre del fondo</h3>${backgroundAdjustHTML(bg)}`:""}
-    ${field("Tamaño del lienzo",`<select data-background-format>${[["9:16","TikTok · 9:16"],["1:1","Flyer · 1:1"],["16:9","Evento · 16:9"],["banner","Banner · 1428 × 400"]].map(([key,label])=>`<option value="${key}" ${formatKey()===key?"selected":""}>${label}</option>`).join("")}</select>`,"Elige un tamaño y confirma el cambio en la vista previa.")}
+    ${field("Tamaño del lienzo",`<select data-background-format>${(formatKey()==="original"?[["original","Original · "+sizeOf().ancho+" × "+sizeOf().alto]]:[]).concat([["9:16","TikTok · 9:16"],["1:1","Flyer · 1:1"],["16:9","Evento · 16:9"],["banner","Banner · 1428 × 400"]]).map(([key,label])=>`<option value="${key}" ${formatKey()===key?"selected":""}>${label}</option>`).join("")}</select>`,"Elige un tamaño y confirma el cambio en la vista previa.")}
     ${resourceSuggestionsHTML("fondos")}<h3 class="section-title">Color o imagen propia</h3>
     <div class="segmented">${[["solido","Color liso"],["degradado","Degradado"],["imagen","Imagen"]].map(([v,n])=>`<button data-action="bgType" data-value="${v}" class="${f.tipo===v?"active":""}" aria-pressed="${f.tipo===v}">${n}</button>`).join("")}</div>
     ${f.tipo==="imagen"?`${bg?.src?`<div class="asset-row"><img class="asset-thumb" src="${bg.src}" alt="Fondo actual"><div class="asset-description"><strong>${esc(bg.nombre)}</strong><small class="help">Adaptar marco llena cada formato. Imagen completa puede dejar márgenes. Manual conserva tu encuadre.</small></div></div>`:"<p class=\"help\">Sube la imagen que quieras usar de fondo.</p>"}<button class="wide" data-action="uploadBackground">Subir mi imagen de fondo</button>`:
@@ -3090,10 +3138,10 @@ function propertiesHTML(){
       <div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>
       <p id="textFeedback" class="help" aria-live="polite"></p>`;
     advanced=`<div class="grid2">${inputProp("Espaciado","espaciado")}${selectProp("Peso","peso",[["400","Normal"],["600","Seminegrita"],["700","Negrita"]])}</div>
-      ${selectProp("Ajuste de líneas","ajusteTexto",[["ajustar","Ajustar líneas existentes"],["envolver","Distribuir palabras en líneas"]])}
-      ${inputProp("Tamaño mínimo automático","minTamano","number",'min="1" max="200"')}
+      ${selectProp("Ajuste de líneas","ajusteTexto",[["ajustar","Ajustar líneas existentes"],["envolver","Distribuir palabras en líneas"],["original","Conservar disposición importada"]])}
+      ${inputProp("Tamaño mínimo automático","minTamano","number",'min="1" max="200"')}${inputProp("Interlineado","interlineado","number",'min="0.3" max="4" step="0.05"')}${checkProp("Cursiva","cursiva")}${checkProp("Subrayado","subrayado")}
       ${inputProp("Color secundario","color2","color")}
-      ${selectProp("Acabado","acabadoTexto",[["solido","Normal"],["dorado","Dorado"],["rosa","Degradado"]])}
+      ${selectProp("Acabado","acabadoTexto",[["solido","Normal"],["dorado","Dorado"],["rosa","Degradado"],["importado","Degradado importado"]])}
       ${rangeProp("Contorno","contornoTexto",0,6,.25)}${inputProp("Color del contorno","colorContorno","color")}
       <button class="wide" data-action="font">Cargar mi propia fuente</button>`;
   }else if(p.tipo==="imagen"){
@@ -3165,10 +3213,10 @@ function updateTextFeedback(){
 }
 function ensureTextRoom(p){
   ctx.save();ctx.font=`${p.peso} ${p.tamano}px "${p.fuente}"`;
-  const lines=p.ajusteTexto==="envolver"?wrapLines(ctx,p.texto,p.w,p.espaciado):String(p.texto).split("\n");
+  const lines=p.ajusteTexto!=="ajustar"?wrapLines(ctx,p.texto,p.w,p.espaciado):String(p.texto).split("\n");
   const width=Math.max(1,...lines.map(t=>measure(ctx,t,p.espaciado)));
-  if(p.ajusteTexto!=="envolver")p.w=Math.min(sizeOf().ancho*.95,Math.max(p.w,width+8));
-  p.h=Math.min(sizeOf().alto*.92,Math.max(p.h,lines.length*p.tamano*1.18+8));ctx.restore();
+  if(p.ajusteTexto==="ajustar")p.w=Math.min(sizeOf().ancho*.95,Math.max(p.w,width+8));
+  p.h=Math.min(sizeOf().alto*.92,Math.max(p.h,lines.length*p.tamano*(p.interlineado||1.18)+8));ctx.restore();
 }
 function positionSelectionToolbar(){
   const p=selectionFrame(),strip=$("selectionStrip");if(!p||strip.hidden)return;
@@ -4260,6 +4308,16 @@ async function action(name,button){
   if(selectedLayers().some(p=>p.bloqueado)&&protectedActions.includes(name)){notify("Desbloquea la capa para cambiarla.");return;}
   if(!["helpTopic","dismissHint","helpGestures","contextHelp","resetHints"].includes(name))dismissHint();
   switch(name){
+    case "templates":await run(()=>openTemplates(v==='admin'));break;
+    case "templateUpload":if(isAdmin())$("templateInput").click();break;
+    case "templateCurrent":await run(prepareCurrentTemplate);break;
+    case "templateReview":await run(()=>reviewTemplate(button.dataset.id));break;
+    case "templateRefresh":await run(()=>openTemplates(T.manager));break;
+    case "importOpen":await run(openImportCopy);break;
+    case "importPublish":await run(publishImport);break;
+    case "importSkip":await run(nextImport);break;
+    case "templateSave":await run(saveTemplateDetails);break;
+    case "templateDelete":await run(deleteTemplate);break;
     case "multiSelect":toggleMultiMode();break;
     case "selectAllPieces":selectAllPieces();break;
     case "togglePiece":toggleSelection(button.dataset.id);break;
@@ -4395,7 +4453,7 @@ async function action(name,button){
     case "format":
       if(!S.opened){notify("Crea un diseño primero.");return;}
       document.querySelector('[name="resizeMode"][value="adaptar"]').checked=true;
-      $("newFormat").value=FORMATS[v]?v:formatKey();previewFormat();showDialog("formatDialog");break;
+      $("newFormat").value=FORMATS[v]?v:FORMATS[formatKey()]?formatKey():"1:1";previewFormat();showDialog("formatDialog");break;
     case "applyFormat":{
       const next=FORMATS[$("newFormat").value],mode=document.querySelector('[name="resizeMode"]:checked').value;
       if(next.ancho===sizeOf().ancho&&next.alto===sizeOf().alto){$("formatDialog").close();break;}
@@ -4560,7 +4618,7 @@ function handleEditorInput(event){
     const key=el.dataset.prop;
     let value=el.type==="checkbox"?el.checked:["range","number"].includes(el.type)?Number(el.value):el.value;
     if(typeof value==="number"&&(!Number.isFinite(value)||el.value===""))return;
-    const limits={tamano:[1,1000],minTamano:[1,200],marcoProteccion:[15,42],espaciado:[-30,100],w:[2,8192],h:[2,8192],x:[-32768,32768],y:[-32768,32768]};
+    const limits={tamano:[1,1000],minTamano:[1,200],marcoProteccion:[15,42],interlineado:[.3,4],espaciado:[-30,100],w:[2,8192],h:[2,8192],x:[-32768,32768],y:[-32768,32768]};
     if(limits[key])value=clamp(value,...limits[key]);
     if(p[key]===value)return;
     beginEdit(p.id+":"+key);
@@ -4570,6 +4628,7 @@ function handleEditorInput(event){
       if(keepRatio||p.rol==="fondo"){p[key==="w"?"h":"w"]*=ratio;if(p.tipo==="texto")p.tamano*=ratio;}
     }
     p[key]=value;
+    if(key==="color"&&p.tipo==="texto"&&p.acabadoTexto==="importado")p.acabadoTexto="solido";
     if(p.rol==="fondo"&&["x","y","w","h","rot"].includes(key))p.ajusteFondo="manual";
     if(key==="tamano")ensureTextRoom(p);
     if(key==="texto")p.pendiente=!p.texto.trim()||(p.ejemplo&&p.texto===p.ejemplo);
@@ -4628,12 +4687,8 @@ document.addEventListener("submit",event=>{
 document.addEventListener("focusin",event=>{if(event.target.closest("#panelBody")&&/INPUT|TEXTAREA|SELECT/.test(event.target.tagName))dismissHint();});
 document.addEventListener("focusout",()=>S.group=null);
 $("zoom").addEventListener("change",()=>draw());
-$("projectInput").onchange=event=>run(async()=>{
-  const file=event.target.files[0];if(!file)return;
-  if(file.size>100*1024*1024)throw new Error("El proyecto supera los 100 MB.");
-  const d=normalizeProject(JSON.parse(await file.text()));
-  await activateDocument(d);notify("Proyecto abierto sin cambiar la escala de sus capas.");
-}).finally(()=>event.target.value="");
+$("projectInput").onchange=event=>{const files=[...event.target.files];event.target.value="";run(()=>startImport(files,false));};
+$("templateInput").onchange=event=>{const files=[...event.target.files];event.target.value="";run(()=>startImport(files,true));};
 $("brandInput").onchange=event=>run(async()=>{
   const file=event.target.files[0];if(!file)return;
   const logo=await importAsset(file);await setBrandLogo(logo.src);
@@ -4997,6 +5052,7 @@ function updateAccountUI(){
 }
 async function openAccount(){if(A.ready)await A.ready;if(A.user&&!A.ownAuth)await initializeAuth();updateAccountUI();showDialog('accountDialog');if(!A.member&&!A.request)$(J.view==='register'?'registerName':'loginEmail').focus();}
 function clearCloudMemory(){
+  resetTemplateMemory();
   clearMemberSecrets();K.intent=null;K.request++;$('assetAgencyGrid').innerHTML='';$('assetPickerSearch').value='';$('assetPickerStatus').textContent='';
   C.observer?.disconnect();C.observer=null;C.cache.clear();C.thumbs.clear();C.items=[];C.collections=[];C.members=[];C.published={items:[],brandLogo:''};C.editId=null;C.formDirty=false;
   resources.clear();previewResources.clear();bitmapCache.clear();backgroundFrameCache.clear();textMetrics.clear();fontResources.clear();
@@ -5980,6 +6036,311 @@ function updateAgencyPreview(){
   $("agencyLogoPreview").hidden=!validLogo(candidate);if(validLogo(candidate))$("agencyLogoPreview").src=candidate;
   $("agencyLogoEmpty").hidden=validLogo(candidate);$("useProjectLogoBtn").disabled=!brandCandidate();
 }
+
+/* v21 · Importación local de PXZ y catálogo privado de plantillas. */
+const T={items:[],manager:false,cache:new Map(),observer:null,request:0,queue:[],current:null,intent:false,epoch:0,edit:null};
+const TEMPLATE_BUCKET='divas-templates',TEMPLATE_MAX=23900000;
+function resetTemplateMemory(){
+  T.request++;T.observer?.disconnect();T.observer=null;T.items=[];T.cache.clear();T.queue=[];T.current=null;T.edit=null;
+  $('importName').value='';$('importCollection').replaceChildren();$('importTitle').textContent='Revisa tu diseño';$('importStatus').textContent='';$('templateStatus').textContent='';
+  for(const id of ['templateGrid','importCompare','importReport'])$(id).replaceChildren();
+}
+function crc32(bytes){let crc=0xffffffff;for(const byte of bytes){crc^=byte;for(let j=0;j<8;j++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}return(crc^0xffffffff)>>>0;}
+async function pxzArchive(file){
+  if(file.size>50*1024*1024)throw new Error('El PXZ supera los 50 MB. Divide el proyecto en Pixlr antes de importarlo.');
+  const bytes=new Uint8Array(await file.arrayBuffer()),v=new DataView(bytes.buffer),end=bytes.length;
+  const u16=n=>v.getUint16(n,true),u32=n=>v.getUint32(n,true),fail=()=>{throw new Error('El archivo PXZ está incompleto o utiliza un ZIP no compatible.');};
+  if(end<22)fail();let e=-1;
+  for(let i=end-22;i>=Math.max(0,end-65557);i--)if(u32(i)===0x06054b50&&i+22+u16(i+20)===end){e=i;break;}
+  if(e<0||u16(e+4)||u16(e+6)||u16(e+8)!==u16(e+10))fail();
+  const count=u16(e+10),offset=u32(e+16),length=u32(e+12);if(count>1000||count===65535||offset+length!==e)fail();
+  const entries=new Map(),decoder=new TextDecoder('utf-8',{fatal:true});let at=offset,total=0;
+  for(let i=0;i<count;i++){
+    if(at+46>e||u32(at)!==0x02014b50)fail();
+    const flags=u16(at+8),method=u16(at+10),crc=u32(at+16),packed=u32(at+20),size=u32(at+24),nl=u16(at+28),xl=u16(at+30),cl=u16(at+32),local=u32(at+42);
+    if(at+46+nl+xl+cl>e||flags&1||![0,8].includes(method)||u16(at+34)||packed===0xffffffff||size>32*1024*1024)fail();
+    const name=decoder.decode(bytes.subarray(at+46,at+46+nl));
+    if(!name||name.length>240||name.startsWith('/')||name.includes('\\')||name.includes(':')||name.split('/').some(p=>p==='..'||p==='.')||/[\x00-\x1f]/.test(name)||entries.has(name))fail();
+    if(local+30>offset||u32(local)!==0x04034b50||u16(local+8)!==method||u16(local+6)!==flags)fail();
+    const lnl=u16(local+26),start=local+30+lnl+u16(local+28);
+    if(start+packed>offset||decoder.decode(bytes.subarray(local+30,local+30+lnl))!==name)fail();
+    total+=size;if(total>150*1024*1024)throw new Error('El contenido del PXZ supera los 150 MB descomprimidos.');
+    entries.set(name,{start,packed,size,crc,method});at+=46+nl+xl+cl;
+  }
+  if(at!==e||!entries.has('manifest.json'))throw new Error('Este ZIP no contiene un proyecto Pixlr PXZ (falta manifest.json).');
+  return {has:name=>entries.has(name),async read(name,max=32*1024*1024){
+    const item=entries.get(name);if(!item)throw new Error('Falta un recurso dentro del PXZ: '+String(name).slice(0,90));
+    if(item.size>max)throw new Error('Un recurso del PXZ supera el tamaño permitido.');
+    let data=bytes.subarray(item.start,item.start+item.packed);
+    if(item.method===8){
+      let stream;try{stream=new DecompressionStream('deflate-raw');}catch{throw new Error('Actualiza Chrome, Edge, Firefox o Safari para abrir este PXZ comprimido.');}
+      const reader=new Blob([data]).stream().pipeThrough(stream).getReader(),chunks=[];let n=0;
+      try{while(true){const part=await reader.read();if(part.done)break;n+=part.value.length;if(n>max||n>item.size){await reader.cancel();throw new Error('El archivo comprimido excede su tamaño declarado.');}chunks.push(part.value);}}
+      finally{reader.releaseLock();}
+      data=new Uint8Array(n);let pos=0;for(const chunk of chunks){data.set(chunk,pos);pos+=chunk.length;}
+    }
+    if(data.length!==item.size||crc32(data)!==item.crc)throw new Error('El PXZ contiene datos dañados. Vuelve a descargarlo desde Pixlr.');
+    return data;
+  }};
+}
+function pxzImageInfo(b){
+  const v=new DataView(b.buffer,b.byteOffset,b.byteLength),str=(a,n)=>String.fromCharCode(...b.subarray(a,a+n));let w=0,h=0,type='';
+  if(b.length>=24&&str(1,3)==='PNG'&&b[0]===137){type='image/png';w=v.getUint32(16);h=v.getUint32(20);}
+  else if(b.length>=30&&str(0,4)==='RIFF'&&str(8,4)==='WEBP'){
+    type='image/webp';const chunk=str(12,4);
+    if(chunk==='VP8X'){w=1+b[24]+(b[25]<<8)+(b[26]<<16);h=1+b[27]+(b[28]<<8)+(b[29]<<16);}
+    else if(chunk==='VP8 '&&b[23]===157&&b[24]===1&&b[25]===42){w=v.getUint16(26,true)&16383;h=v.getUint16(28,true)&16383;}
+    else if(chunk==='VP8L'&&b[20]===47){const n=v.getUint32(21,true);w=(n&16383)+1;h=((n>>>14)&16383)+1;}
+  }else if(b.length>4&&b[0]===255&&b[1]===216){
+    type='image/jpeg';let at=2;while(at+4<=b.length){if(b[at++]!==255)break;let m=b[at++];while(m===255&&at<b.length)m=b[at++];if(m===218||m===217)break;const n=v.getUint16(at);if(n<2||at+n>b.length)break;if([192,193,194,195,197,198,199,201,202,203,205,206,207].includes(m)&&n>=7){h=v.getUint16(at+3);w=v.getUint16(at+5);break;}at+=n;}
+  }
+  if(!w||!h||Math.max(w,h)>16384||w*h>48000000)throw new Error('Una imagen interna no es PNG, JPG o WEBP válido, o supera 48 megapíxeles.');
+  return{w,h,type};
+}
+const importedFontMetrics=new Map();
+function importFontMetrics(font){
+  if(importedFontMetrics.has(font))return importedFontMetrics.get(font);
+  const c=document.createElement('canvas').getContext('2d');c.font=font;c.textBaseline='top';
+  const m=c.measureText('SfTgMjkHpqLRnliIFIABCDEFGIJKNOPQSUVXYZabcdeghmnorstuvxyz'),height=Math.ceil(m.actualBoundingBoxAscent+m.actualBoundingBoxDescent)||40;
+  const result={height,padding:Math.round(height*.2),offset:-m.actualBoundingBoxAscent};
+  importedFontMetrics.set(font,result);if(importedFontMetrics.size>100)importedFontMetrics.delete(importedFontMetrics.keys().next().value);return result;
+}
+function importedTextFill(c,p){
+  if(p.acabadoTexto!=='importado'||!p.degradadoTexto)return p.color;
+  const a=(p.degradadoTexto.angulo-90)*Math.PI/180,dx=Math.cos(a),dy=Math.sin(a),r=(Math.abs(dx)*p.w+Math.abs(dy)*p.h)/2;
+  const g=c.createLinearGradient(-dx*r,-dy*r,dx*r,dy*r);for(const s of p.degradadoTexto.stops)g.addColorStop(s.position,s.color);return g;
+}
+function drawImportedText(c,p,font){
+  const metrics=importFontMetrics(font(p.tamano)),pad=metrics.padding,spacing=p.espaciado||0,width=Math.max(1,p.w-2*pad);
+  c.save();c.font=font(p.tamano);c.textBaseline='top';c.textAlign='left';
+  const lines=[];for(const paragraph of String(p.texto).split('\n')){let line='';for(const word of paragraph.split(/\s+/)){const next=line?line+' '+word:word;if(line&&measure(c,next,spacing)+2*spacing>width){lines.push(line);line=word;}else line=next;}lines.push(line);}
+  const step=p.tamano*(p.interlineado||1.18),overflow=pad+metrics.height+(lines.length-1)*step>p.h+.5||lines.some(t=>measure(c,t,spacing)>width+1);
+  textMetrics.set(p.id,{size:p.tamano,overflow});
+  c.fillStyle=p.acabadoTexto==='dorado'?gold(c,p.w,p.h):p.acabadoTexto==='rosa'?(()=>{const g=c.createLinearGradient(0,-p.h/2,0,p.h/2);g.addColorStop(0,p.color2);g.addColorStop(1,p.color);return g;})():importedTextFill(c,p);
+  c.strokeStyle=p.colorContorno;c.lineWidth=Math.max(.01,p.contornoTexto||0);c.lineJoin='miter';c.miterLimit=2;
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i],w=measure(c,line,spacing),x=p.alineacion==='left'?-p.w/2+pad:p.alineacion==='right'?p.w/2-pad-w:-w/2,y=-p.h/2+pad-metrics.offset+i*step;
+    let pos=x;for(const ch of Array.from(line)){if(p.contornoTexto>0)c.strokeText(ch,pos,y);c.fillText(ch,pos,y);pos+=c.measureText(ch).width+spacing;}
+    if(p.subrayado){c.fillRect(x,y+metrics.offset+metrics.height,w,Math.max(1,p.tamano*.04));}
+  }
+  c.restore();
+}
+async function convertPXZ(file,onProgress=()=>{}){
+  const zip=await pxzArchive(file),raw=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(await zip.read('manifest.json',2*1024*1024)));
+  if(raw.type!=='document'||!Array.isArray(raw.stack)||!raw.stack.length||raw.stack.length>200)throw new Error('El PXZ debe contener entre 1 y 200 capas.');
+  const d=normalizeProject({formato:'divas-estudio-2',lienzo:{ancho:raw.width,alto:raw.height},capas:[]});
+  d.proyecto={nombre:file.name.replace(/\.pxz$/i,'').slice(0,80)};d.fondo={tipo:'solido',color1:color(raw.background,'#ffffff'),color2:'#ffffff',angulo:0,transparente:!raw.background};
+  const warnings=new Set(),assets=new Map(),fonts=new Map();let decodedPixels=0,masks=0;
+  async function asset(name){
+    if(assets.has(name))return assets.get(name);const bytes=await zip.read(name,20*1024*1024),info=pxzImageInfo(bytes);decodedPixels+=info.w*info.h;
+    if(decodedPixels>100000000)throw new Error('Este PXZ contiene demasiadas imágenes grandes. Reduce su resolución antes de importarlo.');
+    const src=await readData(new Blob([bytes],{type:info.type}));await loadImage(src);assets.set(name,src);return src;
+  }
+  for(let i=0;i<raw.stack.length;i++){
+    onProgress('Convirtiendo capa '+(i+1)+' de '+raw.stack.length+'…');const r=raw.stack[i],b=r.rect;
+    if(!b||![b.x,b.y,b.w,b.h,b.r??0].every(Number.isFinite)||b.w<2||b.h<2||Math.max(b.w,b.h)>8192||Math.abs(b.x)>24576||Math.abs(b.y)>24576)throw new Error('Una capa tiene dimensiones que Divas no puede conservar.');
+    if(!['image','text'].includes(r.type))throw new Error('La capa «'+String(r.name).slice(0,80)+'» es de tipo '+String(r.type)+'. Conviértela en imagen en Pixlr antes de importar. No se ha descartado ninguna capa.');
+    const p=layer(r.type==='text'?'texto':'imagen',{nombre:String(r.name||'Capa').slice(0,100),x:b.x+b.w/2,y:b.y+b.h/2,w:b.w,h:b.h,rot:b.r||0,opacidad:r.opacity??1,bloqueado:!!r.locked,oculto:r.visible===false});
+    if(r.blendmode&&r.blendmode!=='normal'){
+      if(['screen','multiply','overlay','soft-light','darken','lighten','color-dodge','color-burn','hard-light','difference','exclusion','hue','saturation','color','luminosity'].includes(r.blendmode))p.mezcla=r.blendmode;
+      else warnings.add('Hay un modo de fusión no compatible; se usa el modo normal.');
+    }
+    if(r.filters||r.adjustments||r.effects)warnings.add('Hay ajustes o filtros adicionales de Pixlr: comprueba su aspecto en la comparación.');
+    if(r.type==='image'){
+      p.src=await asset(r.content);
+      if(r.mask){
+        const mask=await loadImage(await asset(r.mask)),im=await loadImage(p.src),size=imageSize(im),ms=imageSize(mask);
+        if(size.w!==ms.w||size.h!==ms.h)throw new Error('La máscara de «'+p.nombre+'» no coincide con su imagen.');
+        const out=document.createElement('canvas');out.width=size.w;out.height=size.h;const c=out.getContext('2d');c.drawImage(im,0,0);c.globalCompositeOperation='destination-in';c.drawImage(mask,0,0);p.src=out.toDataURL('image/png');await loadImage(p.src);out.width=out.height=1;masks++;
+      }
+      p.original=p.src;
+      if(i===0&&Math.abs(b.x)<=d.lienzo.ancho*.05&&Math.abs(b.y)<=d.lienzo.alto*.05&&b.w>=d.lienzo.ancho*.9&&b.h>=d.lienzo.alto*.9){p.rol='fondo';p.ajusteFondo='manual';d.fondo.tipo='imagen';}
+    }else{
+      const f=r.format||{},style=r.style||{},fdata=f.font;
+      if(fdata?.content){
+        if(!fonts.has(fdata.content)){
+          if(fonts.size>=25)throw new Error('El PXZ supera las 25 fuentes.');
+          const bytes=await zip.read(fdata.content,6*1024*1024),data=await readData(new Blob([bytes],{type:'application/octet-stream'})),font={nombre:'DivasFuente_'+uid(),etiqueta:String(fdata.name||'Fuente Pixlr').slice(0,70),datos:data};
+          const info=fontFileInfo(font);font.datos=await readData(new Blob([bytes],{type:info.type||info.mime||'application/octet-stream'}));await loadFont(font);d.fuentes.push(font);fonts.set(fdata.content,font.nombre);
+        }
+        p.fuente=fonts.get(fdata.content);
+      }else if(FONT_LIST.includes(fdata?.name))p.fuente=fdata.name;
+      else warnings.add('Alguna fuente no está incluida en el PXZ; se sustituyó por Arial.');
+      p.texto=String(r.content||'');if(p.texto.length>2000)throw new Error('Un texto supera los 2.000 caracteres admitidos por capa.');
+      if(f.uppercase)p.texto=p.texto.toUpperCase();p.tamano=finite(f.size,40,1,1000);p.peso=f.bold?'700':'400';p.cursiva=!!f.italic;p.subrayado=!!f.underline;p.alineacion=['left','center','right'].includes(f.align)?f.align:'left';p.ajusteTexto='original';
+      const metrics=importFontMetrics(`${p.cursiva?'italic ':''}${p.peso} ${p.tamano}px "${p.fuente}"`),pad=metrics.padding;
+      p.espaciado=Math.ceil(metrics.height/2*finite(f.letterspace,0,-2,4));p.interlineado=(metrics.height+pad+Math.ceil(metrics.height*finite(f.linespace,0,-.8,3)))/p.tamano;
+      if(f.fill?.type==='gradient'&&f.fill.value?.type==='linear'){
+        p.acabadoTexto='importado';p.degradadoTexto={angulo:f.fill.value.direction||0,stops:f.fill.value.stops};p.color=color(f.fill.value.stops?.[0]?.color?.slice(0,7),'#000000');
+      }else if(f.fill?.type==='color'){p.color=color(String(f.fill.value).slice(0,7),'#000000');if(/^#[a-f\d]{8}$/i.test(f.fill.value))p.opacidad*=parseInt(f.fill.value.slice(7),16)/255;}
+      else{p.color='#000000';warnings.add('Hay un relleno de texto no compatible; revisa su color.');}
+      if(style.outline){p.contornoTexto=Math.round(finite(style.outline.size,0,0,5)*pad);p.colorContorno=color(style.outline.color,'#000000');if(style.outline.punch||style.outline.distance)warnings.add('Los contornos huecos o desplazados necesitan revisión.');}
+      if(style.shadow){const sh=style.shadow,angle=(finite(sh.direction,0,-3600,3600)-90)*Math.PI/180,dist=finite(sh.distance,0,0,5)*pad*2;p.glow=finite(sh.opacity,1,0,1)*100;p.glowColor=color(sh.color,'#000000');p.glowRadio=finite(sh.blur,0,0,5)*pad*2;p.sombraX=Math.cos(angle)*dist;p.sombraY=Math.sin(angle)*dist;}
+      if(style.background||f.curve||f.warp||r.mask)warnings.add('Un texto tiene fondo, máscara o deformación no compatible. Revisa esa capa.');
+    }
+    if(r.link&&typeof r.link==='string'){p.grupo='pxz_'+r.link.replace(/[^\w-]/g,'').slice(0,70);p.grupoNombre='Grupo importado';}
+    d.capas.push(p);
+  }
+  if(masks)warnings.add(masks+' máscara'+(masks>1?'s aplicadas':' aplicada')+' a la transparencia de sus imágenes. La máscara no se edita por separado.');
+  warnings.add('Los textos siguen editables. Revisa los saltos de línea, sombras y degradados antes de publicar.');
+  const normalized=normalizeProject(d),thumb=zip.has('thumbnail.webp')?await asset('thumbnail.webp'):'';
+  const bytes=new Blob([JSON.stringify(compactProject(normalized))]).size;
+  if(bytes>=TEMPLATE_MAX)throw new Error('La conversión ocupa más de 23,9 MB. Reduce las imágenes en Pixlr para poder guardarla en tu cuenta.');
+  return {doc:normalized,original:thumb,warnings:[...warnings],bytes,masks,source:file.name};
+}
+function importPreview(doc,max=600){const prior=S.doc;try{S.doc=doc;const s=sizeOf(doc);return outputCanvas('png',Math.min(1,max/s.ancho,500/s.alto)).toDataURL('image/png');}finally{S.doc=prior;}}
+function templateGuard(epoch,admin=false){if(epoch!==A.epoch)throw new Error('La sesión cambió. Abre de nuevo esta sección.');requireMember(admin);}
+async function templateResult(request,timeout=30000){
+  let timer;try{
+    const result=await Promise.race([request,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('La conexión tardó demasiado. Reintenta: tu proyecto sigue intacto.')),timeout);})]);
+    if(result.error){const e=result.error;if(['42P01','PGRST205'].includes(e.code)||/bucket.*not found/i.test(e.message||''))throw new Error('Falta activar las plantillas. El administrador debe ejecutar 08-divas-plantillas.sql una vez en Supabase.');throw cloudError(e);}
+    return result.data;
+  }finally{clearTimeout(timer);}
+}
+async function templateBlob(path,max){
+  const epoch=A.epoch;requireMember();
+  const blob=await templateResult(A.client.storage.from(TEMPLATE_BUCKET).download(path));templateGuard(epoch);
+  if(!blob||blob.size>max)throw new Error('El archivo de la plantilla supera el tamaño permitido.');return blob;
+}
+async function openTemplates(manager=false){
+  if(A.ready)await A.ready;if(!A.member?.active){await openAccount();return;}requireMember();
+  await saveResourceMetadata();T.manager=manager&&isAdmin();T.edit=null;const epoch=A.epoch,request=++T.request;
+  for(const id of ['catalogDialog','resourceManager','accountDialog'])$(id).close();
+  $('templateTitle').textContent=T.manager?'Tus plantillas de agencia':'Elige tu próximo diseño';
+  $('templateAdminActions').hidden=!T.manager;$('templateManage').hidden=!isAdmin()||T.manager;
+  $('templateCurrentButton').disabled=!S.opened;$('templateGrid').replaceChildren();$('templateStatus').textContent='Cargando plantillas…';showDialog('templatesDialog');
+  try{
+    const [items,collections]=await Promise.all([templateResult(A.client.from('divas_templates').select('*').order('updated_at',{ascending:false})),templateResult(A.client.from('divas_collections').select('*').order('sort_order'))]);
+    templateGuard(epoch);if(request!==T.request)return;T.items=items||[];C.collections=collections||[];
+    $('templateCollection').innerHTML=collectionOptions('todas',true);renderTemplates();
+  }catch(error){if(epoch===A.epoch&&request===T.request)$('templateStatus').textContent=error.message;}
+}
+function renderTemplates(){
+  const query=$('templateSearch').value.trim().toLocaleLowerCase(),collection=$('templateCollection').value;
+  const items=T.items.filter(t=>(T.manager||(t.published&&C.collections.some(c=>c.id===t.collection_id&&visibleCollection(c))))&&(!collection||collection==='todas'||collection===t.collection_id)&&t.name.toLocaleLowerCase().includes(query));
+  $('templateStatus').textContent=items.length+(items.length===1?' plantilla':' plantillas')+(T.manager?' · solo lo publicado en una colección activa se muestra a las emisoras.':' · cada una se abre como un proyecto nuevo.');
+  $('templateGrid').innerHTML=items.map(t=>`<button class="resource-card template-card" data-action="templateReview" data-id="${esc(t.id)}"><span class="resource-thumb" data-template-thumb="${esc(t.id)}"><span class="resource-loading">Cargando…</span></span><strong>${esc(t.name)}</strong><small>${t.width} × ${t.height} · ${t.layer_count} capas · ${t.text_count} textos</small>${T.manager?`<small>${t.published?'Publicado':'Borrador'} · ${esc(C.collections.find(c=>c.id===t.collection_id)?.name||'Colección')}</small>`:''}</button>`).join('')||'<div class="catalog-empty"><strong>Aquí empiezan tus diseños</strong><p>'+(T.manager?'Sube un PXZ o publica el proyecto que tienes abierto.':'Las plantillas aparecerán cuando la agencia las publique.')+'</p></div>';
+  T.observer?.disconnect();const epoch=A.epoch,request=T.request;
+  const load=async el=>{
+    const t=T.items.find(t=>t.id===el.dataset.templateThumb);if(!t)return;
+    try{let src=T.cache.get(t.thumb_path);if(!src){const blob=await templateBlob(t.thumb_path,1500000),bytes=new Uint8Array(await blob.arrayBuffer());if(pxzImageInfo(bytes).type!=='image/png')throw new Error('Miniatura inválida.');src=await readData(new Blob([bytes],{type:'image/png'}));templateGuard(epoch);T.cache.set(t.thumb_path,src);if(T.cache.size>60)T.cache.delete(T.cache.keys().next().value);}
+      if(epoch===A.epoch&&request===T.request){const im=document.createElement('img');im.src=src;im.alt='';el.replaceChildren(im);}
+    }catch{if(epoch===A.epoch&&request===T.request)el.textContent='Vista no disponible';}
+  };
+  if(typeof IntersectionObserver==='function'){T.observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){T.observer.unobserve(e.target);load(e.target);}}),{root:$('templateGrid').closest('.dialog-body'),rootMargin:'100px'});$('templateGrid').querySelectorAll('[data-template-thumb]').forEach(el=>T.observer.observe(el));}
+  else $('templateGrid').querySelectorAll('[data-template-thumb]').forEach(load);
+}
+async function startImport(files,intent=false){
+  if(!files.length)return;if(intent)requireMember(true);
+  if(files.length>10)throw new Error('Elige hasta 10 archivos por tanda. Los revisarás uno por uno.');
+  T.queue=files;T.intent=intent;T.epoch=A.epoch;T.edit=null;await nextImport();
+}
+function validateImportedDocument(raw){
+  const d=normalizeProject(raw);if(!d.capas.length||d.capas.length!==raw.capas.length)throw new Error('El proyecto tiene capas no compatibles o está vacío.');
+  const sources=new Set(d.capas.flatMap(p=>p.tipo==='imagen'?[p.src,p.original].filter(Boolean):[]));let pixels=0;
+  for(const src of sources){const bytes=new Uint8Array(fontBuffer(src)),s=pxzImageInfo(bytes);pixels+=s.w*s.h;if(pixels>100000000)throw new Error('Las imágenes superan los 100 megapíxeles en conjunto.');}
+  for(const f of d.fuentes)fontFileInfo(f);return d;
+}
+async function nextImport(){
+  if(T.epoch!==A.epoch){T.queue=[];throw new Error('La sesión cambió. Vuelve a elegir los archivos.');}
+  const file=T.queue.shift();T.current=null;T.edit=null;
+  if(!file){$('importDialog').close();return;}
+  $('templatesDialog').close();$('importTitle').textContent='Preparando '+file.name;$('importCompare').replaceChildren();$('importReport').replaceChildren();$('importSettings').hidden=true;$('importActions').hidden=true;$('importStatus').textContent='Leyendo archivo…';showDialog('importDialog');
+  const epoch=A.epoch;
+  try{
+    let result;if(/\.pxz$/i.test(file.name))result=await convertPXZ(file,message=>{if(epoch===A.epoch)$('importStatus').textContent=message;});
+    else if(/\.json$/i.test(file.name)){
+      if(file.size>=TEMPLATE_MAX)throw new Error('El proyecto supera los 23,9 MB.');
+      const raw=JSON.parse(await file.text()),doc=validateImportedDocument(raw);
+      if(!doc.proyecto?.nombre)doc.proyecto={nombre:file.name.replace(/\.json$/i,'').slice(0,80)};await hydrate(doc);result={doc,original:'',warnings:[],bytes:file.size,source:file.name};
+    }else throw new Error('Elige un archivo .pxz de Pixlr o .json de Divas.');
+    if(epoch!==A.epoch)return;T.current=result;
+    if(isAdmin()&&(!C.collections.length||T.intent)){try{const collections=await templateResult(A.client.from('divas_collections').select('*').order('sort_order'));templateGuard(epoch,true);C.collections=collections||[];}catch(error){if(epoch!==A.epoch)return;result.warnings.push(error.message);}}
+    if(epoch!==A.epoch)return;renderImport();
+  }catch(error){if(epoch===A.epoch){$('importTitle').textContent='No se pudo importar';$('importStatus').textContent=file.name+': '+error.message;$('importActions').hidden=false;$('importOpen').hidden=true;$('importPublish').hidden=true;$('templateSave').hidden=true;$('templateDelete').hidden=true;renderImportQueue();}}
+}
+function renderImportQueue(){const next=$('importNext');next.hidden=!T.queue.length;next.textContent='Siguiente archivo · '+T.queue.length+' pendiente'+(T.queue.length===1?'':'s');}
+function renderImport(){
+  const r=T.current;if(!r)return;const d=r.doc,s=sizeOf(d),admin=isAdmin(),existing=!!T.edit;
+  $('importTitle').textContent=existing?T.edit.name:'Revisa tu diseño';
+  $('importCompare').innerHTML=(r.original?`<figure><img src="${r.original}" alt="Vista original guardada por Pixlr"><figcaption>Original de Pixlr</figcaption></figure>`:'')+`<figure><img src="${importPreview(d)}" alt="Resultado editable en Divas"><figcaption>Editable en Divas</figcaption></figure>`;
+  const texts=d.capas.filter(p=>p.tipo==='texto').length,images=d.capas.filter(p=>p.tipo==='imagen').length,hidden=d.capas.filter(p=>p.oculto).length;
+  $('importReport').innerHTML=`<p class="import-summary">${s.ancho} × ${s.alto} · <strong>${d.capas.length} capas</strong> · ${texts} textos editables · ${images} imágenes${hidden?' · '+hidden+' ocultas':''}</p>${r.warnings.length?`<details class="property"><summary>Revisar textos y efectos · ${r.warnings.length} avisos</summary><ul>${r.warnings.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></details>`:''}<p class="help">Las letras y cifras que ya forman parte de una imagen seguirán siendo imagen. Puedes moverla o reemplazarla.</p>`;
+  $('importName').value=T.edit?.name||d.proyecto?.nombre||'Mi plantilla';$('importCollection').innerHTML=collectionOptions(T.edit?.collection_id||'');$('importPublished').checked=T.edit?T.edit.published:true;
+  $('importSettings').hidden=!admin;$('importActions').hidden=false;$('importOpen').hidden=false;$('importOpen').textContent=existing?'Usar plantilla · crear mi copia':'Abrir como proyecto';
+  $('importOpen').classList.toggle('primary',!admin||existing||!T.intent);$('importPublish').classList.toggle('primary',admin&&!existing&&T.intent);
+  $('importPublish').hidden=!admin||existing;$('importPublish').disabled=false;$('importPublish').textContent='Guardar en plantillas';
+  $('templateSave').hidden=!admin||!existing;$('templateDelete').hidden=!admin||!existing;
+  $('importStatus').textContent=existing?'La plantilla original se conserva. Cada persona edita su propia copia.':admin?'Abrir como proyecto guarda una copia personal. Guardar en plantillas la añade al catálogo de la agencia.':'Abre una copia editable y guárdala en tus proyectos.';
+  renderImportQueue();
+}
+async function openImportCopy(){
+  const r=T.current,epoch=A.epoch;if(!r)return;if(T.edit)requireMember();
+  const d=normalizeProject(copy(r.doc));d.proyecto={nombre:($('importName').value.trim()||d.proyecto?.nombre||'Mi diseño').slice(0,80)};
+  // activateDocument crea un ID nuevo; nunca recibe el ID de la plantilla.
+  await activateDocument(d);if(epoch!==A.epoch)return;$('importDialog').close();T.queue=[];T.current=null;T.edit=null;
+  notify('Copia editable abierta. Usa Guardar avance; la plantilla original se conserva.');
+}
+async function prepareCurrentTemplate(){
+  requireMember(true);if(!S.opened)throw new Error('Abre primero el diseño que quieres publicar.');finishBrush();
+  const epoch=A.epoch,doc=normalizeProject(compactProject(S.doc));doc.proyecto={nombre:projectName()};
+  const bytes=new Blob([JSON.stringify(compactProject(doc))]).size;if(!doc.capas.length)throw new Error('Añade al menos una capa.');if(bytes>=TEMPLATE_MAX)throw new Error('El proyecto supera los 23,9 MB.');
+  await hydrate(doc);templateGuard(epoch,true);T.queue=[];T.intent=true;T.current={doc,original:'',warnings:[],bytes,source:'Proyecto Divas'};T.epoch=epoch;T.edit=null;$('templatesDialog').close();renderImport();showDialog('importDialog');
+}
+async function reviewTemplate(id){
+  requireMember();const item=T.items.find(t=>t.id===id);if(!item)return;const epoch=A.epoch;
+  const latest=await templateResult(A.client.from('divas_templates').select('*').eq('id',id).single());templateGuard(epoch);
+  const blob=await templateBlob(latest.object_path,TEMPLATE_MAX),raw=JSON.parse(await blob.text()),doc=validateImportedDocument(raw);
+  if(!doc.capas.length||doc.capas.length!==raw.capas.length)throw new Error('La plantilla contiene capas no compatibles.');await hydrate(doc);templateGuard(epoch);
+  T.edit=latest;T.current={doc,original:'',warnings:[],bytes:blob.size};T.queue=[];T.epoch=epoch;$('templatesDialog').close();renderImport();showDialog('importDialog');
+}
+function templateFields(){
+  const name=$('importName').value.trim(),collection=$('importCollection').value;if(!name||name.length>80)throw new Error('Escribe un nombre de hasta 80 caracteres.');
+  if(!C.collections.some(c=>c.id===collection))throw new Error('Elige una colección. Puedes crearla en Administrar agencia → Temporadas.');
+  return{name,collection_id:collection,published:$('importPublished').checked};
+}
+async function publishImport(){
+  requireMember(true);const r=T.current,epoch=A.epoch;if(!r||T.edit)return;const fields=templateFields();
+  $('importStatus').textContent='Subiendo la plantilla privada…';
+  try{
+    if(!r.attempt){const id=crypto.randomUUID(),object=crypto.randomUUID(),thumb=crypto.randomUUID(),d=compactProject(r.doc);d.proyecto={nombre:fields.name};
+      const payload=new Blob([JSON.stringify(d)],{type:'application/json'});if(payload.size>=TEMPLATE_MAX)throw new Error('La plantilla supera los 23,9 MB.');
+      r.attempt={id,object_path:id+'/'+object+'.json',thumb_path:id+'/'+thumb+'.png',payload,thumb:await imageBlob(importPreview(r.doc,400),400),fields};
+    }
+    const a=r.attempt;templateGuard(epoch,true);
+    let row=await templateResult(A.client.from('divas_templates').select('*').eq('id',a.id).maybeSingle());templateGuard(epoch,true);
+    if(!row){
+      for(const [key,path,body] of [['uploaded',a.object_path,a.payload],['thumbUploaded',a.thumb_path,a.thumb]]){
+        if(a[key])continue;const response=await templateResult(A.client.storage.from(TEMPLATE_BUCKET).upload(path,body,{contentType:body.type,upsert:false}).then(result=>{
+          // La ruta pertenece a este intento inmutable: un 409 tras timeout significa que el mismo archivo llegó.
+          if(result.error&&(String(result.error.statusCode)==='409'||result.error.error==='Duplicate'||(String(result.error.statusCode)==='400'&&/already exists|duplicate/i.test(result.error.message||''))))return{data:{path},error:null};return result;
+        }),60000);templateGuard(epoch,true);a[key]=!!response;
+      }
+      $('importStatus').textContent='Confirmando la publicación…';
+      const size=sizeOf(r.doc),value={id:a.id,...fields,object_path:a.object_path,thumb_path:a.thumb_path,width:size.ancho,height:size.alto,layer_count:r.doc.capas.length,text_count:r.doc.capas.filter(p=>p.tipo==='texto').length};
+      try{row=await templateResult(A.client.from('divas_templates').insert(value).select('*').single());}
+      catch(error){templateGuard(epoch,true);row=await templateResult(A.client.from('divas_templates').select('*').eq('id',a.id).maybeSingle());if(!row)throw error;}
+    }
+    templateGuard(epoch,true);T.edit=row;T.items=T.items.filter(t=>t.id!==row.id).concat(row);renderImport();
+    const visible=row.published&&C.collections.some(c=>c.id===row.collection_id&&visibleCollection(c));$('importStatus').textContent=visible?'Publicada. Las cuentas aprobadas ya pueden crear su copia.':row.published?'Guardada como publicada. Aparecerá cuando su colección esté activa.':'Borrador guardado. Solo tú puedes verlo hasta publicarlo.';notify('Plantilla guardada en la agencia.');
+  }catch(error){if(epoch===A.epoch)$('importStatus').textContent=error.message+' Puedes reintentar sin crear otra plantilla.';}
+}
+async function saveTemplateDetails(){
+  requireMember(true);const t=T.edit,epoch=A.epoch;if(!t)return;
+  try{const rows=await templateResult(A.client.from('divas_templates').update(templateFields()).eq('id',t.id).eq('version',t.version).select('*'));templateGuard(epoch,true);
+    if(!rows?.length)throw new Error('La plantilla cambió en otra ventana. Cierra esta vista y pulsa Actualizar antes de editarla.');T.edit=rows[0];T.items=T.items.map(t=>t.id===T.edit.id?T.edit:t);$('importStatus').textContent='Cambios guardados. La visibilidad también depende de las fechas de la colección.';
+  }catch(error){if(epoch===A.epoch)$('importStatus').textContent=error.message;}
+}
+async function deleteTemplate(){
+  requireMember(true);const t=T.edit,epoch=A.epoch;if(!t||!confirm('¿Eliminar «'+t.name+'» del catálogo? Los proyectos que ya se crearon a partir de ella se conservan.'))return;
+  const rows=await templateResult(A.client.from('divas_templates').delete().eq('id',t.id).eq('version',t.version).select('id'));templateGuard(epoch,true);
+  if(!rows?.length)throw new Error('La plantilla cambió. Actualiza el catálogo antes de eliminarla.');
+  const result=await A.client.storage.from(TEMPLATE_BUCKET).remove([t.object_path,t.thumb_path]);templateGuard(epoch,true);
+  $('importDialog').close();T.current=null;T.edit=null;await openTemplates(true);notify(result.error?'Plantilla retirada. No se pudo limpiar su archivo privado.':'Plantilla eliminada. Los proyectos personales se conservan.');
+}
+$('templateSearch').addEventListener('input',renderTemplates);$('templateCollection').addEventListener('change',renderTemplates);
+$('importDialog').addEventListener('close',()=>{if(!S.busy){T.queue=[];T.current=null;T.edit=null;}});
+for(const id of ['importDialog','templatesDialog'])$(id).addEventListener('cancel',event=>{if(S.busy)event.preventDefault();});
 
 async function fetchTemplate(){return null; /* Los recursos oficiales se cargan desde el catálogo privado. */}
 
