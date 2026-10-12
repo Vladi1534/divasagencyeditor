@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="21">
+<meta name="divas-version" content="23">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -970,6 +970,41 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
 
 #resourceManager .admin-tabs{margin-bottom:10px}@media(max-width:600px){#resourceManager .admin-tabs{gap:4px}#resourceManager .admin-tabs button{font-size:10.5px;letter-spacing:-.3px;overflow:hidden;text-overflow:ellipsis}}
 
+/* v23 · Looks, edición directa y guía que acompaña cada acción. */
+.edit-segments{display:flex;gap:4px;padding:4px;background:var(--panel2);border-radius:15px;margin:0 0 12px;position:sticky;top:-1px;z-index:2;border:1px solid var(--line)}
+.edit-segments button{flex:1;border:0;background:transparent;min-height:42px;border-radius:11px;padding:8px 5px;font-size:12px;color:var(--muted)}
+.edit-segments button[aria-pressed=true]{background:var(--panel);color:var(--pink);box-shadow:0 2px 8px #3b143912;font-weight:700}
+.look-intro{margin:0 0 12px;display:grid;gap:4px}.look-intro strong{font-size:15px;letter-spacing:-.25px}.look-intro span{font-size:12px;color:var(--muted);line-height:1.4}
+.look-scope{display:flex;align-items:center;gap:9px;font-size:11px;color:var(--muted);margin:0 0 12px}.look-scope select{flex:1;min-width:0;font-size:12px;min-height:42px;padding:7px}
+.look-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.look-card{overflow:hidden;padding:0 0 9px;min-width:0;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:16px;position:relative;transition:box-shadow .15s}
+.look-card:hover{box-shadow:0 4px 14px #85396420}.look-card[aria-pressed=true]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink)}.look-card[aria-pressed=true]:after{content:'✓';position:absolute;top:7px;right:7px;border-radius:50%;background:var(--panel);color:var(--pink);width:24px;height:24px;display:grid;place-items:center;box-shadow:0 1px 5px #0002;font-size:12px}
+.look-art{height:126px;display:flex;align-items:center;justify-content:center;padding:8px;background:linear-gradient(130deg,var(--look-a),var(--look-b));border-bottom:1px solid var(--line)}.look-art canvas{max-width:100%;max-height:100%;width:auto;height:auto;box-shadow:0 3px 12px #24142320;object-fit:contain}
+.look-card strong{display:block;font-size:12px;margin:9px 10px 2px}.look-card small{font-size:10px;color:var(--muted);margin-inline:10px}.look-note{font-size:11px;line-height:1.5;color:var(--muted);margin:13px 0}
+.text-look-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}.text-look-grid button{padding:0;overflow:hidden;border-radius:13px;border:1px solid var(--line);background:var(--panel)}.text-look-grid canvas{width:100%;height:56px;display:block;object-fit:cover}.text-look-grid span{display:block;font-size:11px;padding:8px 3px}.text-look-grid button:hover,.text-look-grid button:focus-visible{border-color:var(--pink)}
+.editable-properties .text-content{min-height:60px;resize:vertical;max-height:140px;font-size:16px;line-height:1.3}.font-size-block{padding:9px 11px 0;border:1px solid var(--line);border-radius:16px;background:var(--panel2);margin:10px 0 12px}.font-size-block .size-control{display:flex;gap:9px;align-items:center}.font-size-block .size-control button{flex:0 0 56px;min-height:46px;font-size:22px;font-weight:700;border-radius:12px}.font-size-block .size-control label{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;min-width:0}.font-size-block .size-control label span{font-size:11px;color:var(--muted)}.font-size-block input[type=number]{width:66px;min-width:0;text-align:center;padding:5px;font-size:18px;background:transparent;border-color:transparent;min-height:44px}
+.font-size-slider{display:flex;gap:10px;align-items:center;min-height:44px}.font-size-slider input{flex:1;min-width:0;min-height:44px}.font-size-slider>span:first-child{font-size:12px}.font-size-slider>span:last-child{font-size:23px}.text-font-color{display:grid;grid-template-columns:minmax(0,1fr) 70px;gap:10px}.text-font-color .field{min-width:0}.text-font-color select{width:100%;min-width:0}.text-font-color input[type=color]{width:100%;min-height:44px}
+.text-swatches{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:0 0 10px}.text-swatches button{position:relative;flex:0 0 34px;min-height:44px;border:0;background:transparent;padding:0}.text-swatches button:not(.effect-link):after{content:'';width:25px;height:25px;border-radius:50%;background:var(--swatch);border:1px solid #86627860;display:block;margin:auto}.text-swatches .effect-link{flex:1 0 100%;text-align:center;color:var(--pink);background:var(--panel2);font-size:12px;border-radius:11px}.glow-controls{padding:12px;background:var(--panel2);border-radius:15px;margin-bottom:12px}.glow-controls input[type=range]{min-height:44px}.quick-copy{font-size:16px;min-height:64px;line-height:1.35}.quick-copy:focus{border-color:var(--pink)}
+#sidePanel .context-guide{padding:8px 10px;background:var(--panel2);border-color:var(--line);border-radius:12px}.context-guide:after{display:none}.context-guide .coach-copy{align-items:center;gap:6px}.context-guide .coach-copy strong{color:var(--pink)}.context-guide .coach-copy p{color:var(--muted);line-height:1.35}.context-guide .coach-next{min-height:44px;max-width:102px;flex:0 0 auto;font-size:10px;line-height:1.25;padding:6px 8px;color:var(--pink);background:var(--panel);border:1px solid var(--line);border-radius:10px}.context-guide .coach-close{flex:0 0 32px;margin:0;min-height:44px}
+.text-look-grid button:focus-visible,.look-card:focus-visible,.edit-segments button:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+#sidePanel #panelTabs.inspector-tabs{display:block;flex:0 0 auto;padding:8px 10px 4px;border:0}
+#sidePanel #panelTabs.inspector-tabs .edit-segments{position:static;margin:0;top:auto}
+#sidePanel #panelTabs.inspector-tabs button{font-size:12px;padding:8px 5px;min-height:44px;color:var(--muted)}
+#sidePanel #panelTabs.inspector-tabs button[aria-pressed=true]{background:var(--panel);color:var(--pink)}
+.context-guide[data-complete=true] .coach-copy p{display:none}
+#toolRail button[data-value=estilo]{color:var(--pink)}.text-library-more{margin:12px 0}.text-library-more>summary{padding:10px 0;font-size:12px;cursor:pointer}
+@media(max-width:760px){
+  #mobileBar{grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;padding-inline:6px}#mobileBar button{min-height:52px;font-size:10px;border-radius:13px}#mobileBar .ui-icon{width:21px;height:21px}
+  #sidePanel{height:min(40dvh,340px);max-height:47%;border-radius:19px 19px 14px 14px}#sidePanel.expanded{height:min(51dvh,440px);max-height:57%}
+  #sidePanel .panel-heading{padding:4px 9px;min-height:43px}.panel-heading #panelTitle{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 180px)}.panel-controls button{min-width:36px;min-height:40px}
+  #panelBody{padding:10px 12px}.edit-segments{margin-bottom:10px}.edit-segments button{min-height:44px;font-size:12px}.look-intro{margin-bottom:10px}.look-intro strong{font-size:14px}.look-intro span{font-size:11px}.look-art{height:108px}.look-grid{gap:9px}.look-card strong{font-size:12px}.look-card small{font-size:10px}
+  #sidePanel .context-guide{margin:4px 9px 0;max-height:84px}.context-guide .coach-copy strong{font-size:11px}.context-guide .coach-copy p{font-size:11px;margin-top:2px}.context-guide .coach-symbol{display:none}
+  #panelBody input:not([type=range]):not([type=color]):not([type=checkbox]),#panelBody textarea,#panelBody select{font-size:16px}#panelBody select#lookScope{font-size:16px}.look-scope{gap:6px}.look-scope select{padding:5px}
+  .text-look-grid canvas{height:54px}.text-swatches button{flex-basis:44px}.font-size-block{margin-top:8px}.text-content{scroll-margin-top:60px}
+}
+@media(max-width:760px) and (max-height:540px){#sidePanel .context-guide{display:none}}
+@media(max-width:760px) and (max-height:480px) and (min-width:560px){#sidePanel,#sidePanel.expanded{height:100%;max-height:100%}#panelTabs{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.look-card{transition:none}}
+
 </style>
 </head>
 <body>
@@ -1026,7 +1061,7 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
         <button data-action="helpGestures">Ayuda Divas</button>
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v22 · Cuentas y solicitudes</p>
+        <p class="help" id="appVersion">Divas Editor · v23 · Looks y edición móvil</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -1145,6 +1180,7 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
     <div class="canvas-tools">
       <span id="canvasPrompt" class="canvas-prompt">Toca lo que quieres cambiar</span>
       <button data-action="fit" title="Mostrar todo el lienzo"><span aria-hidden="true">⤢</span> Ajustar</button>
+      <button id="focusTextButton" data-action="focusText" title="Acercar la vista a este texto" hidden>⌕ Acercar</button>
       <input id="zoom" type="range" min="5" max="200" value="50" aria-label="Zoom">
       <span id="zoomValue">50%</span>
       <button data-action="format" id="formatLabel" title="Cambiar formato">1:1</button>
@@ -1178,6 +1214,7 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
 </main>
 
 <nav id="mobileBar" aria-label="Herramientas de edición" hidden>
+  <button data-action="mobile" data-tab="estilo"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"></use></svg>Looks</button>
   <button data-action="mobile" data-tab="textos"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-text"></use></svg>Texto</button>
   <button data-action="mobile" data-tab="logos"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-image"></use></svg>Imágenes</button>
   <button data-action="mobile" data-tab="figuras"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"></use></svg>Figuras</button>
@@ -1488,10 +1525,131 @@ const PALETTES={
   noche:{nombre:"Noche elegante",a:"#251c31",b:"#56354f",texto:"#fff0f8",acento:"#d8b276"},
   perla:{nombre:"Perla y champán",a:"#fffaf2",b:"#e7d3c0",texto:"#684834",acento:"#bf965d"}
 };
+/* Looks Divas: efectos nativos que también se guardan y exportan. */
+const TEXT_LOOKS={
+  rosa:{nombre:"Rosa satinado",fondo:"#fff0f7",color:"#bd367d",color2:"#ffd2e9",acabadoTexto:"rosa",contornoTexto:.55,colorContorno:"#9e3068"},
+  fucsia:{nombre:"Rosa fuerte",fondo:"#fff0f7",color:"#e51888",acabadoTexto:"solido",contornoTexto:.4,colorContorno:"#af1464"},
+  oro:{nombre:"Dorado",fondo:"#261c29",color:"#d8af64",acabadoTexto:"dorado",contornoTexto:.65,colorContorno:"#79502a"},
+  oroGlow:{nombre:"Oro + glow",fondo:"#261c29",color:"#eac576",acabadoTexto:"dorado",contornoTexto:.65,colorContorno:"#b88a42",glow:95,glowRadio:23,glowColor:"#ffd682"},
+  neon:{nombre:"Neón rosa",fondo:"#210e30",color:"#fff2fc",acabadoTexto:"solido",contornoTexto:1.5,colorContorno:"#ff4baf",glow:100,glowRadio:23,glowColor:"#ff219f"},
+  perla:{nombre:"Perla luminosa",fondo:"#462b4a",color:"#fffaff",color2:"#f9d0e5",acabadoTexto:"rosa",contornoTexto:.4,colorContorno:"#ffcce9",glow:85,glowRadio:15,glowColor:"#ffb5de"},
+  rose:{nombre:"Oro rosa",fondo:"#fff2ee",color:"#9d4d53",acabadoTexto:"importado",contornoTexto:.5,colorContorno:"#87454a",degradadoTexto:{angulo:180,stops:[{position:0,color:"#9d485a"},{position:.3,color:"#f0bba7"},{position:.48,color:"#fff0da"},{position:.53,color:"#bc7380"},{position:.8,color:"#e8b3a2"},{position:1,color:"#934957"}]}},
+  tinta:{nombre:"Sin efecto",fondo:"#fff0f7",color:"#59304d",acabadoTexto:"solido"}
+};
+const DIVAS_LOOKS={
+  pastel:{nombre:"Rosa pastel",nota:"Suave · satinado",a:"#fff1f8",b:"#f0b0d2",texto:"#63304f",acento:"#ab3471",luz:"#fffaff",titulo:"rosa",fuente:"Georgia"},
+  pink:{nombre:"Pink party",nota:"Fucsia · luminoso",a:"#430e36",b:"#c21e7c",texto:"#fff0f8",acento:"#ffb9de",luz:"#ff77c3",titulo:"perla",fuente:"Arial"},
+  golden:{nombre:"Golden hour",nota:"Dorado · glow",a:"#201421",b:"#583347",texto:"#f7e6d9",acento:"#e6c17a",luz:"#e5ba75",titulo:"oroGlow",fuente:"Georgia"},
+  neon:{nombre:"Neon night",nota:"Rosa eléctrico",a:"#130d25",b:"#492354",texto:"#f8eafd",acento:"#f23f9c",luz:"#e735b0",titulo:"neon",fuente:"Arial"},
+  rose:{nombre:"Rose gold",nota:"Rubor · metal",a:"#fff1ed",b:"#e2b3b7",texto:"#643846",acento:"#945568",luz:"#fff5dd",titulo:"rose",fuente:"Georgia"},
+  champagne:{nombre:"Champán",nota:"Crema · oro",a:"#fffaf0",b:"#e8d5af",texto:"#613f30",acento:"#806035",luz:"#ffffff",titulo:"oro",fuente:"Georgia"}
+};
+function putTextLook(p,key){
+  const style=TEXT_LOOKS[key];if(!style||p.tipo!=="texto"||p.bloqueado)return;
+  const scale=clamp(p.tamano/72,.15,8);
+  Object.assign(p,{glow:0,glowRadio:0,glowColor:"#ff93ce",sombraX:0,sombraY:0,contornoTexto:0,colorContorno:"#9d3069",desenfoque:0,acabadoTexto:"solido"});
+  for(const [k,v] of Object.entries(style))if(!["nombre","fondo"].includes(k))p[k]=copy(v);
+  p.glowRadio*=scale;p.contornoTexto*=scale;
+  if(style.acabadoTexto!=="importado")delete p.degradadoTexto;
+}
+function readableOn(hex){
+  const channels=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+  const luminance=channels[0]*.2126+channels[1]*.7152+channels[2]*.0722;
+  return luminance>.22?"#362036":"#fff8fd";
+}
+function makeDivasLook(doc,key,scope="completo"){
+  const look=DIVAS_LOOKS[key];if(!look)return doc;
+  const texts=doc.capas.filter(p=>p.tipo==="texto"&&!p.oculto&&!p.bloqueado);
+  const title=texts.find(p=>semanticRole(p)==="titulo")||[...texts].sort((a,b)=>b.tamano-a.tamano)[0];
+  const native=isMission(doc),image=doc.fondo.tipo==="imagen",lockedBackground=doc.capas.some(p=>p.rol==="fondo"&&p.bloqueado);
+  const all=scope==="completo";
+  for(const p of texts){
+    const role=semanticRole(p);
+    putTextLook(p,p===title?look.titulo:"tinta");
+    if(p!==title){
+      const base=role==="accion"&&doc.capas.find(q=>semanticRole(q)==="base_accion"&&!q.oculto);
+      p.color=base?readableOn(all&&!base.bloqueado?look.acento:base.color):look.texto;
+    }
+    if(native){p.fuente=p===title?look.fuente:"Arial";p.peso=p===title||role==="accion"?"700":"400";}
+  }
+  if(all){
+    if(!image&&!lockedBackground)Object.assign(doc.fondo,{tipo:"degradado",color1:look.a,color2:look.b,angulo:125,transparente:false});
+    for(const p of doc.capas){
+      if(p.bloqueado||p.oculto||p.tipo==="imagen"||!p.decorativa)continue;
+      if(semanticRole(p)==="base_accion")p.color=look.acento;
+      else if(native&&p.tipo==="luz")p.color=look.luz;
+      else if(native&&["aro","doblearo","estrella"].includes(p.tipo)){p.color=look.acento;p.metalico=["golden","champagne","rose"].includes(key);}
+    }
+    if(native&&!image&&!lockedBackground){
+      doc.capas=doc.capas.filter(p=>!p.rol?.startsWith("look_")||p.bloqueado);
+      const W=doc.lienzo.ancho,H=doc.lienzo.alto,u=Math.min(W,H);
+      const ornaments=[[.09,.23,.032],[.9,.18,.042],[.94,.63,.025],[.07,.83,.035]].map(([x,y,s],i)=>layer("estrella",{id:"divas_look_"+i,rol:"look_"+i,nombre:"Destello del look "+(i+1),decorativa:true,x:W*x,y:H*y,w:u*s,h:u*s,color:look.acento,metalico:["golden","champagne"].includes(key),glow:key==="neon"?80:0,glowColor:look.luz,glowRadio:u*.012,opacidad:.65}));
+      const ids=new Set(doc.capas.map(p=>p.id));
+      doc.capas.unshift(...ornaments.filter(p=>!ids.has(p.id)).slice(0,Math.max(0,200-doc.capas.length)));
+    }
+  }
+  doc.asistente.look=key;return doc;
+}
+function applyDivasLook(key){
+  if(!DIVAS_LOOKS[key])return;
+  if(!S.doc.capas.some(p=>p.tipo==="texto"&&!p.oculto&&!p.bloqueado)){notify("Desbloquea un texto o añade uno para aplicar el look.");return;}
+  commit(()=>{makeDivasLook(S.doc,key,S.lookScope||"completo");textMetrics.clear();});
+  guideDid("look");
+}
+function lookDataHTML(){
+  const texts=visibleTexts().filter(p=>!p.bloqueado);
+  return `<div class="look-intro"><strong>Tus palabras, tu flyer</strong><span>Escribe y mira el resultado arriba.</span></div>${texts.map(p=>field(p.campo||p.nombre,`<textarea class="quick-copy" data-text-id="${esc(p.id)}" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)).join("")||'<p class="help">Toca un texto y desbloquéalo para editarlo.</p>'}<button class="primary wide" data-action="focusCanvas">✓ Ver mi flyer</button><button class="wide" data-action="catalog">Elegir logos e imágenes de la agencia</button>`;
+}
+function divasLooksHTML(){
+  const all=S.lookSection!=="datos";
+  return `<div class="edit-segments" aria-label="Crear con un look"><button data-action="lookSection" data-value="looks" aria-pressed="${all}">✦ Looks</button><button data-action="lookSection" data-value="datos" aria-pressed="${!all}">✎ Mis textos</button></div>${!all?lookDataHTML():`<div class="look-intro"><strong>Tu estilo, en un toque</strong><span>Elige un look y pruébalo en tu diseño.</span></div><label class="look-scope">Aplicar a<select id="lookScope"><option value="completo" ${S.lookScope!=="textos"?"selected":""}>Textos, fondo y adornos</option><option value="textos" ${S.lookScope==="textos"?"selected":""}>Solo los textos</option></select></label><div class="look-grid">${Object.entries(DIVAS_LOOKS).map(([id,l])=>`<button class="look-card" data-action="divasLook" data-value="${id}" aria-pressed="${S.doc.asistente.look===id}" style="--look-a:${l.a};--look-b:${l.b}"><span class="look-art"><canvas data-look-preview="${id}" aria-hidden="true"></canvas></span><strong>${esc(l.nombre)}</strong><small>${esc(l.nota)}</small></button>`).join("")}</div><p class="look-note">Fotos, logos y capas bloqueadas se conservan. Puedes deshacer cualquier look con ↶.</p><button class="primary wide" data-action="lookSection" data-value="datos">Escribir mis textos →</button>`}`;
+}
+function paintLookPreviews(){
+  document.querySelectorAll("[data-look-preview]").forEach(el=>{
+    const d=makeDivasLook(copy(S.doc),el.dataset.lookPreview,S.lookScope||"completo"),f=Math.min(260/d.lienzo.ancho,220/d.lienzo.alto);
+    el.width=Math.round(d.lienzo.ancho*f);el.height=Math.round(d.lienzo.alto*f);
+    render(el.getContext("2d"),{factor:f,document:d});
+  });
+  document.querySelectorAll("[data-text-style]").forEach(el=>{
+    const key=el.dataset.textStyle,style=TEXT_LOOKS[key],c=el.getContext("2d");
+    const p=layer("texto",{texto:"Divas",tamano:46,fuente:selectedLayer()?.fuente||"Georgia",peso:"700",x:120,y:45,w:218,h:80});
+    putTextLook(p,key);c.fillStyle=style.fondo;c.fillRect(0,0,240,90);drawLayer(c,p,1,false);
+  });
+}
+function textEssentialsHTML(p){
+  const effects=S.textSection==="efectos";
+  const size=Math.round(textMetrics.get(p.id)?.size||p.tamano);
+  return `<div class="edit-segments" aria-label="Editar texto"><button data-action="textSection" data-value="texto" aria-pressed="${!effects}">Aa Texto y tamaño</button><button data-action="textSection" data-value="efectos" aria-pressed="${effects}">✦ Efectos</button></div>${effects?`<div class="look-intro"><strong>Dale ese toque Divas</strong><span>Toca un acabado. Se aplica al instante.</span></div><div class="text-look-grid">${Object.entries(TEXT_LOOKS).map(([id,l])=>`<button data-action="textLook" data-value="${id}"><canvas width="240" height="90" data-text-style="${id}" aria-hidden="true"></canvas><span>${esc(l.nombre)}</span></button>`).join("")}</div><div class="glow-controls">${rangeProp("Intensidad del glow","glow",0,100,1)}${inputProp("Color del glow","glowColor","color")}</div><button class="wide" data-action="textSection" data-value="texto">Aa Cambiar tamaño y letra</button>`:`${field("¿Qué quieres decir?",`<textarea class="text-content" data-prop="texto" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)}<div class="font-size-block"><div class="size-control"><button data-action="fontStep" data-value="-1" aria-label="Reducir tamaño de letra">A−</button><label><span>Tamaño</span><input data-prop="tamano" aria-label="Tamaño de letra" type="number" inputmode="numeric" min="1" max="1000" step="1" value="${size}"></label><button data-action="fontStep" data-value="1" aria-label="Aumentar tamaño de letra">A+</button></div><label class="font-size-slider"><span>A</span><input data-prop="tamano" aria-label="Desliza para cambiar tamaño de letra" type="range" min="6" max="${Math.min(1000,Math.max(180,size*2))}" step="1" value="${size}"><span>A</span></label></div><div class="text-font-color">${selectProp("Tipo de letra","fuente",fontOptions())}${inputProp("Color","color","color")}</div><div class="text-swatches" aria-label="Colores Divas">${["#f4bdd8","#e51888","#ffe8a6","#ffffff","#59304d","#15121c"].map(c=>`<button data-action="textColor" data-value="${c}" style="--swatch:${c}" aria-label="Color ${c}" title="${c}"></button>`).join("")}<button class="effect-link" data-action="textSection" data-value="efectos">✦ Dorado y glow</button></div><div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>`}<p id="textFeedback" class="help" aria-live="polite"></p>`;
+}
+function resizeTextTo(p,next){
+  // Escala la caja junto a la letra: el autoajuste ya no cancela A+.
+  const current=textMetrics.get(p.id)?.size||p.tamano,ratio=clamp(next,1,1000)/Math.max(1,current);
+  p.w=clamp(p.w*ratio,2,8192);p.h=clamp(p.h*ratio,2,8192);
+  p.tamano=clamp(next,1,1000);p.espaciado=clamp((p.espaciado||0)*ratio,-30,100);
+  p.minTamano=clamp(Math.min(p.tamano,p.minTamano*ratio),1,200);
+  p.glowRadio=clamp((p.glowRadio||0)*ratio,0,500);p.contornoTexto=clamp((p.contornoTexto||0)*ratio,0,30);
+  p.sombraX=clamp((p.sombraX||0)*ratio,-500,500);p.sombraY=clamp((p.sombraY||0)*ratio,-500,500);
+  // Varios eventos input pueden llegar antes del siguiente frame.
+  textMetrics.delete(p.id);
+}
+function guideDid(what){
+  const info={look:["estilo","Look aplicado","Escribe tus datos para terminar de hacerlo tuyo.","lookData","Mis textos →"],texto:["texto","Texto actualizado","¿Lo quieres más grande? Prueba A+.","tamano","Ver tamaño →"],tamano:["tamano","Tamaño actualizado","Ahora puedes darle dorado o un brillo rosa.","decorar","Ver efectos →"],efecto:["decorar","Tu efecto está listo","Mira el flyer completo cuando quieras.","clean","Ver flyer ↗"]}[what];
+  if(!info||(!H.enabled&&!H.active)||S.panelHidden)return;
+  const [key,title,detail,next,label]=info;
+  if(H.seen.includes("done:"+key))return;
+  if(H.active!==key&&!H.active&&!H.seen.includes(key))return;
+  if(H.active!==key&&H.active&&H.active.startsWith("done:"))return;
+  H.active="done:"+key;H.seen.push(H.active);persistHelpPrefs();clearHelpHighlight();
+  $("contextGuide").dataset.complete="true";
+  $("contextGuide").innerHTML=`<div class="coach-copy"><div><strong>✓ ${esc(title)}</strong><p>${esc(detail)}</p></div><button class="coach-next" data-action="guideNext" data-value="${next}">${esc(label)}</button><button class="coach-close" data-action="dismissHint" aria-label="Cerrar esta pista">×</button></div>`;
+  $("contextGuide").hidden=false;
+}
+
 const previewResources=new Map();
 const resources=new Map(),fontResources=new Map(),bitmapCache=new Map(),textMetrics=new Map();
 const S={
   doc:null,template:null,recovery:null,opened:false,view:"projects",
+  textSection:"texto",lookSection:"looks",lookScope:"completo",
   mode:"avanzado",tab:"textos",panelHidden:false,selected:null,multiIds:[],multiAnchor:null,isolation:null,selecting:false,alignTo:"selection",tool:"mover",backgroundFree:null,frameView:null,backgroundLockHint:null,
   drag:null,work:null,pointer:null,snapX:false,snapY:false,
   fit:true,zoom:.5,queued:false,undo:[],redo:[],group:null,
@@ -1914,6 +2072,7 @@ function normalizeProject(raw){
       ?raw.asistente.objetivo:"libre",
     estilo:Object.hasOwn(PALETTES,raw.asistente?.estilo)?raw.asistente.estilo:"rosa"
   };
+  if(Object.hasOwn(DIVAS_LOOKS,raw.asistente?.look))d.asistente.look=raw.asistente.look;
   const tutorial=raw.asistente?.tutorial;
   if(tutorial&&tutorial.version===1&&["activo","pausado","completo"].includes(tutorial.estado)){
     d.asistente.tutorial={version:1,estado:tutorial.estado,
@@ -2490,7 +2649,7 @@ function drawText(c,p,track=true){
   let size=Math.max(1,p.tamano),spacing=p.espaciado||0,lines,overflow=false;
   const font=n=>`${p.cursiva?"italic ":""}${p.peso||"400"} ${n}px "${p.fuente||"Arial"}"`;
   const lineFactor=p.interlineado||1.18;
-  if(p.ajusteTexto==="original"){drawImportedText(c,p,font);return;}
+  if(p.ajusteTexto==="original"){drawImportedText(c,p,font,track);return;}
 
   if(p.ajusteTexto==="envolver"){
     const minimum=Math.min(size,p.minTamano||18);
@@ -2798,8 +2957,8 @@ function drawSelection(c){
     c.strokeStyle="#82456e";c.lineWidth=1/S.zoom;c.stroke();c.restore();
   }
 }
-function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQuality=false}={}){
-  const {ancho:W,alto:H}=sizeOf();
+function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQuality=false,document:doc=S.doc}={}){
+  const {ancho:W,alto:H}=doc.lienzo;
   c.save();c.setTransform(1,0,0,1,0,0);
   c.globalAlpha=1;c.globalCompositeOperation="source-over";c.filter="none";
   c.shadowColor="transparent";c.shadowBlur=0;c.shadowOffsetX=c.shadowOffsetY=0;
@@ -2807,14 +2966,14 @@ function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQ
   c.setTransform(factor,0,0,factor,-offsetX*factor,-offsetY*factor);
   c.imageSmoothingEnabled=true;c.imageSmoothingQuality="high";
   if(track)textMetrics.clear();
-  if(!S.doc.fondo.transparente){
-    const a=S.doc.fondo.angulo*Math.PI/180,dx=Math.cos(a),dy=Math.sin(a);
+  if(!doc.fondo.transparente){
+    const a=doc.fondo.angulo*Math.PI/180,dx=Math.cos(a),dy=Math.sin(a);
     const r=(Math.abs(dx)*W+Math.abs(dy)*H)/2;
     const g=c.createLinearGradient(W/2-dx*r,H/2-dy*r,W/2+dx*r,H/2+dy*r);
-    g.addColorStop(0,S.doc.fondo.color1);g.addColorStop(1,S.doc.fondo.tipo==="solido"?S.doc.fondo.color1:S.doc.fondo.color2);
+    g.addColorStop(0,doc.fondo.color1);g.addColorStop(1,doc.fondo.tipo==="solido"?doc.fondo.color1:doc.fondo.color2);
     c.fillStyle=g;c.fillRect(0,0,W,H);
   }
-  S.doc.capas.forEach(p=>{if(p.rol!=="fondo"||S.doc.fondo.tipo==="imagen")drawLayer(c,p,factor,track,fullQuality);});
+  doc.capas.forEach(p=>{if(p.rol!=="fondo"||doc.fondo.tipo==="imagen")drawLayer(c,p,factor,track,fullQuality);});
   if(controls){drawSelection(c);}
   c.restore();
 }
@@ -2941,6 +3100,7 @@ function setTab(tab,open=true){
   S.tab=tab;renderPanel();
 }
 function selectLayer(id,{open=false,single=false}={}){
+  if(S.selected!==id)S.textSection="texto";
   S.isolation=single?id:null;S.multiIds=[];S.multiAnchor=null;
   const changed=S.selected!==id,previous=selectedLayer();
   if(id!==S.backgroundFree)S.backgroundFree=null;
@@ -2989,16 +3149,8 @@ function simpleLogosHTML(){
     </div>`).join("")+
     `<button class="wide" data-action="addImage">Añadir otra imagen</button>`;
 }
-function simpleStyleHTML(){
-  return `<h3 class="section-title">Estilo general</h3>`+
-    Object.entries(PALETTES).map(([id,p])=>`<button class="palette" data-action="palette" data-value="${id}">
-      <span class="palette-swatch" style="background:linear-gradient(135deg,${p.a},${p.b})"></span>
-      ${esc(p.nombre)}
-    </button>`).join("")+
-    `<p class="help">Cambia la paleta del diseño, sin recolorear los logos originales.</p>
-    <button class="wide" data-action="background">Ajustar el fondo</button>
-    <button class="wide" data-action="tab" data-value="crear">Más herramientas</button>`;
-}
+function simpleStyleHTML(){return divasLooksHTML();}
+
 const SHAPES=[
   ["estrella","Destello"],["estrella5","Estrella"],["elipse","Círculo"],["rectangulo","Rectángulo"],
   ["corazon","Corazón"],["luz","Luz suave"],["particulas","Brillos"],["aro","Aro"],
@@ -3173,12 +3325,7 @@ function propertiesHTML(){
   const p=selectedLayer();if(!p)return simpleTextsHTML();
   let essential="",advanced="";
   if(p.tipo==="texto"){
-    essential=`${field("Contenido",`<textarea data-prop="texto" maxlength="2000">${esc(p.texto)}</textarea>`)}
-      <div class="text-size-color">${field("Tamaño de letra",`<div class="size-control"><button data-action="fontStep" data-value="-1" aria-label="Reducir tamaño de letra">A−</button><input data-prop="tamano" aria-label="Tamaño de letra" type="number" min="1" max="1000" step="1" value="${Math.round(p.tamano)}"><button data-action="fontStep" data-value="1" aria-label="Aumentar tamaño de letra">A+</button></div>`)}
-      ${inputProp("Color","color","color")}</div>
-      ${selectProp("Fuente","fuente",fontOptions())}
-      <div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>
-      <p id="textFeedback" class="help" aria-live="polite"></p>`;
+    essential=textEssentialsHTML(p);
     advanced=`<div class="grid2">${inputProp("Espaciado","espaciado")}${selectProp("Peso","peso",[["400","Normal"],["600","Seminegrita"],["700","Negrita"]])}</div>
       ${selectProp("Ajuste de líneas","ajusteTexto",[["ajustar","Ajustar líneas existentes"],["envolver","Distribuir palabras en líneas"],["original","Conservar disposición importada"]])}
       ${inputProp("Tamaño mínimo automático","minTamano","number",'min="1" max="200"')}${inputProp("Interlineado","interlineado","number",'min="0.3" max="4" step="0.05"')}${checkProp("Cursiva","cursiva")}${checkProp("Subrayado","subrayado")}
@@ -3204,7 +3351,7 @@ function propertiesHTML(){
       ${p.tipo==="particulas"?rangeProp("Cantidad","cantidad",1,350)+inputProp("Variación","semilla")+
         selectProp("Distribución","distribucion",[["anillo","Contorno"],["libre","Libre"]]):""}`;
   }
-  if(p.tipo==="texto")essential+=resourceSuggestionsHTML("textos",p.id);
+  if(p.tipo==="texto")advanced+=`<details class="text-library-more"><summary>Estilos de la agencia</summary>${resourceSuggestionsHTML("textos",p.id)}</details>`;
   return `${p.grupo?`<button class="wide" data-action="backToGroup">${uiIcon("layers")} Volver al grupo</button>`:""}
     ${p.bloqueado?`<div class="selection-card"><strong>🔒 Capa bloqueada</strong><small>Desbloquéala para moverla o cambiar sus propiedades.</small><button data-action="lock" data-id="${esc(p.id)}">Desbloquear capa</button></div>`:""}
     ${p.oculto?`<p class="help">Esta capa está oculta. <button data-action="visible" data-id="${esc(p.id)}">Mostrar capa</button></p>`:""}
@@ -3222,21 +3369,24 @@ function propertiesHTML(){
 let keepRatio=true;
 function tabForLayer(p){if(p?.rol==="fondo")return "fondo";return p?.tipo==="texto"?"textos":p?.tipo==="imagen"?"logos":"figuras";}
 function renderPanel(){
-  const tabs=[["textos","Texto"],["logos","Imágenes"],["figuras","Figuras"],["fondo","Fondo"],["capas","Capas"]];
+  const tabs=[["estilo","Looks"],["textos","Texto"],["logos","Imágenes"],["figuras","Figuras"],["fondo","Fondo"],["capas","Capas"]];
   const html={textos:simpleTextsHTML,logos:simpleLogosHTML,figuras:shapesHTML,fondo:backgroundHTML,
     capas:layersHTML,ajustes:propertiesHTML,crear:createHTML,estilo:simpleStyleHTML};
   if(!html[S.tab])S.tab="textos";
-  const p=selectedLayer(),active=S.tab==="ajustes"?(selectedLayers().length>1?"capas":tabForLayer(p)):S.tab==="crear"?"figuras":S.tab==="estilo"?"fondo":S.tab;
-  const icons={textos:"text",logos:"image",figuras:"spark",fondo:"background",capas:"layers"};
+  const p=selectedLayer(),active=S.tab==="ajustes"?(selectedLayers().length>1?"capas":tabForLayer(p)):S.tab==="crear"?"figuras":S.tab;
+  const icons={estilo:"spark",textos:"text",logos:"image",figuras:"spark",fondo:"background",capas:"layers"};
   $("toolRail").innerHTML=tabs.map(([id,name])=>`<button data-action="tab" data-value="${id}" title="${name}" aria-pressed="${active===id&&!S.panelHidden}" class="${active===id&&!S.panelHidden?"active":""}">${uiIcon(icons[id])}<span>${name}</span></button>`).join("");
   $("panelTabs").innerHTML=tabs.map(([id,name])=>`<button data-action="tab" data-value="${id}" class="${active===id?"active":""}" aria-pressed="${active===id}">${name}</button>`).join("");
   document.querySelectorAll('#mobileBar [data-tab]').forEach(el=>{el.classList.toggle("active",el.dataset.tab===active&&$("sidePanel").classList.contains("mobile-open"));el.setAttribute("aria-pressed",String(el.dataset.tab===active));});
   $("panelTitle").textContent=selectedLayers().length>1&&S.tab==="ajustes"?selectionLabel():S.tab==="ajustes"&&p?(p.bloqueado?"🔒 ":"")+p.nombre:tabs.find(([id])=>id===active)?.[1]||"Tu diseño";
   $("panelSubtitle").textContent=S.tab==="ajustes"?"Mantén pulsada la pieza para ver sus acciones":"Toca una opción y mira el resultado.";
-  const panelKey=selectedLayers().map(p=>p.id).join(":")+":"+(wholeGroup()||"")+":"+(S.isolation||"")+":"+S.selecting;
+  const panelKey=S.textSection+":"+S.lookSection+":"+selectedLayers().map(p=>p.id).join(":")+":"+(wholeGroup()||"")+":"+(S.isolation||"")+":"+S.selecting;
   const samePanel=S.lastPanelTab===S.tab&&S.lastPanelId===S.selected&&S.lastPanelKey===panelKey;
   const scroll=$("panelBody").scrollTop,openDetails=samePanel?[...$("panelBody").querySelectorAll("details")].map((el,i)=>el.open?i:-1).filter(i=>i>=0):[];
   $("panelBody").innerHTML=html[S.tab]();
+  const subnav=$("panelBody").querySelector(".edit-segments");
+  $("panelTabs").classList.toggle("inspector-tabs",!!subnav);
+  if(subnav)$("panelTabs").replaceChildren(subnav);
   const details=$("panelBody").querySelectorAll("details");for(const i of openDetails)if(details[i])details[i].open=true;
   $("panelBody").scrollTop=samePanel?scroll:0;
   S.lastPanelTab=S.tab;S.lastPanelId=S.selected;S.lastPanelKey=panelKey;
@@ -3244,14 +3394,17 @@ function renderPanel(){
     const p=layer(el.dataset.mini,{w:100,h:85,color:"#d7b57a",color2:"#fff1d6",cantidad:40,metalico:true});
     const c=el.getContext("2d");c.translate(70,35);c.scale(.65,.65);drawShape(c,p);
   });
-  updateSelectionUI();updateTextFeedback();updateCanvasPrompt();
+  paintLookPreviews();updateSelectionUI();updateTextFeedback();updateCanvasPrompt();
   if(A.member)loadResourceThumbs($("panelBody"));
   if(H.active)requestAnimationFrame(()=>{if(H.active)highlightHelp(H.active);});
 }
 function updateTextFeedback(){
   const el=$("textFeedback"),p=selectedLayer(),m=p&&textMetrics.get(p.id);
   if(el&&m)el.textContent=m.overflow?"El texto supera su caja. Amplíala en Más ajustes o reduce el tamaño.":
-    m.size<p.tamano-.8?`El ajuste automático lo muestra a ${Math.round(m.size)} px. A+ amplía también la caja de texto.`:"";
+    m.size<p.tamano-.8?`Tamaño visible: ${Math.round(m.size)}. A+ amplía la letra y su caja.`:"";
+  if(p?.tipo==="texto"&&m)document.querySelectorAll('[data-prop="tamano"]').forEach(input=>{
+    if(document.activeElement!==input)input.value=Math.round(m.size);
+  });
 }
 function ensureTextRoom(p){
   ctx.save();ctx.font=`${p.peso} ${p.tamano}px "${p.fuente}"`;
@@ -3280,13 +3433,13 @@ function positionSelectionToolbar(){
 function updateSelectionUI(){
   const list=selectedLayers(),p=selectedLayer(),strip=$("selectionStrip"),multi=list.length>1,locked=list.some(p=>p.bloqueado),label=multi?selectionLabel():p?.nombre;
   const mode=$("selectionModeBar");mode.hidden=!S.selecting;mode.innerHTML=S.selecting?`<span>Selecciona · ${list.length}</span><button data-action="multiSelect">Listo</button>`:"";
-  strip.hidden=!p||S.selecting;$("selectionMenuBtn").hidden=!p;
+  strip.hidden=!p||S.selecting;$("selectionMenuBtn").hidden=!p;$("focusTextButton").hidden=p?.tipo!=="texto"||multi;
   if(!p)return;
   strip.innerHTML=`<button class="selection-name" data-action="${multi?'selectionProperties':'select'}" data-id="${esc(p.id)}" title="Editar ${esc(label)}">${esc(label)}</button>
-    <button data-action="duplicate" aria-label="${multi?'Duplicar selección':'Duplicar capa'}" title="Duplicar">${uiIcon("copy")}</button>
+    ${p.tipo==="texto"&&!multi?`<button data-action="fontStep" data-value="-1" aria-label="Reducir letra desde el lienzo" title="Letra más pequeña" ${locked?'disabled':''}>A−</button><button data-action="fontStep" data-value="1" aria-label="Aumentar letra desde el lienzo" title="Letra más grande" ${locked?'disabled':''}>A+</button>`:`<button data-action="duplicate" aria-label="${multi?'Duplicar selección':'Duplicar capa'}" title="Duplicar">${uiIcon("copy")}</button>`}
     <button data-action="lock" data-scope="selection" data-id="${esc(p.id)}" aria-label="${locked?'Desbloquear':'Bloquear'} ${multi?'selección':'capa seleccionada'}" title="${locked?'Desbloquear':'Bloquear'}">${uiIcon(locked?"lock":"unlock")}</button>
     <button class="selection-delete" data-action="delete" aria-label="${multi?'Eliminar selección':'Eliminar capa'}" title="${locked?'Desbloquea para eliminar':'Eliminar · puedes deshacer'}" ${locked?'disabled':''}>${uiIcon("trash")}</button>
-    <button data-action="layerMenu" aria-label="Más acciones de la ${multi?'selección':'capa'}" title="Agrupar, ocultar y cambiar orden">•••</button>
+    ${p.tipo==="texto"&&!multi?'':`<button data-action="layerMenu" aria-label="Más acciones de la ${multi?'selección':'capa'}" title="Agrupar, ocultar y cambiar orden">•••</button>`}
     <button data-action="deselect" aria-label="Quitar selección" title="Desmarcar">×</button>`;
   requestAnimationFrame(positionSelectionToolbar);
 }
@@ -3349,12 +3502,13 @@ function readHelpPrefs(){
 }
 const H={...readHelpPrefs(),active:null,target:null,answer:null,query:"",reserve:0};
 const HELP_TOPICS={
+  estilo:{label:"Un look y ya tiene tu estilo",icon:"✦",text:"Toca una tarjeta: verás el cambio en tu flyer.",target:'[data-action="divasLook"]',context:"estilo",related:["texto","decorar"]},
   texto:{label:"Tu texto, a tu estilo",icon:"T",text:"Escribe aquí. Tu diseño cambia al instante.",target:'[data-prop="texto"]',context:"texto",related:["tamano","fuente","decorar"]},
   textos:{label:"Elige qué quieres decir",icon:"T",text:"Toca un texto de la lista o añade uno nuevo.",target:'[data-action="addText"]',context:"textos",related:["texto","tamano"]},
-  tamano:{label:"Un poco más grande",icon:"A+",text:"Prueba A− y A+, o escribe el tamaño exacto.",target:'[data-prop="tamano"]',context:"texto",related:["texto","fuente"]},
+  tamano:{label:"Un poco más grande",icon:"A+",text:"Toca A+ o A−. También puedes deslizar la barra.",target:'[data-prop="tamano"]',context:"texto",related:["texto","fuente"]},
   fuente:{label:"Encuentra tu letra",icon:"Aa",text:"Elige una fuente y mira cómo queda en tu diseño.",target:'[data-prop="fuente"]',context:"texto",related:["tamano","color"]},
   color:{label:"Ponle tu color",icon:"◉",text:"Toca la muestra de color para cambiar este texto.",target:'[data-prop="color"]',context:"texto",related:["fuente","decorar"]},
-  decorar:{label:"Ese toque especial",icon:"✦",text:"Prueba un acabado, un contorno o un resplandor.",target:'[data-prop="acabadoTexto"]',context:"texto",advanced:true,related:["figuras","color"]},
+  decorar:{label:"Ese toque especial",icon:"✦",text:"Toca Dorado, Neón rosa o cualquier acabado. Mira cómo cambia tu texto.",target:'[data-action="textLook"]',context:"texto",related:["figuras","color"]},
   fondo:{label:"Hazlo tuyo desde el fondo",icon:"◐",text:"Elige color, degradado o sube tu propia imagen.",target:'[data-action="bgType"]',context:"fondo",related:["fondoimagen"]},
   fondoimagen:{label:"Tu foto como fondo",icon:"▧",text:"Pulsa Ajusta tu fondo aquí para moverlo libremente. Elige el tamaño del lienzo desde Fondo.",target:'[data-action="uploadBackground"]',context:"fondo",related:["fondo"]},
   imagenes:{label:"Tus imágenes, aquí",icon:"▧",text:"Añade una foto o cambia un logo de la lista.",target:'[data-action="addImage"]',context:"logos",related:["imagen","fondoimagen"]},
@@ -3379,7 +3533,7 @@ const HELP_TOPICS={
   editable:{label:"Llévalo a otro dispositivo",icon:"⇩",text:"Descarga el proyecto editable. Después impórtalo para seguir diseñando.",target:'[data-action="save"]',context:"editable",related:[]},
   marca:{label:"El logo oficial de tu agencia",icon:"✧",text:"Carga tu logo en Identidad de agencia. Aparecerá también en la cabecera.",context:"marca",related:[]}
 };
-const HELP_LABELS={recursos:"Recursos de la agencia",tabla:"Editar tabla",crearTabla:"Añadir tabla",texto:"Escribir",textos:"Textos",tamano:"Tamaño",fuente:"Fuente",color:"Color",decorar:"Decorar",fondo:"Fondo",fondoimagen:"Mi foto de fondo",imagenes:"Añadir imagen",imagen:"Reemplazar imagen",medidas:"Medidas",recorte:"Quitar fondo",figuras:"Figuras",pieza:"Editar figura",capas:"Capas",bloquear:"Bloquear",ocultar:"Ocultar",orden:"Orden",duplicar:"Duplicar",eliminar:"Eliminar",zoom:"Zoom",formato:"Formato",descarga:"Descargar",guardar:"Mis proyectos",editable:"Archivo editable",marca:"Logo de agencia"};
+const HELP_LABELS={estilo:"Looks Divas",recursos:"Recursos de la agencia",tabla:"Editar tabla",crearTabla:"Añadir tabla",texto:"Escribir",textos:"Textos",tamano:"Tamaño",fuente:"Fuente",color:"Color",decorar:"Decorar",fondo:"Fondo",fondoimagen:"Mi foto de fondo",imagenes:"Añadir imagen",imagen:"Reemplazar imagen",medidas:"Medidas",recorte:"Quitar fondo",figuras:"Figuras",pieza:"Editar figura",capas:"Capas",bloquear:"Bloquear",ocultar:"Ocultar",orden:"Orden",duplicar:"Duplicar",eliminar:"Eliminar",zoom:"Zoom",formato:"Formato",descarga:"Descargar",guardar:"Mis proyectos",editable:"Archivo editable",marca:"Logo de agencia"};
 function persistHelpPrefs(){try{localStorage.setItem(HELP_PREF_KEY,JSON.stringify({enabled:H.enabled,seen:H.seen}));}catch{}}
 function clearHelpHighlight(){document.querySelectorAll('.help-highlight').forEach(el=>el.classList.remove('help-highlight'));H.target=null;}
 function releaseHintSpace(){
@@ -3422,6 +3576,7 @@ function showHint(key,{manual=false}={}){
   if(!H.seen.includes(key)){H.seen.push(key);persistHelpPrefs();}
   if(manual)setPanelVisible(true);
   H.active=key;
+  $("contextGuide").dataset.complete="false";
   const title=key==="texto"&&semanticRole(selectedLayer()||{})==="titulo"?"Tu título empieza aquí":topic.label;
   $("contextGuide").innerHTML=`<div class="coach-copy"><span class="coach-symbol" aria-hidden="true">${esc(topic.icon)}</span><div><strong>${esc(title)}</strong><p>${esc(helpTopicText(key))}</p></div><button class="coach-close" data-action="dismissHint" aria-label="Cerrar esta pista">×</button></div>`;
   $("contextGuide").hidden=false;updateCanvasPrompt();
@@ -3440,7 +3595,7 @@ function closeHelp(){if($("helpDialog").open)$("helpDialog").close();}
 function helpChoice(key){return `<button class="help-choice" data-action="helpTopic" data-value="${key}"><span aria-hidden="true">${esc(HELP_TOPICS[key].icon)}</span>${esc(HELP_LABELS[key])}<span aria-hidden="true">↗</span></button>`;}
 function openHelp(){
   dismissHint();closeMenus();closeLayerMenu();
-  const primary=["texto","fondo","imagenes","capas","formato","descarga"];
+  const primary=["estilo","texto","tamano","decorar","fondo","descarga"];
   $("helpBody").innerHTML=`<label class="helper-label" for="helpQuery">¿Qué quieres hacer?</label><form id="helpForm" class="help-search"><input id="helpQuery" type="search" maxlength="180" autocomplete="off" placeholder="Ej.: poner mi foto de fondo" value="${esc(H.query)}"><button class="primary" type="submit" aria-label="Buscar cómo hacerlo">↗</button></form><div id="helpAnswer" class="help-answer" role="status" aria-live="polite" hidden></div><div class="help-shortcuts">${primary.map(helpChoice).join("")}</div><details class="help-all"><summary>Más herramientas</summary><div class="help-shortcuts">${Object.keys(HELP_TOPICS).filter(k=>!primary.includes(k)&&!["textos","pieza"].includes(k)).map(helpChoice).join("")}</div></details><div class="help-preferences"><label class="check"><input id="autoHints" type="checkbox" ${H.enabled?"checked":""}>Pistas en mi primer uso</label><button class="quiet" data-action="resetHints">Volver a verlas</button></div><p class="helper-note">Ayuda del editor · funciona sin conexión.</p>`;
   if(!$("helpDialog").open)$("helpDialog").show();
   if(H.query)answerHelp(H.query);
@@ -3468,7 +3623,8 @@ function matchHelpQuery(input){
     ["tamano",/taman|agrand|grande|pequen|aumentar.*letra/],
     ["color",/color.*(texto|titulo|letra)|(texto|titulo|letra).*color/],
     ["figuras",/figura|estrella|destello|corazon|circulo|rectangulo|luces/],
-    ["decorar",/decor|efecto|sombra|brillo|dorado|contorno|resplandor/],
+    ["decorar",/decor|efecto|sombra|brillo|dorado|contorno|resplandor|glow|neon|oro/],
+    ["estilo",/look|estilo|pastel|fucsia|combina|paleta|flyer.*listo/],
     ["imagenes",/anadir.*(foto|imagen|logo)|subir.*(foto|imagen|logo)|cargar.*(foto|imagen|logo)/],
     ["imagen",/foto|imagen|logo/],
     ["zoom",/zoom|acerc|alejar|ver.*(completo|todo)|ajustar.*vista/],
@@ -3503,6 +3659,7 @@ async function revealHelp(key){
     if(p?.tipo!==type||p.oculto||p.rol==="fondo")p=S.doc.capas.find(p=>p.tipo===type&&!p.oculto&&p.rol!=="fondo"&&(type!=="texto"||semanticRole(p)==="titulo"))||S.doc.capas.find(p=>p.tipo===type&&!p.oculto&&p.rol!=="fondo");
     if(!p){setTab(type==="texto"?"textos":"logos");showHint(type==="texto"?"textos":"imagenes",{manual:true});return;}
     selectLayer(p.id,{open:true});
+    if(type==="texto"){S.textSection=key==="decorar"?"efectos":"texto";renderPanel();}
     if(key==="recorte"&&!p.src){showHint("imagen",{manual:true});return;}
     if(p.bloqueado){setTab("capas");showHint("bloquear",{manual:true});return;}
   }else if(topic.context==="tabla"){
@@ -3518,7 +3675,7 @@ async function revealHelp(key){
     p=p&&!["texto","imagen","tabla"].includes(p.tipo)?p:S.doc.capas.find(p=>!["texto","imagen","tabla"].includes(p.tipo)&&!p.oculto&&!p.bloqueado&&!p.decorativa);
     if(!p){setTab("figuras");showHint("figuras",{manual:true});return;}
     selectLayer(p.id,{open:true});
-  }else if(["textos","logos","figuras","fondo","capas"].includes(topic.context)){
+  }else if(["estilo","textos","logos","figuras","fondo","capas"].includes(topic.context)){
     if(topic.context==="capas"&&!p)S.selected=S.doc.capas.find(p=>p.rol!=="fondo"&&!p.oculto)?.id||null;
     setTab(topic.context);
   }else if(topic.context==="catalogo"){openCatalog("todos");return;}
@@ -3624,7 +3781,10 @@ function canvasPointerDown(event){
   }
   if(p&&!p.bloqueado&&!p.oculto&&(p.rol!=="fondo"||S.doc.fondo.tipo==="imagen")){
     const control=event.target.closest?.("[data-background-handle]");
-    const h=control&&p.rol==="fondo"?handles(p)[Number(control.dataset.backgroundHandle)]:handles(p).find(h=>Math.hypot(h.x-q.x,h.y-q.y)<(event.pointerType==="touch"?17:11)/S.zoom);
+    // Dentro de una pieza pequeña, tocar su centro debe moverla. El área táctil
+    // amplia de las esquinas se conserva hacia fuera del marco de selección.
+    const innerTouch=event.pointerType==="touch"&&hit(p,q);
+    const h=control&&p.rol==="fondo"?handles(p)[Number(control.dataset.backgroundHandle)]:handles(p).find(h=>Math.hypot(h.x-q.x,h.y-q.y)<(event.pointerType==="touch"?(innerTouch?9:17):11)/S.zoom);
     if(h){
       S.drag={kind:h.kind,id:p.id,start:copy(p),members:p.multiple?selectedLayers().map(copy):null,frame:p.multiple?copy(p):null,sx:h.sx,sy:h.sy,saved:false,
         anchor:h.kind==="resize"?world(p,-h.sx*p.w/2,-h.sy*p.h/2):null};
@@ -4339,16 +4499,16 @@ async function exportFile(){
    ========================================================= */
 
 const STYLE_KEYS=[
-  "color","color2","glow","glowRadio","glowColor","sombraY","desenfoque","mezcla",
+  "color","color2","glow","glowRadio","glowColor","sombraY","sombraX","desenfoque","mezcla","degradadoTexto",
   "fuente","peso","espaciado","imagenForma","esquinas","placa","placaColor",
   "bordeImagen","bordeMetalico","bordeImagenColor","decoracion","intensidadDecoracion",
   "sombraBase","acabadoTexto","contornoTexto","colorContorno","metalico"
 ];
 async function action(name,button){
   const p=selectedLayer(),v=button?.dataset.value;
-  const protectedActions=["fontStep","alignText","centerX","centerY","up","down","pasteStyle","imagePreset","restoreImage","cover","removeBackground","tool","editTable"];
+  const protectedActions=["textLook","textColor","fontStep","alignText","centerX","centerY","up","down","pasteStyle","imagePreset","restoreImage","cover","removeBackground","tool","editTable"];
   if(selectedLayers().some(p=>p.bloqueado)&&protectedActions.includes(name)){notify("Desbloquea la capa para cambiarla.");return;}
-  if(!["helpTopic","dismissHint","helpGestures","contextHelp","resetHints"].includes(name))dismissHint();
+  if(!["helpTopic","dismissHint","helpGestures","contextHelp","resetHints","fontStep","textLook","textColor","divasLook","textSection"].includes(name))dismissHint();
   switch(name){
     case "templates":await run(()=>openTemplates(v==='admin'));break;
     case "templateUpload":if(isAdmin())$("templateInput").click();break;
@@ -4454,6 +4614,12 @@ async function action(name,button){
       setTab(tab);if(tab!=="fondo")showHint({logos:"imagenes"}[tab]||tab);break;
     }
     case "focusCanvas":clearSelection({closePanel:true});S.fit=true;requestAnimationFrame(fitCanvas);break;
+    case "focusText":{
+      if(p?.tipo!=="texto")break;
+      const vp=$("viewport"),b=boundsOf(p);S.fit=false;S.frameView=null;
+      applyZoom(Math.min((vp.clientWidth-40)/Math.max(1,b.right-b.left),Math.max(30,vp.clientHeight-120)/Math.max(1,b.bottom-b.top),2));
+      requestAnimationFrame(()=>{const vr=vp.getBoundingClientRect(),cr=canvas.getBoundingClientRect();vp.scrollLeft+=cr.left-vr.left+p.x*S.zoom-vp.clientWidth/2;vp.scrollTop+=cr.top-vr.top+p.y*S.zoom-vp.clientHeight/2+16;positionSelectionToolbar();});break;
+    }
     case "showPanel":setPanelVisible(true);renderPanel();break;
     case "closePanel":setPanelVisible(false);renderPanel();break;
     case "expandPanel":{
@@ -4476,10 +4642,10 @@ async function action(name,button){
     case "closeHelp":closeHelp();break;
     case "dismissHint":dismissHint();updateCanvasPrompt();break;
     case "helpTopic":await revealHelp(v);break;
-    case "contextHelp":await revealHelp(S.tab==="ajustes"?layerHintKey():({logos:"imagenes",crear:"figuras",estilo:"fondo"}[S.tab]||S.tab));break;
+    case "contextHelp":await revealHelp(S.tab==="ajustes"?layerHintKey():({logos:"imagenes",crear:"figuras",estilo:"estilo"}[S.tab]||S.tab));break;
     case "resetHints":H.seen=[];H.enabled=true;persistHelpPrefs();$("autoHints").checked=true;notify("Pistas activadas. Aparecerán al usar cada herramienta por primera vez.");break;
     case "fontStep":
-      if(p?.tipo==="texto")commit(()=>{p.tamano=clamp(Math.round(p.tamano+Number(v)*Math.max(2,Math.round(p.tamano*.08))),1,1000);ensureTextRoom(p);});break;
+      if(p?.tipo==="texto"){const size=textMetrics.get(p.id)?.size||p.tamano;commit(()=>resizeTextTo(p,Math.round(size+Number(v)*Math.max(2,Math.round(size*.1)))));guideDid("tamano");}break;
     case "alignText":if(p?.tipo==="texto")commit(()=>p.alineacion=v);break;
     case "bgType":S.backgroundFree=null;commit(()=>{S.doc.fondo.tipo=v;S.doc.fondo.transparente=false;});break;
     case "reviewLayout":
@@ -4521,6 +4687,12 @@ async function action(name,button){
         if(A.member)await writeSetting("agency",next);else localStorage.setItem("divas-agencia-datos",JSON.stringify(next));
         agency=next;$("agencyDialog").close();notify("Datos guardados para los próximos diseños.");});break;
     case "palette":applyPalette(v);break;
+    case "divasLook":applyDivasLook(v);break;
+    case "lookSection":S.lookSection=v==="datos"?"datos":"looks";setTab("estilo");if(v!=="datos")showHint("estilo");break;
+    case "textSection":S.textSection=v==="efectos"?"efectos":"texto";renderPanel();if(v==="efectos")showHint("decorar");break;
+    case "textLook":if(p?.tipo==="texto"){commit(()=>putTextLook(p,v));guideDid("efecto");}break;
+    case "textColor":if(p?.tipo==="texto"&&/^#[a-f0-9]{6}$/i.test(v))commit(()=>{p.color=v;p.acabadoTexto="solido";});break;
+    case "guideNext":if(v==="lookData"){S.lookSection="datos";setTab("estilo");}else if(v==="clean")clearSelection({closePanel:true});else await revealHelp(v);break;
     case "background":
       setTab("fondo");break;
     case "chooseAsset":
@@ -4598,7 +4770,7 @@ async function action(name,button){
     case "centerX":alignSelection("centerX","canvas");break;
     case "centerY":alignSelection("centerY","canvas");break;
     case "copyStyle":
-      if(p){S.styleCopy={};STYLE_KEYS.forEach(k=>S.styleCopy[k]=p[k]);renderPanel();notify("Estilo copiado. Selecciona otra pieza para pegarlo.");}break;
+      if(p){S.styleCopy={};STYLE_KEYS.forEach(k=>S.styleCopy[k]=copy(p[k]));renderPanel();notify("Estilo copiado. Selecciona otra pieza para pegarlo.");}break;
     case "pasteStyle":if(p&&S.styleCopy)commit(()=>Object.assign(p,copy(S.styleCopy)));break;
     case "imagePreset":applyImagePreset(v);break;
     case "restoreImage":if(p?.original){if(p.src===p.original)notify("La imagen ya está en su versión original.");else {commit(()=>p.src=p.original);notify("Imagen original recuperada.");}}else notify("Carga una imagen primero.");break;
@@ -4644,12 +4816,12 @@ function handleEditorInput(event){
   }
   if(el.id==="alignReference"){S.alignTo=el.value;return;}
   if(el.id==="autoHints"){H.enabled=el.checked;persistHelpPrefs();return;}
-  if(el.closest("#panelBody"))dismissHint();
+  if(el.id==="lookScope"){S.lookScope=el.value==="textos"?"textos":"completo";paintLookPreviews();return;}
   if(el.matches("[data-text-id]")){
     const p=S.doc.capas.find(x=>x.id===el.dataset.textId);if(!p||p.bloqueado)return;
     beginEdit("texto:"+p.id);p.texto=el.value;
     p.pendiente=!p.texto.trim()||(p.ejemplo&&p.texto===p.ejemplo);
-    S.selected=p.id;markChanged();draw();return;
+    S.selected=p.id;markChanged();draw();if(event.type==="change")guideDid("texto");return;
   }
   if(el.matches("[data-background-adjust]")){
     const bg=backgroundLayer(),key=el.dataset.backgroundAdjust,value=Number(el.value);
@@ -4668,21 +4840,21 @@ function handleEditorInput(event){
     if(typeof value==="number"&&(!Number.isFinite(value)||el.value===""))return;
     const limits={tamano:[1,1000],minTamano:[1,200],marcoProteccion:[15,42],interlineado:[.3,4],espaciado:[-30,100],w:[2,8192],h:[2,8192],x:[-32768,32768],y:[-32768,32768]};
     if(limits[key])value=clamp(value,...limits[key]);
-    if(p[key]===value)return;
+    if(p[key]===value&&key!=="tamano"){if(event.type==="change")guideDid(key==="texto"?"texto":key==="glow"?"efecto":key);return;}
     beginEdit(p.id+":"+key);
     if(key==="w"||key==="h"){
       value=clamp(value,2,8192);
       const ratio=value/p[key];
       if(keepRatio||p.rol==="fondo"){p[key==="w"?"h":"w"]*=ratio;if(p.tipo==="texto")p.tamano*=ratio;}
     }
-    p[key]=value;
-    if(key==="color"&&p.tipo==="texto"&&p.acabadoTexto==="importado")p.acabadoTexto="solido";
+    if(key==="tamano")resizeTextTo(p,value);else p[key]=value;
+    if(key==="color"&&p.tipo==="texto")p.acabadoTexto="solido";
     if(p.rol==="fondo"&&["x","y","w","h","rot"].includes(key))p.ajusteFondo="manual";
-    if(key==="tamano")ensureTextRoom(p);
     if(key==="texto")p.pendiente=!p.texto.trim()||(p.ejemplo&&p.texto===p.ejemplo);
     const output=document.querySelector(`[data-output="${key}"]`);
     if(output)output.textContent=value;
-    markChanged();syncNumericFields();draw();return;
+    if(key==="glow"&&p.glow>0&&p.glowRadio<1)p.glowRadio=Math.max(4,p.tamano*.3);
+    markChanged();syncNumericFields();draw();if(event.type==="change")guideDid(key==="glow"?"efecto":key);return;
   }
   if(el.matches("[data-bg]")){
     beginEdit("fondo:"+el.dataset.bg);
@@ -4709,7 +4881,7 @@ document.addEventListener("input",handleEditorInput);
 document.addEventListener("change",event=>{
   const el=event.target,p=selectedLayer();
   if(removalInput(el))return;
-  if(el.matches("[data-prop],[data-bg],[data-background-adjust],[data-table],[data-cell-r]")||el.closest("#resourceEdit")||["autoHints","brushSize","brushHardness"].includes(el.id))handleEditorInput(event);
+  if(el.matches("[data-text-id],[data-prop],[data-bg],[data-background-adjust],[data-table],[data-cell-r]")||el.closest("#resourceEdit")||["autoHints","lookScope","brushSize","brushHardness"].includes(el.id))handleEditorInput(event);
   if(el.matches("[data-background-format]"))action("format",{dataset:{value:el.value}}).catch(error=>notify(error.message));
   if(el.id==="alignReference")S.alignTo=el.value;
   if(el.id==="newFormat"||el.name==="resizeMode")previewFormat();
@@ -4732,7 +4904,7 @@ document.addEventListener("submit",event=>{
   if(event.target.id!=="helpForm")return;
   event.preventDefault();answerHelp($("helpQuery").value);$("helpQuery").blur();
 });
-document.addEventListener("focusin",event=>{if(event.target.closest("#panelBody")&&/INPUT|TEXTAREA|SELECT/.test(event.target.tagName))dismissHint();});
+// Las pistas permanecen durante la escritura y se completan al confirmar el cambio.
 document.addEventListener("focusout",()=>S.group=null);
 $("zoom").addEventListener("change",()=>draw());
 $("projectInput").onchange=event=>{const files=[...event.target.files];event.target.value="";run(()=>startImport(files,false));};
@@ -5241,7 +5413,7 @@ async function openCatalog(category='todos'){
   $('resourceManager').close();$('accountDialog').close();renderCatalog();showDialog('catalogDialog');
 }
 function safeTextStyle(raw={},fonts=S.doc?.fuentes||[]){
-  const p=layer('texto');const keys=['color','color2','fuente','peso','tamano','espaciado','alineacion','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraY'];
+  const p=layer('texto');const keys=['color','color2','fuente','peso','tamano','espaciado','alineacion','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraY','sombraX','degradadoTexto'];
   const out={};for(const k of keys)if(Object.hasOwn(raw,k))out[k]=raw[k];
   if(!FONT_LIST.includes(out.fuente)&&!fonts.some(f=>f.nombre===out.fuente))out.fuente='Georgia';
   const d=emptyDocument();d.fuentes=copy(fonts);d.capas=[{...p,...out,texto:'Tu título'}];const clean=normalizeProject(d).capas[0];return Object.fromEntries(keys.map(k=>[k,clean[k]]));
@@ -5712,9 +5884,9 @@ async function startChosenProject(){
   await ensureProjectSaved();await Promise.allSettled([P.ready,C.ready]);
   if(A.member)try{await refreshCloudCatalog(false);}catch{notify('No se pudo actualizar el catálogo. Puedes continuar con las imágenes disponibles.');}
   if(C.published.brandLogo||P.brandLogo)await loadImage(C.published.brandLogo||P.brandLogo);
-  const d=createMission(F.purpose,F.format);$('initialFormat').value=F.format;
-  S.mode='avanzado';S.tab='textos';$('showCircle').checked=F.purpose==='perfil'&&F.format==='1:1';
-  await activateDocument(d,{savePrevious:false});$('createFormatDialog').close();
+  const d=createMission(F.purpose,F.format);if(!S.template||F.purpose!=="perfil")makeDivasLook(d,"pastel");S.lookSection="looks";$('initialFormat').value=F.format;
+  S.mode='avanzado';S.tab='estilo';$('showCircle').checked=F.purpose==='perfil'&&F.format==='1:1';
+  await activateDocument(d,{savePrevious:false});$('createFormatDialog').close();setTab("estilo");showHint("estilo");
   saveCurrent().catch(()=>{});
  }finally{F.busy=false;$('createFormatButton').disabled=false;}
 }
@@ -6189,12 +6361,12 @@ function importedTextFill(c,p){
   const a=(p.degradadoTexto.angulo-90)*Math.PI/180,dx=Math.cos(a),dy=Math.sin(a),r=(Math.abs(dx)*p.w+Math.abs(dy)*p.h)/2;
   const g=c.createLinearGradient(-dx*r,-dy*r,dx*r,dy*r);for(const s of p.degradadoTexto.stops)g.addColorStop(s.position,s.color);return g;
 }
-function drawImportedText(c,p,font){
+function drawImportedText(c,p,font,track=true){
   const metrics=importFontMetrics(font(p.tamano)),pad=metrics.padding,spacing=p.espaciado||0,width=Math.max(1,p.w-2*pad);
   c.save();c.font=font(p.tamano);c.textBaseline='top';c.textAlign='left';
   const lines=[];for(const paragraph of String(p.texto).split('\n')){let line='';for(const word of paragraph.split(/\s+/)){const next=line?line+' '+word:word;if(line&&measure(c,next,spacing)+2*spacing>width){lines.push(line);line=word;}else line=next;}lines.push(line);}
   const step=p.tamano*(p.interlineado||1.18),overflow=pad+metrics.height+(lines.length-1)*step>p.h+.5||lines.some(t=>measure(c,t,spacing)>width+1);
-  textMetrics.set(p.id,{size:p.tamano,overflow});
+  if(track)textMetrics.set(p.id,{size:p.tamano,overflow});
   c.fillStyle=p.acabadoTexto==='dorado'?gold(c,p.w,p.h):p.acabadoTexto==='rosa'?(()=>{const g=c.createLinearGradient(0,-p.h/2,0,p.h/2);g.addColorStop(0,p.color2);g.addColorStop(1,p.color);return g;})():importedTextFill(c,p);
   c.strokeStyle=p.colorContorno;c.lineWidth=Math.max(.01,p.contornoTexto||0);c.lineJoin='miter';c.miterLimit=2;
   for(let i=0;i<lines.length;i++){
