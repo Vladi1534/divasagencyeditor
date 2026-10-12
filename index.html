@@ -944,6 +944,32 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
 #importActions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));max-height:38dvh;overflow-y:auto}
 #importDialog input,#importDialog select,#templatesDialog input,#templatesDialog select{font-size:16px}
 @media(max-width:600px){#importActions{grid-template-columns:repeat(2,minmax(0,1fr))}#importActions .primary{grid-column:1/-1}#importActions button{min-width:0;line-height:1.3}#importActions #importNext{grid-column:1/-1}}
+/* v22 · Cuentas: decisiones visibles, sin depender del catálogo. */
+#resourceManager[open]{display:flex;flex-direction:column;max-height:92dvh}
+#resourceManager>.dialog-head,#resourceManager>.dialog-footer{flex-shrink:0}
+#resourceManager>.dialog-body{min-height:0;overflow:auto;max-height:none;overscroll-behavior:contain}
+#resourceManager .admin-tabs{position:sticky;top:-1px;background:var(--panel,#fff);z-index:2;padding-block:8px;margin-top:-8px}
+#adminMembers{max-width:900px;margin:0 auto}
+.member-tools{display:flex;gap:8px;flex-wrap:wrap}.member-tools button{min-height:44px}
+.account-settings{border:1px solid var(--line);border-radius:16px;margin:12px 0;background:var(--panel,#fff)}
+.account-settings>summary{padding:14px 16px;cursor:pointer;font-weight:600;min-height:44px}.account-settings>summary span{color:var(--muted);font-size:12px;margin-left:6px;font-weight:400}
+.account-settings form{padding:0 16px 16px}.quota-controls{display:flex;align-items:center;gap:20px;flex-wrap:wrap}.quota-controls .field{max-width:240px;flex:1}.quota-controls input[type=number]{width:100%}.account-connection{margin:12px 0}.account-connection>summary{cursor:pointer;padding:10px 0;color:var(--muted);font-size:13px}.account-connection .field{margin-top:10px}
+.member-filter-bar{margin:14px 0 8px}.member-filter-bar input,#registrationURL{width:100%;min-width:0;min-height:44px}
+.member-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}.member-filters button{min-height:42px;font-size:12px;padding:8px 12px}.member-filters button[aria-pressed=true]{border-color:var(--pink);background:var(--panel2);color:var(--text);box-shadow:inset 0 0 0 1px var(--pink)}.member-filters span{margin-left:3px;font-variant-numeric:tabular-nums}
+#adminMembers .access-requests{border:0;padding:0;margin:0 0 14px}#requestCount{font-size:13px;color:var(--muted);margin:0 0 8px}#adminMembers .access-request{background:var(--panel,#fff);align-items:flex-start}#adminMembers .access-request strong{overflow-wrap:anywhere}#adminMembers .access-request .row{flex-shrink:0}
+#adminMembers .account-card{background:var(--panel,#fff)}#adminMembers .account-card-actions button{flex:0 1 auto}#adminMembers .account-state{white-space:normal;text-align:center;flex-shrink:0;max-width:45%}
+.member-empty{padding:24px;text-align:center;border:1px dashed var(--line);border-radius:16px;grid-column:1/-1}.member-empty strong{display:block;margin-bottom:6px}.member-empty p{margin:0;font-size:13px;color:var(--muted)}
+#memberStatus:empty,#registrationStatus:empty,#memberUpdated:empty{display:none}.request-age{display:block;margin-top:7px;font-size:12px;color:var(--muted)}.request-age.overdue{color:var(--pink);font-weight:600}
+#accessNotice{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:10px 24px;border-bottom:1px solid var(--line);background:var(--panel,#fff);font-size:13px}#accessNotice span{min-width:0}#accessNotice button{min-height:40px;white-space:nowrap}#accessNotice[hidden]{display:none}
+@media(max-width:600px){#resourceManager{width:calc(100% - 16px);max-width:none}.member-tools{display:flex;gap:6px}.member-tools button{font-size:12px;flex:1;padding:8px}.members-heading button{font-size:12px;white-space:nowrap}.member-filters{gap:5px}.member-filters button{flex:1 0 auto;min-height:44px;padding:8px}.quota-controls{gap:8px}.quota-controls .field{max-width:none;flex-basis:100%}#adminMembers input{font-size:16px}#adminMembers .access-request .row{flex-wrap:wrap}#adminMembers .account-card-actions button{flex:1 1 auto}#accessNotice{padding:8px 12px;gap:8px;font-size:12px}#accessNotice button{font-size:12px}#resourceManager .admin-tabs button{padding-inline:8px;font-size:12px}}
+
+#adminMembers .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+#resourceManager .admin-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}#resourceManager .admin-tabs button{min-width:0;white-space:nowrap}
+@media(max-width:600px){#resourceManager .admin-tabs button{font-size:11px;padding:6px 3px}.member-filters{margin-bottom:10px}.members-heading{margin-bottom:10px}.member-filter-bar{margin-top:10px}#requestCount{margin-top:8px}}
+
+#resourceManager .admin-tabs{margin-bottom:10px}@media(max-width:600px){#resourceManager .admin-tabs{gap:4px}#resourceManager .admin-tabs button{font-size:10.5px;letter-spacing:-.3px;overflow:hidden;text-overflow:ellipsis}}
+
 </style>
 </head>
 <body>
@@ -998,13 +1024,15 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
         <button data-action="agency">Identidad de agencia · logo y datos</button>
         <button data-action="format">Cambiar formato del lienzo</button>
         <button data-action="helpGestures">Ayuda Divas</button>
+        <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v21 · Plantillas editables</p>
+        <p class="help" id="appVersion">Divas Editor · v22 · Cuentas y solicitudes</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
   </div>
 </header>
+<div id="accessNotice" hidden><span id="accessNoticeText"></span><button id="accessNoticeButton" data-action="manageMembers">Revisar solicitudes</button></div>
 <div id="recoveryNotice" class="auth-link-notice" role="status" hidden><span>Tu sesión está activa. También abriste un enlace para cambiar una contraseña.</span><button data-action="openRecovery">Revisar enlace</button><button data-action="dismissRecoveryLink">Seguir editando</button></div>
 <div id="guestNotice" class="auth-link-notice" hidden><span>Modo invitada · los proyectos quedan en este navegador. Entra para usar los recursos de la agencia.</span><button data-action="account">Entrar a mi cuenta</button></div>
 
@@ -1179,7 +1207,7 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
     <form id="loginForm"><div class="field"><label for="loginEmail">Correo de tu cuenta</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="tu@correo.com"></div><div class="field"><label for="loginPassword">Contraseña</label><input id="loginPassword" type="password" autocomplete="current-password" required></div><button type="button" class="quiet" data-action="passwordVisibility" data-fields="loginPassword" aria-pressed="false">Mostrar contraseña</button><button class="primary wide" type="submit">Entrar</button><p class="help">Los recursos de la agencia requieren aprobación del administrador.</p><details class="property"><summary>¿Olvidaste tu contraseña?</summary><p class="help">Pide al administrador un enlace para restablecerla. Ábrelo y elige tu nueva contraseña. Entrarás a tu cuenta al terminar.</p></details></form>
     <form id="registerForm" hidden><div class="field"><label for="registerName">Tu nombre</label><input id="registerName" autocomplete="name" maxlength="80" required></div><div class="field"><label for="registerEmail">Tu correo</label><input id="registerEmail" type="email" autocomplete="email" required></div><div class="field"><label for="registerPassword">Contraseña · mínimo 12 caracteres</label><input id="registerPassword" type="password" minlength="12" autocomplete="new-password" required></div><div class="field"><label for="registerRepeat">Repetir contraseña</label><input id="registerRepeat" type="password" minlength="12" autocomplete="new-password" required></div><button type="button" class="quiet" data-action="passwordVisibility" data-fields="registerPassword,registerRepeat" aria-pressed="false">Mostrar contraseña</button><p id="registerPasswordHint" class="help" role="status"></p><button id="registerSubmit" class="primary wide" type="submit">Registrarme y solicitar acceso</button><p class="help">Confirma tu correo. El administrador revisará tu solicitud antes de darte acceso a la agencia.</p></form>
     <div id="accountPending" hidden><span class="account-state paused">Solicitud de acceso</span><h3 id="pendingTitle"></h3><strong id="pendingName"></strong><p id="pendingEmail" class="help"></p><p id="pendingDescription"></p><button id="checkApprovalButton" class="primary wide" data-action="checkApproval">Comprobar acceso</button><button class="quiet wide" data-action="logout">Cerrar sesión</button></div>
-    <div id="accountSession" hidden><div class="account-badge"><strong id="accountName"></strong><span id="accountRole"></span></div><p id="accountEmail" class="help"></p><p id="sessionPersistence" class="help"></p><button id="accountAdmin" class="primary wide" data-action="resourceManager" hidden>Administrar agencia</button><button class="wide" data-action="catalog">Explorar recursos privados</button><details class="property"><summary>Cambiar mi contraseña</summary><form id="passwordForm"><div class="field"><label for="accountPassword">Contraseña nueva · mínimo 12 caracteres</label><input id="accountPassword" type="password" minlength="12" autocomplete="new-password" required></div><div class="field"><label for="accountPasswordRepeat">Repetir contraseña nueva</label><input id="accountPasswordRepeat" type="password" minlength="12" autocomplete="new-password" required></div><button type="submit">Guardar contraseña</button></form></details><button class="danger wide" data-action="logout">Cerrar sesión</button></div>
+    <div id="accountSession" hidden><div class="account-badge"><strong id="accountName"></strong><span id="accountRole"></span></div><p id="accountEmail" class="help"></p><p id="sessionPersistence" class="help"></p><button id="accountMembers" class="primary wide" data-action="manageMembers" hidden>Cuentas y solicitudes</button><button id="accountAdmin" class="primary wide" data-action="resourceManager" hidden>Administrar agencia</button><button class="wide" data-action="catalog">Explorar recursos privados</button><details class="property"><summary>Cambiar mi contraseña</summary><form id="passwordForm"><div class="field"><label for="accountPassword">Contraseña nueva · mínimo 12 caracteres</label><input id="accountPassword" type="password" minlength="12" autocomplete="new-password" required></div><div class="field"><label for="accountPasswordRepeat">Repetir contraseña nueva</label><input id="accountPasswordRepeat" type="password" minlength="12" autocomplete="new-password" required></div><button type="submit">Guardar contraseña</button></form></details><button class="danger wide" data-action="logout">Cerrar sesión</button></div>
     <p id="accountStatus" class="cloud-status" role="status" aria-live="polite"></p>
     <button id="retryConnection" class="quiet wide" data-action="retryConnection" hidden>Reintentar conexión</button>
   </div>
@@ -1206,15 +1234,29 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
   <div class="dialog-body"><button class="wide template-entry" data-action="templates">✧ Plantillas editables · empieza con un diseño completo</button><div class="catalog-filters"><input id="catalogSearch" type="search" placeholder="Busca un fondo, logo o adorno…" aria-label="Buscar recursos"><select id="catalogCategory" aria-label="Categoría"><option value="todos">Todo</option><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option></select><select id="catalogCollection" aria-label="Temporada"></select></div><p id="catalogCount" class="help" role="status"></p><div id="catalogGrid" class="resource-grid"></div></div>
 </dialog>
 <dialog id="resourceManager" aria-labelledby="creatorTitle">
-  <div class="dialog-head"><div><h2 id="creatorTitle">Tu agencia</h2><p class="help">Sube una vez. Publica para tus emisoras.</p></div><button data-action="closeCreator">Cerrar</button></div>
+  <div class="dialog-head"><div><h2 id="creatorTitle">Tu agencia</h2><p id="agencyManagerSubtitle" class="help">Sube una vez. Publica para tus emisoras.</p></div><button data-action="closeCreator">Cerrar</button></div>
   <div class="dialog-body">
     <nav class="admin-tabs" aria-label="Administración"><button data-action="templates" data-value="admin">Plantillas</button><button data-action="adminTab" data-value="resources" class="active">Recursos</button><button data-action="adminTab" data-value="seasons">Temporadas</button><button data-action="adminTab" data-value="members">Cuentas</button></nav>
     <section id="adminResources"><div class="resource-upload"><div class="field"><label for="uploadResourceCategory">Categoría</label><select id="uploadResourceCategory"><option value="fondos">Fondos</option><option value="figuras">Figuras y adornos</option><option value="logos">Logos</option></select></div><div class="field"><label for="uploadResourceCollection">Colección</label><select id="uploadResourceCollection"></select></div><button class="primary" data-action="uploadResources">+ Subir imágenes</button><button data-action="captureTextStyle">Guardar estilo del texto seleccionado</button></div><p class="help">Los archivos se suben como borrador. Publícalos cuando estén listos.</p><div class="creator-workspace"><div id="creatorGrid" class="resource-grid"></div><form id="resourceEdit" class="resource-edit" hidden><h3 id="resourceEditName">Editar recurso</h3><div class="field"><label for="resourceName">Nombre</label><input id="resourceName" type="text" maxlength="80" required></div><div class="field"><label for="resourceCollection">Colección</label><select id="resourceCollection"></select></div><div class="field"><label for="resourceCategory">Categoría</label><select id="resourceCategory"><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option></select></div><label class="check"><input id="resourceVisible" type="checkbox">Publicado para las emisoras</label><label class="check"><input id="resourceBrand" type="checkbox">Logo oficial de la cabecera</label><p class="help">Solo puede haber un logo oficial publicado.</p><p id="resourceEditStatus" class="help" role="status"></p><div class="row"><button type="submit" class="primary">Guardar cambios</button><button type="button" class="danger" data-action="deleteResource">Eliminar</button></div></form></div></section>
     <section id="adminSeasons" hidden><div class="creator-workspace"><div id="seasonList" class="season-list"></div><form id="seasonForm" class="resource-edit"><h3 id="seasonFormTitle">Nueva temporada</h3><input id="seasonId" type="hidden"><div class="field"><label for="seasonName">Nombre</label><input id="seasonName" required maxlength="60" placeholder="Halloween 2026"></div><div class="field"><label for="seasonStart">Mostrar desde · opcional</label><input id="seasonStart" type="date"></div><div class="field"><label for="seasonEnd">Mostrar hasta · opcional</label><input id="seasonEnd" type="date"></div><label class="check"><input id="seasonPublished" type="checkbox">Visible para las emisoras</label><p class="help">Las fechas usan el calendario UTC del servidor. Deja ambas vacías para mantenerla disponible.</p><div class="row"><button class="primary" type="submit">Guardar temporada</button><button type="button" data-action="newSeason">Nueva</button></div></form></div></section>
     <section id="adminMembers" hidden>
-      <section class="access-requests"><h3 id="requestCount">Solicitudes de acceso</h3><div id="requestList"></div></section><div class="members-heading"><div><h3>Las cuentas de tu agencia</h3><p id="memberCount" class="help"></p></div><button data-action="refreshMembers">Actualizar cuentas</button></div>
-      <p id="memberStatus" class="cloud-status" role="status" aria-live="polite"></p><div id="memberList" class="accounts-grid"></div>
-      <details class="member-create"><summary>+ Añadir una cuenta de emisora</summary><form id="memberForm" class="member-form"><p class="help">Ella elige su contraseña con un enlace personal. Puedes mantener hasta dos cuentas de emisora activas.</p><div class="field"><label for="memberMode">Tipo de cuenta</label><select id="memberMode"><option value="new">Crear cuenta nueva</option><option value="existing">Cuenta existente · autorizar acceso</option></select></div><div class="field"><label for="memberName">Nombre en Divas</label><input id="memberName" maxlength="80" required autocomplete="off"></div><div class="field"><label for="memberEmail">Correo de la dueña de la cuenta</label><input id="memberEmail" type="email" required autocomplete="off"></div><button id="memberSubmit" class="primary" type="submit" disabled>Preparar cuenta y enlace</button></form></details>
+      <div class="members-heading"><div><h3>Tu equipo</h3><p id="memberCount" class="help">Consulta solicitudes y gestiona el acceso.</p></div><button data-action="refreshMembers" aria-label="Actualizar cuentas">↻ Actualizar</button></div>
+      <div class="member-tools"><button class="primary" data-action="copyRegistration">Enlace de registro</button><button data-action="openAccountSettings">Cambiar cupo</button></div>
+      <p id="registrationStatus" class="help" role="status"></p><input id="registrationURL" aria-label="Enlace de registro para compartir" readonly hidden>
+      <p id="memberStatus" class="cloud-status" role="status" aria-live="polite"></p>
+      <div class="member-filter-bar"><label class="sr-only" for="memberSearch">Buscar por nombre o correo</label><input id="memberSearch" type="search" placeholder="Buscar nombre o correo…" autocomplete="off"></div>
+      <div class="member-filters" role="group" aria-label="Estado de las cuentas"><button data-action="memberFilter" data-value="pending">Pendientes <span data-member-count="pending">—</span></button><button data-action="memberFilter" data-value="active">Activas <span data-member-count="active">—</span></button><button data-action="memberFilter" data-value="paused">Suspendidas <span data-member-count="paused">—</span></button><button data-action="memberFilter" data-value="rejected">Rechazadas <span data-member-count="rejected">—</span></button><button data-action="memberFilter" data-value="all">Todas</button></div>
+      <section id="requestSection" class="access-requests"><h4 id="requestCount">Solicitudes de acceso</h4><div id="requestList"></div></section><div id="memberList" class="accounts-grid"></div>
+      <p id="memberUpdated" class="help"></p>
+      <details id="accountSettings" class="account-settings"><summary>Cupo de la agencia <span id="quotaSummary"></span></summary>
+        <form id="accountSettingsForm">
+          <p class="help">Solo cuentan las usuarias activas. Tu administrador no ocupa un lugar. Cada acceso sigue requiriendo tu aprobación.</p>
+          <div class="quota-controls"><div class="field"><label for="memberLimit">Máximo de usuarias activas</label><input id="memberLimit" type="number" min="1" max="1000" step="1" value="10" inputmode="numeric" required></div><label class="check"><input id="unlimitedMembers" type="checkbox">Sin límite del editor</label></div>
+          <details class="account-connection"><summary>Dirección del editor para enlaces</summary><div class="field"><label for="agencyAppURL">Dirección oficial HTTPS</label><input id="agencyAppURL" type="url" maxlength="500" required autocomplete="url"></div><button type="button" data-action="currentAppURL">Usar dirección actual</button><p class="help">Se usa para crear enlaces de contraseña y conectar la función de cuentas. Si cambias de dominio, actualízala aquí y también en Authentication → URL Configuration de Supabase.</p></details>
+          <p id="accountSettingsStatus" class="help" role="status"></p><button id="saveAccountSettings" class="primary" type="submit">Guardar ajustes</button><button type="button" data-action="reloadAccountSettings">Recargar ajustes</button>
+        </form>
+      </details>
+      <details class="member-create"><summary>+ Crear o autorizar una cuenta manualmente</summary><form id="memberForm" class="member-form"><p class="help">Lo más sencillo es compartir el enlace de registro y aprobar su solicitud. Si creas la cuenta tú, ella elige su contraseña con un enlace personal.</p><div class="field"><label for="memberMode">Tipo de cuenta</label><select id="memberMode"><option value="new">Crear cuenta nueva</option><option value="existing">Cuenta existente · autorizar acceso</option></select></div><div class="field"><label for="memberName">Nombre en Divas</label><input id="memberName" maxlength="80" required autocomplete="off"></div><div class="field"><label for="memberEmail">Correo de la dueña de la cuenta</label><input id="memberEmail" type="email" required autocomplete="off"></div><button id="memberSubmit" class="primary" type="submit" disabled>Preparar cuenta y enlace</button></form></details>
     </section>
     <p id="creatorStatus" class="cloud-status" role="status" aria-live="polite"></p>
   </div>
@@ -4339,6 +4381,12 @@ async function action(name,button){
     case "catalog":await run(()=>openCatalog(v));break;
     case "insertResource":await run(()=>insertResource(button.dataset.id));break;
     case "resourceManager":await run(openResourceManager);break;
+    case "manageMembers":await run(openMembers);break;
+    case "memberFilter":if(['pending','active','paused','rejected','all'].includes(v)){M.filter=v;renderMembers();}break;
+    case "reloadAccountSettings":await run(async()=>{if(await loadMembers()){M.settingsDirty=false;renderAccountSettings();$('accountSettingsStatus').textContent='Ajustes recargados. Puedes modificarlos de nuevo.';}});break;
+    case "copyRegistration":await run(copyRegistration);break;
+    case "openAccountSettings":openAccountSettings();break;
+    case "currentAppURL":$('agencyAppURL').value=location.origin+location.pathname;M.settingsDirty=true;$('accountSettingsStatus').textContent='Dirección preparada. Pulsa Guardar ajustes para aplicarla.';break;
     case "closeCreator":await run(async()=>{await saveResourceMetadata();$("resourceManager").close();});break;
     case "uploadResources":if(isAdmin())$("resourceFiles").click();break;
     case "editResource":await run(()=>editResource(button.dataset.id));break;
@@ -4678,7 +4726,7 @@ document.addEventListener("change",event=>{
   }
 });
 document.addEventListener("submit",event=>{
-  const forms={loginForm:loginAccount,passwordForm:changeAccountPassword,seasonForm:saveSeason,memberForm:grantMember,memberEditForm:saveMember,memberDeleteForm:deleteMember,recoveryForm:saveRecoveryPassword,registerForm:registerAccount};
+  const forms={loginForm:loginAccount,passwordForm:changeAccountPassword,seasonForm:saveSeason,accountSettingsForm:saveAccountSettings,memberForm:grantMember,memberEditForm:saveMember,memberDeleteForm:deleteMember,recoveryForm:saveRecoveryPassword,registerForm:registerAccount};
   if(forms[event.target.id]){event.preventDefault();run(forms[event.target.id]);return;}
   if(event.target.id==="resourceEdit"){event.preventDefault();run(saveResourceMetadata);return;}
   if(event.target.id!=="helpForm")return;
@@ -5049,6 +5097,7 @@ function updateAccountUI(){
   $('projectStorageDescription').textContent=signed?'Tus proyectos se guardan en tu cuenta y puedes retomarlos en otro dispositivo.':'Tus proyectos locales se guardan en este navegador. Entra para usar tu cuenta y los recursos privados.';
   $('saveState').textContent=signed?'Proyectos privados de tu cuenta':'Proyectos locales de este navegador';
   $('agencyResourcesButton').setAttribute('title',signed?'Colecciones privadas de Divas':'Entra para ver las colecciones privadas');
+  $('accountMembers').hidden=!isAdmin();queueAccessCheck();
 }
 async function openAccount(){if(A.ready)await A.ready;if(A.user&&!A.ownAuth)await initializeAuth();updateAccountUI();showDialog('accountDialog');if(!A.member&&!A.request)$(J.view==='register'?'registerName':'loginEmail').focus();}
 function clearCloudMemory(){
@@ -5263,7 +5312,7 @@ async function insertResource(id){
   $('catalogDialog').close();notify('Recurso aplicado. Puedes deshacerlo con ↶.');
 }
 async function openResourceManager(){
-  requireMember(true);await refreshCloudCatalog(false);$('accountDialog').close();$('catalogDialog').close();renderResourceManager();await adminTab('resources');showDialog('resourceManager');
+  requireMember(true);await refreshCloudCatalog(false);$('accountDialog').close();$('catalogDialog').close();renderResourceManager();await adminTab('resources',{load:false});showDialog('resourceManager');
 }
 function renderResourceManager(){
   requireMember(true);$('uploadResourceCollection').innerHTML=collectionOptions($('uploadResourceCollection').value);
@@ -5328,10 +5377,13 @@ async function deleteResource(){
   if(validFontAsset(a.style?.fontAsset)){const {error}=await A.client.storage.from(FONT_BUCKET).remove([a.style.fontAsset.path]);if(error)notify('Estilo retirado. No se pudo limpiar su fuente privada.');}
   await refreshCloudCatalog();
 }
-async function adminTab(name){
-  requireMember(true);await saveResourceMetadata();for(const [id,key] of [['adminResources','resources'],['adminSeasons','seasons'],['adminMembers','members']])$(id).hidden=key!==name;
-  document.querySelectorAll('[data-action="adminTab"]').forEach(el=>el.classList.toggle('active',el.dataset.value===name));
-  if(name==='members')await loadMembers();
+async function adminTab(name,{load=true}={}){
+  requireMember(true);if(!['resources','seasons','members'].includes(name))return;
+  await saveResourceMetadata();for(const [id,key] of [['adminResources','resources'],['adminSeasons','seasons'],['adminMembers','members']])$(id).hidden=key!==name;
+  document.querySelectorAll('[data-action="adminTab"]').forEach(el=>{el.classList.toggle('active',el.dataset.value===name);el.setAttribute('aria-pressed',String(el.dataset.value===name));});
+  $('agencyManagerSubtitle').textContent=name==='members'?'Aprueba accesos y gestiona tu equipo.':'Sube una vez. Publica para tus emisoras.';
+  $('creatorStatus').hidden=name==='members';$('resourceManager').querySelector('.dialog-footer').hidden=name==='members';
+  if(load){if(name==='members')await loadMembers();else{await refreshCloudCatalog(false);renderResourceManager();}}
 }
 function renderSeasons(){$('seasonList').innerHTML=C.collections.map(c=>`<button class="season-row" data-action="editSeason" data-id="${esc(c.id)}"><strong>${esc(c.name)}</strong><small>${visibleCollection(c)?'Activa':c.published?'Programada / fuera de fecha':'Borrador'} · ${C.items.filter(a=>a.collection_id===c.id).length} recursos</small></button>`).join('');}
 function editSeason(id){const c=C.collections.find(c=>c.id===id);$('seasonId').value=c?.id||'';$('seasonName').value=c?.name||'';$('seasonStart').value=c?.starts_on||'';$('seasonEnd').value=c?.ends_on||'';$('seasonPublished').checked=!!c?.published;$('seasonFormTitle').textContent=c?'Editar temporada':'Nueva temporada';}
@@ -5362,24 +5414,15 @@ async function registerAccount(){
 function renderPendingAccount(){
   const rejected=A.request?.status==='rejected';$('pendingName').textContent=A.request?.display_name||'';$('pendingEmail').textContent=A.user?.email||'';
   $('pendingTitle').textContent=rejected?'Tu solicitud no fue aprobada':'Tu solicitud está en revisión';
-  $('pendingDescription').textContent=rejected?'Contacta con el administrador si crees que se trata de un error.':'El administrador debe autorizarte para usar los recursos y guardar proyectos en tu cuenta.';
+  $('pendingDescription').textContent=rejected?'Contacta con el administrador si crees que se trata de un error.':'El administrador debe aprobar tu acceso. Esta ventana lo comprueba cada 30 segundos; no necesitas registrarte otra vez ni cambiar la contraseña.';
   $('checkApprovalButton').hidden=rejected;
 }
-async function checkApproval(){
-  if(!A.request)return;A.ownAuth=true;
-  try{const next=await verifyMember({allowPending:true});if(next.member){A.error='';await resetAccountWorkspace(next);$('accountDialog').close();notify('Tu acceso está aprobado. Bienvenida a Divas.');}
-    else{A.request=next.request;updateAccountUI();$('accountStatus').textContent=next.request.status==='pending'?'Todavía está pendiente. Puedes comprobarlo de nuevo más tarde.':'';}}
-  catch(error){$('accountStatus').textContent=cloudError(error).message;}
+async function checkApproval({quiet=false}={}){
+  if(!A.request||A.ownAuth||A.switching)return;const epoch=A.epoch;A.ownAuth=true;
+  try{const next=await verifyMember({allowPending:true});if(epoch!==A.epoch)return;if(next.member){await preserveSessionDraft();A.error='';await resetAccountWorkspace(next);await restoreSessionDraft();$('accountDialog').close();notify('Tu acceso está aprobado. Bienvenida a Divas.');}
+    else{A.request=next.request;updateAccountUI();if(!quiet)$('accountStatus').textContent=next.request.status==='pending'?'Todavía está pendiente. La página comprueba el acceso automáticamente mientras esta ventana esté abierta.':'';}}
+  catch(error){if(epoch===A.epoch&&!quiet)$('accountStatus').textContent=cloudError(error).message;}
   finally{A.ownAuth=false;}
-}
-function renderAccessRequests(requests=[],ready=true){
-  $('requestCount').textContent=requests.length?'Solicitudes pendientes · '+requests.length:'Solicitudes de acceso';
-  $('requestList').innerHTML=!ready?'<p class="help">Activa las solicitudes ejecutando 04-divas-solicitudes.sql y actualizando divas-accounts.</p>':requests.length?requests.map(r=>`<article class="access-request"><div><strong>${esc(r.display_name)}</strong><p>${esc(r.email)}</p><small>${r.email_confirmed?'Correo confirmado · lista para revisar':'Esperando que confirme su correo'}</small></div><div class="row"><button class="primary" data-action="reviewRequest" data-id="${esc(r.user_id)}" data-value="approve" ${r.email_confirmed?'':'disabled'}>Aprobar acceso</button><button class="quiet" data-action="reviewRequest" data-id="${esc(r.user_id)}" data-value="reject">Rechazar</button></div></article>`).join(''):'<p class="help">Cuando alguien se registre, su solicitud aparecerá aquí.</p>';
-}
-async function reviewAccessRequest(id,decision){
-  const request=M.requests?.find(r=>r.user_id===id);if(!request)return;
-  if(!confirm((decision==='approve'?'¿Dar acceso a los recursos de la agencia a ':'¿Rechazar la solicitud de ')+request.display_name+' ('+request.email+')?'))return;
-  await memberTask(async()=>{const result=await accountsAPI('review_request',{id,decision});if(await loadMembers())memberStatus(result.message);});
 }
 function readRegistrationCallback(){
   const hash=globalThis.location?.hash||'';if(!hash||hash.includes('divas-recovery='))return;
@@ -5389,6 +5432,7 @@ function readRegistrationCallback(){
   globalThis.history?.replaceState(null,'',location.pathname+location.search);
 }
 async function showRegistrationCallback(){
+  if(location.hash==='#solicitar'){globalThis.history.replaceState(null,'',location.pathname+location.search);if(!A.member&&!A.request){J.view='register';await openAccount();}return;}
   if(!J.confirmation)return;const callback=J.confirmation;J.confirmation=null;
   await openAccount();if(callback.error||!callback.token){$('accountStatus').textContent='No se pudo confirmar el correo con este enlace. Revisa si ya lo habías confirmado o pide ayuda al administrador.';return;}
   const {data,error}=await A.client.auth.getUser(callback.token);
@@ -5397,104 +5441,139 @@ async function showRegistrationCallback(){
   $('loginEmail').value=data.user.email||'';$('accountStatus').textContent=A.member?'Correo confirmado para '+data.user.email+'. Puedes entrar con esa cuenta al cerrar la sesión actual.':'Correo confirmado. Entra con tu contraseña para ver el estado de tu solicitud.';
 }
 
-/* Cuentas de agencia: operaciones privilegiadas exclusivamente en el servidor. */
-const M={ready:false,busy:false,link:null,epoch:0,requests:[],titlesReady:false};
+/* Cuentas v22: lecturas y permisos por RPC privado; Auth sensible en Edge. */
+const M={ready:false,busy:false,link:null,epoch:0,requests:[],titlesReady:false,settings:null,settingsDirty:false,formVersion:null,loadFailed:false,filter:'pending',search:'',loading:false,loadedAt:0,pending:null,noticeError:false,lastPoll:0,polling:false,pollTimer:null};
 const R={token:'',client:null,user:null,busy:false,done:false,email:'',invalid:false,reason:'',accountId:null,entered:false};
 function memberStatus(message){$('memberStatus').textContent=message;}
-function setMemberBusy(value){M.busy=value;document.querySelectorAll('#adminMembers button,#memberEditForm button,#memberDeleteForm button').forEach(el=>el.disabled=value);$('memberSubmit').disabled=value||!M.ready;}
+function setMemberBusy(value){
+ M.busy=value;document.querySelectorAll('#adminMembers button,#memberEditForm button,#memberDeleteForm button').forEach(el=>el.disabled=value);
+ document.querySelectorAll('#accountSettingsForm input,#memberForm input,#memberForm select,#memberEditForm input,#memberDeleteForm input').forEach(el=>el.disabled=value);$('memberLimit').disabled=value||$('unlimitedMembers').checked;
+ $('memberSubmit').disabled=value||!M.ready;$('saveAccountSettings').disabled=value||!M.settings;
+ if(!value){document.querySelectorAll('[data-action="reviewRequest"][data-value="approve"]').forEach(el=>el.disabled=!M.requests.find(r=>r.user_id===el.dataset.id)?.email_confirmed);document.querySelectorAll('[data-action="memberRecovery"]').forEach(el=>el.disabled=!C.members.find(m=>m.user_id===el.dataset.id)?.active);}
+}
+async function accountRPC(name,params={}){
+ requireMember(true);const epoch=A.epoch,controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
+ try{
+  let query=A.client.rpc(name,params);if(query.abortSignal)query=query.abortSignal(controller.signal);
+  const {data,error}=await Promise.race([query,new Promise((_,reject)=>controller.signal.addEventListener('abort',()=>reject(new Error('La conexión tardó demasiado. Actualiza las cuentas para comprobar el resultado antes de repetir.')),{once:true}))]);
+  if(epoch!==A.epoch||!isAdmin())throw new Error('La sesión cambió. No se mostrarán datos de otra cuenta.');
+  if(error){if(['PGRST202','PGRST205','42P01','42703'].includes(error.code))throw new Error('Falta activar esta actualización. Ejecuta 09-divas-gestion-cuentas.sql en el Supabase de Divas y pulsa Actualizar.');if(error.code==='42501')throw new Error('Solo un administrador activo puede gestionar las cuentas. Comprueba tu acceso desde el botón Administrador.');if(['P0001','22023','40001'].includes(error.code))throw new Error(error.message);throw new Error('No se pudieron consultar o guardar las cuentas. Comprueba tu conexión y pulsa Actualizar antes de repetir.');}
+  return data;
+ }finally{clearTimeout(timer);}
+}
 function accountAPIError(data,status){
-  if(data?.error?.message)return new Error(data.error.message);
-  if(status===404)return new Error('Falta activar la función divas-accounts en Supabase. Sigue la guía incluida y pulsa Actualizar cuentas.');
-  if(status===401)return new Error('No se pudo verificar la sesión. Cierra sesión y vuelve a entrar.');
-  return new Error('El servicio de cuentas no respondió. Actualiza la lista antes de repetir la acción.');
+ if(data?.error?.message)return new Error(data.error.message);
+ if(status===404)return new Error('Falta desplegar divas-accounts. Las solicitudes y aprobaciones siguen disponibles.');
+ if(status===401)return new Error('La función no pudo verificar el acceso. Reintenta la conexión desde Administrador. Si persiste, actualiza divas-accounts según la guía v22.');
+ return new Error('El servicio de contraseñas no respondió. Actualiza las cuentas antes de repetir la acción.');
 }
 async function accountsAPI(action,values={}){
-  requireMember(true);const epoch=A.epoch;
-  const {data,error}=await A.client.auth.getSession();if(error||!data.session?.access_token)throw new Error('Vuelve a iniciar sesión para gestionar cuentas.');
-  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
-  try{
-    const response=await fetch(CLOUD.url+'/functions/v1/divas-accounts',{method:'POST',headers:{apikey:CLOUD.key,Authorization:'Bearer '+data.session.access_token,'Content-Type':'application/json'},body:JSON.stringify({action,...values}),signal:controller.signal,cache:'no-store'});
-    const result=await response.json().catch(()=>null);
-    if(epoch!==A.epoch||!isAdmin())throw new Error('La sesión cambió. No se mostraron datos de la cuenta anterior.');
-    if(!response.ok||!result?.ok)throw accountAPIError(result,response.status);
-    return result;
-  }catch(error){if(error.name==='AbortError'||error instanceof TypeError)throw new Error('No se pudo conectar con la gestión de cuentas. Comprueba la función divas-accounts y actualiza la lista antes de repetir.');throw error;}
-  finally{clearTimeout(timer);}
+ requireMember(true);const epoch=A.epoch;
+ const {data,error}=await A.client.auth.getSession();if(error||!data.session?.access_token)throw new Error('Comprueba tu conexión desde Administrador antes de gestionar contraseñas.');
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
+ try{
+  const response=await fetch(CLOUD.url+'/functions/v1/divas-accounts',{method:'POST',headers:{apikey:CLOUD.key,Authorization:'Bearer '+data.session.access_token,'Content-Type':'application/json'},body:JSON.stringify({action,...values}),signal:controller.signal,cache:'no-store'});
+  const result=await response.json().catch(()=>null);
+  if(epoch!==A.epoch||!isAdmin())throw new Error('La sesión cambió. No se mostraron datos de la cuenta anterior.');
+  if(!response.ok||!result?.ok)throw accountAPIError(result,response.status);return result;
+ }catch(error){if(error.name==='AbortError'||error instanceof TypeError)throw new Error('No se pudo conectar con la función de contraseñas. Actualiza divas-accounts a v22 y revisa Cuentas → Cupo de la agencia → Dirección del editor. Puedes seguir viendo y aprobando solicitudes. Antes de repetir esta acción, actualiza la lista.');throw error;}finally{clearTimeout(timer);}
 }
 function memberCard(m){
-  const editor=m.role==='editor',last=m.last_sign_in_at?new Date(m.last_sign_in_at).toLocaleString('es-CL',{dateStyle:'short',timeStyle:'short'}):'Todavía no ha entrado';
-  return `<article class="account-card"><div class="account-card-heading"><strong>${esc(m.display_name)}</strong><span class="account-state ${m.active?'':'paused'}">${editor?(m.active?(m.account_title||'Emisora')+' · Activa':'Suspendida'):'Administrador'}</span></div><p class="account-card-email">${esc(m.email||'')}</p><p class="help">${editor?'Último acceso: '+esc(last):'Tu cuenta · permisos protegidos'}</p>${editor?`<div class="account-card-actions"><button data-action="memberRecovery" data-id="${esc(m.user_id)}" ${m.active?'':'disabled'}>Restablecer contraseña</button><button data-action="memberEdit" data-id="${esc(m.user_id)}">Editar datos</button><button data-action="memberTitle" data-id="${esc(m.user_id)}" data-value="${m.account_title==='Dueña'?'Emisora':'Dueña'}" ${M.titlesReady?'':'disabled title="Ejecuta 06-divas-acceso-claro.sql"'}>${m.account_title==='Dueña'?'Marcar como emisora':'Marcar como dueña'}</button></div><details class="account-more"><summary>Más opciones</summary><button data-action="memberActive" data-id="${esc(m.user_id)}" data-value="${!m.active}">${m.active?'Suspender acceso':'Reactivar acceso'}</button>${m.active?'':`<button class="danger" data-action="memberDelete" data-id="${esc(m.user_id)}">Eliminar cuenta…</button>`}</details>`:''}</article>`;
+ const editor=m.role==='editor',last=m.last_sign_in_at?new Date(m.last_sign_in_at).toLocaleString('es-CL',{dateStyle:'short',timeStyle:'short'}):'Todavía no ha entrado';
+ return `<article class="account-card"><div class="account-card-heading"><strong>${esc(m.display_name)}</strong><span class="account-state ${m.active?'':'paused'}">${editor?(m.active?(m.account_title||'Emisora')+' · Activa':'Suspendida'):'Administrador'}</span></div><p class="account-card-email">${esc(m.email||'')}</p><p class="help">${editor?'Último inicio de sesión: '+esc(last):'Tu cuenta · permisos protegidos'}</p>${editor?`<div class="account-card-actions"><button data-action="memberEdit" data-id="${esc(m.user_id)}">Editar</button><button data-action="memberRecovery" data-id="${esc(m.user_id)}" ${m.active?'':'disabled'}>Enlace de contraseña</button><button class="${m.active?'quiet':'primary'}" data-action="memberActive" data-id="${esc(m.user_id)}" data-value="${!m.active}">${m.active?'Suspender':'Reactivar'}</button></div><details class="account-more"><summary>Identificación y otras opciones</summary><button data-action="memberTitle" data-id="${esc(m.user_id)}" data-value="${m.account_title==='Dueña'?'Emisora':'Dueña'}">${m.account_title==='Dueña'?'Mostrar como emisora':'Mostrar como dueña'}</button>${m.active?'':`<button class="danger" data-action="memberDelete" data-id="${esc(m.user_id)}">Eliminar cuenta…</button>`}</details>`:''}</article>`;
 }
-async function loadMembers(){
-  requireMember(true);const epoch=A.epoch,request=++M.epoch;memberStatus('Cargando cuentas…');
-  try{const result=await accountsAPI('list');if(epoch!==A.epoch||request!==M.epoch)return false;let labels=[];try{labels=await boundedCloud(A.client.from('divas_members').select('*'));}catch{}if(epoch!==A.epoch||request!==M.epoch)return false;M.titlesReady=labels.some(m=>Object.hasOwn(m,'account_title'));C.members=result.members.map(m=>({...m,account_title:labels.find(x=>x.user_id===m.user_id)?.account_title}));M.requests=result.requests||[];renderAccessRequests(M.requests,result.requests_ready===true);M.ready=true;$('memberList').innerHTML=C.members.map(memberCard).join('');$('memberCount').textContent=C.members.filter(m=>m.role==='editor'&&m.active).length+' de 2 cuentas de agencia activas · 1 administrador';memberStatus('');$('memberSubmit').disabled=M.busy;return true;}
-  catch(error){if(epoch!==A.epoch||request!==M.epoch)return false;M.ready=false;C.members=[];M.requests=[];$('requestList').innerHTML='';$('memberList').innerHTML='';$('memberCount').textContent='';$('memberSubmit').disabled=true;memberStatus(error.message);return false;}
+function requestAge(r){const t=new Date(r.created_at).getTime(),days=Number.isFinite(t)?Math.max(0,Math.floor((Date.now()-t)/86400000)):0;return {days,label:days>0?`Hace ${days} ${days===1?'día':'días'}`:'Hoy',date:Number.isFinite(t)?new Date(t).toLocaleDateString('es-CL'):''};}
+function memberMatches(row){return (row.display_name+' '+row.email).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(M.search.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase());}
+function renderAccessRequests(requests=M.requests){
+ const list=requests.filter(r=>(M.filter==='all'||r.status===M.filter)&&memberMatches(r));
+ $('requestSection').hidden=!['pending','rejected','all'].includes(M.filter);$('requestCount').textContent=M.filter==='rejected'?'Solicitudes rechazadas':'Solicitudes · '+list.length;
+ $('requestList').innerHTML=list.length?list.map(r=>{const age=requestAge(r);return `<article class="access-request"><div><strong>${esc(r.display_name)}</strong><p>${esc(r.email)}</p><small>${r.status==='rejected'?'Rechazada · puedes reconsiderarla':r.email_confirmed?'Correo confirmado · lista para aprobar':'Falta que confirme su correo'}</small><span class="request-age ${age.days>=2&&r.status==='pending'?'overdue':''}" title="${esc(age.date)}">${age.label}${r.status==='pending'?' · esperando aprobación':''}</span></div><div class="row"><button class="primary" data-action="reviewRequest" data-id="${esc(r.user_id)}" data-value="approve" ${r.email_confirmed?'':'disabled'}>${r.status==='rejected'?'Aprobar ahora':'Aprobar acceso'}</button>${r.status==='pending'?`<button class="quiet" data-action="reviewRequest" data-id="${esc(r.user_id)}" data-value="reject">Rechazar</button>`:''}</div></article>`;}).join(''):M.filter==='all'?'':`<div class="member-empty"><strong>${M.search?'Sin coincidencias':M.filter==='pending'?'Todo al día':'Sin solicitudes rechazadas'}</strong><p>${M.search?'Prueba con otro nombre o correo.':M.filter==='pending'?'Las nuevas solicitudes aparecerán aquí automáticamente mientras tengas la página abierta.':'Aquí puedes revisar decisiones anteriores.'}</p></div>`;
+}
+function renderMembers(){
+ if(!M.ready)return;
+ const active=C.members.filter(m=>m.role==='editor'&&m.active).length,maximum=M.settings?.member_limit;
+ $('memberCount').textContent=maximum==null?active+' usuarias activas · sin límite del editor':active+' de '+maximum+' lugares ocupados';
+ $('quotaSummary').textContent=maximum==null?'Sin límite':maximum+' lugares';
+ const counts={pending:M.requests.filter(r=>r.status==='pending').length,rejected:M.requests.filter(r=>r.status==='rejected').length,active,paused:C.members.filter(m=>m.role==='editor'&&!m.active).length};
+ document.querySelectorAll('[data-member-count]').forEach(el=>el.textContent=counts[el.dataset.memberCount]);document.querySelectorAll('[data-action="memberFilter"]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.value===M.filter)));
+ renderAccessRequests();const list=C.members.filter(m=>memberMatches(m)&&(M.filter==='all'||m.role==='editor'&&(M.filter==='active'?m.active:M.filter==='paused'?!m.active:false)));
+ $('memberList').hidden=['pending','rejected'].includes(M.filter);$('memberList').innerHTML=list.map(memberCard).join('')||'<div class="member-empty"><strong>Sin cuentas en esta vista</strong><p>Prueba otro estado o nombre.</p></div>';
+ $('memberUpdated').textContent='Actualizado '+new Date(M.loadedAt).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})+' · revisión automática cada 30 s';
+ M.pending=counts.pending;M.noticeError=false;renderAccessNotice();setMemberBusy(M.busy);
+}
+function renderAccountSettings(){if(!M.settings||M.settingsDirty)return;$('unlimitedMembers').checked=M.settings.member_limit===null;M.formVersion=M.settings.version;$('memberLimit').value=M.settings.member_limit??10;$('memberLimit').disabled=M.settings.member_limit===null;$('agencyAppURL').value=M.settings.app_url;$('saveAccountSettings').disabled=M.busy;}
+async function loadMembers({quiet=false}={}){
+ requireMember(true);const epoch=A.epoch,request=++M.epoch;M.loading=true;if(!quiet)memberStatus('Cargando cuentas…');
+ try{const result=await accountRPC('divas_admin_accounts');if(epoch!==A.epoch||request!==M.epoch)return false;
+  if(!result?.ok||!Array.isArray(result.members)||!Array.isArray(result.requests)||!result.settings)throw new Error('La respuesta de cuentas está incompleta. Ejecuta el SQL 09 y actualiza la lista.');
+  if(!M.ready&&!result.requests.some(r=>r.status==='pending'))M.filter='active';
+  C.members=result.members;M.requests=result.requests;M.settings=result.settings;M.titlesReady=true;M.ready=true;M.loadedAt=Date.now();renderMembers();renderAccountSettings();if(!quiet||M.loadFailed)memberStatus('');M.loadFailed=false;return true;
+ }catch(error){if(epoch!==A.epoch||request!==M.epoch)return false;M.loadFailed=true;memberStatus(error.message+(M.ready?' Se conserva la última lista; los datos pueden haber cambiado.':''));if(!M.ready){$('requestList').innerHTML='<p class="help">No se pudo cargar la lista. Aún no sabemos cuántas solicitudes hay.</p>';$('memberList').innerHTML='';}M.noticeError=true;renderAccessNotice();return false;
+ }finally{if(epoch===A.epoch&&request===M.epoch){M.loading=false;setMemberBusy(M.busy);}}
 }
 async function memberTask(task,statusId='memberStatus'){
-  requireMember(true);if(M.busy)return;const epoch=A.epoch;setMemberBusy(true);$(statusId).textContent='Guardando…';
-  try{await task();}
-  catch(error){if(epoch===A.epoch)$(statusId).textContent=error.message;}
-  finally{if(epoch===A.epoch){setMemberBusy(false);document.querySelectorAll('[data-action="reviewRequest"][data-value="approve"]').forEach(el=>el.disabled=!M.requests.find(r=>r.user_id===el.dataset.id)?.email_confirmed);document.querySelectorAll('[data-action="memberRecovery"]').forEach(el=>{el.disabled=!C.members.find(m=>m.user_id===el.dataset.id)?.active;});}}
+ requireMember(true);if(M.busy)return;const epoch=A.epoch;setMemberBusy(true);$(statusId).textContent='Guardando…';
+ try{await task();}catch(error){if(epoch===A.epoch)$(statusId).textContent=error.message;}finally{if(epoch===A.epoch)setMemberBusy(false);}
+}
+async function reviewAccessRequest(id,decision){
+ const request=M.requests.find(r=>r.user_id===id);if(!request||!['approve','reject'].includes(decision))return;
+ if(decision==='reject'&&!confirm('¿Rechazar la solicitud de '+request.display_name+'? Podrás reconsiderarla en Rechazadas.'))return;
+ await memberTask(async()=>{await accountRPC('divas_review_request',{request_id:id,decision});if(await loadMembers())memberStatus(decision==='approve'?'Acceso aprobado para '+request.display_name+'. Conserva su contraseña; la ventana Mi solicitud comprobará el acceso automáticamente.':'Solicitud rechazada. Puedes recuperarla desde Rechazadas.');});
+}
+async function openMembers(){requireMember(true);await saveResourceMetadata();$('accountDialog').close();$('catalogDialog').close();await adminTab('members',{load:false});showDialog('resourceManager');await loadMembers();}
+function renderAccessNotice(){const admin=isAdmin();$('membersMenuButton').hidden=!admin;$('accessNotice').hidden=!admin||(M.pending===null||M.pending===0)&&!M.noticeError;if(!admin)return;$('membersMenuButton').textContent='Cuentas y solicitudes'+(M.pending?' · '+M.pending:'');$('accessNoticeText').textContent=M.noticeError?'No se pudo comprobar si hay nuevas solicitudes.':M.pending===0?'Cuentas al día · sin solicitudes pendientes':M.pending+' '+(M.pending===1?'solicitud pendiente de tu aprobación':'solicitudes pendientes de tu aprobación');$('accessNoticeButton').textContent=M.noticeError?'Revisar cuentas':M.pending?'Revisar solicitudes':'Gestionar cuentas';}
+function queueAccessCheck(){renderAccessNotice();clearTimeout(M.pollTimer);M.pollTimer=setTimeout(()=>refreshAccessNotice(),300);}
+async function refreshAccessNotice({force=false}={}){
+ if(document.hidden||A.ownAuth||A.switching||A.identityChanging||M.busy||M.loading||M.polling||!A.client||!force&&Date.now()-M.lastPoll<25000)return;
+ if(!isAdmin()){if(A.request?.status==='pending'&&!S.opened&&$('accountDialog').open){M.lastPoll=Date.now();await checkApproval({quiet:true});}return;}
+ const epoch=A.epoch;M.polling=true;M.lastPoll=Date.now();
+ try{if($('resourceManager').open&&!$('adminMembers').hidden){await loadMembers({quiet:true});return;}const data=await accountRPC('divas_admin_access_summary');if(epoch===A.epoch){if(!Number.isInteger(data?.pending))throw new Error('Respuesta incompleta');M.pending=data.pending;M.noticeError=false;renderAccessNotice();}}
+ catch{if(epoch===A.epoch){M.noticeError=true;renderAccessNotice();}}finally{if(epoch===A.epoch)M.polling=false;}
+}
+function openAccountSettings(){$('accountSettings').open=true;$('accountSettings').scrollIntoView({block:'nearest',behavior:'smooth'});$('memberLimit').focus();}
+async function saveAccountSettings(){
+ if(!M.settings)return;const unlimited=$('unlimitedMembers').checked,limit=unlimited?null:Number($('memberLimit').value);let app;
+ try{app=new URL($('agencyAppURL').value.trim());if(app.protocol!=='https:'||app.username||app.password||app.hash||app.search)throw new Error();}catch{$('accountSettingsStatus').textContent='Escribe la dirección HTTPS del editor, sin parámetros ni fragmentos.';return;}
+ if(!unlimited&&(!Number.isInteger(limit)||limit<1||limit>1000)){$('accountSettingsStatus').textContent='Elige entre 1 y 1000 usuarias, o Sin límite del editor.';return;}
+ const version=M.formVersion;await memberTask(async()=>{const result=await accountRPC('divas_set_account_settings',{p_member_limit:limit,p_app_url:app.href,p_expected:version});M.settings=result;M.settingsDirty=false;renderAccountSettings();renderMembers();$('accountSettingsStatus').textContent='Ajustes guardados. '+(limit===null?'Sin límite de usuarias del editor.':'Cupo: '+limit+' usuarias activas.');},'accountSettingsStatus');
+}
+async function copyRegistration(){
+ requireMember(true);const link=new URL(location.pathname,location.origin);link.hash='solicitar';$('registrationURL').value=link.href;
+ try{await navigator.clipboard.writeText(link.href);$('registrationStatus').textContent='Enlace copiado. Ella se registra con su correo y tú apruebas su solicitud.';$('registrationURL').hidden=true;}catch{$('registrationURL').hidden=false;$('registrationURL').focus();$('registrationURL').select();$('registrationStatus').textContent='Copia este enlace para compartir el registro.';}
 }
 function showMemberLink(link){
-  requireMember(true);if(!link||typeof link.url!=='string')return;
-  const url=new URL(link.url);if(url.protocol!=='https:'||url.origin!==location.origin)throw new Error('El enlace apunta a otro dominio. Revisa DIVAS_APP_URL.');
-  M.link=link;$('memberLinkRecipient').textContent=link.display_name+' · '+link.email;$('memberLinkURL').value=link.url;
-  $('memberLinkStatus').textContent='Compártelo solo con la dueña de esta cuenta. Para entrar a diario debe usar la página normal con su contraseña. Genera otro enlace solo si necesita restablecerla.';showDialog('memberLinkDialog');
+ requireMember(true);if(!link||typeof link.url!=='string')return;
+ const url=new URL(link.url);if(url.protocol!=='https:'||url.origin!==location.origin)throw new Error('El enlace apunta a otro dominio. Revisa Cuentas → Cupo de la agencia → Dirección del editor antes de generar otro.');
+ M.link=link;$('memberLinkRecipient').textContent=link.display_name+' · '+link.email;$('memberLinkURL').value=link.url;$('memberLinkStatus').textContent='Compártelo solo con la dueña de esta cuenta. Para entrar a diario usa la página normal y su contraseña.';showDialog('memberLinkDialog');
 }
-async function copyMemberLink(){
-  requireMember(true);if(!M.link)return;
-  try{await navigator.clipboard.writeText(M.link.url);$('memberLinkStatus').textContent='Enlace copiado. Ya puedes compartirlo en privado.';}
-  catch{$('memberLinkURL').focus();$('memberLinkURL').select();$('memberLinkStatus').textContent='Seleccionamos el enlace. Usa Copiar en tu dispositivo.';}
-}
+async function copyMemberLink(){requireMember(true);if(!M.link)return;try{await navigator.clipboard.writeText(M.link.url);$('memberLinkStatus').textContent='Enlace copiado. Ya puedes compartirlo en privado.';}catch{$('memberLinkURL').focus();$('memberLinkURL').select();$('memberLinkStatus').textContent='Seleccionamos el enlace. Usa Copiar en tu dispositivo.';}}
 async function grantMember(){
-  const existing=$('memberMode').value==='existing';
-  await memberTask(async()=>{const result=await accountsAPI(existing?'authorize':'create',{email:$('memberEmail').value.trim(),name:$('memberName').value.trim()});$('memberEmail').value='';$('memberName').value='';const loaded=await loadMembers();if(loaded)memberStatus(existing?'Acceso autorizado. Ya puede entrar con su correo y contraseña actual. Usa Restablecer contraseña solo si la olvidó.':result.warning||'Cuenta preparada. Comparte su enlace para que elija una contraseña.');if(loaded&&!existing&&result.link)showMemberLink(result.link);});
+ const existing=$('memberMode').value==='existing';await memberTask(async()=>{const email=$('memberEmail').value.trim(),name=$('memberName').value.trim();const result=existing?{id:await accountRPC('divas_grant_editor',{member_email:email,member_name:name})}:await accountsAPI('create',{email,name});$('memberEmail').value='';$('memberName').value='';M.filter='active';const loaded=await loadMembers();if(loaded)memberStatus(existing?'Acceso autorizado. Conserva su contraseña actual.':result.warning||'Cuenta preparada. Comparte su enlace para que elija una contraseña.');if(loaded&&!existing&&result.link)showMemberLink(result.link);});
 }
-async function resetMemberPassword(id){
-  await memberTask(async()=>{const result=await accountsAPI('recovery',{id});memberStatus('Enlace preparado. La contraseña actual se mantiene hasta que la dueña la cambie.');showMemberLink(result.link);});
-}
-function editMember(id){
-  requireMember(true);const m=C.members.find(m=>m.user_id===id&&m.role==='editor');if(!m||M.busy)return;
-  $('memberEditId').value=id;$('memberEditName').value=m.display_name;$('memberEditEmail').value=m.email;$('memberEditStatus').textContent='';showDialog('memberEditDialog');
-}
+async function resetMemberPassword(id){await memberTask(async()=>{const result=await accountsAPI('recovery',{id});memberStatus('Enlace preparado. La contraseña actual se mantiene hasta que la dueña la cambie.');showMemberLink(result.link);});}
+function editMember(id){requireMember(true);const m=C.members.find(m=>m.user_id===id&&m.role==='editor');if(!m||M.busy)return;$('memberEditId').value=id;$('memberEditName').value=m.display_name;$('memberEditEmail').value=m.email;$('memberEditStatus').textContent='';showDialog('memberEditDialog');}
 async function saveMember(){
-  const id=$('memberEditId').value,m=C.members.find(m=>m.user_id===id&&m.role==='editor');if(!m)return;
-  const email=$('memberEditEmail').value.trim().toLowerCase();if(email!==m.email.toLowerCase()&&!confirm('¿Cambiar el correo de acceso de '+m.email+' a '+email+'? Confirma que pertenece a la misma dueña.'))return;
-  await memberTask(async()=>{const result=await accountsAPI('update',{id,name:$('memberEditName').value.trim(),email,confirm_email:m.email});$('memberEditDialog').close();const loaded=await loadMembers();if(loaded)memberStatus(result.message);},'memberEditStatus');
+ const id=$('memberEditId').value,m=C.members.find(m=>m.user_id===id&&m.role==='editor');if(!m)return;const email=$('memberEditEmail').value.trim().toLowerCase(),changed=email!==m.email.toLowerCase();
+ if(changed&&!confirm('¿Cambiar el correo de acceso de '+m.email+' a '+email+'? Confirma que pertenece a la misma dueña.'))return;
+ await memberTask(async()=>{const name=$('memberEditName').value.trim();if(changed)await accountsAPI('update',{id,name,email,confirm_email:m.email});else await accountRPC('divas_rename_editor',{member_id:id,member_name:name});$('memberEditDialog').close();if(await loadMembers())memberStatus(changed?'Nombre y correo guardados. Conserva sus proyectos.':'Nombre actualizado.');},'memberEditStatus');
 }
-async function setMemberTitle(id,title){
-  requireMember(true);if(!['Dueña','Emisora'].includes(title)||!C.members.some(m=>m.user_id===id&&m.role==='editor'))return;
-  await memberTask(async()=>{
-    const result=await awaitAuth(A.client.rpc('divas_set_editor_title',{member_id:id,member_title:title}));
-    if(result.error?.code==='PGRST202')throw new Error('Ejecuta 06-divas-acceso-claro.sql en Supabase y vuelve a actualizar las cuentas.');
-    if(result.error)throw cloudError(result.error);
-    if(await loadMembers())memberStatus('Identificación actualizada a '+title+'. Se verá cuando actualice su cuenta.');
-  });
-}
-$('registerForm').addEventListener('input',()=>{
-  const password=$('registerPassword').value,repeat=$('registerRepeat').value;
-  $('registerPasswordHint').textContent=!password?'':password.length<12?'Faltan '+(12-password.length)+' caracteres.':repeat?(password===repeat?'Las contraseñas coinciden.':'Las contraseñas no coinciden. Corrígelas antes de enviar.'):'Repite la contraseña para comprobarla.';
-});
-async function setMemberActive(id,enabled){
-  const m=C.members.find(m=>m.user_id===id&&m.role==='editor');if(!m)return;
-  if(!enabled&&!confirm('¿Suspender el acceso de '+m.display_name+'? Sus proyectos se conservarán.'))return;
-  await memberTask(async()=>{await accountsAPI('active',{id,enabled});const loaded=await loadMembers();if(loaded)memberStatus(enabled?'Cuenta reactivada.':'Acceso suspendido. Sus proyectos se conservaron.');});
-}
-function openDeleteMember(id){
-  requireMember(true);const m=C.members.find(m=>m.user_id===id&&m.role==='editor'&&!m.active);if(!m||M.busy)return;
-  $('memberDeleteId').value=id;$('memberDeleteWho').textContent=m.display_name+' · '+m.email;$('memberDeleteEmail').value='';$('memberDeleteStatus').textContent='';showDialog('memberDeleteDialog');
-}
-async function deleteMember(){
-  const id=$('memberDeleteId').value,m=C.members.find(m=>m.user_id===id&&m.role==='editor'&&!m.active);if(!m)return;
-  if($('memberDeleteEmail').value.trim()!==m.email){$('memberDeleteStatus').textContent='El correo no coincide. Escribe exactamente '+m.email;return;}
-  await memberTask(async()=>{await accountsAPI('delete',{id,confirm_email:$('memberDeleteEmail').value.trim()});$('memberDeleteDialog').close();const loaded=await loadMembers();if(loaded)memberStatus('Cuenta y proyectos eliminados.');},'memberDeleteStatus');
-}
+async function setMemberTitle(id,title){requireMember(true);if(!['Dueña','Emisora'].includes(title)||!C.members.some(m=>m.user_id===id&&m.role==='editor'))return;await memberTask(async()=>{await accountRPC('divas_set_editor_title',{member_id:id,member_title:title});if(await loadMembers())memberStatus('Identificación actualizada a '+title+'.');});}
+$('registerForm').addEventListener('input',()=>{const password=$('registerPassword').value,repeat=$('registerRepeat').value;$('registerPasswordHint').textContent=!password?'':password.length<12?'Faltan '+(12-password.length)+' caracteres.':repeat?(password===repeat?'Las contraseñas coinciden.':'Las contraseñas no coinciden. Corrígelas antes de enviar.'):'Repite la contraseña para comprobarla.';});
+async function setMemberActive(id,enabled){const m=C.members.find(m=>m.user_id===id&&m.role==='editor');if(!m)return;if(!enabled&&!confirm('¿Suspender el acceso de '+m.display_name+'? Sus proyectos se conservarán.'))return;await memberTask(async()=>{await accountRPC('divas_set_editor_active',{member_id:id,enabled});if(await loadMembers())memberStatus(enabled?'Cuenta reactivada.':'Acceso suspendido. Sus proyectos se conservaron.');});}
+function openDeleteMember(id){requireMember(true);const m=C.members.find(m=>m.user_id===id&&m.role==='editor'&&!m.active);if(!m||M.busy)return;$('memberDeleteId').value=id;$('memberDeleteWho').textContent=m.display_name+' · '+m.email;$('memberDeleteEmail').value='';$('memberDeleteStatus').textContent='';showDialog('memberDeleteDialog');}
+async function deleteMember(){const id=$('memberDeleteId').value,m=C.members.find(m=>m.user_id===id&&m.role==='editor'&&!m.active);if(!m)return;if($('memberDeleteEmail').value.trim()!==m.email){$('memberDeleteStatus').textContent='El correo no coincide. Escribe exactamente '+m.email;return;}await memberTask(async()=>{await accountsAPI('delete',{id,confirm_email:$('memberDeleteEmail').value.trim()});$('memberDeleteDialog').close();if(await loadMembers())memberStatus('Cuenta y proyectos eliminados.');},'memberDeleteStatus');}
 function clearMemberSecrets(){
-  M.epoch++;M.link=null;M.ready=false;M.busy=false;M.requests=[];$('requestList').innerHTML='';$('requestCount').textContent='Solicitudes de acceso';$('registerPassword').value='';$('registerRepeat').value='';$('pendingName').textContent='';$('pendingEmail').textContent='';
-  for(const id of ['memberLinkURL','memberEmail','memberName','memberEditId','memberEditName','memberEditEmail','memberDeleteId','memberDeleteEmail','accountPassword','accountPasswordRepeat','registerName','registerEmail'])$(id).value='';
-  for(const id of ['memberStatus','memberCount','memberLinkRecipient','memberLinkStatus','memberEditStatus','memberDeleteWho','memberDeleteStatus'])$(id).textContent='';
+ M.epoch++;clearTimeout(M.pollTimer);M.link=null;M.ready=false;M.busy=false;M.requests=[];M.settings=null;M.settingsDirty=false;M.formVersion=null;M.loadFailed=false;M.loading=false;M.loadedAt=0;M.pending=null;M.noticeError=false;M.lastPoll=0;M.polling=false;M.filter='pending';M.search='';C.members=[];
+ $('requestList').innerHTML='';$('memberList').innerHTML='';$('requestCount').textContent='Solicitudes de acceso';$('pendingName').textContent='';$('pendingEmail').textContent='';$('accountSettings').open=false;$('accessNotice').hidden=true;$('membersMenuButton').hidden=true;$('registrationURL').hidden=true;
+ for(const id of ['memberLinkURL','memberEmail','memberName','memberEditId','memberEditName','memberEditEmail','memberDeleteId','memberDeleteEmail','accountPassword','accountPasswordRepeat','registerName','registerEmail','registerPassword','registerRepeat','memberSearch','agencyAppURL','registrationURL'])$(id).value='';
+ for(const id of ['memberStatus','memberCount','memberLinkRecipient','memberLinkStatus','memberEditStatus','memberDeleteWho','memberDeleteStatus','memberUpdated','accountSettingsStatus','registrationStatus','quotaSummary','accessNoticeText'])$(id).textContent='';
+ document.querySelectorAll('[data-member-count]').forEach(el=>el.textContent='—');
 }
+$('memberSearch').addEventListener('input',()=>{M.search=$('memberSearch').value.trim();renderMembers();});
+$('accountSettingsForm').addEventListener('input',()=>{M.settingsDirty=true;$('memberLimit').disabled=$('unlimitedMembers').checked;$('accountSettingsStatus').textContent='Cambios sin guardar.';});
+
+$('memberMode').addEventListener('change',()=>{$('memberSubmit').textContent=$('memberMode').value==='existing'?'Autorizar acceso':'Preparar cuenta y enlace';});
+
 function readRecoveryLink(){
   const hash=globalThis.location?.hash||'';if(!hash.includes('divas-recovery='))return;
   const params=new URLSearchParams(hash.slice(1)),token=params.get('divas-recovery')||'';
@@ -6374,6 +6453,8 @@ async function boot(){
   updateBrandLogo();updateAccountUI();showRecovery();await showRegistrationCallback();
 }
 setInterval(autoSave,10000);
+setInterval(()=>refreshAccessNotice(),30000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshAccessNotice({force:true});});
 document.addEventListener("visibilitychange",()=>{if(document.hidden)autoSave();else if(A.needsRetry&&!A.ownAuth&&!A.switching)initializeAuth();});
 window.addEventListener("online",()=>{
  if(A.needsRetry&&!A.ownAuth&&!A.switching)initializeAuth();
