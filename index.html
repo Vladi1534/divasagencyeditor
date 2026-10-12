@@ -1017,6 +1017,8 @@ button,a,input[type=button],input[type=range],select{touch-action:manipulation}
 body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agencyFontsDialog .dialog-head button{pointer-events:none;opacity:.5}
 @media(max-width:760px){.agency-save-choices button{padding:12px;min-height:105px}.agency-save-choices{gap:8px}#agencyAddDialog input,#agencyAddDialog select,#agencyFontsDialog select{font-size:16px}#agencyAddDialog .dialog-footer button,#agencyFontsDialog .dialog-footer button{min-height:44px;flex:1;font-size:12px}.agency-capture-preview img{max-height:155px}.resource-upload .agency-add-entry{margin:0}}
 
+.font-pack-settings{font-size:13px;margin-bottom:8px}.font-pack-settings>summary{min-height:44px;align-content:center;cursor:pointer}.font-pack-settings[open]>summary{margin-bottom:6px}.font-pack-progress{padding:14px;margin:14px 0;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}.font-pack-progress-title{display:flex;justify-content:space-between;gap:8px;font-size:13px}.font-pack-progress progress{width:100%;height:10px;accent-color:var(--pink);margin-top:10px}.font-pack-progress .help{margin:7px 0 0}#fontPackCurrent{overflow-wrap:anywhere}#fontPackDetails{font-size:13px}#fontPackDetails summary{min-height:44px;align-content:center;cursor:pointer}#fontPackResults{max-height:240px;overflow:auto}.font-pack-task{position:fixed;right:14px;bottom:18px;z-index:70;max-width:calc(100vw - 28px);min-height:44px;border:1px solid var(--pink);background:var(--panel);color:var(--text);box-shadow:0 5px 24px #0003;border-radius:99px;padding:9px 16px;font-size:12px}#agencyFontsDialog .dialog-footer{flex-wrap:wrap}#agencyFontsDialog .dialog-footer button{min-height:44px}#agencyFontsDialog .font-pack-progress[hidden]{display:none}
+@media(max-width:760px){.font-pack-task{bottom:calc(92px + env(safe-area-inset-bottom))}#agencyFontsDialog .dialog-head h2{font-size:18px}#agencyFontsDialog .dialog-footer{gap:7px}#agencyFontsDialog .dialog-footer button{flex:1 1 40%}.glow-controls input[type=range]{min-height:44px}}
 @media(max-width:380px){header{padding-inline:8px}.header-actions{gap:3px}.header-actions .account-button{max-width:66px}.header-actions #downloadBtn{padding-inline:11px}}
 </style>
 </head>
@@ -1075,7 +1077,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v24 · Tu biblioteca creativa</p>
+        <p class="help" id="appVersion">Divas Editor · v25 · Glow nítido y packs de fuentes</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -1365,6 +1367,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
             <option value="1">Tamaño original</option>
             <option value="2">Doble resolución</option>
             <option value="3">Triple resolución</option>
+            <option value="4k">4K · lado largo de 3840 px</option>
           </select>
         </div>
         <p id="exportDimensions" class="help"></p>
@@ -1483,20 +1486,31 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   <div class="dialog-footer"><button data-action="agencyCaptureBack">Volver</button><button id="agencyCaptureSave" class="primary" data-action="agencyCaptureSave" disabled>Guardar en la agencia</button></div>
 </dialog>
 <dialog id="agencyFontsDialog" aria-labelledby="agencyFontsTitle">
-  <div class="dialog-head"><div><h2 id="agencyFontsTitle">Fuentes para tu agencia</h2><p class="help">Sube archivos o un pack ZIP. Las letras quedan disponibles para otros proyectos.</p></div><button data-action="closeDialog">Cerrar</button></div>
+  <div class="dialog-head"><div><h2 id="agencyFontsTitle">Fuentes para tu agencia</h2><p class="help">Elige el pack completo. Divas organiza las tandas por ti.</p></div><button data-action="closeDialog" aria-label="Cerrar y seguir editando">Cerrar</button></div>
   <div class="dialog-body">
+    <details id="fontPackOptions" class="font-pack-settings" open><summary>Destino y clasificación</summary>
     <div class="field"><label for="fontPackCollection">Colección de destino</label><select id="fontPackCollection"></select></div>
     <div class="field"><label for="fontPackUse">Clasificación</label><select id="fontPackUse"><option value="auto">Sugerir por el nombre de cada fuente</option></select></div>
     <label class="check"><input id="fontPackPublished" type="checkbox" checked>Publicar para las cuentas aprobadas</label>
-    <button class="primary wide" data-action="agencyFontFiles">+ Elegir fuentes o pack ZIP</button>
-    <p class="help">TTF, OTF, WOFF o WOFF2 · hasta 40 fuentes por tanda, 6 MB por fuente. Los archivos repetidos se reconocen por su contenido.</p>
-    <label class="check"><input id="autoArchiveFonts" type="checkbox" checked>Guardar automáticamente las fuentes incluidas en mis PXZ y las que cargo al proyecto</label>
+    </details>
+    <button id="fontPackChoose" class="primary wide" data-action="agencyFontFiles">+ Elegir fuentes o pack ZIP</button>
+    <p class="help">ZIP de hasta 200 MB y 3000 fuentes · 6 MB por fuente. TTF, OTF, WOFF y WOFF2, también dentro de carpetas. No necesitas dividir el archivo.</p>
+    <section id="fontPackProgressBox" class="font-pack-progress" hidden aria-label="Progreso de importación">
+      <div class="font-pack-progress-title"><strong id="fontPackProgressLabel"></strong><span id="fontPackPercent"></span></div>
+      <progress id="fontPackProgress" max="100" value="0" aria-label="Fuentes procesadas"></progress>
+      <p id="fontPackCurrent" class="help"></p>
+      <p id="fontPackContinuity" class="help"></p>
+    </section>
+    <details class="font-pack-settings"><summary>Guardado automático desde PXZ</summary><label class="check"><input id="autoArchiveFonts" type="checkbox" checked>Guardar automáticamente las fuentes incluidas en mis PXZ y las que cargo al proyecto</label>
     <p class="help">Se guardan en «Fuentes de agencia». La sugerencia usa nombres reconocibles; si no hay pistas, queda «Por clasificar». Puedes cambiarla en Administrar agencia → Recursos.</p>
-    <p id="fontPackStatus" class="help" role="status" aria-live="polite"></p><ul id="fontPackResults" class="font-pack-results"></ul>
+    </details>
+    <p id="fontPackStatus" class="help" role="status" aria-live="polite"></p>
+    <details id="fontPackDetails"><summary id="fontPackDetailsLabel">Ver resultados</summary><ul id="fontPackResults" class="font-pack-results"></ul></details>
   </div>
-  <div class="dialog-footer"><button data-action="resourceManager">Ver y organizar recursos</button><button id="retryFontPack" data-action="retryFontPack" hidden>Reintentar pendientes</button></div>
+  <div class="dialog-footer"><button data-action="resourceManager">Ver recursos</button><button id="pauseFontPack" data-action="pauseFontPack" hidden>Pausar</button><button id="retryFontPack" class="primary" data-action="retryFontPack" hidden>Continuar</button><button id="stopFontPack" data-action="stopFontPack" hidden>Dejar pendientes</button><button id="fontPackDownloadReport" data-action="fontPackReport" hidden>Informe</button></div>
 </dialog>
 <input id="agencyFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2,.zip" multiple hidden>
+<button id="fontPackTask" class="font-pack-task" data-action="agencyFonts" hidden aria-label="Ver progreso del pack de fuentes"></button>
 
 <input id="fontInput" type="file" accept=".ttf,.otf,.woff,.woff2,.zip" multiple hidden>
 <input id="csvInput" type="file" accept=".csv,.tsv,.txt" hidden>
@@ -1666,7 +1680,7 @@ function paintLookPreviews(){
 function textEssentialsHTML(p){
   const effects=S.textSection==="efectos";
   const size=Math.round(textMetrics.get(p.id)?.size||p.tamano);
-  return `<div class="edit-segments" aria-label="Editar texto"><button data-action="textSection" data-value="texto" aria-pressed="${!effects}">Aa Texto y tamaño</button><button data-action="textSection" data-value="efectos" aria-pressed="${effects}">✦ Efectos</button></div>${effects?`<div class="look-intro"><strong>Dale ese toque Divas</strong><span>Toca un acabado. Se aplica al instante.</span></div><div class="text-look-grid">${Object.entries(TEXT_LOOKS).map(([id,l])=>`<button data-action="textLook" data-value="${id}"><canvas width="240" height="90" data-text-style="${id}" aria-hidden="true"></canvas><span>${esc(l.nombre)}</span></button>`).join("")}</div><div class="glow-controls">${rangeProp("Intensidad del glow","glow",0,100,1)}${inputProp("Color del glow","glowColor","color")}</div><button class="wide" data-action="textSection" data-value="texto">Aa Cambiar tamaño y letra</button>`:`${field("¿Qué quieres decir?",`<textarea class="text-content" data-prop="texto" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)}<div class="font-size-block"><div class="size-control"><button data-action="fontStep" data-value="-1" aria-label="Reducir tamaño de letra">A−</button><label><span>Tamaño</span><input data-prop="tamano" aria-label="Tamaño de letra" type="number" inputmode="numeric" min="1" max="1000" step="1" value="${size}"></label><button data-action="fontStep" data-value="1" aria-label="Aumentar tamaño de letra">A+</button></div><label class="font-size-slider"><span>A</span><input data-prop="tamano" aria-label="Desliza para cambiar tamaño de letra" type="range" min="6" max="${Math.min(1000,Math.max(180,size*2))}" step="1" value="${size}"><span>A</span></label></div><div class="text-font-color">${selectProp("Tipo de letra","fuente",fontOptions())}${inputProp("Color","color","color")}</div><div class="font-library-actions"><button data-action="catalog" data-value="fuentes">Fuentes de agencia</button><button data-action="font">Cargar fuente</button></div><div class="text-swatches" aria-label="Colores Divas">${["#f4bdd8","#e51888","#ffe8a6","#ffffff","#59304d","#15121c"].map(c=>`<button data-action="textColor" data-value="${c}" style="--swatch:${c}" aria-label="Color ${c}" title="${c}"></button>`).join("")}<button class="effect-link" data-action="textSection" data-value="efectos">✦ Dorado y glow</button></div><div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>`}<p id="textFeedback" class="help" aria-live="polite"></p>`;
+  return `<div class="edit-segments" aria-label="Editar texto"><button data-action="textSection" data-value="texto" aria-pressed="${!effects}">Aa Texto y tamaño</button><button data-action="textSection" data-value="efectos" aria-pressed="${effects}">✦ Efectos</button></div>${effects?`<div class="look-intro"><strong>Dale ese toque Divas</strong><span>Toca un acabado. Se aplica al instante.</span></div><div class="text-look-grid">${Object.entries(TEXT_LOOKS).map(([id,l])=>`<button data-action="textLook" data-value="${id}"><canvas width="240" height="90" data-text-style="${id}" aria-hidden="true"></canvas><span>${esc(l.nombre)}</span></button>`).join("")}</div><div class="glow-controls">${rangeProp("Intensidad del glow","glow",0,100,1)}${rangeProp("Tamaño del halo","glowRadio",0,150,1)}${inputProp("Color del glow","glowColor","color")}<p class="help">Más brillo alrededor; las letras conservan su nitidez.</p></div><button class="wide" data-action="textSection" data-value="texto">Aa Cambiar tamaño y letra</button>`:`${field("¿Qué quieres decir?",`<textarea class="text-content" data-prop="texto" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)}<div class="font-size-block"><div class="size-control"><button data-action="fontStep" data-value="-1" aria-label="Reducir tamaño de letra">A−</button><label><span>Tamaño</span><input data-prop="tamano" aria-label="Tamaño de letra" type="number" inputmode="numeric" min="1" max="1000" step="1" value="${size}"></label><button data-action="fontStep" data-value="1" aria-label="Aumentar tamaño de letra">A+</button></div><label class="font-size-slider"><span>A</span><input data-prop="tamano" aria-label="Desliza para cambiar tamaño de letra" type="range" min="6" max="${Math.min(1000,Math.max(180,size*2))}" step="1" value="${size}"><span>A</span></label></div><div class="text-font-color">${selectProp("Tipo de letra","fuente",fontOptions())}${inputProp("Color","color","color")}</div><div class="font-library-actions"><button data-action="catalog" data-value="fuentes">Fuentes de agencia</button><button data-action="font">Cargar fuente</button></div><div class="text-swatches" aria-label="Colores Divas">${["#f4bdd8","#e51888","#ffe8a6","#ffffff","#59304d","#15121c"].map(c=>`<button data-action="textColor" data-value="${c}" style="--swatch:${c}" aria-label="Color ${c}" title="${c}"></button>`).join("")}<button class="effect-link" data-action="textSection" data-value="efectos">✦ Dorado y glow</button></div><div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>`}<p id="textFeedback" class="help" aria-live="polite"></p>`;
 }
 function resizeTextTo(p,next){
   // Escala la caja junto a la letra: el autoajuste ya no cancela A+.
@@ -2082,6 +2096,7 @@ async function loadFont(f){
   await face.load();
   if(old?.face)document.fonts.delete(old.face);
   document.fonts.add(face);fontResources.set(f.nombre,{datos:f.datos,face});
+  textGlowCache.clear();
 }
 async function hydrate(d){
   const sources=new Set();
@@ -2690,6 +2705,60 @@ function wrapLines(c,text,width,spacing){
   }
   return lines;
 }
+// El halo se compone a partir de la silueta completa. La tinta se dibuja al
+// final, con texto nativo a la resolución de salida, nunca con blur del glow.
+const textGlowCache=new Map();
+function paintTextRuns(c,p,runs,marks=[]){
+  const ink=(target,mask=false)=>{
+    target.save();
+    if(mask){
+      target.font=c.font;target.textAlign=c.textAlign;target.textBaseline=c.textBaseline;
+      target.lineJoin=c.lineJoin;target.lineWidth=c.lineWidth;target.miterLimit=c.miterLimit;
+      target.fillStyle=target.strokeStyle='#fff';
+    }
+    if(p.ajusteTexto==='envolver'){target.beginPath();target.rect(-p.w/2,-p.h/2,p.w,p.h);target.clip();}
+    // Primero todos los contornos, después todas las letras: tampoco un
+    // contorno grueso debe tapar la letra vecina con espaciado estrecho.
+    if(p.contornoTexto>0)for(const r of runs)target.strokeText(r.ch,r.x,r.y);
+    for(const r of runs)target.fillText(r.ch,r.x,r.y);
+    for(const r of marks)target.fillRect(r.x,r.y,r.w,r.h);
+    target.restore();
+  };
+  c.save();
+  if(p.glow>0&&runs.length){
+    const transform=c.getTransform(),factor=Math.max(.001,Math.hypot(transform.a,transform.b));
+    const determinant=transform.a*transform.d-transform.b*transform.c;
+    const radius=c.shadowBlur/factor,dx=(c.shadowOffsetX*transform.d-c.shadowOffsetY*transform.c)/determinant,dy=(c.shadowOffsetY*transform.a-c.shadowOffsetX*transform.b)/determinant;
+    let left=Infinity,top=Infinity,right=-Infinity,bottom=-Infinity;
+    for(const r of runs){const m=c.measureText(r.ch);left=Math.min(left,r.x-m.actualBoundingBoxLeft);right=Math.max(right,r.x+m.actualBoundingBoxRight);top=Math.min(top,r.y-m.actualBoundingBoxAscent);bottom=Math.max(bottom,r.y+m.actualBoundingBoxDescent);}
+    for(const r of marks){left=Math.min(left,r.x);right=Math.max(right,r.x+r.w);top=Math.min(top,r.y);bottom=Math.max(bottom,r.y+r.h);}
+    const pad=Math.max(2,p.contornoTexto||0)+radius*2;
+    left=Math.floor(left-pad+Math.min(0,dx));top=Math.floor(top-pad+Math.min(0,dy));
+    const w=Math.max(1,Math.ceil(right+pad+Math.max(0,dx)-left)),h=Math.max(1,Math.ceil(bottom+pad+Math.max(0,dy)-top));
+    // El halo suave tiene un presupuesto acotado. La letra nítida no se
+    // rasteriza aquí y conserva toda la resolución incluso al exportar 4K.
+    const scale=Math.min(factor,2,2048/w,2048/h,Math.sqrt(1000000/(w*h)));
+    const key=JSON.stringify([runs,marks,c.font,c.textBaseline,c.lineWidth,c.lineJoin,c.miterLimit,c.shadowColor,radius,dx,dy,scale,p.ajusteTexto,p.w,p.h]);
+    let halo=textGlowCache.get(key);
+    if(!halo){
+      const mask=document.createElement('canvas'),out=document.createElement('canvas');
+      mask.width=out.width=Math.max(1,Math.ceil(w*scale));mask.height=out.height=Math.max(1,Math.ceil(h*scale));
+      const mc=mask.getContext('2d'),oc=out.getContext('2d');mc.scale(scale,scale);mc.translate(-left,-top);ink(mc,true);
+      oc.shadowColor=c.shadowColor;oc.shadowBlur=radius*scale;oc.shadowOffsetX=dx*scale;oc.shadowOffsetY=dy*scale;oc.drawImage(mask,0,0);
+      oc.shadowColor='transparent';oc.shadowBlur=oc.shadowOffsetX=oc.shadowOffsetY=0;
+      oc.globalCompositeOperation='destination-out';oc.drawImage(mask,0,0);
+      halo={canvas:out,left,top,w:out.width/scale,h:out.height/scale};
+      // Como máximo cuatro superficies de un megapíxel; no se guardan
+      // máscaras ni copias del texto al mover los controles.
+      if(textGlowCache.size>=4)textGlowCache.delete(textGlowCache.keys().next().value);
+      textGlowCache.set(key,halo);mask.width=mask.height=1;
+    }
+    c.shadowColor='transparent';c.shadowBlur=c.shadowOffsetX=c.shadowOffsetY=0;
+    c.drawImage(halo.canvas,halo.left,halo.top,halo.w,halo.h);
+  }
+  c.shadowColor='transparent';c.shadowBlur=c.shadowOffsetX=c.shadowOffsetY=0;
+  ink(c);c.restore();
+}
 function drawText(c,p,track=true){
   const text=String(p.texto||"");
   if(!text)return;
@@ -2719,9 +2788,6 @@ function drawText(c,p,track=true){
 
   if(track&&p.id)textMetrics.set(p.id,{size,overflow});
   c.save();
-  if(p.ajusteTexto==="envolver"){
-    c.beginPath();c.rect(-p.w/2,-p.h/2,p.w,p.h);c.clip();
-  }
   c.font=font(size);c.textAlign="left";c.textBaseline="middle";
   if(p.acabadoTexto==="importado"&&p.degradadoTexto)c.fillStyle=importedTextFill(c,p);
   else if(p.acabadoTexto==="dorado")c.fillStyle=gold(c,p.w,p.h);
@@ -2731,17 +2797,17 @@ function drawText(c,p,track=true){
   }else c.fillStyle=p.color;
   c.strokeStyle=p.colorContorno;c.lineJoin="round";
   c.lineWidth=Math.max(.01,p.contornoTexto||0);
-  const lh=size*lineFactor;
+  const lh=size*lineFactor,runs=[],marks=[];
   lines.forEach((line,i)=>{
     const width=measure(c,line,spacing);
     let x=p.alineacion==="left"?-p.w/2:p.alineacion==="right"?p.w/2-width:-width/2;
     const y=(i-(lines.length-1)/2)*lh;
     for(const ch of Array.from(line)){
-      if(p.contornoTexto>0)c.strokeText(ch,x,y);
-      c.fillText(ch,x,y);x+=c.measureText(ch).width+spacing;
+      runs.push({ch,x,y});x+=c.measureText(ch).width+spacing;
     }
-    if(p.subrayado)c.fillRect(x-width-spacing,y+size*.4,width,Math.max(1,size*.04));
+    if(p.subrayado)marks.push({x:x-width-spacing,y:y+size*.4,w:width,h:Math.max(1,size*.04)});
   });
+  paintTextRuns(c,p,runs,marks);
   c.restore();
 }
 function drawShape(c,p){
@@ -4507,8 +4573,12 @@ function review(type,factor){
   }
   return [...new Set(messages)].slice(0,12);
 }
+function exportFactor(type){
+  const s=sizeOf(),side=type==='perfil'?cropArea().side:Math.max(s.ancho,s.alto);
+  return $('exportScale').value==='4k'?3840/side:+$('exportScale').value;
+}
 function updateExportPreview(){
-  const type=$("exportType").value,factor=+$("exportScale").value;
+  const type=$("exportType").value,factor=exportFactor(type);
   render(ctx,{controls:true,track:true});
   const s=sizeOf(),side=type==="perfil"?cropArea().side:Math.max(s.ancho,s.alto);
   const preview=outputCanvas(type,280/side),target=$("exportPreview");
@@ -4531,7 +4601,7 @@ async function exportFile(){
   finishBrush();await document.fonts.ready;
   const button=$("exportConfirm");button.disabled=true;
   try{
-    const type=$("exportType").value,factor=+$("exportScale").value;
+    const type=$("exportType").value,factor=exportFactor(type);
     const out=outputCanvas(type,factor);
     const mime=type==="jpg"?"image/jpeg":"image/png";
     const blob=await new Promise((resolve,reject)=>out.toBlob(
@@ -4564,7 +4634,10 @@ async function action(name,button){
     case "agencyCaptureSave":if(!G.capture?.saved)await run(saveAgencyCapture);break;
     case "agencyFonts":await run(openAgencyFonts);break;
     case "agencyFontFiles":if(isAdmin()&&!S.busy)$("agencyFontFiles").click();break;
-    case "retryFontPack":await run(()=>importFontPack([],true));break;
+    case "retryFontPack":importFontPack([],true).catch(fontPackError);break;
+    case "pauseFontPack":pauseFontPack();break;
+    case "stopFontPack":stopFontPack();break;
+    case "fontPackReport":downloadFontPackReport();break;
     case "archiveImportFonts":await run(async()=>{if(T.current){await archiveDocumentFonts(T.current,{force:true});renderImport();}});break;
     case "restoreVisibility":if(p?.tipo==='imagen'&&!p.bloqueado){commit(()=>resetImageVisibility(p));notify('Opacidad al 100 % y color normal. El recorte transparente se conserva.');}break;
     case "metalColor":if(p?.tipo==='imagen'&&!p.bloqueado&&/^#[a-f0-9]{6}$/i.test(v)){commit(()=>{p.bordeMetalico=true;p.bordeImagenColor=v;p.bordeImagen=Math.max(2,p.bordeImagen);});}break;
@@ -5323,8 +5396,8 @@ function clearCloudMemory(){
   resetTemplateMemory();
   clearMemberSecrets();K.intent=null;K.request++;$('assetAgencyGrid').innerHTML='';$('assetPickerSearch').value='';$('assetPickerStatus').textContent='';
   C.observer?.disconnect();C.observer=null;C.cache.clear();C.thumbs.clear();C.items=[];C.collections=[];C.members=[];C.published={items:[],brandLogo:''};C.editId=null;C.formDirty=false;
-  G.capture=null;G.pendingFonts=[];G.fontImport=null;for(const id of ['agencyAddDialog','agencyFontsDialog'])$(id).close();$('fontPackResults').replaceChildren();$('agencyCapturePreview').removeAttribute('src');
-  resources.clear();previewResources.clear();bitmapCache.clear();backgroundFrameCache.clear();textMetrics.clear();fontResources.clear();
+  G.capture=null;G.pendingFonts=[];G.fontImport=null;if(G.fontQueue)G.fontQueue.state='cancelled';G.fontQueue=null;for(const id of ['agencyAddDialog','agencyFontsDialog'])$(id).close();$('fontPackResults').replaceChildren();$('agencyCapturePreview').removeAttribute('src');renderFontQueue();
+  resources.clear();previewResources.clear();bitmapCache.clear();backgroundFrameCache.clear();textMetrics.clear();fontResources.clear();textGlowCache.clear();
   document.querySelectorAll('canvas').forEach(out=>out.getContext('2d').clearRect(0,0,out.width,out.height));
   $('projectName').textContent='Mi diseño · ✎';$('resourceName').value='';$('resourceEditName').textContent='Editar recurso';$('resourceEditStatus').textContent='';$('creatorStatus').textContent='';
   $('catalogGrid').innerHTML='';$('creatorGrid').innerHTML='';$('resourceEdit').hidden=true;$('memberList').innerHTML='';$('seasonList').innerHTML='';$('assetLibrary').innerHTML='';
@@ -5417,9 +5490,18 @@ async function initializeCatalog(){
 }
 function visibleCollection(c){const today=new Date().toISOString().slice(0,10);return c.published&&(!c.starts_on||c.starts_on<=today)&&(!c.ends_on||c.ends_on>=today);}
 function availableAsset(a){return a.published&&C.collections.some(c=>c.id===a.collection_id&&visibleCollection(c));}
+async function catalogAssetPages(epoch){
+  const items=new Map(),pageSize=500;
+  for(let start=0;;start+=pageSize){
+    const page=await boundedCloud(A.client.from('divas_assets').select('*').order('updated_at',{ascending:false}).order('id').range(start,start+pageSize-1));
+    if(epoch!==A.epoch)return [];
+    for(const item of page||[])items.set(item.id,item);
+    if(!page||page.length<pageSize)return [...items.values()];
+  }
+}
 async function refreshCloudCatalog(render=true){
   requireMember();const epoch=A.epoch;
-  const [items,collections]=await Promise.all([boundedCloud(A.client.from('divas_assets').select('*').order('updated_at',{ascending:false})),boundedCloud(A.client.from('divas_collections').select('*').order('sort_order').order('name'))]);
+  const [items,collections]=await Promise.all([catalogAssetPages(epoch),boundedCloud(A.client.from('divas_collections').select('*').order('sort_order').order('name'))]);
   if(epoch!==A.epoch)return;
   C.items=items||[];C.collections=collections||[];C.published.items=C.items.filter(availableAsset);C.published.brandLogo='';
   const brand=C.published.items.find(a=>a.is_brand&&a.kind==='image');
@@ -6408,11 +6490,13 @@ function drawImportedText(c,p,font,track=true){
   if(track)textMetrics.set(p.id,{size:p.tamano,overflow});
   c.fillStyle=p.acabadoTexto==='dorado'?gold(c,p.w,p.h):p.acabadoTexto==='rosa'?(()=>{const g=c.createLinearGradient(0,-p.h/2,0,p.h/2);g.addColorStop(0,p.color2);g.addColorStop(1,p.color);return g;})():importedTextFill(c,p);
   c.strokeStyle=p.colorContorno;c.lineWidth=Math.max(.01,p.contornoTexto||0);c.lineJoin='miter';c.miterLimit=2;
+  const runs=[],marks=[];
   for(let i=0;i<lines.length;i++){
     const line=lines[i],w=measure(c,line,spacing),x=p.alineacion==='left'?-p.w/2+pad:p.alineacion==='right'?p.w/2-pad-w:-w/2,y=-p.h/2+pad-metrics.offset+i*step;
-    let pos=x;for(const ch of Array.from(line)){if(p.contornoTexto>0)c.strokeText(ch,pos,y);c.fillText(ch,pos,y);pos+=c.measureText(ch).width+spacing;}
-    if(p.subrayado){c.fillRect(x,y+metrics.offset+metrics.height,w,Math.max(1,p.tamano*.04));}
+    let pos=x;for(const ch of Array.from(line)){runs.push({ch,x:pos,y});pos+=c.measureText(ch).width+spacing;}
+    if(p.subrayado)marks.push({x,y:y+metrics.offset+metrics.height,w,h:Math.max(1,p.tamano*.04)});
   }
+  paintTextRuns(c,p,runs,marks);
   c.restore();
 }
 async function convertPXZ(file,onProgress=()=>{}){
@@ -6635,7 +6719,7 @@ for(const id of ['importDialog','templatesDialog'])$(id).addEventListener('cance
 
 /* v24 · recursos reutilizables. Los permisos siguen siendo los de Supabase. */
 const FONT_USES={comun:'Uso común',titulos:'Títulos e impacto',elegante:'Elegante y editorial',manuscrita:'Manuscrita',halloween:'Halloween',navidad:'Navidad',pendiente:'Por clasificar'};
-const G={capture:null,pendingFonts:[],fontImport:null};
+const G={capture:null,pendingFonts:[],fontImport:null,fontQueue:null};
 function fontUseOptions(value='pendiente',auto=false){return (auto?'<option value="auto">Sugerir por el nombre de cada fuente</option>':'')+Object.entries(FONT_USES).map(([id,label])=>`<option value="${id}" ${value===id?'selected':''}>${esc(label)}</option>`).join('');}
 function suggestFontUse(name){
   const n=String(name).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -6791,10 +6875,17 @@ async function fontFingerprint(font){
   const uuidFrom=part=>part.slice(0,8)+'-'+part.slice(8,12)+'-5'+part.slice(13,16)+'-a'+part.slice(17,20)+'-'+part.slice(20,32);
   return {hash,id:uuidFrom(hash.slice(0,32)),file:uuidFrom(hash.slice(32)),info};
 }
-async function archiveFont(font,{collection,name=font.etiqueta||font.nombre,published=true,use='auto',source='Archivo de fuente',epoch=A.epoch}={}){
+async function archiveFont(font,{collection,name=font.etiqueta||font.nombre,published=true,use='auto',source='Archivo de fuente',epoch=A.epoch,validate=false,known=null}={}){
   templateGuard(epoch,true);const key=await fontFingerprint(font);templateGuard(epoch,true);
-  const existing=await boundedCloud(A.client.from('divas_assets').select('*').eq('id',key.id).maybeSingle());templateGuard(epoch,true);
+  const existing=known?.get(key.hash)||await boundedCloud(A.client.from('divas_assets').select('*').eq('id',key.id).maybeSingle());templateGuard(epoch,true);
   if(existing){if(!fontResource(existing)||existing.style.fontHash!==key.hash)throw new Error('La referencia de esta fuente está ocupada.');return {row:existing,duplicate:true};}
+  if(validate&&key.info){
+    // Comprobar sin añadir cientos de FontFace al documento. Se cargan en
+    // el editor únicamente cuando alguien utiliza o previsualiza la fuente.
+    try{await new FontFace('DivasPackCheck',key.info.bytes).load();}
+    catch{const error=new Error('El navegador no puede leer esta fuente. El archivo puede estar dañado.');error.name='InvalidFont';throw error;}
+    templateGuard(epoch,true);
+  }
   const family=key.info?'DivasFuente_'+key.hash.slice(0,24):font.nombre;
   const style={resourceType:'font',fuente:family,fontHash:key.hash,fontUse:Object.hasOwn(FONT_USES,use)?use:suggestFontUse(font.etiqueta||name),fontSuggestion:suggestFontUse(font.etiqueta||name),source:String(source).slice(0,100)};
   if(key.info){const path=key.id+'/'+key.file+'.'+key.info.ext;style.fontAsset={path,nombre:family,etiqueta:String(font.etiqueta||name).slice(0,80),mime:key.info.mime};await storageOnce(FONT_BUCKET,path,new Blob([key.info.bytes],{type:key.info.mime}),epoch);}
@@ -6816,44 +6907,191 @@ function fontArchiveReport(r){
   if(!report)return `<div class="archive-font-report">${r.doc.fuentes.length} fuentes incluidas en el proyecto.<br><button data-action="archiveImportFonts">Guardar fuentes en la agencia</button></div>`;
   return `<div class="archive-font-report">Fuentes: ${report.saved} guardadas · ${report.duplicates} ya estaban en la agencia.${report.errors.length?`<details><summary>Revisar ${report.errors.length} avisos</summary>${report.errors.map(e=>'<p>'+esc(e)+'</p>').join('')}</details><button data-action="archiveImportFonts">Reintentar guardar fuentes</button>`:' Puedes clasificarlas en Administrar agencia → Recursos → Fuentes.'}</div>`;
 }
-async function openAgencyFonts(){
-  requireMember(true);await saveResourceMetadata();await refreshCloudCatalog(false);const epoch=A.epoch,id=await fontCollection(epoch);templateGuard(epoch,true);
-  for(const dialog of ['resourceManager','agencyAddDialog','catalogDialog'])$(dialog).close();
-  $('fontPackCollection').innerHTML=collectionOptions(id);$('fontPackUse').innerHTML=fontUseOptions('auto',true);$('autoArchiveFonts').checked=automaticFonts();
-  $('fontPackStatus').textContent='Elige las fuentes que quieras compartir con tu equipo.';showDialog('agencyFontsDialog');
+const FONT_PACK={zipBytes:200*1024*1024,fontBytes:6*1024*1024,maxFonts:3000,batch:20};
+const fontPackYield=()=>new Promise(resolve=>setTimeout(resolve,0));
+// Solo se lee el índice del ZIP y, después, una fuente por vez. No se
+// descomprime el pack completo ni se incorpora a las fuentes del proyecto.
+async function fontZipIndex(file){
+  if(file.size>FONT_PACK.zipBytes)throw new Error('El ZIP supera los 200 MB.');
+  const fail=()=>{throw new Error('El ZIP está incompleto o utiliza un formato no compatible. Usa un ZIP normal, sin contraseña.');};
+  const tailStart=Math.max(0,file.size-65557),tail=new Uint8Array(await file.slice(tailStart).arrayBuffer()),v=new DataView(tail.buffer);
+  if(tail.length<22)fail();let end=-1;
+  for(let i=tail.length-22;i>=0;i--)if(v.getUint32(i,true)===0x06054b50&&i+22+v.getUint16(i+20,true)===tail.length){end=i;break;}
+  if(end<0||v.getUint16(end+4,true)||v.getUint16(end+6,true)||v.getUint16(end+8,true)!==v.getUint16(end+10,true))fail();
+  const count=v.getUint16(end+10,true),offset=v.getUint32(end+16,true),length=v.getUint32(end+12,true);
+  if(count>20000||count===65535||length>8*1024*1024||offset+length!==tailStart+end)fail();
+  const directory=new Uint8Array(await file.slice(offset,offset+length).arrayBuffer()),dv=new DataView(directory.buffer),names=new Set(),entries=[];
+  const u16=n=>dv.getUint16(n,true),u32=n=>dv.getUint32(n,true),decoder=new TextDecoder('utf-8');let at=0;
+  for(let i=0;i<count;i++){
+    if(at+46>directory.length||u32(at)!==0x02014b50)fail();
+    const flags=u16(at+8),method=u16(at+10),crc=u32(at+16),packed=u32(at+20),size=u32(at+24),nl=u16(at+28),xl=u16(at+30),cl=u16(at+32),local=u32(at+42);
+    if(at+46+nl+xl+cl>directory.length||u16(at+34)||packed===0xffffffff||size===0xffffffff||local===0xffffffff)fail();
+    const rawName=directory.slice(at+46,at+46+nl),name=decoder.decode(rawName);
+    if(!name||name.length>1024||/[\x00-\x1f]/.test(name)||names.has(name))fail();names.add(name);
+    if(/\.(ttf|otf|woff2?)$/i.test(name)&&!name.split(/[\\/]/).some(part=>part==='__MACOSX'||part.startsWith('.'))){
+      if(flags&1||![0,8].includes(method))fail();
+      if(entries.length>=FONT_PACK.maxFonts)throw new Error('Este pack supera las 3000 fuentes.');
+      entries.push({name,rawName,flags,method,crc,packed,size,local});
+    }
+    at+=46+nl+xl+cl;
+  }
+  if(at!==directory.length)fail();
+  if(!entries.length)throw new Error('El ZIP no contiene TTF, OTF, WOFF ni WOFF2.');
+  if(entries.some(item=>item.method===8))try{new DecompressionStream('deflate-raw');}catch{throw new Error('Actualiza tu navegador para abrir este ZIP comprimido.');}
+  return entries.map(item=>({name:item.name,size:item.size,async read(){
+    if(item.size>FONT_PACK.fontBytes)throw new Error('Supera los 6 MB por fuente.');
+    if(item.packed>FONT_PACK.fontBytes+128*1024||item.local+30>offset)fail();
+    const head=new Uint8Array(await file.slice(item.local,item.local+30).arrayBuffer());if(head.length!==30)fail();const h=new DataView(head.buffer);
+    if(h.getUint32(0,true)!==0x04034b50||h.getUint16(6,true)!==item.flags||h.getUint16(8,true)!==item.method)fail();
+    const nameLength=h.getUint16(26,true),start=item.local+30+nameLength+h.getUint16(28,true);
+    if(start+item.packed>offset||nameLength!==item.rawName.length)fail();
+    const localName=new Uint8Array(await file.slice(item.local+30,item.local+30+nameLength).arrayBuffer());if(localName.some((b,i)=>b!==item.rawName[i]))fail();
+    let bytes;
+    if(item.method===0){if(item.packed!==item.size)fail();bytes=new Uint8Array(await file.slice(start,start+item.packed).arrayBuffer());}
+    else{
+      const reader=file.slice(start,start+item.packed).stream().pipeThrough(new DecompressionStream('deflate-raw')).getReader(),chunks=[];let total=0;
+      try{while(true){const part=await reader.read();if(part.done)break;total+=part.value.length;if(total>FONT_PACK.fontBytes||total>item.size){await reader.cancel();throw new Error('El archivo comprimido supera su tamaño declarado.');}chunks.push(part.value);}}
+      finally{reader.releaseLock();}
+      bytes=new Uint8Array(total);let pos=0;for(const chunk of chunks){bytes.set(chunk,pos);pos+=chunk.length;}
+    }
+    if(bytes.length!==item.size||crc32(bytes)!==item.crc)throw new Error('Esta fuente está dañada dentro del ZIP.');
+    return new Blob([bytes]);
+  }}));
 }
-async function readFontPack(files){
-  const selected=[...files];if(selected.length>40)throw new Error('Elige hasta 40 archivos por tanda.');let fonts=[],errors=[];
-  const read=async(name,blob)=>{try{if(blob.size>6*1024*1024)throw new Error('Supera 6 MB.');const font={nombre:'DivasFuente_'+uid(),etiqueta:name.split('/').pop().replace(/\.[^.]+$/,'').slice(0,80),datos:await readData(blob)};fontFileInfo(font);await loadFont(font);fonts.push(font);}catch(error){errors.push(name+': '+error.message);}};
+async function indexFontFiles(files){
+  const selected=[...files],items=[],issues=[];
+  if(selected.length>FONT_PACK.maxFonts)throw new Error('Elige hasta 3000 fuentes por importación.');
   for(const file of selected){
     if(/\.zip$/i.test(file.name)){
-      try{const zip=await pxzArchive(file,{manifest:false}),names=zip.names.filter(n=>/\.(ttf|otf|woff2?)$/i.test(n)&&!n.startsWith('__MACOSX/')&&!n.split('/').pop().startsWith('.'));if(names.length+fonts.length>40)throw new Error('El pack supera las 40 fuentes. Divídelo en tandas.');if(!names.length)throw new Error('El ZIP no contiene TTF, OTF, WOFF ni WOFF2.');
-        for(const name of names){try{await read(name,new Blob([await zip.read(name,6*1024*1024)]));}catch(error){errors.push(name+': '+error.message);}}
-      }catch(error){errors.push(file.name+': '+error.message.replace(/PXZ/g,'ZIP'));}
-    }else if(/\.(ttf|otf|woff2?)$/i.test(file.name))await read(file.name,file);
-    else errors.push(file.name+': formato no compatible.');
-    if(fonts.length>40)throw new Error('Elige hasta 40 fuentes por tanda.');
+      try{const entries=await fontZipIndex(file);if(items.length+entries.length>FONT_PACK.maxFonts)throw new Error('El conjunto supera las 3000 fuentes. Elige un solo pack.');items.push(...entries);}
+      catch(error){issues.push({name:file.name,error:error.message,state:'invalid'});}
+    }else if(/\.(ttf|otf|woff2?)$/i.test(file.name)){
+      if(items.length>=FONT_PACK.maxFonts)issues.push({name:file.name,error:'El conjunto supera las 3000 fuentes.',state:'invalid'});
+      else items.push({name:file.name,size:file.size,read:async()=>file});
+    }
+    else issues.push({name:file.name,error:'Formato no compatible.',state:'invalid'});
+    await fontPackYield();
   }
-  return {fonts,errors};
+  return {items,issues};
+}
+async function readPackFont(item){
+  if(item.size>FONT_PACK.fontBytes)throw new Error('Supera los 6 MB por fuente.');
+  const blob=await item.read();if(blob.size>FONT_PACK.fontBytes)throw new Error('Supera los 6 MB por fuente.');
+  const font={nombre:'DivasFuente_'+uid(),etiqueta:item.name.split(/[\\/]/).pop().replace(/\.[^.]+$/,'').slice(0,80),datos:await readData(blob)};
+  fontFileInfo(font);return font;
+}
+function fontQueueCounts(q){
+  const count={saved:0,duplicate:0,invalid:0,failed:0,pending:0,skipped:0};
+  for(const item of q.items)count[Object.hasOwn(count,item.state)?item.state:'pending']++;
+  return {...count,done:count.saved+count.duplicate+count.invalid+count.skipped,total:q.items.length,issues:count.invalid+count.failed+count.skipped+q.issues.length};
+}
+function renderFontQueue(){
+  const q=G.fontQueue,box=$('fontPackProgressBox'),badge=$('fontPackTask');
+  box.hidden=!q;badge.hidden=!q||$('agencyFontsDialog').open||!isAdmin()||(q.state==='done'&&q.reviewed);
+  $('pauseFontPack').hidden=!q||!['running','pausing'].includes(q.state);$('pauseFontPack').disabled=q?.state==='pausing';
+  $('pauseFontPack').textContent=q?.state==='pausing'?'Terminando esta fuente…':'Pausar';
+  $('retryFontPack').hidden=q?q.state!=='paused':!G.pendingFonts.length;
+  $('retryFontPack').disabled=!!q?.promise;$('fontPackDownloadReport').hidden=!q||q.state==='indexing';
+  const locked=!!q&&q.state!=='done'&&q.state!=='cancelled';
+  for(const id of ['fontPackChoose','fontPackCollection','fontPackUse','fontPackPublished'])$(id).disabled=locked;
+  $('stopFontPack').hidden=!q||q.state!=='paused';$('stopFontPack').disabled=!!q?.promise;
+  if(!q){$('fontPackStatus').textContent=G.pendingFonts.length?'Hay fuentes del proyecto pendientes de guardar en la agencia. Puedes reintentar.':'Elige las fuentes que quieras compartir con tu equipo.';$('retryFontPack').textContent='Reintentar fuentes del proyecto';return;}
+  const counts=fontQueueCounts(q),total=counts.total,done=counts.done;
+  const batch=Math.min(Math.ceil(total/FONT_PACK.batch)||1,Math.floor(done/FONT_PACK.batch)+1);
+  $('fontPackProgressLabel').textContent=q.state==='indexing'?'Leyendo el índice del ZIP…':`${done} de ${total} fuentes · tanda ${batch} de ${Math.ceil(total/FONT_PACK.batch)||1}`;
+  const progress=$('fontPackProgress');progress.max=total||1;
+  if(q.state==='indexing')progress.removeAttribute('value');else progress.value=done;
+  $('fontPackPercent').textContent=total?Math.floor(done/total*100)+' %':'';
+  $('fontPackContinuity').textContent=q.state==='done'?'Las fuentes guardadas ya están en tu agencia. Puedes cerrar la página. Para retomar archivos pendientes, vuelve a elegir el mismo ZIP.':'Puedes cerrar este panel y seguir editando. Mantén la pestaña abierta; si recargas, elige el mismo ZIP y se reconocerán las fuentes ya guardadas.';
+  $('fontPackCurrent').textContent=q.error||(q.state==='indexing'?'Preparando las tandas sin cargar todo el pack en memoria.':q.state==='paused'?'En pausa. Lo que ya se guardó permanece en la agencia.':q.state==='pausing'?'Se termina la fuente actual y se pausa.':q.state==='done'?'Importación terminada. Puedes revisar y organizar tus fuentes.':q.current||'Preparando la siguiente fuente…');
+  const summary=`${counts.saved} guardadas · ${counts.duplicate} repetidas · ${counts.issues} por revisar.`;
+  $('fontPackStatus').textContent=summary+(q.state==='running'?' Subiendo por tandas de 20.':q.state==='done'&&q.options.published?' Las fuentes nuevas siguen la visibilidad de su colección.':'');
+  $('retryFontPack').textContent=counts.failed?'Reintentar y continuar':'Continuar importación';
+  const problems=[...q.issues,...q.items.filter(item=>['invalid','failed','skipped'].includes(item.state))],recent=q.items.filter(item=>['saved','duplicate'].includes(item.state)).slice(-12);
+  $('fontPackDetailsLabel').textContent=`Ver resultados${counts.issues?' · '+counts.issues+' por revisar':''}`;
+  const label={saved:'✓ Guardada',duplicate:'Ya estaba',invalid:'No compatible',failed:'Pendiente de reintento',skipped:'Pendiente'};
+  $('fontPackResults').innerHTML=[...problems.slice(0,30),...recent].map(item=>`<li>${label[item.state]} · ${esc(item.name)}${item.error?' · '+esc(item.error):''}</li>`).join('')+(problems.length>30?'<li>El informe descargable incluye todos los avisos.</li>':'');
+  badge.textContent=q.state==='done'?'Fuentes listas · ver resultado':q.state==='paused'?'Fuentes en pausa · continuar':`Fuentes ${done}/${total||'…'} · ver progreso`;
+}
+function pauseFontPack(){const q=G.fontQueue;if(q&&q.state==='running'){q.pauseRequested=true;q.state='pausing';renderFontQueue();}}
+function stopFontPack(){const q=G.fontQueue;if(!q||q.promise||q.state!=='paused')return;for(const item of q.items)if(['pending','failed'].includes(item.state)){item.state='skipped';item.read=null;}q.state='done';q.error='Puedes elegir otro pack. Si vuelves a elegir este ZIP, se reconocerán las fuentes ya guardadas.';renderFontQueue();}
+function fontPackError(error){const q=G.fontQueue;if(q&&q.options.epoch===A.epoch&&q.state!=='cancelled'){q.error=error.message;q.state='paused';q.promise=null;renderFontQueue();}else if(isAdmin())notify(error.message||'No se pudo preparar el pack.');}
+function downloadFontPackReport(){
+  const q=G.fontQueue;if(!q)return;const labels={saved:'GUARDADA',duplicate:'REPETIDA',invalid:'NO COMPATIBLE',failed:'REINTENTAR',pending:'PENDIENTE',working:'EN CURSO',skipped:'PENDIENTE'};
+  const text=['Divas · Informe de fuentes',new Date().toLocaleString('es'),$('fontPackStatus').textContent,'',...[...q.issues,...q.items].map(item=>`${labels[item.state]||item.state}\t${item.name}${item.error?'\t'+item.error:''}`)].join('\n');
+  download(new Blob([text],{type:'text/plain;charset=utf-8'}),'divas-informe-fuentes.txt');
+}
+async function openAgencyFonts(){
+  requireMember(true);
+  if(G.fontQueue?.state==='done'&&G.pendingFonts.length)G.fontQueue=null;
+  if(G.fontQueue?.options.epoch===A.epoch){await saveResourceMetadata();requireMember(true);if(G.fontQueue.state==='done')G.fontQueue.reviewed=true;for(const dialog of ['resourceManager','agencyAddDialog','catalogDialog'])$(dialog).close();showDialog('agencyFontsDialog');renderFontQueue();return;}
+  await saveResourceMetadata();await refreshCloudCatalog(false);const epoch=A.epoch,id=await fontCollection(epoch);templateGuard(epoch,true);
+  for(const dialog of ['resourceManager','agencyAddDialog','catalogDialog'])$(dialog).close();
+  $('fontPackCollection').innerHTML=collectionOptions(id);$('fontPackUse').innerHTML=fontUseOptions('auto',true);$('autoArchiveFonts').checked=automaticFonts();
+  showDialog('agencyFontsDialog');renderFontQueue();
+}
+async function processFontQueue(q){
+  const guard=()=>{templateGuard(q.options.epoch,true);if(G.fontQueue!==q||q.state==='cancelled')throw new Error('La importación se canceló.');};
+  guard();q.state='running';q.error='';q.pauseRequested=false;renderFontQueue();
+  for(const item of q.items){
+    guard();if(q.pauseRequested)break;if(item.state!=='pending')continue;
+    item.state='working';q.current=item.name;renderFontQueue();let font;
+    try{font=item.font||await readPackFont(item);}
+    catch(error){guard();item.state='invalid';item.error=error.message;item.read=null;renderFontQueue();await fontPackYield();continue;}
+    guard();if(q.pauseRequested){item.state='pending';break;}
+    let outcome=null;
+    for(let attempt=0;attempt<2;attempt++){
+      try{outcome=await archiveFont(font,{...q.options,source:'Pack de fuentes',validate:true,known:q.known});break;}
+      catch(error){
+        guard();item.error=error.message;
+        if(error.name==='InvalidFont'){item.state='invalid';item.read=null;break;}
+        if(attempt===0&&!q.pauseRequested&&navigator.onLine!==false){q.current='Reintentando · '+item.name;renderFontQueue();await new Promise(resolve=>setTimeout(resolve,750));if(!q.pauseRequested)continue;}
+        item.state='failed';q.error='No se pudo confirmar esta fuente: '+item.name+'. '+error.message+' Las demás quedan pendientes; pulsa Reintentar y continuar.';q.pauseRequested=true;break;
+      }
+    }
+    guard();if(outcome){
+      item.state=outcome.duplicate?'duplicate':'saved';item.error='';item.read=null;item.font=null;q.known.set(outcome.row.style.fontHash,outcome.row);
+      if(!C.items.some(a=>a.id===outcome.row.id)){C.items.unshift(outcome.row);if(availableAsset(outcome.row))C.published.items.unshift(outcome.row);}
+    }
+    font=null;renderFontQueue();await fontPackYield();
+    // Cede también entre tandas; nunca precarga las siguientes 20 fuentes.
+    if(fontQueueCounts(q).done%FONT_PACK.batch===0)await fontPackYield();
+  }
+  guard();const remaining=q.items.some(item=>['pending','failed','working'].includes(item.state));q.state=remaining?'paused':'done';q.reviewed=!remaining&&$('agencyFontsDialog').open;q.current='';renderFontQueue();
+  try{await refreshCloudCatalog(false);}catch(error){guard();q.error='Las fuentes guardadas se conservan. No se pudo actualizar el catálogo: '+error.message;}
+  guard();renderFontQueue();if(q.state==='done'&&!$('agencyFontsDialog').open)notify('Pack procesado. Abre «Fuentes listas» para ver el resultado.');
+}
+function launchFontQueue(q){
+  if(q.promise)return q.promise;
+  q.promise=processFontQueue(q).catch(error=>{if(G.fontQueue===q&&q.options.epoch===A.epoch&&q.state!=='cancelled')fontPackError(error);}).finally(()=>{q.promise=null;if(G.fontQueue===q)renderFontQueue();});
+  renderFontQueue();return q.promise;
 }
 async function importFontPack(files,retry=false){
-  requireMember(true);const epoch=A.epoch,options=retry?G.fontImport:{collection:$('fontPackCollection').value,use:$('fontPackUse').value,published:$('fontPackPublished').checked,epoch};
+  requireMember(true);const epoch=A.epoch;
+  if(retry&&G.fontQueue){const q=G.fontQueue;templateGuard(q.options.epoch,true);if(q.promise)return q.promise;if(q.state!=='paused')return;for(const item of q.items)if(item.state==='failed')item.state='pending';return launchFontQueue(q);}
+  if(G.fontQueue&&G.fontQueue.state!=='done'&&G.fontQueue.state!=='cancelled')throw new Error('Termina o pausa el pack en curso antes de elegir otro.');
+  const options=retry&&G.fontImport?{...G.fontImport,collection:G.fontImport.collection||$('fontPackCollection').value}:retry?null:{collection:$('fontPackCollection').value,use:$('fontPackUse').value,published:$('fontPackPublished').checked,epoch};
   if(!options||options.epoch!==epoch)throw new Error('Vuelve a elegir el pack con tu sesión actual.');
   if(!C.collections.some(c=>c.id===options.collection))throw new Error('Elige una colección.');
-  $('fontPackStatus').textContent='Comprobando archivos…';$('retryFontPack').hidden=true;
-  const parsed=retry?{fonts:G.pendingFonts,errors:[]}:await readFontPack(files);templateGuard(epoch,true);G.fontImport=options;G.pendingFonts=[];
-  const lines=parsed.errors.map(e=>'⚠ '+e);let saved=0,duplicates=0;
-  for(let i=0;i<parsed.fonts.length;i++){
-    templateGuard(epoch,true);const font=parsed.fonts[i];$('fontPackStatus').textContent=`Guardando ${i+1} de ${parsed.fonts.length}…`;
-    try{const result=await archiveFont(font,{...options,source:'Pack de fuentes'});result.duplicate?duplicates++:saved++;lines.push((result.duplicate?'Ya estaba · ':'✓ Guardada · ')+font.etiqueta+' · '+(FONT_USES[result.row.style?.fontUse]||'Por clasificar'));}
-    catch(error){if(epoch!==A.epoch)throw error;G.pendingFonts.push(font);lines.push('⚠ '+font.etiqueta+': '+error.message);}
-  }
-  templateGuard(epoch,true);$('fontPackResults').innerHTML=lines.map(line=>'<li>'+esc(line)+'</li>').join('');$('retryFontPack').hidden=!G.pendingFonts.length;
-  $('fontPackStatus').textContent=`${saved} guardadas · ${duplicates} repetidas · ${G.pendingFonts.length+parsed.errors.length} por revisar. `+(C.collections.some(c=>c.id===options.collection&&visibleCollection(c))&&options.published?'Los archivos nuevos quedan publicados. Los repetidos conservan su publicación anterior.':'La visibilidad depende de la publicación y de la colección.');
-  await refreshCloudCatalog(false);
+  const q={options:{...options},items:[],issues:[],state:'indexing',known:new Map(),promise:null,error:'',current:'',pauseRequested:false};G.fontQueue=q;G.fontImport=options;$('fontPackOptions').open=false;renderFontQueue();
+  if($('agencyFontsDialog').open)$('fontPackProgressBox').scrollIntoView({block:'nearest'});
+  const parsed=retry?{items:G.pendingFonts.map(font=>({name:font.etiqueta||font.nombre,font})),issues:[]}:await indexFontFiles(files);
+  templateGuard(epoch,true);if(G.fontQueue!==q)return;q.items=parsed.items.map(item=>({...item,state:'pending',error:''}));q.issues=parsed.issues;G.pendingFonts=[];
+  return launchFontQueue(q);
+}
+async function readFontPack(files){
+  const indexed=await indexFontFiles(files),fonts=[],errors=indexed.issues.map(item=>item.name+': '+item.error);
+  if(indexed.items.length>25)throw new Error('Este pack es para la biblioteca de la agencia. Ábrelo desde Fuentes y packs; cada proyecto puede incorporar 25 fuentes.');
+  for(const item of indexed.items){try{const font=await readPackFont(item);await loadFont(font);fonts.push(font);}catch(error){errors.push(item.name+': '+error.message);}await fontPackYield();}
+  return {fonts,errors};
 }
 async function loadProjectFonts(files){
-  const doc=S.doc,epoch=A.epoch;if(!doc||!S.opened)throw new Error('Abre un proyecto antes de cargar fuentes.');const parsed=await readFontPack(files),added=[];
+  const doc=S.doc,epoch=A.epoch;if(!doc||!S.opened)throw new Error('Abre un proyecto antes de cargar fuentes.');
+  if(isAdmin()&&[...files].some(file=>/\.zip$/i.test(file.name))){
+    const indexed=await indexFontFiles(files);templateGuard(epoch,true);
+    if(indexed.items.length>25){await openAgencyFonts();importFontPack(files).catch(fontPackError);return;}
+  }
+  const parsed=await readFontPack(files),added=[];
   const seen=new Set(doc.fuentes.map(f=>f.datos.split(',')[1]));for(const font of parsed.fonts){const data=font.datos.split(',')[1];if(!seen.has(data)){seen.add(data);added.push(font);}}
   if(doc.fuentes.length+added.length>25)throw new Error('El proyecto admite 25 fuentes. Guarda el pack en la agencia y aplica solo las que necesites.');
   if(doc!==S.doc||epoch!==A.epoch)throw new Error('El proyecto cambió. Vuelve a cargar la fuente.');
@@ -6879,10 +7117,11 @@ $('agencyCaptureCollection').addEventListener('change',updateCaptureVisibility);
 $('creatorCategory').addEventListener('change',()=>run(async()=>{await saveResourceMetadata();C.managerCategory=$('creatorCategory').value;renderResourceManager();}));
 $('creatorSearch').addEventListener('input',()=>{C.managerQuery=$('creatorSearch').value;$('creatorGrid').innerHTML=creatorResources().map(a=>resourceCard(a,{manager:true})).join('')||'<p class="help">Sin recursos con este filtro.</p>';loadResourceThumbs($('creatorGrid'));});
 $('catalogFontUse').addEventListener('change',()=>{C.fontUse=$('catalogFontUse').value;renderCatalog();});
-$('agencyFontFiles').onchange=event=>{const files=[...event.target.files];event.target.value='';if(files.length)run(()=>importFontPack(files));};
+$('agencyFontFiles').onchange=event=>{const files=[...event.target.files];event.target.value='';if(files.length)importFontPack(files).catch(fontPackError);};
 $('autoArchiveFonts').addEventListener('change',event=>{try{localStorage.setItem('divas-auto-fonts',event.target.checked?'on':'off');}catch{notify('No se pudo recordar esta preferencia.');}});
 for(const id of ['agencyAddDialog','agencyFontsDialog'])$(id).addEventListener('cancel',event=>{if(S.busy)event.preventDefault();});
 $('agencyAddDialog').addEventListener('close',()=>{if(!S.busy)G.capture=null;});
+$('agencyFontsDialog').addEventListener('close',renderFontQueue);
 
 async function fetchTemplate(){return null; /* Los recursos oficiales se cargan desde el catálogo privado. */}
 
