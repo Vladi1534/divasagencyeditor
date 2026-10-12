@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="23">
+<meta name="divas-version" content="24">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -1005,6 +1005,19 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
 @media(max-width:760px) and (max-height:480px) and (min-width:560px){#sidePanel,#sidePanel.expanded{height:100%;max-height:100%}#panelTabs{grid-template-columns:repeat(6,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.look-card{transition:none}}
 
+/* v24: acciones táctiles y publicación de recursos. */
+button,a,input[type=button],input[type=range],select{touch-action:manipulation}
+.agency-add-entry{color:var(--pink);border:1px solid var(--line);background:var(--panel2);min-height:44px;margin-top:10px}
+.agency-save-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.agency-save-choices button{padding:16px;text-align:left;min-height:90px;background:var(--panel2);color:var(--text)}.agency-save-choices strong,.agency-save-choices small{display:block}.agency-save-choices strong{font-size:14px}.agency-save-choices small{font-size:12px;color:var(--muted);line-height:1.45;margin-top:5px}
+#agencyAddDialog,#agencyFontsDialog{width:min(660px,calc(100vw - 20px));max-height:92dvh}#agencyAddDialog[open],#agencyFontsDialog[open]{display:flex;flex-direction:column}#agencyAddDialog .dialog-body,#agencyFontsDialog .dialog-body{min-height:0;flex:1;overflow:auto;max-height:none}#agencyAddDialog .dialog-head,#agencyAddDialog .dialog-footer,#agencyFontsDialog .dialog-head,#agencyFontsDialog .dialog-footer{flex-shrink:0}
+.agency-capture-preview{margin:0 0 14px;text-align:center;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:conic-gradient(#ddd4df 25%,#fff6fb 0 50%,#ddd4df 0 75%,#fff6fb 0) 0 0/20px 20px}.agency-capture-preview img{max-height:210px;max-width:100%;object-fit:contain;display:block;margin:12px auto}.agency-capture-preview figcaption{padding:9px;font-size:12px;background:var(--panel);color:var(--muted);line-height:1.5}
+.creator-filter-bar{display:flex;gap:8px;margin:10px 0 16px}.creator-filter-bar input{flex:1;min-width:0}.creator-filter-bar select{max-width:45%}.font-tag{font-size:10px;font-style:normal;color:var(--pink);display:block;margin-top:5px}.font-library-actions{display:flex;gap:6px;margin:7px 0 12px}.font-library-actions button{flex:1;font-size:12px;min-height:44px}
+.image-visibility{margin:12px 0;padding:10px;background:var(--panel2);border:1px solid var(--line);border-radius:12px}.image-visibility .field{margin-bottom:8px}.image-visibility button{font-size:12px;min-height:44px}.metal-swatches{display:flex;gap:6px;margin:8px 0 12px;flex-wrap:wrap}.metal-swatches button{flex:1;font-size:11px;min-height:44px;padding:7px;border-color:var(--line)}.metal-swatches i{display:block;height:7px;background:linear-gradient(125deg,color-mix(in srgb,var(--metal),black 40%),var(--metal),#fff,var(--metal));border-radius:8px;margin-bottom:4px}
+.font-pack-results{font-size:12px;line-height:1.55;padding-left:20px;overflow-wrap:anywhere}.font-pack-results li{margin-bottom:8px}.archive-font-report{padding:10px;border:1px solid var(--line);background:var(--panel2);border-radius:12px;font-size:12px;margin:10px 0}.archive-font-report button{min-height:44px;margin-top:6px}
+body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agencyFontsDialog .dialog-head button{pointer-events:none;opacity:.5}
+@media(max-width:760px){.agency-save-choices button{padding:12px;min-height:105px}.agency-save-choices{gap:8px}#agencyAddDialog input,#agencyAddDialog select,#agencyFontsDialog select{font-size:16px}#agencyAddDialog .dialog-footer button,#agencyFontsDialog .dialog-footer button{min-height:44px;flex:1;font-size:12px}.agency-capture-preview img{max-height:155px}.resource-upload .agency-add-entry{margin:0}}
+
+@media(max-width:380px){header{padding-inline:8px}.header-actions{gap:3px}.header-actions .account-button{max-width:66px}.header-actions #downloadBtn{padding-inline:11px}}
 </style>
 </head>
 <body>
@@ -1060,8 +1073,9 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
         <button data-action="format">Cambiar formato del lienzo</button>
         <button data-action="helpGestures">Ayuda Divas</button>
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
+        <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v23 · Looks y edición móvil</p>
+        <p class="help" id="appVersion">Divas Editor · v24 · Tu biblioteca creativa</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -1268,13 +1282,13 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
 
 <dialog id="catalogDialog" aria-labelledby="catalogTitle">
   <div class="dialog-head"><div><h2 id="catalogTitle">Recursos de la agencia</h2><p class="help">Colecciones oficiales · acceso privado</p></div><button data-action="closeDialog">Cerrar</button></div>
-  <div class="dialog-body"><button class="wide template-entry" data-action="templates">✧ Plantillas editables · empieza con un diseño completo</button><div class="catalog-filters"><input id="catalogSearch" type="search" placeholder="Busca un fondo, logo o adorno…" aria-label="Buscar recursos"><select id="catalogCategory" aria-label="Categoría"><option value="todos">Todo</option><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option></select><select id="catalogCollection" aria-label="Temporada"></select></div><p id="catalogCount" class="help" role="status"></p><div id="catalogGrid" class="resource-grid"></div></div>
+  <div class="dialog-body"><button class="wide template-entry" data-action="templates">✧ Plantillas editables · empieza con un diseño completo</button><div class="catalog-filters"><input id="catalogSearch" type="search" placeholder="Busca un fondo, logo o adorno…" aria-label="Buscar recursos"><select id="catalogCategory" aria-label="Categoría"><option value="todos">Todo</option><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option><option value="fuentes">Fuentes</option></select><select id="catalogCollection" aria-label="Temporada"></select><select id="catalogFontUse" aria-label="Uso de la fuente" hidden><option value="todas">Todos los usos</option></select></div><p id="catalogCount" class="help" role="status"></p><div id="catalogGrid" class="resource-grid"></div></div>
 </dialog>
 <dialog id="resourceManager" aria-labelledby="creatorTitle">
   <div class="dialog-head"><div><h2 id="creatorTitle">Tu agencia</h2><p id="agencyManagerSubtitle" class="help">Sube una vez. Publica para tus emisoras.</p></div><button data-action="closeCreator">Cerrar</button></div>
   <div class="dialog-body">
     <nav class="admin-tabs" aria-label="Administración"><button data-action="templates" data-value="admin">Plantillas</button><button data-action="adminTab" data-value="resources" class="active">Recursos</button><button data-action="adminTab" data-value="seasons">Temporadas</button><button data-action="adminTab" data-value="members">Cuentas</button></nav>
-    <section id="adminResources"><div class="resource-upload"><div class="field"><label for="uploadResourceCategory">Categoría</label><select id="uploadResourceCategory"><option value="fondos">Fondos</option><option value="figuras">Figuras y adornos</option><option value="logos">Logos</option></select></div><div class="field"><label for="uploadResourceCollection">Colección</label><select id="uploadResourceCollection"></select></div><button class="primary" data-action="uploadResources">+ Subir imágenes</button><button data-action="captureTextStyle">Guardar estilo del texto seleccionado</button></div><p class="help">Los archivos se suben como borrador. Publícalos cuando estén listos.</p><div class="creator-workspace"><div id="creatorGrid" class="resource-grid"></div><form id="resourceEdit" class="resource-edit" hidden><h3 id="resourceEditName">Editar recurso</h3><div class="field"><label for="resourceName">Nombre</label><input id="resourceName" type="text" maxlength="80" required></div><div class="field"><label for="resourceCollection">Colección</label><select id="resourceCollection"></select></div><div class="field"><label for="resourceCategory">Categoría</label><select id="resourceCategory"><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option></select></div><label class="check"><input id="resourceVisible" type="checkbox">Publicado para las emisoras</label><label class="check"><input id="resourceBrand" type="checkbox">Logo oficial de la cabecera</label><p class="help">Solo puede haber un logo oficial publicado.</p><p id="resourceEditStatus" class="help" role="status"></p><div class="row"><button type="submit" class="primary">Guardar cambios</button><button type="button" class="danger" data-action="deleteResource">Eliminar</button></div></form></div></section>
+    <section id="adminResources"><div class="resource-upload"><button class="agency-add-entry" data-action="agencyAdd">＋ Agregar contenido del lienzo</button><button data-action="agencyFonts">Aa Fuentes y packs</button><div class="field"><label for="uploadResourceCategory">Categoría</label><select id="uploadResourceCategory"><option value="fondos">Fondos</option><option value="figuras">Figuras y adornos</option><option value="logos">Logos</option></select></div><div class="field"><label for="uploadResourceCollection">Colección</label><select id="uploadResourceCollection"></select></div><button class="primary" data-action="uploadResources">+ Subir imágenes</button><button data-action="captureTextStyle">Guardar estilo del texto seleccionado</button></div><p class="help">Los archivos se suben como borrador. Publícalos cuando estén listos.</p><div class="creator-filter-bar"><input id="creatorSearch" type="search" placeholder="Buscar recurso o uso…" aria-label="Buscar contenido de la agencia"><select id="creatorCategory" aria-label="Tipo de recurso"></select></div><div class="creator-workspace"><div id="creatorGrid" class="resource-grid"></div><form id="resourceEdit" class="resource-edit" hidden><h3 id="resourceEditName">Editar recurso</h3><div class="field"><label for="resourceName">Nombre</label><input id="resourceName" type="text" maxlength="80" required></div><div class="field"><label for="resourceCollection">Colección</label><select id="resourceCollection"></select></div><div class="field"><label for="resourceCategory">Categoría</label><select id="resourceCategory"><option value="fondos">Fondos</option><option value="figuras">Adornos</option><option value="logos">Logos</option><option value="textos">Estilos de texto</option><option value="fuentes">Fuentes</option></select></div><div id="resourceFontUseField" class="field" hidden><label for="resourceFontUse">Uso de la fuente</label><select id="resourceFontUse"></select><p id="resourceFontSuggestion" class="help"></p></div><label class="check"><input id="resourceVisible" type="checkbox">Publicado para las emisoras</label><label class="check"><input id="resourceBrand" type="checkbox">Logo oficial de la cabecera</label><p class="help">Solo puede haber un logo oficial publicado.</p><p id="resourceEditStatus" class="help" role="status"></p><div class="row"><button type="submit" class="primary">Guardar cambios</button><button type="button" class="danger" data-action="deleteResource">Eliminar</button></div></form></div></section>
     <section id="adminSeasons" hidden><div class="creator-workspace"><div id="seasonList" class="season-list"></div><form id="seasonForm" class="resource-edit"><h3 id="seasonFormTitle">Nueva temporada</h3><input id="seasonId" type="hidden"><div class="field"><label for="seasonName">Nombre</label><input id="seasonName" required maxlength="60" placeholder="Halloween 2026"></div><div class="field"><label for="seasonStart">Mostrar desde · opcional</label><input id="seasonStart" type="date"></div><div class="field"><label for="seasonEnd">Mostrar hasta · opcional</label><input id="seasonEnd" type="date"></div><label class="check"><input id="seasonPublished" type="checkbox">Visible para las emisoras</label><p class="help">Las fechas usan el calendario UTC del servidor. Deja ambas vacías para mantenerla disponible.</p><div class="row"><button class="primary" type="submit">Guardar temporada</button><button type="button" data-action="newSeason">Nueva</button></div></form></div></section>
     <section id="adminMembers" hidden>
       <div class="members-heading"><div><h3>Tu equipo</h3><p id="memberCount" class="help">Consulta solicitudes y gestiona el acceso.</p></div><button data-action="refreshMembers" aria-label="Actualizar cuentas">↻ Actualizar</button></div>
@@ -1451,7 +1465,40 @@ body.is-processing #importDialog .dialog-head button,body.is-processing #templat
 <input id="brandInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
 <input id="projectInput" type="file" accept=".json,.pxz" multiple hidden>
 <input id="templateInput" type="file" accept=".pxz,.json" multiple hidden>
-<input id="fontInput" type="file" accept=".ttf,.otf,.woff,.woff2" hidden>
+<dialog id="agencyAddDialog" aria-labelledby="agencyAddTitle">
+  <div class="dialog-head"><div><h2 id="agencyAddTitle">Agregar contenido a la agencia</h2><p class="help">Guárdalo una vez. Tu equipo podrá reutilizarlo.</p></div><button data-action="closeDialog">Cerrar</button></div>
+  <div class="dialog-body">
+    <div id="agencyAddChoices" class="agency-save-choices"></div>
+    <div id="agencyCaptureFields" hidden>
+      <figure class="agency-capture-preview"><img id="agencyCapturePreview" alt="Vista del recurso que vas a guardar"><figcaption id="agencyCaptureDescription"></figcaption></figure>
+      <label id="agencyCaptureEffectsField" class="check"><input id="agencyCaptureEffects" type="checkbox">Incluir borde, forma y efectos del lienzo</label>
+      <div class="grid2"><div class="field"><label for="agencyCaptureName">Nombre</label><input id="agencyCaptureName" maxlength="80" required></div><div class="field"><label for="agencyCaptureCategory">Guardar en</label><select id="agencyCaptureCategory"><option value="logos">Logos</option><option value="figuras">Adornos</option><option value="fondos">Fondos</option><option value="textos">Estilos de texto</option><option value="fuentes">Fuentes</option></select></div></div>
+      <div class="field"><label for="agencyCaptureCollection">Colección</label><select id="agencyCaptureCollection"></select></div>
+      <div id="agencyCaptureFontField" class="field" hidden><label for="agencyCaptureFontUse">Uso sugerido · puedes cambiarlo</label><select id="agencyCaptureFontUse"></select></div>
+      <label class="check"><input id="agencyCapturePublished" type="checkbox" checked>Disponible para las cuentas aprobadas</label>
+      <p id="agencyCaptureVisibility" class="help"></p>
+    </div>
+    <p id="agencyCaptureStatus" class="help" role="status" aria-live="polite"></p>
+  </div>
+  <div class="dialog-footer"><button data-action="agencyCaptureBack">Volver</button><button id="agencyCaptureSave" class="primary" data-action="agencyCaptureSave" disabled>Guardar en la agencia</button></div>
+</dialog>
+<dialog id="agencyFontsDialog" aria-labelledby="agencyFontsTitle">
+  <div class="dialog-head"><div><h2 id="agencyFontsTitle">Fuentes para tu agencia</h2><p class="help">Sube archivos o un pack ZIP. Las letras quedan disponibles para otros proyectos.</p></div><button data-action="closeDialog">Cerrar</button></div>
+  <div class="dialog-body">
+    <div class="field"><label for="fontPackCollection">Colección de destino</label><select id="fontPackCollection"></select></div>
+    <div class="field"><label for="fontPackUse">Clasificación</label><select id="fontPackUse"><option value="auto">Sugerir por el nombre de cada fuente</option></select></div>
+    <label class="check"><input id="fontPackPublished" type="checkbox" checked>Publicar para las cuentas aprobadas</label>
+    <button class="primary wide" data-action="agencyFontFiles">+ Elegir fuentes o pack ZIP</button>
+    <p class="help">TTF, OTF, WOFF o WOFF2 · hasta 40 fuentes por tanda, 6 MB por fuente. Los archivos repetidos se reconocen por su contenido.</p>
+    <label class="check"><input id="autoArchiveFonts" type="checkbox" checked>Guardar automáticamente las fuentes incluidas en mis PXZ y las que cargo al proyecto</label>
+    <p class="help">Se guardan en «Fuentes de agencia». La sugerencia usa nombres reconocibles; si no hay pistas, queda «Por clasificar». Puedes cambiarla en Administrar agencia → Recursos.</p>
+    <p id="fontPackStatus" class="help" role="status" aria-live="polite"></p><ul id="fontPackResults" class="font-pack-results"></ul>
+  </div>
+  <div class="dialog-footer"><button data-action="resourceManager">Ver y organizar recursos</button><button id="retryFontPack" data-action="retryFontPack" hidden>Reintentar pendientes</button></div>
+</dialog>
+<input id="agencyFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2,.zip" multiple hidden>
+
+<input id="fontInput" type="file" accept=".ttf,.otf,.woff,.woff2,.zip" multiple hidden>
 <input id="csvInput" type="file" accept=".csv,.tsv,.txt" hidden>
 
 
@@ -1619,7 +1666,7 @@ function paintLookPreviews(){
 function textEssentialsHTML(p){
   const effects=S.textSection==="efectos";
   const size=Math.round(textMetrics.get(p.id)?.size||p.tamano);
-  return `<div class="edit-segments" aria-label="Editar texto"><button data-action="textSection" data-value="texto" aria-pressed="${!effects}">Aa Texto y tamaño</button><button data-action="textSection" data-value="efectos" aria-pressed="${effects}">✦ Efectos</button></div>${effects?`<div class="look-intro"><strong>Dale ese toque Divas</strong><span>Toca un acabado. Se aplica al instante.</span></div><div class="text-look-grid">${Object.entries(TEXT_LOOKS).map(([id,l])=>`<button data-action="textLook" data-value="${id}"><canvas width="240" height="90" data-text-style="${id}" aria-hidden="true"></canvas><span>${esc(l.nombre)}</span></button>`).join("")}</div><div class="glow-controls">${rangeProp("Intensidad del glow","glow",0,100,1)}${inputProp("Color del glow","glowColor","color")}</div><button class="wide" data-action="textSection" data-value="texto">Aa Cambiar tamaño y letra</button>`:`${field("¿Qué quieres decir?",`<textarea class="text-content" data-prop="texto" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)}<div class="font-size-block"><div class="size-control"><button data-action="fontStep" data-value="-1" aria-label="Reducir tamaño de letra">A−</button><label><span>Tamaño</span><input data-prop="tamano" aria-label="Tamaño de letra" type="number" inputmode="numeric" min="1" max="1000" step="1" value="${size}"></label><button data-action="fontStep" data-value="1" aria-label="Aumentar tamaño de letra">A+</button></div><label class="font-size-slider"><span>A</span><input data-prop="tamano" aria-label="Desliza para cambiar tamaño de letra" type="range" min="6" max="${Math.min(1000,Math.max(180,size*2))}" step="1" value="${size}"><span>A</span></label></div><div class="text-font-color">${selectProp("Tipo de letra","fuente",fontOptions())}${inputProp("Color","color","color")}</div><div class="text-swatches" aria-label="Colores Divas">${["#f4bdd8","#e51888","#ffe8a6","#ffffff","#59304d","#15121c"].map(c=>`<button data-action="textColor" data-value="${c}" style="--swatch:${c}" aria-label="Color ${c}" title="${c}"></button>`).join("")}<button class="effect-link" data-action="textSection" data-value="efectos">✦ Dorado y glow</button></div><div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>`}<p id="textFeedback" class="help" aria-live="polite"></p>`;
+  return `<div class="edit-segments" aria-label="Editar texto"><button data-action="textSection" data-value="texto" aria-pressed="${!effects}">Aa Texto y tamaño</button><button data-action="textSection" data-value="efectos" aria-pressed="${effects}">✦ Efectos</button></div>${effects?`<div class="look-intro"><strong>Dale ese toque Divas</strong><span>Toca un acabado. Se aplica al instante.</span></div><div class="text-look-grid">${Object.entries(TEXT_LOOKS).map(([id,l])=>`<button data-action="textLook" data-value="${id}"><canvas width="240" height="90" data-text-style="${id}" aria-hidden="true"></canvas><span>${esc(l.nombre)}</span></button>`).join("")}</div><div class="glow-controls">${rangeProp("Intensidad del glow","glow",0,100,1)}${inputProp("Color del glow","glowColor","color")}</div><button class="wide" data-action="textSection" data-value="texto">Aa Cambiar tamaño y letra</button>`:`${field("¿Qué quieres decir?",`<textarea class="text-content" data-prop="texto" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)}<div class="font-size-block"><div class="size-control"><button data-action="fontStep" data-value="-1" aria-label="Reducir tamaño de letra">A−</button><label><span>Tamaño</span><input data-prop="tamano" aria-label="Tamaño de letra" type="number" inputmode="numeric" min="1" max="1000" step="1" value="${size}"></label><button data-action="fontStep" data-value="1" aria-label="Aumentar tamaño de letra">A+</button></div><label class="font-size-slider"><span>A</span><input data-prop="tamano" aria-label="Desliza para cambiar tamaño de letra" type="range" min="6" max="${Math.min(1000,Math.max(180,size*2))}" step="1" value="${size}"><span>A</span></label></div><div class="text-font-color">${selectProp("Tipo de letra","fuente",fontOptions())}${inputProp("Color","color","color")}</div><div class="font-library-actions"><button data-action="catalog" data-value="fuentes">Fuentes de agencia</button><button data-action="font">Cargar fuente</button></div><div class="text-swatches" aria-label="Colores Divas">${["#f4bdd8","#e51888","#ffe8a6","#ffffff","#59304d","#15121c"].map(c=>`<button data-action="textColor" data-value="${c}" style="--swatch:${c}" aria-label="Color ${c}" title="${c}"></button>`).join("")}<button class="effect-link" data-action="textSection" data-value="efectos">✦ Dorado y glow</button></div><div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>`}<p id="textFeedback" class="help" aria-live="polite"></p>`;
 }
 function resizeTextTo(p,next){
   // Escala la caja junto a la letra: el autoajuste ya no cancela A+.
@@ -1887,7 +1934,7 @@ function multiPropertiesHTML(){
     ${group?field('Nombre del grupo',`<input data-group-name maxlength="60" value="${esc(list[0].grupoNombre||'Grupo')}">`):''}
     ${locked?'<p class="help">Hay piezas bloqueadas. Desbloquea la selección para ajustarla.</p>':''}
     <div class="grid2"><button class="${group?'':'primary'}" data-action="${group?'ungroupPieces':'groupPieces'}" ${locked?'disabled':''}>${group?'Desagrupar':'Agrupar'}</button><button data-action="multiSelect">${S.selecting?'Listo':'Cambiar selección'}</button></div>
-    ${compositionHTML(true)}
+    ${agencyAddHTML()}${compositionHTML(true)}
     <details class="property"><summary>Tamaño y giro del conjunto</summary><fieldset ${locked?'disabled':''}><div class="grid2"><button data-action="scalePieces" data-value="0.9">Reducir 10 %</button><button data-action="scalePieces" data-value="1.1">Ampliar 10 %</button><button data-action="rotatePieces" data-value="-15">Girar −15°</button><button data-action="rotatePieces" data-value="15">Girar +15°</button></div></fieldset></details>
     <details class="property"><summary>Editar una pieza por separado</summary><div class="piece-picker">${list.map(p=>`<button data-action="editPiece" data-id="${esc(p.id)}">${uiIcon(p.tipo==='texto'?'text':p.tipo==='imagen'?'image':'spark')}<span>${esc(p.nombre)}</span></button>`).join('')}</div></details>
     <details class="property"><summary>Orden y acciones</summary>${selectionActionsHTML()}</details>`;
@@ -1979,7 +2026,7 @@ async function history(direction){
 }
 function closeMenus(){$("mainMenu").open=false;}
 function showDialog(id){dismissHint();closeHelp();closeMenus();closeLayerMenu();const d=$(id);if(!d.open)d.showModal();}
-function closeDialog(button){const d=button.closest("dialog");if(S.busy&&["importDialog","templatesDialog"].includes(d?.id))return;d?.close();}
+function closeDialog(button){const d=button.closest("dialog");if(S.busy&&["importDialog","templatesDialog","agencyAddDialog","agencyFontsDialog"].includes(d?.id))return;d?.close();}
 $("formatDialog").addEventListener("close",()=>{if(S.opened)renderPanel();});
 function busy(value){
   S.busy=value;
@@ -2898,7 +2945,7 @@ function drawLayer(c,p,factor=1,track=true,fullQuality=false){
     c.shadowColor="transparent";c.filter="none";
     if(p.bordeImagen>0){
       imagePath(c,p,p.w,p.h);c.lineWidth=p.bordeImagen;
-      c.strokeStyle=p.bordeMetalico?gold(c,p.w,p.h):p.bordeImagenColor;c.stroke();
+      c.strokeStyle=p.bordeMetalico?metal(c,p.w,p.h,p.bordeImagenColor):p.bordeImagenColor;c.stroke();
     }
   }else if(p.tipo==="texto")drawText(c,p,track);
   else drawShape(c,p);
@@ -3073,7 +3120,7 @@ function checkProp(label,key){
   return `<label class="check"><input data-prop="${key}" type="checkbox" ${selectedLayer()?.[key]?"checked":""}>${esc(label)}</label>`;
 }
 function fontOptions(){
-  return [...FONT_LIST.map(f=>[f,f]),...(S.doc.fuentes||[]).map(f=>[f.nombre,f.etiqueta+" · cargada"])];
+  return [...FONT_LIST.map(f=>[f,f]),...(S.doc.fuentes||[]).map(f=>[f.nombre,f.etiqueta+" · cargada"]),...catalogFontOptions()];
 }
 function visibleTexts(){return S.doc.capas.filter(p=>p.tipo==="texto"&&!p.oculto&&!p.decorativa);}
 function refresh(){
@@ -3264,7 +3311,7 @@ function imageControlsHTML(){
     ${checkProp("Base de color","placa")}
     ${inputProp("Color de la base","placaColor","color")}
     ${rangeProp("Borde","bordeImagen",0,14,.5)}
-    ${checkProp("Borde metálico","bordeMetalico")}
+    ${checkProp("Borde metálico","bordeMetalico")}${metalPresetsHTML()}
     ${inputProp("Color del borde","bordeImagenColor","color")}
     ${selectProp("Decoración","decoracion",[["ninguna","Ninguna"],["aura","Aura"],["orbita","Órbita y destellos"]])}
     ${rangeProp("Intensidad de decoración","intensidadDecoracion",0,1,.01)}
@@ -3340,7 +3387,7 @@ function propertiesHTML(){
       <div class="grid2">${inputProp("Ancho","w","number",'min="2" max="8192"')}${inputProp("Alto","h","number",'min="2" max="8192"')}</div>
       <label class="check"><input id="keepRatio" type="checkbox" ${keepRatio?"checked":""}>Mantener proporción</label>
       ${selectProp("Forma","imagenForma",[["original","Original"],["redondeada","Redondeada"],["circular","Circular"]])}
-      ${rangeProp("Opacidad","opacidad",0,1,.01)}`;
+      ${imageVisibilityHTML(p)}`;
     advanced=imageControlsHTML();
   }else if(p.tipo==="tabla")essential=tableControlsHTML(p);
   else{
@@ -3361,7 +3408,7 @@ function propertiesHTML(){
       </details>
     </fieldset>
     <button class="wide" data-action="multiSelect" aria-pressed="${S.selecting}">${uiIcon("multi")} ${S.selecting?"Terminar selección":"Seleccionar varias"}</button>
-    ${compositionHTML()}
+    ${agencyAddHTML()}${compositionHTML()}
     <details class="property" data-layer-actions><summary>Orden y acciones de la capa</summary><div class="grid3"><button data-action="duplicate">Duplicar</button><button data-action="up">Subir</button><button data-action="down">Bajar</button></div>
       <div class="grid3" style="margin-top:7px"><button data-action="lock" data-id="${esc(p.id)}">${p.bloqueado?"Desbloquear":"Bloquear"}</button><button data-action="visible" data-id="${esc(p.id)}">${p.oculto?"Mostrar":"Ocultar"}</button><button class="danger" data-action="delete">Eliminar</button></div>
     </details>`;
@@ -3435,12 +3482,13 @@ function updateSelectionUI(){
   const mode=$("selectionModeBar");mode.hidden=!S.selecting;mode.innerHTML=S.selecting?`<span>Selecciona · ${list.length}</span><button data-action="multiSelect">Listo</button>`:"";
   strip.hidden=!p||S.selecting;$("selectionMenuBtn").hidden=!p;$("focusTextButton").hidden=p?.tipo!=="texto"||multi;
   if(!p)return;
-  strip.innerHTML=`<button class="selection-name" data-action="${multi?'selectionProperties':'select'}" data-id="${esc(p.id)}" title="Editar ${esc(label)}">${esc(label)}</button>
+  const markup=`<button class="selection-name" data-action="${multi?'selectionProperties':'select'}" data-id="${esc(p.id)}" title="Editar ${esc(label)}">${esc(label)}</button>
     ${p.tipo==="texto"&&!multi?`<button data-action="fontStep" data-value="-1" aria-label="Reducir letra desde el lienzo" title="Letra más pequeña" ${locked?'disabled':''}>A−</button><button data-action="fontStep" data-value="1" aria-label="Aumentar letra desde el lienzo" title="Letra más grande" ${locked?'disabled':''}>A+</button>`:`<button data-action="duplicate" aria-label="${multi?'Duplicar selección':'Duplicar capa'}" title="Duplicar">${uiIcon("copy")}</button>`}
     <button data-action="lock" data-scope="selection" data-id="${esc(p.id)}" aria-label="${locked?'Desbloquear':'Bloquear'} ${multi?'selección':'capa seleccionada'}" title="${locked?'Desbloquear':'Bloquear'}">${uiIcon(locked?"lock":"unlock")}</button>
     <button class="selection-delete" data-action="delete" aria-label="${multi?'Eliminar selección':'Eliminar capa'}" title="${locked?'Desbloquea para eliminar':'Eliminar · puedes deshacer'}" ${locked?'disabled':''}>${uiIcon("trash")}</button>
     ${p.tipo==="texto"&&!multi?'':`<button data-action="layerMenu" aria-label="Más acciones de la ${multi?'selección':'capa'}" title="Agrupar, ocultar y cambiar orden">•••</button>`}
     <button data-action="deselect" aria-label="Quitar selección" title="Desmarcar">×</button>`;
+  if(strip.innerHTML!==markup)strip.innerHTML=markup;
   requestAnimationFrame(positionSelectionToolbar);
 }
 $("viewport").addEventListener("scroll",positionSelectionToolbar,{passive:true});
@@ -3453,7 +3501,7 @@ function openLayerMenu(id,x,y){
   updateSelectionUI();draw();
   const menu=$("layerMenu"),i=S.doc.capas.indexOf(p);
   if(selectedLayers().length>1){
-    menu.innerHTML=`<div class="layer-menu-head"><strong>${esc(selectionLabel())}</strong><button data-action="closeLayerMenu" aria-label="Cerrar acciones">×</button></div>${selectionActionsHTML()}<button class="wide" data-action="selectionProperties">Alinear y ajustar</button>`;
+    menu.innerHTML=`<div class="layer-menu-head"><strong>${esc(selectionLabel())}</strong><button data-action="closeLayerMenu" aria-label="Cerrar acciones">×</button></div>${selectionActionsHTML()}<button class="wide" data-action="selectionProperties">Alinear y ajustar</button>${agencyAddHTML()}`;
     dismissHint();menu.hidden=false;const r=menu.getBoundingClientRect();
     menu.style.left=clamp(x-r.width/2,12,window.innerWidth-r.width-12)+"px";menu.style.top=clamp(y+8,12,window.innerHeight-r.height-12)+"px";
     menu.querySelector('button')?.focus({preventScroll:true});return;
@@ -3463,7 +3511,7 @@ function openLayerMenu(id,x,y){
     <div class="grid2"><button data-action="lock" data-id="${esc(p.id)}">${p.bloqueado?"🔓 Desbloquear":"🔒 Bloquear"}</button><button data-action="visible" data-id="${esc(p.id)}">${p.oculto?"◉ Mostrar":"○ Ocultar"}</button>
     <button data-action="duplicate">Duplicar</button><button data-action="select" data-id="${esc(p.id)}">Editar</button>
     <button data-action="up" ${p.bloqueado||i===S.doc.capas.length-1?"disabled":""}>Subir una capa</button><button data-action="down" ${p.bloqueado||i===0?"disabled":""}>Bajar una capa</button>
-    <button class="danger" data-action="delete" ${p.bloqueado?"disabled":""}>Eliminar</button><button data-action="multiSelect">Seleccionar varias</button></div>`;
+    <button class="danger" data-action="delete" ${p.bloqueado?"disabled":""}>Eliminar</button><button data-action="multiSelect">Seleccionar varias</button></div>${agencyAddHTML()}`;
   dismissHint();menu.hidden=false;
   const r=menu.getBoundingClientRect();
   menu.style.left=clamp(x-r.width/2,12,window.innerWidth-r.width-12)+"px";
@@ -3964,7 +4012,7 @@ let brushSize=45,brushHardness=65;
 const K={intent:null,request:0,category:"logos",season:"todas",query:""};
 function resourceChoices(category,target=null){
   const role=S.doc.capas.find(p=>p.id===target)?.rol;
-  return C.items.filter(a=>availableAsset(a)&&(category==='todos'||a.category===category)&&(category==='textos'?a.kind==='text':a.kind==='image'))
+  return C.items.filter(a=>availableAsset(a)&&(category==='todos'||a.category===category)&&(category==='textos'?a.kind==='text'&&!fontResource(a):a.kind==='image'))
     .sort((a,b)=>category==='logos'?(role==='logo'?Number(b.is_brand)-Number(a.is_brand):Number(a.is_brand)-Number(b.is_brand)):0);
 }
 function suggestedResourceCard(a,intent,small=false){
@@ -3984,7 +4032,7 @@ function visiblePickerCollections(){return C.collections.filter(visibleCollectio
 function renderAssetPicker(){
   const intent=K.intent;if(!intent)return;
   const q=K.query.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-  const list=resourceChoices(K.category,intent.id).filter(a=>(K.season==='todas'||a.collection_id===K.season)&&(a.name+' '+(C.collections.find(c=>c.id===a.collection_id)?.name||'')).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));
+  const list=resourceChoices(K.category,intent.id).filter(a=>(K.season==='todas'||a.collection_id===K.season)&&(a.name+' '+(FONT_USES[a.style?.fontUse]||'')+' '+(C.collections.find(c=>c.id===a.collection_id)?.name||'')).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));
   const categories=intent.category==='textos'?[['textos','Estilos de texto']]:intent.kind==='background'?[['fondos','Fondos']]:[['todos','Todas las imágenes'],['logos','Logos'],['fondos','Fondos'],['figuras','Figuras']];
   $('assetPickerCategory').innerHTML=categories.map(([value,label])=>`<option value="${value}" ${K.category===value?'selected':''}>${label}</option>`).join('');$('assetPickerCategory').value=K.category;$('assetPickerCategory').disabled=categories.length===1;
   $('assetPickerSeason').innerHTML='<option value="todas">Todas las temporadas</option>'+visiblePickerCollections().map(c=>`<option value="${esc(c.id)}" ${K.season===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
@@ -4039,8 +4087,8 @@ async function applySuggestedResource(id,intent){
     const p=S.doc.capas.find(p=>p.id===intent.id);if(p?.tipo!=='texto')throw new Error('Selecciona un texto.');
     const prepared=await prepareResourceStyle(row.style,intent.doc,intent.epoch);assertAssetContext(intent);
     if(p.bloqueado)throw new Error('Desbloquea el texto para aplicar el estilo.');
-    commit(()=>{installStyleFont(prepared);Object.assign(p,prepared.style);ensureTextRoom(p);});$('assetDialog').close();
-  }else await applyPickedAsset({src:await privateImage(row),nombre:row.name},intent);
+    commit(()=>{installStyleFont(prepared);Object.assign(p,preparedFontStyle(row,prepared));ensureTextRoom(p);});$('assetDialog').close();
+  }else if(intent.kind==='add'&&row.category==='figuras'&&insertNativeComponent(row)){$('assetDialog').close();}else await applyPickedAsset({src:await privateImage(row),nombre:row.name},intent);
   notify('Aplicado. Puedes deshacerlo con ↶.');
 }
 $('assetPickerSearch').addEventListener('input',()=>{K.query=$('assetPickerSearch').value;renderAssetPicker();});
@@ -4053,7 +4101,7 @@ async function useAsset(asset,id){
   const doc=S.doc,epoch=A.epoch;await loadImage(asset.src);if(doc!==S.doc||epoch!==A.epoch)throw new Error("El diseño cambió. Selecciona la imagen de nuevo.");
   const p=S.doc.capas.find(x=>x.id===id&&x.tipo==="imagen");if(!p)throw new Error("La imagen ya no está en este diseño.");
   if(p.bloqueado){notify("Desbloquea la capa para reemplazar su imagen.");return;}
-  commit(()=>{fitImageLayer(p,asset);S.selected=p.id;});
+  commit(()=>{fitImageLayer(p,asset);resetImageVisibility(p);S.selected=p.id;});
 }
 function chooseImages(kind,id=null){
   S.imageIntent={kind,id,doc:S.doc,epoch:A.epoch};
@@ -4078,7 +4126,7 @@ async function importImages(files,pointAt=null){
   commit(()=>{
     data.forEach((asset,i)=>{
       const existing=i===0&&intent.kind==="replace"?S.doc.capas.find(p=>p.id===intent.id):null;
-      if(existing){fitImageLayer(existing,asset);S.selected=existing.id;return;}
+      if(existing){fitImageLayer(existing,asset);resetImageVisibility(existing);S.selected=existing.id;return;}
       const im=resources.get(asset.src),d=imageSize(im),background=intent.kind==="background";
       const scale=background?Math.min(s.ancho/d.w,s.alto/d.h):Math.min(360/d.w,360/d.h,1);
       const p=layer("imagen",{
@@ -4293,7 +4341,7 @@ function finishBrush(){
 function applyImagePreset(key){
   const p=selectedLayer();if(p?.tipo!=="imagen")return;
   const presets={
-    champan:{imagenForma:"redondeada",esquinas:24,placa:false,bordeImagen:2,bordeMetalico:true,decoracion:"orbita",glow:78,glowColor:"#ffe3a5",glowRadio:32,sombraY:0,sombraBase:35},
+    champan:{imagenForma:"redondeada",esquinas:24,placa:false,bordeImagen:2,bordeMetalico:true,bordeImagenColor:"#d6b36d",decoracion:"orbita",glow:78,glowColor:"#ffe3a5",glowRadio:32,sombraY:0,sombraBase:35},
     rosa:{imagenForma:"redondeada",esquinas:23,placa:true,placaColor:"#fff8fc",bordeImagen:2,bordeMetalico:false,bordeImagenColor:"#fff3fb",decoracion:"aura",glow:58,glowColor:"#eda7d2",glowRadio:40,sombraY:0,sombraBase:28},
     editorial:{imagenForma:"redondeada",esquinas:16,placa:false,bordeImagen:0,decoracion:"ninguna",glow:25,glowColor:"#69354f",glowRadio:22,sombraY:7,sombraBase:0},
     ninguno:{imagenForma:"original",placa:false,bordeImagen:0,decoracion:"ninguna",glow:0,sombraBase:0,sombraY:0}
@@ -4500,7 +4548,7 @@ async function exportFile(){
 
 const STYLE_KEYS=[
   "color","color2","glow","glowRadio","glowColor","sombraY","sombraX","desenfoque","mezcla","degradadoTexto",
-  "fuente","peso","espaciado","imagenForma","esquinas","placa","placaColor",
+  "fuente","peso","cursiva","subrayado","espaciado","imagenForma","esquinas","placa","placaColor",
   "bordeImagen","bordeMetalico","bordeImagenColor","decoracion","intensidadDecoracion",
   "sombraBase","acabadoTexto","contornoTexto","colorContorno","metalico"
 ];
@@ -4510,6 +4558,16 @@ async function action(name,button){
   if(selectedLayers().some(p=>p.bloqueado)&&protectedActions.includes(name)){notify("Desbloquea la capa para cambiarla.");return;}
   if(!["helpTopic","dismissHint","helpGestures","contextHelp","resetHints","fontStep","textLook","textColor","divasLook","textSection"].includes(name))dismissHint();
   switch(name){
+    case "agencyAdd":await run(openAgencyAdd);break;
+    case "agencyCaptureMode":await run(()=>chooseCaptureMode(v));break;
+    case "agencyCaptureBack":if(!S.busy&&G.capture){G.capture.mode=null;G.capture.attempt=null;G.capture.saved=false;renderAgencyChoices();}break;
+    case "agencyCaptureSave":if(!G.capture?.saved)await run(saveAgencyCapture);break;
+    case "agencyFonts":await run(openAgencyFonts);break;
+    case "agencyFontFiles":if(isAdmin()&&!S.busy)$("agencyFontFiles").click();break;
+    case "retryFontPack":await run(()=>importFontPack([],true));break;
+    case "archiveImportFonts":await run(async()=>{if(T.current){await archiveDocumentFonts(T.current,{force:true});renderImport();}});break;
+    case "restoreVisibility":if(p?.tipo==='imagen'&&!p.bloqueado){commit(()=>resetImageVisibility(p));notify('Opacidad al 100 % y color normal. El recorte transparente se conserva.');}break;
+    case "metalColor":if(p?.tipo==='imagen'&&!p.bloqueado&&/^#[a-f0-9]{6}$/i.test(v)){commit(()=>{p.bordeMetalico=true;p.bordeImagenColor=v;p.bordeImagen=Math.max(2,p.bordeImagen);});}break;
     case "templates":await run(()=>openTemplates(v==='admin'));break;
     case "templateUpload":if(isAdmin())$("templateInput").click();break;
     case "templateCurrent":await run(prepareCurrentTemplate);break;
@@ -4610,7 +4668,8 @@ async function action(name,button){
     case "tab":setTab(v);if(v!=="fondo")showHint({logos:"imagenes"}[v]||v);break;
     case "mobile":{
       const tab=button.dataset.tab;
-      if(S.tab===tab&&$("sidePanel").classList.contains("mobile-open")){setPanelVisible(false);renderPanel();break;}
+      // La barra abre siempre la herramienta; Cerrar recupera el lienzo.
+      if(S.busy)return;
       setTab(tab);if(tab!=="fondo")showHint({logos:"imagenes"}[tab]||tab);break;
     }
     case "focusCanvas":clearSelection({closePanel:true});S.fit=true;requestAnimationFrame(fitCanvas);break;
@@ -4799,7 +4858,7 @@ async function action(name,button){
   }
 }
 document.addEventListener("click",event=>{
-  if(Date.now()<suppressClickUntil){event.preventDefault();return;}
+  if(Date.now()<suppressClickUntil&&event.target.closest("#canvas,[data-layer]")){event.preventDefault();return;}
   const button=event.target.closest("[data-action]");
   if(button){closeMenus();if(button.dataset.action!=="layerMenu")closeLayerMenu();action(button.dataset.action,button).catch(e=>notify(e.message));return;}
   if(!event.target.closest("#layerMenu"))closeLayerMenu();
@@ -4836,6 +4895,7 @@ function handleEditorInput(event){
   if(el.matches("[data-prop]")){
     const p=selectedLayer();if(!p||p.bloqueado||selectedLayers().length>1)return;
     const key=el.dataset.prop;
+    if(key==='fuente'&&el.value.startsWith('agency:')){if(event.type==='input')run(()=>insertResource(el.value.slice(7)));return;}
     let value=el.type==="checkbox"?el.checked:["range","number"].includes(el.type)?Number(el.value):el.value;
     if(typeof value==="number"&&(!Number.isFinite(value)||el.value===""))return;
     const limits={tamano:[1,1000],minTamano:[1,200],marcoProteccion:[15,42],interlineado:[.3,4],espaciado:[-30,100],w:[2,8192],h:[2,8192],x:[-32768,32768],y:[-32768,32768]};
@@ -4853,6 +4913,7 @@ function handleEditorInput(event){
     if(key==="texto")p.pendiente=!p.texto.trim()||(p.ejemplo&&p.texto===p.ejemplo);
     const output=document.querySelector(`[data-output="${key}"]`);
     if(output)output.textContent=value;
+    if(p.tipo==='imagen')document.querySelectorAll('[data-image-visibility]').forEach(node=>node.textContent=Math.round(p.opacidad*100)+' % · '+(p.mezcla==='source-over'?'Mezcla normal':'Mezcla: '+p.mezcla));
     if(key==="glow"&&p.glow>0&&p.glowRadio<1)p.glowRadio=Math.max(4,p.tamano*.3);
     markChanged();syncNumericFields();draw();if(event.type==="change")guideDid(key==="glow"?"efecto":key);return;
   }
@@ -4920,21 +4981,7 @@ $("projectNameInput").addEventListener("keydown",event=>{if(event.key==="Enter")
 $("imageInput").onchange=event=>run(async()=>{
   if(event.target.files.length)await importImages(event.target.files);
 }).finally(()=>event.target.value="");
-$("fontInput").onchange=event=>run(async()=>{
-  const file=event.target.files[0];if(!file)return;
-  const doc=S.doc,epoch=A.epoch;
-  if(!doc||!S.opened)throw new Error("Abre un proyecto antes de cargar una fuente.");
-  if(doc.fuentes.length>=25)throw new Error("Este proyecto ya tiene 25 fuentes cargadas.");
-  if(file.size>6*1024*1024)throw new Error("Usa una fuente menor de 6 MB.");
-  const f={nombre:"DivasFuente_"+uid(),etiqueta:file.name.replace(/\.[^.]+$/,"").slice(0,70),datos:await readData(file)};
-  fontFileInfo(f);await loadFont(f);
-  if(doc!==S.doc||epoch!==A.epoch)throw new Error("El proyecto cambió. Carga la fuente de nuevo.");
-  commit(()=>{
-    S.doc.fuentes.push(f);
-    const p=selectedLayer();if(p&&!p.bloqueado&&["texto","tabla"].includes(p.tipo))p.fuente=f.nombre;
-  });
-  notify("Fuente incorporada al proyecto.");
-}).finally(()=>event.target.value="");
+$("fontInput").onchange=event=>{const files=[...event.target.files];event.target.value="";if(files.length)run(()=>loadProjectFonts(files));};
 $("csvInput").onchange=event=>run(async()=>{
   const file=event.target.files[0];if(!file)return;
   if(file.size>2*1024*1024)throw new Error("Usa un CSV menor de 2 MB.");
@@ -5125,7 +5172,7 @@ function drawHalloween(c,p){
 /* Supabase · cuentas verificadas, permisos en el servidor y archivos privados. */
 const CLOUD={url:'https://nmwdjakqzssccceedfif.supabase.co',key:'sb_publishable_ZgAjzfGBgEjj0p2Cjazzhg_FND3vIi-',bucket:'divas-private'};
 const A={client:null,user:null,member:null,ready:null,error:'',epoch:0,switching:false,ownAuth:false,pendingRecovery:null,request:null,initializing:null,subscription:null,needsRetry:false,storageMode:'memory',eventVersion:0,checkedEventVersion:-1,identityChanging:false};
-const CATEGORIES={fondos:'Fondos',figuras:'Adornos',logos:'Logos',textos:'Estilos de texto'};
+const CATEGORIES={fondos:'Fondos',figuras:'Adornos',logos:'Logos',textos:'Estilos de texto',fuentes:'Fuentes'};
 const C={published:{items:[],brandLogo:''},items:[],collections:[],members:[],ready:null,category:'todos',collection:'todas',search:'',editId:null,formDirty:false,preview:false,cache:new Map(),thumbs:new Map(),observer:null};
 const PROJECT_COLUMNS='id,nombre,manual,creado,modificado,miniatura,objetivo,formato,editor,version';
 function cloudError(error){
@@ -5262,7 +5309,7 @@ function updateAccountUI(){
   document.querySelectorAll('[data-action="accountView"]').forEach(el=>{el.classList.toggle('active',el.dataset.value===J.view);el.setAttribute('aria-pressed',String(el.dataset.value===J.view));});
   $('accountPending').hidden=!pending;if(pending)renderPendingAccount();
   $('accountSession').hidden=!signed;$('accountAdmin').hidden=!isAdmin();
-  $('adminMenuButton').hidden=!isAdmin();$('accountName').textContent=A.member?.display_name||'';
+  $('adminMenuButton').hidden=!isAdmin();$('agencyAddMenu').hidden=!isAdmin();$('accountName').textContent=A.member?.display_name||'';
   $('accountRole').textContent=(isAdmin()?'Administrador':A.member?.account_title||'Emisora')+' · Acceso activo';$('accountEmail').textContent=A.user?.email||'';
   $('accountStatus').textContent=A.error||'';$('retryConnection').hidden=!!A.client&&!A.needsRetry;
   $('sessionPersistence').textContent=A.storageMode==='local'?'Tu sesión se recuerda en este navegador. Usa Cerrar sesión para salir.':A.storageMode==='tab'?'Este navegador solo permite mantener la sesión mientras esta pestaña siga abierta.':'Este navegador no permite recordar la sesión. Puedes abrir el editor en tu navegador habitual.';
@@ -5276,6 +5323,7 @@ function clearCloudMemory(){
   resetTemplateMemory();
   clearMemberSecrets();K.intent=null;K.request++;$('assetAgencyGrid').innerHTML='';$('assetPickerSearch').value='';$('assetPickerStatus').textContent='';
   C.observer?.disconnect();C.observer=null;C.cache.clear();C.thumbs.clear();C.items=[];C.collections=[];C.members=[];C.published={items:[],brandLogo:''};C.editId=null;C.formDirty=false;
+  G.capture=null;G.pendingFonts=[];G.fontImport=null;for(const id of ['agencyAddDialog','agencyFontsDialog'])$(id).close();$('fontPackResults').replaceChildren();$('agencyCapturePreview').removeAttribute('src');
   resources.clear();previewResources.clear();bitmapCache.clear();backgroundFrameCache.clear();textMetrics.clear();fontResources.clear();
   document.querySelectorAll('canvas').forEach(out=>out.getContext('2d').clearRect(0,0,out.width,out.height));
   $('projectName').textContent='Mi diseño · ✎';$('resourceName').value='';$('resourceEditName').textContent='Editar recurso';$('resourceEditStatus').textContent='';$('creatorStatus').textContent='';
@@ -5371,7 +5419,7 @@ function visibleCollection(c){const today=new Date().toISOString().slice(0,10);r
 function availableAsset(a){return a.published&&C.collections.some(c=>c.id===a.collection_id&&visibleCollection(c));}
 async function refreshCloudCatalog(render=true){
   requireMember();const epoch=A.epoch;
-  const [items,collections]=await Promise.all([cloudResult(A.client.from('divas_assets').select('*').order('updated_at',{ascending:false})),cloudResult(A.client.from('divas_collections').select('*').order('sort_order').order('name'))]);
+  const [items,collections]=await Promise.all([boundedCloud(A.client.from('divas_assets').select('*').order('updated_at',{ascending:false})),boundedCloud(A.client.from('divas_collections').select('*').order('sort_order').order('name'))]);
   if(epoch!==A.epoch)return;
   C.items=items||[];C.collections=collections||[];C.published.items=C.items.filter(availableAsset);C.published.brandLogo='';
   const brand=C.published.items.find(a=>a.is_brand&&a.kind==='image');
@@ -5382,16 +5430,21 @@ async function refreshCloudCatalog(render=true){
 async function privateImage(a,thumb=false){
   requireMember();const path=thumb?a.thumb_path:a.object_path;if(!path)throw new Error('Este recurso no tiene imagen.');
   const key=path;if(C.cache.has(key))return C.cache.get(key);
-  const epoch=A.epoch,job=(async()=>{const file=await cloudResult(A.client.storage.from(CLOUD.bucket).download(path));if(epoch!==A.epoch)throw new Error('La sesión cambió.');if(file.size>12*1024*1024)throw new Error('Este recurso supera el tamaño admitido.');const src=await readData(file);await loadImage(src);if(epoch!==A.epoch)throw new Error('La sesión cambió.');return src;})();
+  const epoch=A.epoch,job=(async()=>{const file=await boundedCloud(A.client.storage.from(CLOUD.bucket).download(path));if(epoch!==A.epoch)throw new Error('La sesión cambió.');if(file.size>12*1024*1024)throw new Error('Este recurso supera el tamaño admitido.');const src=await readData(file);await loadImage(src);if(epoch!==A.epoch)throw new Error('La sesión cambió.');return src;})();
   C.cache.set(key,job);try{const src=await job;C.cache.set(key,src);return src;}catch(error){C.cache.delete(key);throw error;}
 }
 function resourceCard(a,{manager=false}={}){
   const collection=C.collections.find(c=>c.id===a.collection_id)?.name||'Colección';
-  return `<button class="resource-card ${manager&&C.editId===a.id?'active':''}" data-action="${manager?'editResource':'insertResource'}" data-id="${esc(a.id)}"><span class="resource-thumb ${a.category==='fondos'?'is-background':''}" data-resource-thumb="${esc(a.id)}">${a.kind==='text'?`<span class="text-preset-sample">Aa</span>`:'<span class="resource-loading">Cargando…</span>'}</span><strong>${esc(a.name)}</strong><small>${esc(collection)}${manager?' · '+(a.published?'Publicado':'Borrador'):''}</small></button>`;
+  return `<button class="resource-card ${manager&&C.editId===a.id?'active':''}" data-action="${manager?'editResource':'insertResource'}" data-id="${esc(a.id)}"><span class="resource-thumb ${a.category==='fondos'?'is-background':''}" data-resource-thumb="${esc(a.id)}">${a.kind==='text'?`<span class="text-preset-sample">Aa</span>`:'<span class="resource-loading">Cargando…</span>'}</span><strong>${esc(a.name)}</strong>${fontResource(a)?`<em class="font-tag">${esc(FONT_USES[a.style.fontUse]||'Por clasificar')} · Fuente</em>`:a.style?.component?'<em class="font-tag">Adorno editable</em>':''}<small>${esc(collection)}${manager?' · '+(a.published?'Publicado':'Borrador'):''}</small></button>`;
 }
 function loadResourceThumbs(root){
   const epoch=A.epoch;
-  const load=async el=>{if(el.dataset.loaded)return;el.dataset.loaded='true';const a=C.items.find(a=>a.id===el.dataset.resourceThumb);if(!a||a.kind==='text')return;
+  const load=async el=>{if(el.dataset.loaded)return;el.dataset.loaded='true';const a=C.items.find(a=>a.id===el.dataset.resourceThumb);if(!a)return;
+    if(a.kind==='text'){
+      if(!fontResource(a))return;
+      try{const family=await privateFontPreview(a,epoch);if(epoch!==A.epoch||!el.isConnected)return;const sample=el.querySelector('.text-preset-sample');if(sample){sample.style.fontFamily='"'+family+'"';sample.textContent='Divas';}}
+      catch{if(epoch===A.epoch)el.title='La fuente se cargará al aplicarla.';}return;
+    }
     try{const src=await privateImage(a,true);if(epoch===A.epoch)el.innerHTML=`<img src="${src}" alt="" loading="lazy">`;}
     catch{if(epoch===A.epoch)el.innerHTML='<span class="resource-loading">Vista no disponible</span>';}
   };
@@ -5402,7 +5455,8 @@ function loadResourceThumbs(root){
 function collectionOptions(value='',all=false){return (all?'<option value="todas">Todas las temporadas</option>':'')+C.collections.map(c=>`<option value="${esc(c.id)}" ${value===c.id?'selected':''}>${esc(c.name)}${!c.published?' · borrador':''}</option>`).join('');}
 function renderCatalog(){
   const query=C.search.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-  const list=C.items.filter(a=>availableAsset(a)&&(C.category==='todos'||a.category===C.category)&&(C.collection==='todas'||a.collection_id===C.collection)&&(a.name+' '+(C.collections.find(c=>c.id===a.collection_id)?.name||'')).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(query));
+  const list=C.items.filter(a=>availableAsset(a)&&(C.category==='todos'||assetCategory(a)===C.category)&&(C.category!=='fuentes'||!C.fontUse||C.fontUse==='todas'||a.style?.fontUse===C.fontUse)&&(C.collection==='todas'||a.collection_id===C.collection)&&(a.name+' '+(FONT_USES[a.style?.fontUse]||'')+' '+(C.collections.find(c=>c.id===a.collection_id)?.name||'')).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(query));
+  $('catalogFontUse').hidden=C.category!=='fuentes';$('catalogFontUse').innerHTML='<option value="todas">Todos los usos</option>'+fontUseOptions(C.fontUse||'todas');$('catalogFontUse').value=C.fontUse||'todas';
   $('catalogCategory').value=C.category;$('catalogCollection').innerHTML=collectionOptions(C.collection,true);
   $('catalogGrid').innerHTML=list.map(a=>resourceCard(a)).join('')||'<div class="catalog-empty"><strong>Esta colección está por llegar</strong><p>Los recursos aparecerán aquí cuando tu agencia los publique.</p></div>';
   $('catalogCount').textContent=list.length+' recursos publicados';loadResourceThumbs($('catalogGrid'));
@@ -5413,7 +5467,7 @@ async function openCatalog(category='todos'){
   $('resourceManager').close();$('accountDialog').close();renderCatalog();showDialog('catalogDialog');
 }
 function safeTextStyle(raw={},fonts=S.doc?.fuentes||[]){
-  const p=layer('texto');const keys=['color','color2','fuente','peso','tamano','espaciado','alineacion','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraY','sombraX','degradadoTexto'];
+  const p=layer('texto');const keys=['color','color2','fuente','peso','cursiva','subrayado','tamano','espaciado','alineacion','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraY','sombraX','degradadoTexto'];
   const out={};for(const k of keys)if(Object.hasOwn(raw,k))out[k]=raw[k];
   if(!FONT_LIST.includes(out.fuente)&&!fonts.some(f=>f.nombre===out.fuente))out.fuente='Georgia';
   const d=emptyDocument();d.fuentes=copy(fonts);d.capas=[{...p,...out,texto:'Tu título'}];const clean=normalizeProject(d).capas[0];return Object.fromEntries(keys.map(k=>[k,clean[k]]));
@@ -5421,7 +5475,7 @@ function safeTextStyle(raw={},fonts=S.doc?.fuentes||[]){
 const FONT_BUCKET='divas-fonts';
 function fontFileInfo(font){
   const bytes=new Uint8Array(fontBuffer(font.datos));
-  if(bytes.length>6*1024*1024||bytes.length<12)throw new Error('La fuente debe pesar menos de 6 MB.');
+  if(bytes.length>6*1024*1024)throw new Error('La fuente supera los 6 MB.');if(bytes.length<12)throw new Error('El archivo no contiene una fuente válida.');
   const tag=String.fromCharCode(...bytes.slice(0,4));
   const ext=tag==='wOF2'?'woff2':tag==='wOFF'?'woff':tag==='OTTO'?'otf':tag==='true'||(bytes[0]===0&&bytes[1]===1&&bytes[2]===0&&bytes[3]===0)?'ttf':null;
   if(!ext)throw new Error('Carga una fuente TTF, OTF, WOFF o WOFF2 válida.');
@@ -5434,7 +5488,7 @@ async function prepareResourceStyle(raw={},doc=S.doc,epoch=A.epoch){
   let font=null;const style=copy(raw);
   if(raw.fontAsset){
     if(!validFontAsset(raw.fontAsset)||raw.fuente!==raw.fontAsset.nombre)throw new Error('Este estilo tiene una fuente inválida. Pide al administrador que lo vuelva a guardar.');
-    const blob=await cloudResult(A.client.storage.from(FONT_BUCKET).download(raw.fontAsset.path));
+    const blob=await boundedCloud(A.client.storage.from(FONT_BUCKET).download(raw.fontAsset.path));
     if(!blob||blob.size>6*1024*1024)throw new Error('No se pudo cargar la fuente del estilo.');
     font={nombre:raw.fontAsset.nombre,etiqueta:String(raw.fontAsset.etiqueta||'Fuente de la agencia').slice(0,80),datos:await readData(blob)};
     fontFileInfo(font);
@@ -5466,15 +5520,15 @@ async function insertResource(id){
   const s=sizeOf();
   if(a.kind==='text'){
     const p=selectedLayer();
-    if(p?.tipo==='texto'){
+    if(p?.tipo==='texto'||(fontResource(a)&&p?.tipo==='tabla')){
       if(p.bloqueado)throw new Error('Desbloquea el texto para aplicar el estilo.');
-      commit(()=>{installStyleFont(prepared);Object.assign(p,prepared.style);ensureTextRoom(p);});
+      commit(()=>{installStyleFont(prepared);Object.assign(p,preparedFontStyle(a,prepared));if(p.tipo==='texto')ensureTextRoom(p);});
     }else{
       if(S.doc.capas.length>=200)throw new Error('Este proyecto ya tiene 200 capas.');
       const text=layer('texto',{...prepared.style,texto:'Tu título',nombre:a.name,x:s.ancho/2,y:s.alto/2,w:s.ancho*.75,h:s.alto*.18});
       commit(()=>{installStyleFont(prepared);S.doc.capas.push(text);S.selected=text.id;});setTab('ajustes');offerLayerHint();
     }
-  }else{
+  }else if(a.category==='figuras'&&insertNativeComponent(a)){ /* Capas nativas conservadas. */ }else{
     const im=await loadImage(src),d=imageSize(im),background=a.category==='fondos';
     if(epoch!==A.epoch||doc!==S.doc)throw new Error('El diseño cambió. Aplica el recurso de nuevo.');
     if(S.doc.capas.length>=200&&(!background||!S.doc.capas.some(p=>p.rol==='fondo')))throw new Error('Este proyecto ya tiene 200 capas.');
@@ -5484,13 +5538,14 @@ async function insertResource(id){
   $('catalogDialog').close();notify('Recurso aplicado. Puedes deshacerlo con ↶.');
 }
 async function openResourceManager(){
-  requireMember(true);await refreshCloudCatalog(false);$('accountDialog').close();$('catalogDialog').close();renderResourceManager();await adminTab('resources',{load:false});showDialog('resourceManager');
+  requireMember(true);await refreshCloudCatalog(false);$('accountDialog').close();$('catalogDialog').close();$('agencyFontsDialog').close();$('agencyAddDialog').close();G.capture=null;renderResourceManager();await adminTab('resources',{load:false});showDialog('resourceManager');
 }
 function renderResourceManager(){
-  requireMember(true);$('uploadResourceCollection').innerHTML=collectionOptions($('uploadResourceCollection').value);
-  $('creatorGrid').innerHTML=C.items.map(a=>resourceCard(a,{manager:true})).join('')||'<div class="catalog-empty"><strong>Tu catálogo empieza aquí</strong><p>Sube los fondos y adornos oficiales de tu agencia. Las emisoras verán solo lo publicado.</p></div>';
+  requireMember(true);renderCreatorFilters();$('uploadResourceCollection').innerHTML=collectionOptions($('uploadResourceCollection').value);
+  $('creatorGrid').innerHTML=creatorResources().map(a=>resourceCard(a,{manager:true})).join('')||'<div class="catalog-empty"><strong>Tu catálogo empieza aquí</strong><p>Sube los fondos y adornos oficiales de tu agencia. Las emisoras verán solo lo publicado.</p></div>';
   const a=C.items.find(a=>a.id===C.editId);$('resourceEdit').hidden=!a;C.formDirty=false;
-  if(a){$('resourceEditName').textContent=a.name;$('resourceName').value=a.name;$('resourceCollection').innerHTML=collectionOptions(a.collection_id);$('resourceCategory').value=a.category;$('resourceCategory').disabled=a.kind==='text';$('resourceVisible').checked=a.published;$('resourceBrand').checked=a.is_brand;$('resourceBrand').disabled=a.kind!=='image';}
+  if(a){$('resourceEditName').textContent=a.name;$('resourceName').value=a.name;$('resourceCollection').innerHTML=collectionOptions(a.collection_id);$('resourceCategory').value=assetCategory(a);$('resourceCategory').disabled=a.kind==='text';$('resourceVisible').checked=a.published;$('resourceBrand').checked=a.is_brand;$('resourceBrand').disabled=a.kind!=='image';}
+  $('resourceFontUseField').hidden=!fontResource(a);if(fontResource(a)){$('resourceFontUse').innerHTML=fontUseOptions(a.style.fontUse);$('resourceFontSuggestion').textContent='Sugerencia por nombre: '+(FONT_USES[a.style.fontSuggestion]||'Por clasificar')+'. Puedes corregirla.';}
   $('resourceEditStatus').textContent='';$('creatorStatus').textContent=C.items.length+' recursos · '+C.items.filter(availableAsset).length+' disponibles para las emisoras';
   renderSeasons();loadResourceThumbs($('creatorGrid'));
 }
@@ -5499,9 +5554,10 @@ async function saveResourceMetadata(){
   if(!C.formDirty||!C.editId)return;requireMember(true);const a=C.items.find(a=>a.id===C.editId);if(!a)return;
   const name=$('resourceName').value.trim();if(!name)throw new Error('Escribe el nombre del recurso.');
   const category=a.kind==='text'?'textos':$('resourceCategory').value;
-  if(a.kind==='image'&&category==='textos')throw new Error('Las imágenes deben estar en Fondos, Adornos o Logos.');
+  if(a.kind==='image'&&!['fondos','figuras','logos'].includes(category))throw new Error('Las imágenes deben estar en Fondos, Adornos o Logos.');
   const brand=$('resourceBrand').checked;if(brand&&category!=='logos')throw new Error('El logo oficial debe estar en la categoría Logos.');
   const patch={name,collection_id:$('resourceCollection').value,category,published:$('resourceVisible').checked,is_brand:brand,updated_at:new Date().toISOString()};
+  if(fontResource(a))patch.style={...a.style,fontUse:Object.hasOwn(FONT_USES,$('resourceFontUse').value)?$('resourceFontUse').value:'pendiente'};
   await cloudResult(A.client.from('divas_assets').update(patch).eq('id',a.id).select('id').single());C.formDirty=false;await refreshCloudCatalog();$('resourceEditStatus').textContent=patch.published?'✓ Guardado. Se verá si la temporada está activa.':'✓ Guardado como borrador privado.';
 }
 async function imageBlob(src,maxSize=null){const im=await loadImage(src),s=imageSize(im),factor=maxSize?Math.min(1,maxSize/Math.max(s.w,s.h)):1,out=document.createElement('canvas');out.width=Math.round(s.w*factor);out.height=Math.round(s.h*factor);out.getContext('2d').drawImage(im,0,0,out.width,out.height);return new Promise((resolve,reject)=>out.toBlob(b=>b?resolve(b):reject(new Error('No se pudo preparar la imagen.')),'image/png'));}
@@ -5521,25 +5577,8 @@ async function uploadResources(files){
   await refreshCloudCatalog();notify('Imágenes subidas como borrador. Elige cuáles publicar.');
 }
 async function captureTextStyle(){
-  requireMember(true);const p=selectedLayer(),doc=S.doc,epoch=A.epoch;
-  if(p?.tipo!=='texto')throw new Error('Selecciona un texto del lienzo antes de guardar su estilo.');
-  const style=safeTextStyle(p),font=copy(doc.fuentes.find(f=>f.nombre===p.fuente)),name=('Estilo · '+p.nombre).slice(0,80);
-  await saveResourceMetadata();const collection=$('uploadResourceCollection').value;if(!collection)throw new Error('Elige una colección.');
-  const id=uuid();let path=null;
-  try{
-    if(font){
-      const info=fontFileInfo(font);path=id+'/'+uuid()+'.'+info.ext;
-      try{await cloudResult(A.client.storage.from(FONT_BUCKET).upload(path,new Blob([info.bytes],{type:info.mime}),{contentType:info.mime,upsert:false}));}
-      catch(error){throw new Error('No se pudo guardar la fuente privada. Comprueba tu conexión y que hayas ejecutado 07-divas-fuentes.sql. '+(error.message||''));}
-      style.fontAsset={path,nombre:font.nombre,etiqueta:font.etiqueta,mime:info.mime};
-    }
-    if(doc!==S.doc||epoch!==A.epoch)throw new Error('El diseño o la sesión cambió. Guarda el estilo de nuevo.');
-    await cloudResult(A.client.from('divas_assets').insert({id,name,category:'textos',collection_id:collection,kind:'text',style,published:false}));
-  }catch(error){
-    if(path&&epoch===A.epoch){const check=await Promise.resolve(A.client.from('divas_assets').select('id').eq('id',id).maybeSingle()).catch(()=>({error:true}));if(!check.error&&!check.data)await A.client.storage.from(FONT_BUCKET).remove([path]).catch(()=>{});}
-    throw error;
-  }
-  C.editId=id;await refreshCloudCatalog();notify('Estilo editable guardado como borrador'+(font?', con su fuente personalizada.':'.'));
+  if(selectedLayer()?.tipo!=='texto')throw new Error('Selecciona un texto del lienzo antes de guardar su estilo.');
+  await openAgencyAdd();await chooseCaptureMode('style');
 }
 async function deleteResource(){
   requireMember(true);const a=C.items.find(a=>a.id===C.editId);if(!a)return;
@@ -6297,7 +6336,7 @@ function resetTemplateMemory(){
   for(const id of ['templateGrid','importCompare','importReport'])$(id).replaceChildren();
 }
 function crc32(bytes){let crc=0xffffffff;for(const byte of bytes){crc^=byte;for(let j=0;j<8;j++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}return(crc^0xffffffff)>>>0;}
-async function pxzArchive(file){
+async function pxzArchive(file,{manifest=true}={}){
   if(file.size>50*1024*1024)throw new Error('El PXZ supera los 50 MB. Divide el proyecto en Pixlr antes de importarlo.');
   const bytes=new Uint8Array(await file.arrayBuffer()),v=new DataView(bytes.buffer),end=bytes.length;
   const u16=n=>v.getUint16(n,true),u32=n=>v.getUint32(n,true),fail=()=>{throw new Error('El archivo PXZ está incompleto o utiliza un ZIP no compatible.');};
@@ -6318,8 +6357,8 @@ async function pxzArchive(file){
     total+=size;if(total>150*1024*1024)throw new Error('El contenido del PXZ supera los 150 MB descomprimidos.');
     entries.set(name,{start,packed,size,crc,method});at+=46+nl+xl+cl;
   }
-  if(at!==e||!entries.has('manifest.json'))throw new Error('Este ZIP no contiene un proyecto Pixlr PXZ (falta manifest.json).');
-  return {has:name=>entries.has(name),async read(name,max=32*1024*1024){
+  if(at!==e||(manifest&&!entries.has('manifest.json')))throw new Error('Este ZIP no contiene un proyecto Pixlr PXZ (falta manifest.json).');
+  return {names:[...entries.keys()],has:name=>entries.has(name),async read(name,max=32*1024*1024){
     const item=entries.get(name);if(!item)throw new Error('Falta un recurso dentro del PXZ: '+String(name).slice(0,90));
     if(item.size>max)throw new Error('Un recurso del PXZ supera el tamaño permitido.');
     let data=bytes.subarray(item.start,item.start+item.packed);
@@ -6507,7 +6546,7 @@ async function nextImport(){
     }else throw new Error('Elige un archivo .pxz de Pixlr o .json de Divas.');
     if(epoch!==A.epoch)return;T.current=result;
     if(isAdmin()&&(!C.collections.length||T.intent)){try{const collections=await templateResult(A.client.from('divas_collections').select('*').order('sort_order'));templateGuard(epoch,true);C.collections=collections||[];}catch(error){if(epoch!==A.epoch)return;result.warnings.push(error.message);}}
-    if(epoch!==A.epoch)return;renderImport();
+    if(epoch!==A.epoch)return;await archiveDocumentFonts(result);if(epoch!==A.epoch)return;renderImport();
   }catch(error){if(epoch===A.epoch){$('importTitle').textContent='No se pudo importar';$('importStatus').textContent=file.name+': '+error.message;$('importActions').hidden=false;$('importOpen').hidden=true;$('importPublish').hidden=true;$('templateSave').hidden=true;$('templateDelete').hidden=true;renderImportQueue();}}
 }
 function renderImportQueue(){const next=$('importNext');next.hidden=!T.queue.length;next.textContent='Siguiente archivo · '+T.queue.length+' pendiente'+(T.queue.length===1?'':'s');}
@@ -6517,6 +6556,7 @@ function renderImport(){
   $('importCompare').innerHTML=(r.original?`<figure><img src="${r.original}" alt="Vista original guardada por Pixlr"><figcaption>Original de Pixlr</figcaption></figure>`:'')+`<figure><img src="${importPreview(d)}" alt="Resultado editable en Divas"><figcaption>Editable en Divas</figcaption></figure>`;
   const texts=d.capas.filter(p=>p.tipo==='texto').length,images=d.capas.filter(p=>p.tipo==='imagen').length,hidden=d.capas.filter(p=>p.oculto).length;
   $('importReport').innerHTML=`<p class="import-summary">${s.ancho} × ${s.alto} · <strong>${d.capas.length} capas</strong> · ${texts} textos editables · ${images} imágenes${hidden?' · '+hidden+' ocultas':''}</p>${r.warnings.length?`<details class="property"><summary>Revisar textos y efectos · ${r.warnings.length} avisos</summary><ul>${r.warnings.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></details>`:''}<p class="help">Las letras y cifras que ya forman parte de una imagen seguirán siendo imagen. Puedes moverla o reemplazarla.</p>`;
+  $('importReport').insertAdjacentHTML('beforeend',fontArchiveReport(r));
   $('importName').value=T.edit?.name||d.proyecto?.nombre||'Mi plantilla';$('importCollection').innerHTML=collectionOptions(T.edit?.collection_id||'');$('importPublished').checked=T.edit?T.edit.published:true;
   $('importSettings').hidden=!admin;$('importActions').hidden=false;$('importOpen').hidden=false;$('importOpen').textContent=existing?'Usar plantilla · crear mi copia':'Abrir como proyecto';
   $('importOpen').classList.toggle('primary',!admin||existing||!T.intent);$('importPublish').classList.toggle('primary',admin&&!existing&&T.intent);
@@ -6532,9 +6572,9 @@ async function openImportCopy(){
   await activateDocument(d);if(epoch!==A.epoch)return;$('importDialog').close();T.queue=[];T.current=null;T.edit=null;
   notify('Copia editable abierta. Usa Guardar avance; la plantilla original se conserva.');
 }
-async function prepareCurrentTemplate(){
+async function prepareCurrentTemplate(source=S.doc,title=projectName()){
   requireMember(true);if(!S.opened)throw new Error('Abre primero el diseño que quieres publicar.');finishBrush();
-  const epoch=A.epoch,doc=normalizeProject(compactProject(S.doc));doc.proyecto={nombre:projectName()};
+  const epoch=A.epoch,doc=normalizeProject(compactProject(source));doc.proyecto={nombre:title};await refreshCloudCatalog(false);templateGuard(epoch,true);
   const bytes=new Blob([JSON.stringify(compactProject(doc))]).size;if(!doc.capas.length)throw new Error('Añade al menos una capa.');if(bytes>=TEMPLATE_MAX)throw new Error('El proyecto supera los 23,9 MB.');
   await hydrate(doc);templateGuard(epoch,true);T.queue=[];T.intent=true;T.current={doc,original:'',warnings:[],bytes,source:'Proyecto Divas'};T.epoch=epoch;T.edit=null;$('templatesDialog').close();renderImport();showDialog('importDialog');
 }
@@ -6592,6 +6632,257 @@ async function deleteTemplate(){
 $('templateSearch').addEventListener('input',renderTemplates);$('templateCollection').addEventListener('change',renderTemplates);
 $('importDialog').addEventListener('close',()=>{if(!S.busy){T.queue=[];T.current=null;T.edit=null;}});
 for(const id of ['importDialog','templatesDialog'])$(id).addEventListener('cancel',event=>{if(S.busy)event.preventDefault();});
+
+/* v24 · recursos reutilizables. Los permisos siguen siendo los de Supabase. */
+const FONT_USES={comun:'Uso común',titulos:'Títulos e impacto',elegante:'Elegante y editorial',manuscrita:'Manuscrita',halloween:'Halloween',navidad:'Navidad',pendiente:'Por clasificar'};
+const G={capture:null,pendingFonts:[],fontImport:null};
+function fontUseOptions(value='pendiente',auto=false){return (auto?'<option value="auto">Sugerir por el nombre de cada fuente</option>':'')+Object.entries(FONT_USES).map(([id,label])=>`<option value="${id}" ${value===id?'selected':''}>${esc(label)}</option>`).join('');}
+function suggestFontUse(name){
+  const n=String(name).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  if(/halloween|spooky|creep|horror|blood|zombie|vampir|fright|haunt|nosifer|eater/.test(n))return 'halloween';
+  if(/christmas|navidad|noel|santa\b|snow|xmas/.test(n))return 'navidad';
+  if(/arial|verdana|tahoma|roboto|open.?sans|noto.?sans|lato\b|inter\b|helvetica|trebuchet/.test(n))return 'comun';
+  if(/script|handwrit|signature|brush|cursive|dancing|pacifico|caveat/.test(n))return 'manuscrita';
+  if(/impact|bebas|anton\b|display|black\b|poster/.test(n))return 'titulos';
+  if(/georgia|garamond|baskerville|didot|bodoni|playfair|cormorant|cinzel|palatino|times.new.roman|book.antiqua/.test(n))return 'elegante';
+  return 'pendiente';
+}
+function fontResource(a){return a?.kind==='text'&&a.style?.resourceType==='font';}
+function assetCategory(a){return fontResource(a)?'fuentes':a.category;}
+function imageVisibilityHTML(p){
+  return `<div class="image-visibility">${rangeProp('Opacidad de la capa','opacidad',0,1,.01)}<p class="help" data-image-visibility>${Math.round(p.opacidad*100)} % · ${p.mezcla==='source-over'?'Mezcla normal':'Mezcla: '+esc(p.mezcla)}</p><button class="wide" data-action="restoreVisibility">Restaurar opacidad y color</button><small class="help">Conserva los píxeles transparentes y el fondo que ya quitaste.</small></div>`;
+}
+function resetImageVisibility(p){Object.assign(p,{opacidad:1,mezcla:'source-over',brillo:100,contraste:100,saturacion:100,desenfoque:0});}
+function metal(c,w,h,hex){
+  if(!/^#[0-9a-f]{6}$/i.test(hex||'')||hex.toLowerCase()==='#d6b36d')return gold(c,w,h);
+  const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));
+  const tint=(toward,amount)=>'#'+rgb.map(v=>Math.round(v+(toward-v)*amount).toString(16).padStart(2,'0')).join('');
+  const g=c.createLinearGradient(-w/2,-h/2,w/2,h/2);
+  [[0,tint(0,.5)],[.2,hex],[.4,tint(255,.45)],[.5,tint(255,.85)],[.58,tint(0,.18)],[.8,tint(255,.35)],[1,tint(0,.45)]].forEach(([at,color])=>g.addColorStop(at,color));return g;
+}
+function metalPresetsHTML(){return `<div class="metal-swatches" aria-label="Colores de borde metálico">${[['#d6b36d','Oro'],['#4d9bd8','Azul'],['#b5becf','Plata'],['#d28b9b','Oro rosa']].map(([color,label])=>`<button data-action="metalColor" data-value="${color}"><i style="--metal:${color}"></i>${label}</button>`).join('')}</div>`;}
+function agencyAddHTML(){return isAdmin()?'<button class="wide agency-add-entry" data-action="agencyAdd">＋ Agregar contenido a la agencia</button>':'';}
+function catalogFontOptions(){return C.items.filter(a=>availableAsset(a)&&fontResource(a)).map(a=>['agency:'+a.id,a.name+' · agencia']);}
+function preparedFontStyle(a,prepared){return fontResource(a)?{fuente:prepared.style.fuente}:prepared.style;}
+async function privateFontPreview(a,epoch){
+  if(!a.style?.fontAsset)return FONT_LIST.includes(a.style?.fuente)?a.style.fuente:'Arial';
+  const asset=a.style.fontAsset;if(!validFontAsset(asset))throw new Error('Fuente inválida.');
+  const key='font:'+asset.path;if(C.thumbs.has(key))return C.thumbs.get(key);
+  const job=(async()=>{const blob=await boundedCloud(A.client.storage.from(FONT_BUCKET).download(asset.path));if(epoch!==A.epoch)throw new Error('La sesión cambió.');if(blob.size>6*1024*1024)throw new Error('Fuente demasiado grande.');const f={nombre:'DivasFuente_preview_'+a.id.replace(/-/g,''),etiqueta:a.name,datos:await readData(blob)};fontFileInfo(f);await loadFont(f);if(epoch!==A.epoch)throw new Error('La sesión cambió.');return f.nombre;})();
+  C.thumbs.set(key,job);try{return await job;}catch(error){C.thumbs.delete(key);throw error;}
+}
+function renderCreatorFilters(){
+  const value=C.managerCategory||'todos';$('creatorCategory').innerHTML='<option value="todos">Todo el contenido</option>'+Object.entries(CATEGORIES).map(([id,name])=>`<option value="${id}" ${id===value?'selected':''}>${esc(name)}</option>`).join('');
+}
+function creatorResources(){
+  const q=String(C.managerQuery||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  return C.items.filter(a=>(!C.managerCategory||C.managerCategory==='todos'||assetCategory(a)===C.managerCategory)&&[a.name,FONT_USES[a.style?.fontUse]||'',C.collections.find(c=>c.id===a.collection_id)?.name||''].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));
+}
+function captureGuard(c){requireMember(true);if(!c||G.capture!==c||c.epoch!==A.epoch)throw new Error('La sesión cambió. Vuelve a abrir Agregar a la agencia.');}
+async function openAgencyAdd(){
+  requireMember(true);if(!S.opened)throw new Error('Abre un proyecto para guardar su contenido.');
+  finishBrush();await saveResourceMetadata();await refreshCloudCatalog(false);requireMember(true);
+  for(const id of ['resourceManager','accountDialog','catalogDialog'])$(id).close();
+  const list=selectedLayers();G.capture={epoch:A.epoch,doc:copy(S.doc),layers:list.map(copy),name:projectName(),mode:null,attempt:null};
+  renderAgencyChoices();showDialog('agencyAddDialog');
+}
+function renderAgencyChoices(){
+  const c=G.capture;if(!c)return;const p=c.layers[0],single=c.layers.length===1;
+  $('agencyCaptureFields').hidden=true;$('agencyCaptureSave').disabled=true;$('agencyCaptureStatus').textContent='Elige qué quieres reutilizar.';
+  $('agencyAddChoices').hidden=false;$('agencyAddChoices').innerHTML=`<button data-action="agencyCaptureMode" data-value="template"><strong>✧ Flyer editable</strong><small>Todo el proyecto, con sus capas. Cada usuaria crea una copia.</small></button><button data-action="agencyCaptureMode" data-value="image" ${!c.layers.length?'disabled':''}><strong>▧ ${single&&p.tipo==='imagen'?'Imagen seleccionada':'Selección del lienzo'}</strong><small>${!c.layers.length?'Selecciona una capa o un grupo primero.':single&&p.tipo==='imagen'?'Conserva el recorte y el fondo transparente.':'Guarda este adorno, texto o grupo como recurso.'}</small></button>${single&&p.tipo==='texto'?'<button data-action="agencyCaptureMode" data-value="style"><strong>Aa Estilo de texto</strong><small>Fuente, color, dorado y glow para aplicarlos a otras palabras.</small></button>':''}${single&&['texto','tabla'].includes(p.tipo)?'<button data-action="agencyCaptureMode" data-value="font"><strong>Ab Solo la fuente</strong><small>Reutiliza la letra conservando el tamaño y los efectos del texto de destino.</small></button>':''}<button data-action="agencyFonts"><strong>＋ Pack de fuentes</strong><small>Varios archivos o un ZIP, con clasificación sugerida.</small></button>`;
+}
+function nativeComponent(c){
+  if(c.mode!=='image'||c.layers.some(p=>p.tipo==='imagen'||p.rol==='fondo'||c.doc.fuentes.some(f=>f.nombre===p.fuente)))return null;
+  const component={layers:c.layers.map(p=>({...copy(p),id:uid(),rol:'',grupo:null,grupoNombre:'',decorativa:false,bloqueado:false,oculto:false}))};
+  return new Blob([JSON.stringify(component)]).size<13000?component:null;
+}
+function renderSelectionAsset(c,effects){
+  const list=c.layers.map(p=>({...copy(p),oculto:false})),p=list[0];
+  if(list.length===1&&p.tipo==='imagen'&&!effects){
+    const im=resources.get(p.src);if(!im)throw new Error('La imagen aún no está cargada.');const size=imageSize(im),scale=Math.min(1,4096/Math.max(size.w,size.h)),out=document.createElement('canvas');out.width=Math.max(1,Math.round(size.w*scale));out.height=Math.max(1,Math.round(size.h*scale));out.getContext('2d').drawImage(im,0,0,out.width,out.height);return out;
+  }
+  const boxes=list.map(boundsOf),pad=Math.max(8,...list.map(p=>Math.max(p.bordeImagen||0,p.glow?p.glowRadio*2:0,p.desenfoque*2||0,Math.abs(p.sombraY||0)+p.glowRadio,Math.abs(p.sombraX||0)+p.glowRadio,p.decoracion&&p.decoracion!=='ninguna'?Math.max(p.w,p.h)*.35:0)));
+  const left=Math.min(...boxes.map(b=>b.left))-pad,top=Math.min(...boxes.map(b=>b.top))-pad,w=Math.max(...boxes.map(b=>b.right))-left+pad,h=Math.max(...boxes.map(b=>b.bottom))-top+pad,factor=Math.min(1,4096/Math.max(w,h)),out=document.createElement('canvas');
+  out.width=Math.max(1,Math.ceil(w*factor));out.height=Math.max(1,Math.ceil(h*factor));const context=out.getContext('2d');context.scale(factor,factor);context.translate(-left,-top);list.forEach(p=>drawLayer(context,p,factor,false,true));return out;
+}
+async function chooseCaptureMode(mode){
+  const c=G.capture;captureGuard(c);
+  if(mode==='template'){$('agencyAddDialog').close();await prepareCurrentTemplate(c.doc,c.name);G.capture=null;return;}
+  if(!['image','style','font'].includes(mode)||!c.layers.length)return;
+  c.mode=mode;c.attempt=null;c.saved=false;const p=c.layers[0];$('agencyCaptureSave').textContent='Guardar en la agencia';
+  $('agencyCaptureFields').querySelectorAll('input,select').forEach(el=>el.disabled=false);
+  if(['style','font'].includes(mode)&&(c.layers.length!==1||!['texto','tabla'].includes(p.tipo)))throw new Error('Selecciona un texto.');
+  $('agencyAddChoices').hidden=true;$('agencyCaptureFields').hidden=false;$('agencyCaptureEffects').checked=false;
+  $('agencyCaptureEffectsField').hidden=mode!=='image'||c.layers.length!==1||p.tipo!=='imagen';
+  $('agencyCaptureCategory').value=mode==='style'?'textos':mode==='font'?'fuentes':p.rol==='fondo'?'fondos':p.tipo==='imagen'?'logos':'figuras';
+  [...$('agencyCaptureCategory').options].forEach(option=>option.disabled=mode==='image'?['textos','fuentes'].includes(option.value):option.value!==(mode==='style'?'textos':'fuentes'));
+  const font=c.doc.fuentes.find(f=>f.nombre===p.fuente),label=font?.etiqueta||p.fuente;
+  $('agencyCaptureName').value=(mode==='font'?label:mode==='style'?'Estilo · '+p.nombre:p.nombre||'Mi recurso').slice(0,80);
+  $('agencyCaptureCollection').innerHTML=collectionOptions(C.collections.find(visibleCollection)?.id);
+  $('agencyCaptureFontField').hidden=mode!=='font';$('agencyCaptureFontUse').innerHTML=fontUseOptions(suggestFontUse(label));
+  $('agencyCapturePublished').checked=true;await updateCapturePreview();captureGuard(c);$('agencyCaptureSave').disabled=false;updateCaptureVisibility();
+}
+async function updateCapturePreview(){
+  const c=G.capture;captureGuard(c);if(!c.mode)return;const out=renderSelectionAsset(c,$('agencyCaptureEffects').checked),src=out.toDataURL('image/png');
+  c.src=src;c.component=nativeComponent(c);$('agencyCapturePreview').src=src;
+  $('agencyCaptureDescription').textContent=c.mode==='style'?'Se guardan la fuente y sus efectos, para escribir cualquier texto.':c.mode==='font'?'Se guarda la tipografía; el tamaño, el color y los efectos de destino se conservan.':`${out.width} × ${out.height} px · ${c.component&&$('agencyCaptureCategory').value==='figuras'?'Adorno editable y vista previa PNG.':c.layers.length===1&&c.layers[0].tipo==='imagen'&&!$('agencyCaptureEffects').checked?'PNG con el recorte actual, sin heredar opacidad ni filtros.':'Imagen PNG de la selección. Para conservar todas las capas, elige Flyer editable.'}`;
+  $('agencyCaptureStatus').textContent='Revisa el nombre y dónde quieres guardarlo.';
+}
+function updateCaptureVisibility(){const collection=C.collections.find(c=>c.id===$('agencyCaptureCollection').value);$('agencyCaptureVisibility').textContent=!collection?'Crea una colección en Administrar agencia → Temporadas.':!$('agencyCapturePublished').checked?'Solo tú verás el borrador.':visibleCollection(collection)?'Tu equipo podrá usarlo al terminar de guardar.':'La colección está en borrador o fuera de fecha. El recurso aparecerá cuando la actives.';}
+async function storageOnce(bucket,path,body,epoch){
+  templateGuard(epoch,true);
+  const result=await boundedCloud(A.client.storage.from(bucket).upload(path,body,{contentType:body.type,upsert:false}).then(r=>{
+    if(r.error&&/bucket.*not found/i.test(r.error.message||''))throw new Error('Falta el almacenamiento privado. Ejecuta '+(bucket===FONT_BUCKET?'07-divas-fuentes.sql':'01-divas-instalacion.sql')+' de tu instalación.');
+    if(r.error&&(String(r.error.statusCode)==='409'||r.error.error==='Duplicate'||(String(r.error.statusCode)==='400'&&/already exists|duplicate/i.test(r.error.message||''))))return {data:{path},error:null};return r;
+  }));templateGuard(epoch,true);return result;
+}
+async function insertAssetOnce(row,epoch){
+  templateGuard(epoch,true);let existing=await boundedCloud(A.client.from('divas_assets').select('*').eq('id',row.id).maybeSingle());templateGuard(epoch,true);if(existing)return existing;
+  try{existing=await boundedCloud(A.client.from('divas_assets').insert(row).select('*').single());}
+  catch(error){templateGuard(epoch,true);existing=await boundedCloud(A.client.from('divas_assets').select('*').eq('id',row.id).maybeSingle());if(!existing)throw error;}
+  templateGuard(epoch,true);return existing;
+}
+async function saveAgencyCapture(){
+  const c=G.capture;captureGuard(c);if(!c.mode)return;
+  $('agencyCaptureStatus').textContent='Guardando el recurso privado…';$('agencyCaptureSave').disabled=true;
+  try{
+    const name=$('agencyCaptureName').value.trim(),collection=$('agencyCaptureCollection').value,p=c.layers[0];
+    if(!name||name.length>80)throw new Error('Escribe un nombre de hasta 80 caracteres.');
+    if(!C.collections.some(a=>a.id===collection))throw new Error('Elige una colección.');
+    let row;
+    if(c.mode==='font'){
+      const font=c.doc.fuentes.find(f=>f.nombre===p.fuente)||{nombre:p.fuente,etiqueta:p.fuente};
+      const result=await archiveFont(font,{collection,name,published:$('agencyCapturePublished').checked,use:$('agencyCaptureFontUse').value,source:'Selección del editor',epoch:c.epoch});row=result.row;
+      c.duplicate=result.duplicate;
+    }else{
+      if(!c.attempt){
+        const id=uuid(),style=c.mode==='style'?safeTextStyle(p,c.doc.fuentes):c.component&&$('agencyCaptureCategory').value==='figuras'?{component:c.component,resourceType:'component'}:{};
+        const row={id,name,collection_id:collection,category:c.mode==='style'?'textos':$('agencyCaptureCategory').value,kind:c.mode==='style'?'text':'image',style,published:$('agencyCapturePublished').checked};
+        const uploads=[];
+        if(c.mode==='style'){
+          const font=c.doc.fuentes.find(f=>f.nombre===p.fuente);if(font){const info=fontFileInfo(font),path=id+'/'+uuid()+'.'+info.ext;style.fontAsset={path,nombre:font.nombre,etiqueta:font.etiqueta,mime:info.mime};uploads.push({bucket:FONT_BUCKET,path,body:new Blob([info.bytes],{type:info.mime})});}
+        }else{
+          if(!['logos','figuras','fondos'].includes(row.category))throw new Error('Elige Logos, Adornos o Fondos.');
+          const body=await imageBlob(c.src),thumb=await imageBlob(c.src,320);captureGuard(c);
+          if(body.size>12*1024*1024)throw new Error('Esta selección supera 12 MB. Reduce su tamaño antes de guardarla.');
+          row.object_path=id+'/'+uuid()+'.png';row.thumb_path=id+'/'+uuid()+'.png';uploads.push({bucket:CLOUD.bucket,path:row.object_path,body},{bucket:CLOUD.bucket,path:row.thumb_path,body:thumb});
+        }
+        c.attempt={row,uploads};
+      }
+      $('agencyCaptureFields').querySelectorAll('input,select').forEach(el=>el.disabled=true);
+      for(const upload of c.attempt.uploads){if(!upload.done){await storageOnce(upload.bucket,upload.path,upload.body,c.epoch);upload.done=true;}}
+      row=await insertAssetOnce(c.attempt.row,c.epoch);
+    }
+    captureGuard(c);C.editId=row.id;await refreshCloudCatalog(false);captureGuard(c);
+    $('agencyCaptureStatus').textContent=c.duplicate?'Esta fuente ya estaba guardada. Conservamos su categoría y publicación actuales.':'✓ Guardado. '+(availableAsset(row)?'Tu equipo ya puede usarlo.':'Quedará disponible cuando publiques el recurso y su colección.');
+    $('agencyCaptureSave').textContent='Guardado';c.saved=true;notify(c.duplicate?'La fuente ya estaba en la agencia.':'Contenido guardado en la agencia.');
+  }catch(error){if(c.epoch===A.epoch){$('agencyCaptureStatus').textContent=error.message+' Puedes reintentar sin crear otra copia.';$('agencyCaptureSave').disabled=false;}}
+}
+async function fontCollection(epoch){
+  templateGuard(epoch,true);let row=await boundedCloud(A.client.from('divas_collections').select('*').eq('name','Fuentes de agencia').maybeSingle());
+  if(!row){try{row=await boundedCloud(A.client.from('divas_collections').insert({name:'Fuentes de agencia',published:true}).select('*').single());}catch(error){templateGuard(epoch,true);row=await boundedCloud(A.client.from('divas_collections').select('*').eq('name','Fuentes de agencia').maybeSingle());if(!row)throw error;}}
+  templateGuard(epoch,true);if(!C.collections.some(c=>c.id===row.id))C.collections.push(row);return row.id;
+}
+function automaticFonts(){try{return localStorage.getItem('divas-auto-fonts')!=='off';}catch{return true;}}
+async function fontFingerprint(font){
+  const info=font.datos?fontFileInfo(font):null;if(!info&&!FONT_LIST.includes(font.nombre))throw new Error('Falta el archivo de esta fuente.');
+  const bytes=info?.bytes||new TextEncoder().encode('divas-builtin:'+font.nombre);
+  const hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');
+  const uuidFrom=part=>part.slice(0,8)+'-'+part.slice(8,12)+'-5'+part.slice(13,16)+'-a'+part.slice(17,20)+'-'+part.slice(20,32);
+  return {hash,id:uuidFrom(hash.slice(0,32)),file:uuidFrom(hash.slice(32)),info};
+}
+async function archiveFont(font,{collection,name=font.etiqueta||font.nombre,published=true,use='auto',source='Archivo de fuente',epoch=A.epoch}={}){
+  templateGuard(epoch,true);const key=await fontFingerprint(font);templateGuard(epoch,true);
+  const existing=await boundedCloud(A.client.from('divas_assets').select('*').eq('id',key.id).maybeSingle());templateGuard(epoch,true);
+  if(existing){if(!fontResource(existing)||existing.style.fontHash!==key.hash)throw new Error('La referencia de esta fuente está ocupada.');return {row:existing,duplicate:true};}
+  const family=key.info?'DivasFuente_'+key.hash.slice(0,24):font.nombre;
+  const style={resourceType:'font',fuente:family,fontHash:key.hash,fontUse:Object.hasOwn(FONT_USES,use)?use:suggestFontUse(font.etiqueta||name),fontSuggestion:suggestFontUse(font.etiqueta||name),source:String(source).slice(0,100)};
+  if(key.info){const path=key.id+'/'+key.file+'.'+key.info.ext;style.fontAsset={path,nombre:family,etiqueta:String(font.etiqueta||name).slice(0,80),mime:key.info.mime};await storageOnce(FONT_BUCKET,path,new Blob([key.info.bytes],{type:key.info.mime}),epoch);}
+  const row=await insertAssetOnce({id:key.id,name:String(name).slice(0,80),category:'textos',collection_id:collection||await fontCollection(epoch),kind:'text',style,published},epoch);
+  return {row,duplicate:false};
+}
+async function archiveDocumentFonts(result,{force=false}={}){
+  if(!isAdmin()||(!automaticFonts()&&!force)||!result.doc.fuentes.length)return;
+  const epoch=A.epoch,fonts=result.doc.fuentes;result.fontArchive={saved:0,duplicates:0,errors:[],total:fonts.length};
+  for(let i=0;i<fonts.length;i++){
+    if(epoch!==A.epoch)return;$('importStatus').textContent=`Guardando fuentes en la agencia · ${i+1} de ${fonts.length}…`;
+    try{const out=await archiveFont(fonts[i],{source:result.source||'Proyecto importado',epoch});result.fontArchive[out.duplicate?'duplicates':'saved']++;}
+    catch(error){if(epoch!==A.epoch)return;result.fontArchive.errors.push(fonts[i].etiqueta+': '+error.message);if(i+1<fonts.length)result.fontArchive.errors.push((fonts.length-i-1)+' fuentes quedan pendientes. Puedes abrir el proyecto y reintentar el guardado después.');break;}
+  }
+  if(epoch!==A.epoch||result.fontArchive.errors.length)return;try{await refreshCloudCatalog(false);}catch(error){result.fontArchive.errors.push('No se pudo actualizar el catálogo: '+error.message);}
+}
+function fontArchiveReport(r){
+  const report=r.fontArchive;if(!isAdmin()||!r.doc.fuentes.length)return '';
+  if(!report)return `<div class="archive-font-report">${r.doc.fuentes.length} fuentes incluidas en el proyecto.<br><button data-action="archiveImportFonts">Guardar fuentes en la agencia</button></div>`;
+  return `<div class="archive-font-report">Fuentes: ${report.saved} guardadas · ${report.duplicates} ya estaban en la agencia.${report.errors.length?`<details><summary>Revisar ${report.errors.length} avisos</summary>${report.errors.map(e=>'<p>'+esc(e)+'</p>').join('')}</details><button data-action="archiveImportFonts">Reintentar guardar fuentes</button>`:' Puedes clasificarlas en Administrar agencia → Recursos → Fuentes.'}</div>`;
+}
+async function openAgencyFonts(){
+  requireMember(true);await saveResourceMetadata();await refreshCloudCatalog(false);const epoch=A.epoch,id=await fontCollection(epoch);templateGuard(epoch,true);
+  for(const dialog of ['resourceManager','agencyAddDialog','catalogDialog'])$(dialog).close();
+  $('fontPackCollection').innerHTML=collectionOptions(id);$('fontPackUse').innerHTML=fontUseOptions('auto',true);$('autoArchiveFonts').checked=automaticFonts();
+  $('fontPackStatus').textContent='Elige las fuentes que quieras compartir con tu equipo.';showDialog('agencyFontsDialog');
+}
+async function readFontPack(files){
+  const selected=[...files];if(selected.length>40)throw new Error('Elige hasta 40 archivos por tanda.');let fonts=[],errors=[];
+  const read=async(name,blob)=>{try{if(blob.size>6*1024*1024)throw new Error('Supera 6 MB.');const font={nombre:'DivasFuente_'+uid(),etiqueta:name.split('/').pop().replace(/\.[^.]+$/,'').slice(0,80),datos:await readData(blob)};fontFileInfo(font);await loadFont(font);fonts.push(font);}catch(error){errors.push(name+': '+error.message);}};
+  for(const file of selected){
+    if(/\.zip$/i.test(file.name)){
+      try{const zip=await pxzArchive(file,{manifest:false}),names=zip.names.filter(n=>/\.(ttf|otf|woff2?)$/i.test(n)&&!n.startsWith('__MACOSX/')&&!n.split('/').pop().startsWith('.'));if(names.length+fonts.length>40)throw new Error('El pack supera las 40 fuentes. Divídelo en tandas.');if(!names.length)throw new Error('El ZIP no contiene TTF, OTF, WOFF ni WOFF2.');
+        for(const name of names){try{await read(name,new Blob([await zip.read(name,6*1024*1024)]));}catch(error){errors.push(name+': '+error.message);}}
+      }catch(error){errors.push(file.name+': '+error.message.replace(/PXZ/g,'ZIP'));}
+    }else if(/\.(ttf|otf|woff2?)$/i.test(file.name))await read(file.name,file);
+    else errors.push(file.name+': formato no compatible.');
+    if(fonts.length>40)throw new Error('Elige hasta 40 fuentes por tanda.');
+  }
+  return {fonts,errors};
+}
+async function importFontPack(files,retry=false){
+  requireMember(true);const epoch=A.epoch,options=retry?G.fontImport:{collection:$('fontPackCollection').value,use:$('fontPackUse').value,published:$('fontPackPublished').checked,epoch};
+  if(!options||options.epoch!==epoch)throw new Error('Vuelve a elegir el pack con tu sesión actual.');
+  if(!C.collections.some(c=>c.id===options.collection))throw new Error('Elige una colección.');
+  $('fontPackStatus').textContent='Comprobando archivos…';$('retryFontPack').hidden=true;
+  const parsed=retry?{fonts:G.pendingFonts,errors:[]}:await readFontPack(files);templateGuard(epoch,true);G.fontImport=options;G.pendingFonts=[];
+  const lines=parsed.errors.map(e=>'⚠ '+e);let saved=0,duplicates=0;
+  for(let i=0;i<parsed.fonts.length;i++){
+    templateGuard(epoch,true);const font=parsed.fonts[i];$('fontPackStatus').textContent=`Guardando ${i+1} de ${parsed.fonts.length}…`;
+    try{const result=await archiveFont(font,{...options,source:'Pack de fuentes'});result.duplicate?duplicates++:saved++;lines.push((result.duplicate?'Ya estaba · ':'✓ Guardada · ')+font.etiqueta+' · '+(FONT_USES[result.row.style?.fontUse]||'Por clasificar'));}
+    catch(error){if(epoch!==A.epoch)throw error;G.pendingFonts.push(font);lines.push('⚠ '+font.etiqueta+': '+error.message);}
+  }
+  templateGuard(epoch,true);$('fontPackResults').innerHTML=lines.map(line=>'<li>'+esc(line)+'</li>').join('');$('retryFontPack').hidden=!G.pendingFonts.length;
+  $('fontPackStatus').textContent=`${saved} guardadas · ${duplicates} repetidas · ${G.pendingFonts.length+parsed.errors.length} por revisar. `+(C.collections.some(c=>c.id===options.collection&&visibleCollection(c))&&options.published?'Los archivos nuevos quedan publicados. Los repetidos conservan su publicación anterior.':'La visibilidad depende de la publicación y de la colección.');
+  await refreshCloudCatalog(false);
+}
+async function loadProjectFonts(files){
+  const doc=S.doc,epoch=A.epoch;if(!doc||!S.opened)throw new Error('Abre un proyecto antes de cargar fuentes.');const parsed=await readFontPack(files),added=[];
+  const seen=new Set(doc.fuentes.map(f=>f.datos.split(',')[1]));for(const font of parsed.fonts){const data=font.datos.split(',')[1];if(!seen.has(data)){seen.add(data);added.push(font);}}
+  if(doc.fuentes.length+added.length>25)throw new Error('El proyecto admite 25 fuentes. Guarda el pack en la agencia y aplica solo las que necesites.');
+  if(doc!==S.doc||epoch!==A.epoch)throw new Error('El proyecto cambió. Vuelve a cargar la fuente.');
+  if(added.length)commit(()=>{doc.fuentes.push(...added);const p=selectedLayer();if(p&&!p.bloqueado&&['texto','tabla'].includes(p.tipo))p.fuente=added[0].nombre;});
+  const failures=[...parsed.errors];let archived=0;
+  if(isAdmin()&&automaticFonts())for(const font of parsed.fonts){try{await archiveFont(font,{epoch,source:'Fuente cargada al proyecto'});archived++;}catch(error){if(epoch!==A.epoch)return;failures.push(font.etiqueta+': '+error.message);}}
+  if(archived)await refreshCloudCatalog(false).catch(()=>{});if(epoch!==A.epoch)return;
+  if(failures.length){G.pendingFonts=parsed.fonts;G.fontImport={epoch,collection:C.collections.find(c=>c.name==='Fuentes de agencia')?.id,use:'auto',published:true};$('fontPackResults').innerHTML=failures.map(e=>'<li>'+esc(e)+'</li>').join('');$('retryFontPack').hidden=false;notify('Fuente cargada. Hay avisos de archivo o guardado; revísalos en Fuentes para tu agencia.');}
+  else notify(archived?'Fuentes disponibles en el proyecto y en la agencia.':'Fuentes incorporadas al proyecto.');renderPanel();
+}
+function insertNativeComponent(a){
+  const raw=a.style?.component;if(!raw||!Array.isArray(raw.layers)||raw.layers.length<1||raw.layers.length>200||raw.layers.some(p=>!TYPES.includes(p.tipo)||p.tipo==='imagen'))return false;
+  const d=emptyDocument();d.capas=copy(raw.layers);const layers=normalizeProject(d).capas;
+  if(layers.length!==raw.layers.length)return false;if(S.doc.capas.length+layers.length>200)throw new Error('El proyecto admite hasta 200 capas.');
+  const boxes=layers.map(boundsOf),x=(Math.min(...boxes.map(b=>b.left))+Math.max(...boxes.map(b=>b.right)))/2,y=(Math.min(...boxes.map(b=>b.top))+Math.max(...boxes.map(b=>b.bottom)))/2,s=sizeOf(),group=layers.length>1?uid():null;
+  const w=Math.max(...boxes.map(b=>b.right))-Math.min(...boxes.map(b=>b.left)),h=Math.max(...boxes.map(b=>b.bottom))-Math.min(...boxes.map(b=>b.top)),scale=Math.min(1,s.ancho*.8/Math.max(1,w),s.alto*.8/Math.max(1,h));
+  for(const p of layers){p.id=uid();p.rol='';p.bloqueado=false;p.oculto=false;p.decorativa=false;p.grupo=group;p.grupoNombre=group?a.name:'';p.x=(p.x-x)*scale+s.ancho/2;p.y=(p.y-y)*scale+s.alto/2;p.w*=scale;p.h*=scale;p.tamano*=scale;p.glowRadio*=scale;p.contornoTexto*=scale;}
+  commit(()=>{S.doc.capas.push(...layers);S.selected=layers[0].id;});selectLayer(layers[0].id,{open:true});return true;
+}
+$('agencyCaptureEffects').addEventListener('change',()=>run(updateCapturePreview));
+$('agencyCaptureCategory').addEventListener('change',()=>run(updateCapturePreview));
+$('agencyCaptureCollection').addEventListener('change',updateCaptureVisibility);$('agencyCapturePublished').addEventListener('change',updateCaptureVisibility);
+$('creatorCategory').addEventListener('change',()=>run(async()=>{await saveResourceMetadata();C.managerCategory=$('creatorCategory').value;renderResourceManager();}));
+$('creatorSearch').addEventListener('input',()=>{C.managerQuery=$('creatorSearch').value;$('creatorGrid').innerHTML=creatorResources().map(a=>resourceCard(a,{manager:true})).join('')||'<p class="help">Sin recursos con este filtro.</p>';loadResourceThumbs($('creatorGrid'));});
+$('catalogFontUse').addEventListener('change',()=>{C.fontUse=$('catalogFontUse').value;renderCatalog();});
+$('agencyFontFiles').onchange=event=>{const files=[...event.target.files];event.target.value='';if(files.length)run(()=>importFontPack(files));};
+$('autoArchiveFonts').addEventListener('change',event=>{try{localStorage.setItem('divas-auto-fonts',event.target.checked?'on':'off');}catch{notify('No se pudo recordar esta preferencia.');}});
+for(const id of ['agencyAddDialog','agencyFontsDialog'])$(id).addEventListener('cancel',event=>{if(S.busy)event.preventDefault();});
+$('agencyAddDialog').addEventListener('close',()=>{if(!S.busy)G.capture=null;});
 
 async function fetchTemplate(){return null; /* Los recursos oficiales se cargan desde el catálogo privado. */}
 
