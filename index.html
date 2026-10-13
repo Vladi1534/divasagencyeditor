@@ -3928,6 +3928,9 @@ function hitStack(q){
 }
 const touchPointers=new Map();
 let canvasGesture=null,canvasPress=null,pressTimer=null,lastTap=null,suppressClickUntil=0;
+/* Gestos táctiles: umbrales para distinguir toque, arrastre, esquina y pulsación larga. */
+const TOUCH_SLOP=10,MOUSE_SLOP=4,HANDLE_TOUCH=26,HANDLE_MOUSE=11,LONG_PRESS=600,TAP_MAX=350;
+const slopFor=e=>e.pointerType==="mouse"?MOUSE_SLOP:TOUCH_SLOP;
 function cancelPressTimer(){clearTimeout(pressTimer);pressTimer=null;}
 function snapPosition(p,event){
   S.snapX=S.snapY=false;S.guides={x:null,y:null};
@@ -3974,29 +3977,37 @@ function canvasPointerDown(event){
     const control=event.target.closest?.("[data-background-handle]");
     // Dentro de una pieza pequeña, tocar su centro debe moverla. El área táctil
     // amplia de las esquinas se conserva hacia fuera del marco de selección.
-    const innerTouch=event.pointerType==="touch"&&hit(p,q);
-    const h=control&&p.rol==="fondo"?handles(p)[Number(control.dataset.backgroundHandle)]:handles(p).find(h=>Math.hypot(h.x-q.x,h.y-q.y)<(event.pointerType==="touch"?(innerTouch?9:17):11)/S.zoom);
+    
+    let h=null;
+    if(control&&p.rol==="fondo")h=handles(p)[Number(control.dataset.backgroundHandle)];
+    else{
+      let r=(event.pointerType==="mouse"?HANDLE_MOUSE:HANDLE_TOUCH)/S.zoom;
+      // En piezas pequeñas, tocar dentro deja libre el centro para moverlas.
+      if(event.pointerType!=="mouse"&&hit(p,q))r=Math.min(r,Math.max(8/S.zoom,Math.min(p.w,p.h)*0.3));
+      let best=r;
+      for(const c of handles(p)){const d=Math.hypot(c.x-q.x,c.y-q.y);if(d<best){best=d;h=c;}}
+    }
     if(h){
       S.drag={kind:h.kind,id:p.id,start:copy(p),members:p.multiple?selectedLayers().map(copy):null,frame:p.multiple?copy(p):null,sx:h.sx,sy:h.sy,saved:false,
         anchor:h.kind==="resize"?world(p,-h.sx*p.w/2,-h.sy*p.h/2):null};
-      canvasPress={id:p.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handle:true};
+      canvasPress={id:p.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,t:performance.now(),moved:false,handle:true};
       canvas.setPointerCapture(event.pointerId);return;
     }
   }
   const stack=hitStack(q);
   const found=event.altKey&&stack.length?stack[(stack.findIndex(x=>x.id===S.selected)+1)%stack.length]:stack[0];
   if(!found){selectLayer(null);canvasPress={id:null,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handled:false};canvas.setPointerCapture(event.pointerId);return;}
-  if(!selectedLayers().some(p=>p.id===found.id))selectLayer(found.id);
+  const wasSelected=selectedLayers().some(p=>p.id===found.id);
+  if(!wasSelected)selectLayer(found.id);
   const targetFrame=selectionFrame();
   if(selectedLayers().length===1&&found.tipo==="tabla"){S.cell=tableCellAt(found,q);renderPanel();draw();}
-  canvasPress={id:found.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handled:false};
+  canvasPress={id:found.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,t:performance.now(),moved:false,handled:false,wasSelected,longPress:false,menuX:event.clientX,menuY:event.clientY};
   if(!targetFrame.bloqueado)S.drag={kind:"move",id:targetFrame.id,dx:q.x-targetFrame.x,dy:q.y-targetFrame.y,start:copy(targetFrame),members:targetFrame.multiple?selectedLayers().map(copy):null,frame:targetFrame.multiple?copy(targetFrame):null,saved:false};
   canvas.setPointerCapture(event.pointerId);
   if(event.pointerType!=="mouse")pressTimer=setTimeout(()=>{
     if(!canvasPress||canvasPress.moved)return;
-    canvasPress.handled=true;S.drag=null;suppressClickUntil=Date.now()+500;
-    openLayerMenu(found.id,event.clientX,event.clientY);
-  },550);
+    canvasPress.longPress=true;navigator.vibrate?.(12); // el menú se abre al soltar si no hubo arrastre
+  },LONG_PRESS);
 }
 canvas.addEventListener("pointerdown",canvasPointerDown);
 $("backgroundFrame").addEventListener("pointerdown",event=>{
@@ -4018,7 +4029,7 @@ canvas.addEventListener("pointermove",event=>{
   const q=point(event);S.pointer=q;
   if(S.work){paintBrush(q);draw();return;}
   if(canvasPress&&canvasPress.pointerId===event.pointerId){
-    if(Math.hypot(event.clientX-canvasPress.x,event.clientY-canvasPress.y)>6){canvasPress.moved=true;cancelPressTimer();}
+    if(!canvasPress.moved&&Math.hypot(event.clientX-canvasPress.x,event.clientY-canvasPress.y)>slopFor(event)){canvasPress.moved=true;canvasPress.longPress=false;cancelPressTimer();closeLayerMenu();}
     if(!canvasPress.moved||canvasPress.handled)return;
   }
   if(!S.drag){if(S.tool!=="mover")draw();return;}
@@ -4060,10 +4071,13 @@ function endPointer(event){
   const press=canvasPress;
   if(press?.multiId&&press.pointerId===event.pointerId&&event.type==="pointerup"&&!press.moved)toggleSelection(press.multiId);
   if(press?.pointerId===event.pointerId){
-    if(event.type==="pointerup"&&!press.moved&&!press.handled&&!press.handle){
+    const still=!press.moved&&Math.hypot(event.clientX-press.x,event.clientY-press.y)<=slopFor(event);
+    const quick=event.pointerType==="mouse"||performance.now()-(press.t||0)<TAP_MAX;
+    if(event.type==="pointerup"&&still&&press.longPress&&press.id){openLayerMenu(press.id,press.menuX,press.menuY);suppressClickUntil=Date.now()+500;}
+    else if(event.type==="pointerup"&&still&&quick&&!press.handled&&!press.handle){
       if(press.id){
         const bg=S.doc.capas.find(p=>p.id===press.id)?.rol==="fondo";
-        if(selectedLayers().length>1){S.tab="ajustes";setPanelVisible(true);renderPanel();}else selectLayer(press.id,{open:true,single:S.isolation===press.id});
+        if(selectedLayers().length>1){S.tab="ajustes";setPanelVisible(true);renderPanel();}else selectLayer(press.id,{open:!!(press.wasSelected||bg||event.pointerType==="mouse"),single:S.isolation===press.id});
         if(bg)requestAnimationFrame(fitCanvas);else if(selectedLayers().length===1)offerLayerHint();
       }
       else {
@@ -4077,6 +4091,7 @@ function endPointer(event){
       }
       lastTap={id:press.id,time:Date.now()};
     }
+    if(press.moved||press.handle)suppressClickUntil=Date.now()+300;
     canvasPress=null;
   }
   finishBrush();S.drag=null;S.snapX=S.snapY=false;
