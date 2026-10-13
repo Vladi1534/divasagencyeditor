@@ -4054,14 +4054,15 @@ canvas.addEventListener("pointermove",event=>{
     const a=d.start.rot*Math.PI/180,dx=q.x-d.anchor.x,dy=q.y-d.anchor.y;
     const lx=dx*Math.cos(a)+dy*Math.sin(a),ly=-dx*Math.sin(a)+dy*Math.cos(a);
     let w,h;
-    if(p.rol==="fondo"||(keepRatio&&!event.shiftKey)){
+    if(p.rol==="fondo"||(p.tipo==="texto"&&!event.shiftKey)||(keepRatio&&!event.shiftKey)){
+      // Textos: la esquina siempre escala caja y letra juntas. Shift = solo la caja.
       const factor=clamp((d.sx*lx*d.start.w+d.sy*ly*d.start.h)/(d.start.w**2+d.start.h**2),.02,Math.min(8192/d.start.w,8192/d.start.h));
       w=d.start.w*factor;h=d.start.h*factor;
     }else{w=clamp(d.sx*lx,2,8192);h=clamp(d.sy*ly,2,8192);}
     p.w=w;p.h=h;
     p.x=d.anchor.x+d.sx*w/2*Math.cos(a)-d.sy*h/2*Math.sin(a);
     p.y=d.anchor.y+d.sx*w/2*Math.sin(a)+d.sy*h/2*Math.cos(a);
-    if(p.tipo==="texto")p.tamano=clamp(d.start.tamano*h/d.start.h,1,1000);
+    if(p.tipo==="texto"&&!event.shiftKey)p.tamano=clamp(d.start.tamano*h/d.start.h,1,1000);
   }
   markChanged();syncNumericFields();draw();
 });
