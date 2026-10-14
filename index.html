@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="27">
+<meta name="divas-version" content="28">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -1042,6 +1042,49 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 .tiktok-style-grid canvas{width:100%;height:86px;display:block;padding:0}
 @media(max-width:760px){.font-organize-entry{align-items:stretch;flex-direction:column}.font-class-task{bottom:calc(146px + env(safe-area-inset-bottom))}#fontClassDialog .dialog-head h2,#tiktokDialog .dialog-head h2{font-size:18px}#fontClassDialog .dialog-footer button{flex:1 1 40%}}
 
+.co-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid #29abb770;background:var(--panel);border-radius:14px;padding:10px 12px;margin-bottom:9px}.co-bar[hidden],.co-notice[hidden]{display:none}.co-info{flex:1;min-width:150px}.co-info strong{display:block;font-size:13px}.co-info small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.co-bar button{min-height:40px;font-size:12px;padding:7px 11px}#coActivity{width:100%;font-size:11px;color:var(--muted);margin:0;overflow-wrap:anywhere}.co-notice{margin:8px 18px;padding:9px 14px;background:var(--panel2);border:1px solid var(--pink);border-radius:14px;display:flex;align-items:center;gap:10px;font-size:13px}.co-notice span{flex:1}.co-notice button{min-height:44px}
+#coDialog{width:min(620px,calc(100vw - 24px))}.co-person{padding:13px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex-wrap:wrap}.co-person>div{flex:1;min-width:120px}.co-person strong,.co-person small{display:block;overflow-wrap:anywhere}.co-person small{color:var(--muted);font-size:12px;margin-top:5px}.co-person button{min-height:44px}.co-dialog-actions{display:grid;gap:9px;margin:16px 0}.co-dialog-actions button{min-height:44px}.co-highlight{outline:3px solid #10bacd!important;outline-offset:3px;box-shadow:0 0 16px #10bacd70!important}
+.co-viewing #panelBody [data-prop],.co-viewing #panelBody textarea,.co-viewing #panelBody input{pointer-events:none;opacity:.75}.co-viewing #canvas{cursor:crosshair}
+@media(max-width:760px){.co-bar{gap:6px;padding:8px}.co-info{flex-basis:100%}.co-bar button{min-height:44px;flex:1}.co-bar .co-info small{font-size:10px}#coStatus{max-height:2.8em;overflow:hidden}.co-notice{margin:8px;font-size:12px}#coDialog .dialog-head h2{font-size:19px}}
+
+/* v28 · selección táctil estable, fuera del diseño. */
+#mobileSelection{display:none}#saveFeedbackDetails>summary{cursor:pointer;font-weight:600;font-size:12px;min-height:28px;line-height:28px}#saveFeedbackDetails>summary::marker{color:var(--danger)}
+@media(max-width:760px){
+  header{gap:4px;padding-left:8px;padding-right:8px}.brand{flex:0 1 78px;min-width:56px}.brand img{max-width:78px}.header-actions{min-width:0;gap:0}.header-actions .icon-button{min-width:32px;width:32px;padding:5px}
+  .canvas-tools #zoomValue{display:none}.canvas-tools{gap:4px}.canvas-tools .canvas-focus{font-size:0!important}.canvas-tools .canvas-focus:after{content:"Ver limpio";font-size:10px}
+  #selectionStrip{display:none!important}
+  #mobileSelection:not([hidden]){display:block;flex:none;margin:6px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:5px 7px;box-shadow:0 3px 14px #512c4210}
+  #workspace:has(#sidePanel.mobile-open) #mobileSelection{display:none}
+  .mobile-selection-head{display:flex;align-items:center;gap:2px;min-height:44px}
+  #mobileSelection button{min-width:44px;min-height:44px;border:0;background:transparent;padding:5px 8px;color:var(--text);border-radius:12px;touch-action:manipulation}
+  #mobileSelection button:active{background:var(--panel2)}
+  #mobileSelection button .ui-icon{width:19px;height:19px}
+  #mobileSelection .mobile-selected-name{flex:1;min-width:0;text-align:left;overflow:hidden;padding-left:7px}
+  .mobile-selected-name strong,.mobile-selected-name small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mobile-selected-name strong{font-size:12px}.mobile-selected-name small{font-size:10px;color:var(--muted);margin-top:2px}
+  #mobileSelection .mobile-delete{color:var(--danger)}html[data-theme=light] #mobileSelection .mobile-delete{color:#a9254e}
+  .mobile-transform-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;border-top:1px solid var(--line);padding-top:4px}
+  #mobileSelection .mobile-transform-tabs button{display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;min-width:0;padding:4px}
+  .mobile-transform-tabs button span{font-size:19px;line-height:1}
+  #mobileSelection .mobile-transform-tabs button[aria-pressed=true]{background:var(--panel2);box-shadow:inset 0 0 0 1px var(--pink);font-weight:600}
+  .mobile-size-row,.mobile-rotate-row,.mobile-precision{display:flex;align-items:center;justify-content:center;gap:5px;border-top:1px solid var(--line);margin-top:5px;padding-top:5px}
+  .mobile-size-row>span{font-size:12px}.mobile-size-row>button{font-size:22px!important;background:var(--panel2)!important}
+  .mobile-ratio{display:flex;align-items:center;gap:5px;min-height:44px;font-size:12px;margin-left:auto;white-space:nowrap}.mobile-ratio input{width:20px;height:20px;margin:0;flex:none}
+  .mobile-rotate-row label{display:flex;align-items:center;gap:4px;font-size:11px}.mobile-rotate-row input{width:61px;min-height:44px;font-size:16px;padding:4px}.mobile-rotate-row button:last-child{font-size:11px!important;background:var(--panel2)!important}.mobile-rotate-row button{font-size:22px!important}
+  .mobile-precision>span{flex:1;font-size:10px;color:var(--muted)}.mobile-precision>button{font-size:21px;background:var(--panel2)!important}
+  .mobile-dimensions{display:flex;gap:12px;padding:4px}.mobile-dimensions label{flex:1;font-size:11px}.mobile-dimensions input{display:block;min-height:44px;font-size:16px}
+  .save-feedback{padding:5px 10px;max-height:32dvh;overflow:auto;margin-bottom:5px}.save-feedback p{font-size:12px}.save-feedback .row button{min-height:44px}
+  #saveFeedbackDetails>summary{min-height:34px;line-height:34px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #toast{top:calc(64px + env(safe-area-inset-top));bottom:auto;pointer-events:none;font-size:11px}
+  #layerMenu{left:8px!important;right:8px!important;top:auto!important;bottom:calc(72px + env(safe-area-inset-bottom));width:auto;max-height:57dvh;border-radius:22px;padding:14px;box-shadow:0 -7px 40px #0003}
+  #layerMenu .layer-menu-head button{min-height:44px;min-width:44px}#layerMenu .grid2 button{min-height:48px}
+  .canvas-column{min-height:180px}.canvas-surface{min-height:110px}
+  #sidePanel.mobile-open~*{min-width:0}
+  #workspace:has(#mobileSelection:not([hidden])) #sidePanel{max-height:32dvh;height:min(27dvh,240px)}
+  #workspace:has(#mobileSelection:not([hidden])) #sidePanel.expanded{max-height:42dvh;height:42dvh}
+  #coEntry:after{content:"↔ Ayuda";font-size:11px}body:has(#coBar:not([hidden])) #coEntry:after{content:"● En vivo"}#coEntry{font-size:0;min-height:36px;padding:5px 8px}.project-toolbar{height:auto!important;flex-wrap:wrap;min-height:32px}.project-toolbar #projectName{flex:1;max-width:none!important}
+  .co-bar{padding:6px 8px;margin-bottom:5px}.co-bar .co-info{flex-basis:auto;min-width:130px}.co-bar .co-info strong{font-size:11px}.co-bar button{min-height:36px;font-size:10px;flex:none}.co-bar #coApply{display:none}.co-bar #coActivity:empty{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -1099,12 +1142,12 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v27 · Fuentes y TikTok</p>
+        <p class="help" id="appVersion">Divas Editor · v28 · Móvil y ayuda en vivo</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
   </div>
-</header>
+</header><div id="coNotice" class="co-notice" hidden><span id="coNoticeText"></span><button id="coNoticeButton" data-action="coOpen">Ver invitación</button></div>
 <div id="accessNotice" hidden><span id="accessNoticeText"></span><button id="accessNoticeButton" data-action="manageMembers">Revisar solicitudes</button></div>
 <div id="recoveryNotice" class="auth-link-notice" role="status" hidden><span>Tu sesión está activa. También abriste un enlace para cambiar una contraseña.</span><button data-action="openRecovery">Revisar enlace</button><button data-action="dismissRecoveryLink">Seguir editando</button></div>
 <div id="guestNotice" class="auth-link-notice" hidden><span>Modo invitada · los proyectos quedan en este navegador. Entra para usar los recursos de la agencia.</span><button data-action="account">Entrar a mi cuenta</button></div>
@@ -1189,10 +1232,10 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 <main id="workspace" hidden>
   <nav id="toolRail" aria-label="Herramientas de edición"></nav>
   <section class="canvas-column">
-    <div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button id="surpriseButton" class="surprise-button" data-action="surprise">✦ Sorpréndeme</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
+    <div id="coBar" class="co-bar" hidden><div class="co-info"><strong id="coTitle"></strong><small id="coStatus"></small></div><button id="coTake" data-action="coControl">Pedir control</button><button id="coGrant" data-action="coGrant" hidden>Ceder control</button><button id="coApply" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coOpen" aria-label="Opciones de la ayuda compartida">•••</button><p id="coActivity" role="status"></p></div><div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="coEntry" data-action="coOpen">♧ Ayuda compartida</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button id="surpriseButton" class="surprise-button" data-action="surprise">✦ Sorpréndeme</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
     <div class="save-toolbar"><button data-action="home" class="quiet">‹ Proyectos</button><button id="saveProgressButton" class="primary" data-action="saveLocal">Guardar avance</button><button data-action="saveDetails" class="save-status"><span id="projectSaveState" role="status" aria-live="polite">Cambios pendientes</span><span aria-hidden="true"> ⓘ</span></button></div>
     </div>
-    <div id="saveFeedback" class="save-feedback" role="status" hidden><p id="saveFeedbackText"></p><div class="row"><button data-action="saveLocal">Reintentar</button><button data-action="saveCopy">Guardar como copia</button><button data-action="save">Descargar respaldo</button><button class="quiet" data-action="dismissSaveFeedback">Ocultar aviso</button></div></div>
+    <div id="saveFeedback" class="save-feedback" role="status" hidden><details id="saveFeedbackDetails"><summary>El guardado necesita atención · Ver opciones</summary><p id="saveFeedbackText"></p><div class="row"><button data-action="saveLocal">Reintentar</button><button data-action="saveCopy">Guardar como copia</button><button data-action="save">Descargar respaldo</button><button class="quiet" data-action="dismissSaveFeedback">Ocultar aviso</button></div></details></div>
     <div id="activeToolBar" class="active-tool" hidden><div><strong id="activeToolName"></strong><span id="activeToolDescription"> · Arrastra sobre la imagen</span></div><button id="activeToolFinish" data-action="tool" data-value="mover">Terminar</button></div>
     <div id="layoutNotice" class="layout-notice" hidden></div>
     <div id="canvasSurface" class="canvas-surface">
@@ -1215,7 +1258,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
       </div></div>
     </div>
     </div>
-    <div class="canvas-tools">
+    <section id="mobileSelection" aria-label="Editar elemento seleccionado" hidden></section><div class="canvas-tools">
       <span id="canvasPrompt" class="canvas-prompt">Toca lo que quieres cambiar</span>
       <button data-action="fit" title="Mostrar todo el lienzo"><span aria-hidden="true">⤢</span> Ajustar</button>
       <button id="focusTextButton" data-action="focusText" title="Acercar la vista a este texto" hidden>⌕ Acercar</button>
@@ -1567,6 +1610,13 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   <div class="dialog-footer"><button data-action="resourceManager">Ver recursos</button><button id="pauseFontPack" data-action="pauseFontPack" hidden>Pausar</button><button id="retryFontPack" class="primary" data-action="retryFontPack" hidden>Continuar</button><button id="stopFontPack" data-action="stopFontPack" hidden>Dejar pendientes</button><button id="fontPackDownloadReport" data-action="fontPackReport" hidden>Informe</button></div>
 </dialog>
 <input id="agencyFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2,.zip" multiple hidden>
+<dialog id="coDialog" aria-labelledby="coDialogTitle">
+ <div class="dialog-head"><div><h2 id="coDialogTitle">Ayuda compartida</h2><p class="help">Dos personas · una copia privada</p></div><button data-action="closeDialog" aria-label="Cerrar ayuda compartida">Cerrar</button></div>
+ <div class="dialog-body"><p id="coDialogInfo" class="help"></p><p id="coDialogError" class="help error" role="status"></p><div id="coInviteList"></div>
+ <div id="coLiveActions" hidden><label class="check"><input id="coFollow" type="checkbox" checked>Seguir la selección de mi compañera</label><p class="help">Una persona edita mientras la otra ve los cambios y puede señalar en el lienzo. «Pedir control» permite intercambiar los papeles. El guardado automático corresponde a esta copia compartida.</p><div class="co-dialog-actions"><button id="coApplyDialog" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coLeave">Salir y volver a mi proyecto</button><button data-action="coBackup">Descargar respaldo de la ayuda</button><button data-action="coReconnect">Reconectar</button><button id="coDiscard" class="danger" data-action="coDiscard">Descartar copia compartida</button></div><p class="help">Puedes retomar una ayuda activa durante las próximas 2 horas sin actividad. El resultado terminado queda disponible 7 días. Si se pierde la conexión con cambios pendientes, descarga un respaldo antes de cerrar o recargar.</p></div>
+ </div><div class="dialog-footer"><button data-action="coRefresh">Actualizar personas conectadas</button></div>
+</dialog>
+
 <dialog id="fontClassDialog" aria-labelledby="fontClassTitle">
   <div class="dialog-head"><div><h2 id="fontClassTitle">Organizando tus fuentes</h2><p class="help">Una biblioteca más fácil de usar, también para tu equipo.</p></div><button data-action="closeDialog" aria-label="Cerrar y seguir editando">Cerrar</button></div>
   <div class="dialog-body">
@@ -2079,6 +2129,7 @@ function emptyDocument(){
 S.doc=emptyDocument();
 
 function markChanged(){
+  if(CO.room&&coChanged())return;
   S.revision++;updateProjectToolbar();
   clearTimeout(P.saveTimer);
   if(S.opened)P.saveTimer=setTimeout(()=>autoSave(),1500);
@@ -2090,16 +2141,20 @@ function snapshot(){
   S.redo=[];S.group=null;updateHistory();
 }
 function beginEdit(key){
+  if(CO.room&&!coEditing())throw new Error("Pide el control para editar la copia.");
   if(S.group!==key){snapshot();S.group=key;}
 }
 function commit(fn){
+  if(CO.room&&!coEditing())throw new Error("Pide el control para editar la copia.");
   finishBrush();snapshot();fn();markChanged();refresh();
 }
 function updateHistory(){
+  if(CO.room&&!coEditing()){$("undoBtn").disabled=true;$("redoBtn").disabled=true;return;}
   $("undoBtn").disabled=S.view!=="editor"||!S.undo.length;
   $("redoBtn").disabled=S.view!=="editor"||!S.redo.length;
 }
 async function history(direction){
+  if(CO.room&&!coEditing())return;
   finishBrush();closeLayerMenu();S.layoutMessages=[];
   const from=direction==="undo"?S.undo:S.redo,to=direction==="undo"?S.redo:S.undo;
   if(!from.length)return;
@@ -2315,6 +2370,7 @@ function saveProject(){
   notify("Proyecto editable guardado. Incluye las imágenes y las fuentes cargadas.");
 }
 async function activateDocument(d,{remember=true,project=null,savePrevious=true,pending=null,guard=null}={}){
+  if(CO.room&&!CO.joining)coNavigation();
   finishBrush();
   if(savePrevious&&S.opened&&P.current)await ensureProjectSaved();
   if(P.ready)await P.ready.catch(()=>{});
@@ -2348,6 +2404,7 @@ function showEditor(){
   renderPanel();updateInteractionHint();updateShell();
 }
 async function showHome(){
+  coNavigation();
   finishBrush();closeMenus();closeLayerMenu();
   resetGuidance();
   await ensureProjectSaved();
@@ -3122,11 +3179,11 @@ function drawSelection(c){
     c.save();c.lineWidth=1.5/S.zoom;c.strokeStyle=p.bloqueado?"#a2733f":"#a4477a";c.fillStyle="#fff";
     if(p.bloqueado)c.setLineDash([5/S.zoom,4/S.zoom]);
     c.beginPath();points.slice(0,4).forEach((q,i)=>i?c.lineTo(q.x,q.y):c.moveTo(q.x,q.y));c.closePath();c.stroke();
-    if(!p.bloqueado){
+    if(!p.bloqueado&&(!mobileCanvas()||["size","rotate"].includes(MOB.mode)&&Math.min(p.w,p.h)*S.zoom>=44)){
       c.setLineDash([]);
       const top=world(p,0,-p.h/2);
-      c.beginPath();c.moveTo(top.x,top.y);c.lineTo(points[4].x,points[4].y);c.stroke();
-      points.forEach(q=>{c.beginPath();c.arc(q.x,q.y,(matchMedia("(pointer:coarse)").matches?6:4.5)/S.zoom,0,Math.PI*2);c.fill();c.stroke();});
+      if(!mobileCanvas()||MOB.mode==="rotate"){c.beginPath();c.moveTo(top.x,top.y);c.lineTo(points[4].x,points[4].y);c.stroke();}
+      points.filter(q=>!mobileCanvas()||(MOB.mode==="rotate"?q.kind==="rotate":q.kind==="resize")).forEach(q=>{c.beginPath();c.arc(q.x,q.y,(matchMedia("(pointer:coarse)").matches?6:4.5)/S.zoom,0,Math.PI*2);c.fill();c.stroke();});
     }
     c.restore();
   }
@@ -3164,14 +3221,15 @@ function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQ
     c.fillStyle=g;c.fillRect(0,0,W,H);
   }
   doc.capas.forEach(p=>{if(p.rol!=="fondo"||doc.fondo.tipo==="imagen")drawLayer(c,p,factor,track,fullQuality);});
-  if(controls){drawSelection(c);}
+  if(controls){drawSelection(c);drawCollabOverlay(c);}
   c.restore();
 }
 function draw(){
+  coPreview();
   if(S.queued||!S.opened)return;
   S.queued=true;
   requestAnimationFrame(()=>{
-    S.queued=false;render(ctx,{controls:true,track:true});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();
+    S.queued=false;render(ctx,{controls:true,track:true});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();mobileSelectionUI();
   });
 }
 function syncGeometry(){
@@ -3271,7 +3329,7 @@ function refresh(){
 }
 function updateInteractionHint(){
   $("interactionHint").textContent=matchMedia("(max-width:760px)").matches
-    ?"Arrastra para mover · Mantén pulsado para más"
+    ?"Arrastra para mover · Tamaño y giro debajo del lienzo"
     :"Arrastra · Mayús + clic: seleccionar varias · Alt + clic: capa inferior";
 }
 function setPanelVisible(visible){
@@ -3373,7 +3431,7 @@ function createHTML(){
 function layersHTML(){
   return `<h3 class="section-title">Capas · de delante hacia atrás</h3>
     <div class="grid2"><button class="${S.selecting?'active':''}" data-action="multiSelect" aria-pressed="${S.selecting}">${S.selecting?'Listo':'Seleccionar varias'}</button><button data-action="selectAllPieces">Seleccionar visibles</button></div>
-    <p class="help">${S.selecting?'Marca las piezas en esta lista o tócalas en el lienzo. Después pulsa Listo.':'Mantén pulsado para más acciones. Las piezas con el mismo nombre de grupo se mueven juntas.'}</p>
+    <p class="help">${S.selecting?'Marca las piezas en esta lista o tócalas en el lienzo. Después pulsa Listo.':'En esta lista, mantén pulsada una fila para más acciones. Las piezas con el mismo nombre de grupo se mueven juntas.'}</p>
     ${selectedLayers().length>1?selectionActionsHTML():''}`+
     (selectedLayer()?`<div class="grid3"><button data-action="up">Subir</button><button data-action="down">Bajar</button><button data-action="duplicate">Duplicar</button></div>`:"")+`<div class="layer-list">`+
     [...S.doc.capas].reverse().map(p=>`
@@ -3505,8 +3563,8 @@ function geometryHTML(){
   return `${inputProp("Nombre de la capa","nombre","text")}
     <div class="grid2">${inputProp("Posición X","x")}${inputProp("Posición Y","y")}
     ${dimensions?inputProp("Ancho","w","number",'min="2" max="8192"')+inputProp("Alto","h","number",'min="2" max="8192"'):""}</div>
-    ${p?.tipo!=="imagen"?`<label class="check"><input id="keepRatio" type="checkbox" ${keepRatio?"checked":""}>Mantener proporción</label>`:""}
-    ${rangeProp("Rotación","rot",-180,180)}${rangeProp("Opacidad","opacidad",0,1,.01)}
+    ${p?.tipo!=="imagen"?`<label class="check"><input id="keepRatio" type="checkbox" ${keepRatio?"checked":""}>No deformar</label>`:""}
+    ${rangeProp("Giro","rot",-180,180)}${rangeProp("Opacidad","opacidad",0,1,.01)}
     <div class="grid2"><button data-action="centerX">Centrar horizontal</button><button data-action="centerY">Centrar vertical</button></div>`;
 }
 function propertiesHTML(){
@@ -3528,7 +3586,7 @@ function propertiesHTML(){
       <button class="wide primary" data-action="removeBackground" ${p.src?"":"disabled"}>✂ Quitar fondo · vista previa</button>
       ${!p.src?'<p class="help">Elige una imagen para activar sus herramientas.</p>':""}
       <div class="grid2">${inputProp("Ancho","w","number",'min="2" max="8192"')}${inputProp("Alto","h","number",'min="2" max="8192"')}</div>
-      <label class="check"><input id="keepRatio" type="checkbox" ${keepRatio?"checked":""}>Mantener proporción</label>
+      <label class="check"><input id="keepRatio" type="checkbox" ${keepRatio?"checked":""}>No deformar</label>
       ${selectProp("Forma","imagenForma",[["original","Original"],["redondeada","Redondeada"],["circular","Circular"]])}
       ${imageVisibilityHTML(p)}`;
     advanced=imageControlsHTML();
@@ -3569,7 +3627,7 @@ function renderPanel(){
   $("panelTabs").innerHTML=tabs.map(([id,name])=>`<button data-action="tab" data-value="${id}" class="${active===id?"active":""}" aria-pressed="${active===id}">${name}</button>`).join("");
   document.querySelectorAll('#mobileBar [data-tab]').forEach(el=>{el.classList.toggle("active",el.dataset.tab===active&&$("sidePanel").classList.contains("mobile-open"));el.setAttribute("aria-pressed",String(el.dataset.tab===active));});
   $("panelTitle").textContent=selectedLayers().length>1&&S.tab==="ajustes"?selectionLabel():S.tab==="ajustes"&&p?(p.bloqueado?"🔒 ":"")+p.nombre:tabs.find(([id])=>id===active)?.[1]||"Tu diseño";
-  $("panelSubtitle").textContent=S.tab==="ajustes"?"Mantén pulsada la pieza para ver sus acciones":"Toca una opción y mira el resultado.";
+  $("panelSubtitle").textContent=S.tab==="ajustes"?"Pulsa Más para fijar, ocultar o duplicar":"Toca una opción y mira el resultado.";
   const panelKey=S.textSection+":"+S.lookSection+":"+selectedLayers().map(p=>p.id).join(":")+":"+(wholeGroup()||"")+":"+(S.isolation||"")+":"+S.selecting;
   const samePanel=S.lastPanelTab===S.tab&&S.lastPanelId===S.selected&&S.lastPanelKey===panelKey;
   const scroll=$("panelBody").scrollTop,openDetails=samePanel?[...$("panelBody").querySelectorAll("details")].map((el,i)=>el.open?i:-1).filter(i=>i>=0):[];
@@ -3604,6 +3662,7 @@ function ensureTextRoom(p){
   p.h=Math.min(sizeOf().alto*.92,Math.max(p.h,lines.length*p.tamano*(p.interlineado||1.18)+8));ctx.restore();
 }
 function positionSelectionToolbar(){
+  if(mobileCanvas())return;
   const p=selectionFrame(),strip=$("selectionStrip");if(!p||strip.hidden)return;
   strip.classList.toggle("is-dragging",!!S.drag||!!S.work);
   const surface=$("canvasSurface").getBoundingClientRect(),stage=canvas.getBoundingClientRect(),b=boundsOf(p);
@@ -3621,6 +3680,7 @@ function positionSelectionToolbar(){
   strip.style.left=best.left+"px";strip.style.top=best.top+"px";
 }
 function updateSelectionUI(){
+  mobileSelectionUI();
   const list=selectedLayers(),p=selectedLayer(),strip=$("selectionStrip"),multi=list.length>1,locked=list.some(p=>p.bloqueado),label=multi?selectionLabel():p?.nombre;
   const mode=$("selectionModeBar");mode.hidden=!S.selecting;mode.innerHTML=S.selecting?`<span>Selecciona · ${list.length}</span><button data-action="multiSelect">Listo</button>`:"";
   strip.hidden=!p||S.selecting;$("selectionMenuBtn").hidden=!p;$("focusTextButton").hidden=p?.tipo!=="texto"||multi;
@@ -3653,7 +3713,7 @@ function openLayerMenu(id,x,y){
     <p class="help">${p.bloqueado?"🔒 Bloqueada":"Se puede mover"} · ${p.oculto?"Oculta":"Visible"}</p>
     <div class="grid2"><button data-action="lock" data-id="${esc(p.id)}">${p.bloqueado?"🔓 Desbloquear":"🔒 Bloquear"}</button><button data-action="visible" data-id="${esc(p.id)}">${p.oculto?"◉ Mostrar":"○ Ocultar"}</button>
     <button data-action="duplicate">Duplicar</button><button data-action="select" data-id="${esc(p.id)}">Editar</button>
-    <button data-action="up" ${p.bloqueado||i===S.doc.capas.length-1?"disabled":""}>Subir una capa</button><button data-action="down" ${p.bloqueado||i===0?"disabled":""}>Bajar una capa</button>
+    <button data-action="up" ${p.bloqueado||i===S.doc.capas.length-1?"disabled":""}>Traer adelante</button><button data-action="down" ${p.bloqueado||i===0?"disabled":""}>Enviar atrás</button>
     <button class="danger" data-action="delete" ${p.bloqueado?"disabled":""}>Eliminar</button><button data-action="multiSelect">Seleccionar varias</button></div>${agencyAddHTML()}`;
   dismissHint();menu.hidden=false;
   const r=menu.getBoundingClientRect();
@@ -3704,13 +3764,13 @@ const HELP_TOPICS={
   fondoimagen:{label:"Tu foto como fondo",icon:"▧",text:"Pulsa Ajusta tu fondo aquí para moverlo libremente. Elige el tamaño del lienzo desde Fondo.",target:'[data-action="uploadBackground"]',context:"fondo",related:["fondo"]},
   imagenes:{label:"Tus imágenes, aquí",icon:"▧",text:"Añade una foto o cambia un logo de la lista.",target:'[data-action="addImage"]',context:"logos",related:["imagen","fondoimagen"]},
   imagen:{label:"Una imagen con tu sello",icon:"▧",text:"Reemplaza esta imagen o ajusta sus medidas debajo.",target:'[data-action="chooseAsset"]',context:"imagen",related:["medidas","recorte"]},
-  medidas:{label:"La proporción importa",icon:"↗",text:"Cambia ancho o alto. Mantener proporción evita deformarla.",target:'[data-prop="w"]',context:"imagen",related:["imagen"]},
+  medidas:{label:"La proporción importa",icon:"↗",text:"No deformar hace que el ancho y el alto cambien juntos. En móvil está en Tamaño.",target:'[data-prop="w"]',context:"imagen",related:["imagen"]},
   recorte:{label:"Quita el fondo de una imagen",icon:"✂",text:"Abre la vista previa, toca el fondo y aplica cuando te guste el resultado.",target:'[data-action="removeBackground"]',context:"imagen",related:["imagen"]},
   figuras:{label:"Un toque de brillo",icon:"✦",text:"Toca una figura para añadirla. Después, muévela donde quieras.",target:'[data-action="shape"]',context:"figuras",related:["pieza"]},
   tabla:{label:"Tus datos, celda por celda",icon:"▦",text:"Toca Editar cuadrícula para cambiar los textos o números de la tabla.",target:'[data-action="editTable"]',context:"tabla",related:[]},
   crearTabla:{label:"Una cuadrícula para tu diseño",icon:"▦",text:"Añade una tabla editable o una cuadrícula de números de rifa.",target:'[data-action="addTable"]',context:"figuras",related:[]},
   pieza:{label:"Dale forma a tu idea",icon:"✧",text:"Cambia color y tamaño aquí. Arrastra la pieza para moverla.",target:'[data-prop="color"]',context:"pieza",related:["capas","bloquear"]},
-  capas:{label:"Cada pieza es una capa",icon:"▱",text:"Candado: fija la pieza. Ojo: la oculta. Mantén pulsado para más.",target:'[data-layer]',context:"capas",related:["bloquear","ocultar","orden"]},
+  capas:{label:"Cada pieza es una capa",icon:"▱",text:"Candado: fija la pieza. Ojo: la oculta. Mantén pulsada una fila de esta lista para más opciones.",target:'[data-layer]',context:"capas",related:["bloquear","ocultar","orden"]},
   bloquear:{label:"Que se quede en su sitio",icon:"◇",text:"Toca el candado para bloquear o desbloquear. No hace falta arrastrar.",target:'[data-action="lock"]',context:"capas",related:["ocultar","orden"]},
   ocultar:{label:"Guárdala sin borrarla",icon:"◉",text:"Toca el ojo para ocultar o volver a mostrar una capa.",target:'[data-action="visible"]',context:"capas",related:["bloquear","eliminar"]},
   orden:{label:"Delante o detrás",icon:"▱",text:"Selecciona una capa. Subir la acerca al frente; Bajar, al fondo.",target:'[data-action="up"]',context:"capas",related:["duplicar","bloquear"]},
@@ -3928,9 +3988,6 @@ function hitStack(q){
 }
 const touchPointers=new Map();
 let canvasGesture=null,canvasPress=null,pressTimer=null,lastTap=null,suppressClickUntil=0;
-/* Gestos táctiles: umbrales para distinguir toque, arrastre, esquina y pulsación larga. */
-const TOUCH_SLOP=10,MOUSE_SLOP=4,HANDLE_TOUCH=26,HANDLE_MOUSE=11,LONG_PRESS=600,TAP_MAX=350;
-const slopFor=e=>e.pointerType==="mouse"?MOUSE_SLOP:TOUCH_SLOP;
 function cancelPressTimer(){clearTimeout(pressTimer);pressTimer=null;}
 function snapPosition(p,event){
   S.snapX=S.snapY=false;S.guides={x:null,y:null};
@@ -3941,7 +3998,7 @@ function snapPosition(p,event){
     const box=boundsOf(other);xTargets.push(other.x,box.left,box.right);yTargets.push(other.y,box.top,box.bottom);
   }
   function nearest(anchors,targets){
-    let delta=7/S.zoom,match=null;
+    let delta=(matchMedia("(pointer:coarse)").matches&&Math.min(p.w,p.h)*S.zoom<44?3:7)/S.zoom,match=null;
     for(const a of anchors)for(const t of targets)if(Math.abs(t-a)<Math.abs(delta)){delta=t-a;match=t;}
     return match===null?null:{delta,match};
   }
@@ -3950,7 +4007,10 @@ function snapPosition(p,event){
   if(y){p.y+=y.delta;S.snapY=true;S.guides.y=y.match;}
 }
 function canvasPointerDown(event){
+  if(event.pointerType==="touch"){MOB.touchAt=Date.now();}
+  if(CO.room&&!coEditing()){coPoint(event);return;}
   if(S.busy||event.button!==0)return;
+  MOB.defer=event.pointerType==="touch";
   event.preventDefault();dismissHint({keepSpace:true});closeHelp();closeLayerMenu();canvas.focus({preventScroll:true});
   if(event.pointerType==="touch"){
     touchPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
@@ -3977,37 +4037,28 @@ function canvasPointerDown(event){
     const control=event.target.closest?.("[data-background-handle]");
     // Dentro de una pieza pequeña, tocar su centro debe moverla. El área táctil
     // amplia de las esquinas se conserva hacia fuera del marco de selección.
-    
-    let h=null;
-    if(control&&p.rol==="fondo")h=handles(p)[Number(control.dataset.backgroundHandle)];
-    else{
-      let r=(event.pointerType==="mouse"?HANDLE_MOUSE:HANDLE_TOUCH)/S.zoom;
-      // En piezas pequeñas, tocar dentro deja libre el centro para moverlas.
-      if(event.pointerType!=="mouse"&&hit(p,q))r=Math.min(r,Math.max(8/S.zoom,Math.min(p.w,p.h)*0.3));
-      let best=r;
-      for(const c of handles(p)){const d=Math.hypot(c.x-q.x,c.y-q.y);if(d<best){best=d;h=c;}}
+    const innerTouch=event.pointerType==="touch"&&hit(p,q);
+    let h=control&&p.rol==="fondo"?handles(p)[Number(control.dataset.backgroundHandle)]:handles(p).find(h=>Math.hypot(h.x-q.x,h.y-q.y)<(event.pointerType==="touch"?(innerTouch?9:17):11)/S.zoom);
+    if(event.pointerType==="touch"&&!control){
+      if(innerTouch||Math.min(p.w,p.h)*S.zoom<44||mobileCanvas()&&(!['size','rotate'].includes(MOB.mode)||h?.kind==="rotate"&&MOB.mode!=="rotate"||h?.kind==="resize"&&MOB.mode!=="size"))h=null;
     }
     if(h){
       S.drag={kind:h.kind,id:p.id,start:copy(p),members:p.multiple?selectedLayers().map(copy):null,frame:p.multiple?copy(p):null,sx:h.sx,sy:h.sy,saved:false,
         anchor:h.kind==="resize"?world(p,-h.sx*p.w/2,-h.sy*p.h/2):null};
-      canvasPress={id:p.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,t:performance.now(),moved:false,handle:true};
+      canvasPress={id:p.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handle:true};
       canvas.setPointerCapture(event.pointerId);return;
     }
   }
-  const stack=hitStack(q);
+  const stack=event.pointerType==="touch"?touchHitStack(q):hitStack(q);
   const found=event.altKey&&stack.length?stack[(stack.findIndex(x=>x.id===S.selected)+1)%stack.length]:stack[0];
   if(!found){selectLayer(null);canvasPress={id:null,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handled:false};canvas.setPointerCapture(event.pointerId);return;}
-  const wasSelected=selectedLayers().some(p=>p.id===found.id);
-  if(!wasSelected)selectLayer(found.id);
+  if(!selectedLayers().some(p=>p.id===found.id))selectLayer(found.id);
   const targetFrame=selectionFrame();
   if(selectedLayers().length===1&&found.tipo==="tabla"){S.cell=tableCellAt(found,q);renderPanel();draw();}
-  canvasPress={id:found.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,t:performance.now(),moved:false,handled:false,wasSelected,longPress:false,menuX:event.clientX,menuY:event.clientY};
+  canvasPress={id:found.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handled:false};
   if(!targetFrame.bloqueado)S.drag={kind:"move",id:targetFrame.id,dx:q.x-targetFrame.x,dy:q.y-targetFrame.y,start:copy(targetFrame),members:targetFrame.multiple?selectedLayers().map(copy):null,frame:targetFrame.multiple?copy(targetFrame):null,saved:false};
   canvas.setPointerCapture(event.pointerId);
-  if(event.pointerType!=="mouse")pressTimer=setTimeout(()=>{
-    if(!canvasPress||canvasPress.moved)return;
-    canvasPress.longPress=true;navigator.vibrate?.(12); // el menú se abre al soltar si no hubo arrastre
-  },LONG_PRESS);
+
 }
 canvas.addEventListener("pointerdown",canvasPointerDown);
 $("backgroundFrame").addEventListener("pointerdown",event=>{
@@ -4016,6 +4067,7 @@ $("backgroundFrame").addEventListener("pointerdown",event=>{
 });
 $("backgroundBleed").addEventListener("pointerdown",event=>{canvasPointerDown(event);event.stopPropagation();});
 canvas.addEventListener("pointermove",event=>{
+  if(CO.room&&!coEditing()){coPoint(event);return;}
   if(touchPointers.has(event.pointerId))touchPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
   if(canvasGesture){
     if(touchPointers.size>=2){
@@ -4029,7 +4081,7 @@ canvas.addEventListener("pointermove",event=>{
   const q=point(event);S.pointer=q;
   if(S.work){paintBrush(q);draw();return;}
   if(canvasPress&&canvasPress.pointerId===event.pointerId){
-    if(!canvasPress.moved&&Math.hypot(event.clientX-canvasPress.x,event.clientY-canvasPress.y)>slopFor(event)){canvasPress.moved=true;canvasPress.longPress=false;cancelPressTimer();closeLayerMenu();}
+    if(Math.hypot(event.clientX-canvasPress.x,event.clientY-canvasPress.y)>4){canvasPress.moved=true;cancelPressTimer();}
     if(!canvasPress.moved||canvasPress.handled)return;
   }
   if(!S.drag){if(S.tool!=="mover")draw();return;}
@@ -4054,45 +4106,41 @@ canvas.addEventListener("pointermove",event=>{
     const a=d.start.rot*Math.PI/180,dx=q.x-d.anchor.x,dy=q.y-d.anchor.y;
     const lx=dx*Math.cos(a)+dy*Math.sin(a),ly=-dx*Math.sin(a)+dy*Math.cos(a);
     let w,h;
-    if(p.rol==="fondo"||(p.tipo==="texto"&&!event.shiftKey)||(keepRatio&&!event.shiftKey)){
-      // Textos: la esquina siempre escala caja y letra juntas. Shift = solo la caja.
+    if(p.rol==="fondo"||(keepRatio&&!event.shiftKey)){
       const factor=clamp((d.sx*lx*d.start.w+d.sy*ly*d.start.h)/(d.start.w**2+d.start.h**2),.02,Math.min(8192/d.start.w,8192/d.start.h));
       w=d.start.w*factor;h=d.start.h*factor;
     }else{w=clamp(d.sx*lx,2,8192);h=clamp(d.sy*ly,2,8192);}
     p.w=w;p.h=h;
     p.x=d.anchor.x+d.sx*w/2*Math.cos(a)-d.sy*h/2*Math.sin(a);
     p.y=d.anchor.y+d.sx*w/2*Math.sin(a)+d.sy*h/2*Math.cos(a);
-    if(p.tipo==="texto"&&!event.shiftKey)p.tamano=clamp(d.start.tamano*h/d.start.h,1,1000);
+    if(p.tipo==="texto")p.tamano=clamp(d.start.tamano*h/d.start.h,1,1000);
   }
   markChanged();syncNumericFields();draw();
 });
 function endPointer(event){
+  MOB.defer=false;
   cancelPressTimer();touchPointers.delete(event.pointerId);
   if(canvasGesture){if(!touchPointers.size)canvasGesture=null;canvasPress=null;S.drag=null;}
   const press=canvasPress;
   if(press?.multiId&&press.pointerId===event.pointerId&&event.type==="pointerup"&&!press.moved)toggleSelection(press.multiId);
   if(press?.pointerId===event.pointerId){
-    const still=!press.moved&&Math.hypot(event.clientX-press.x,event.clientY-press.y)<=slopFor(event);
-    const quick=event.pointerType==="mouse"||performance.now()-(press.t||0)<TAP_MAX;
-    if(event.type==="pointerup"&&still&&press.longPress&&press.id){openLayerMenu(press.id,press.menuX,press.menuY);suppressClickUntil=Date.now()+500;}
-    else if(event.type==="pointerup"&&still&&quick&&!press.handled&&!press.handle){
+    if(event.type==="pointerup"&&!press.moved&&!press.handled&&!press.handle){
       if(press.id){
         const bg=S.doc.capas.find(p=>p.id===press.id)?.rol==="fondo";
-        if(selectedLayers().length>1){S.tab="ajustes";setPanelVisible(true);renderPanel();}else selectLayer(press.id,{open:!!(press.wasSelected||bg||event.pointerType==="mouse"),single:S.isolation===press.id});
-        if(bg)requestAnimationFrame(fitCanvas);else if(selectedLayers().length===1)offerLayerHint();
+        if(selectedLayers().length>1){S.tab="ajustes";if(!mobileCanvas()||event.pointerType!=="touch")setPanelVisible(true);renderPanel();}else selectLayer(press.id,{open:!mobileCanvas()||event.pointerType!=="touch"||bg,single:S.isolation===press.id});
+        if(bg)requestAnimationFrame(fitCanvas);else if(selectedLayers().length===1&&!mobileCanvas())offerLayerHint();
       }
       else {
         const bg=backgroundLayer();
         if(bg&&!bg.oculto&&S.doc.fondo.tipo==="imagen")selectLayer(bg.id,{open:true});
         else setTab("fondo");
       }
-      if(selectedLayers().length===1&&lastTap?.id===press.id&&Date.now()-lastTap.time<350){
+      if(event.pointerType!=="touch"&&selectedLayers().length===1&&lastTap?.id===press.id&&Date.now()-lastTap.time<350){
         const p=selectedLayer();if(p?.tipo==="texto"&&!p.bloqueado){const input=document.querySelector('[data-prop="texto"]');input?.focus();input?.select();}
         if(p?.tipo==="tabla"&&!p.bloqueado)openTable();
       }
       lastTap={id:press.id,time:Date.now()};
     }
-    if(press.moved||press.handle)suppressClickUntil=Date.now()+300;
     canvasPress=null;
   }
   finishBrush();S.drag=null;S.snapX=S.snapY=false;
@@ -4103,6 +4151,7 @@ function endPointer(event){
 canvas.addEventListener("pointerup",endPointer);
 canvas.addEventListener("pointercancel",endPointer);
 canvas.addEventListener("lostpointercapture",event=>{
+  MOB.defer=false;
   cancelPressTimer();finishBrush();S.drag=null;S.snapX=S.snapY=false;
   touchPointers.delete(event.pointerId);
   if(canvasPress?.pointerId===event.pointerId)canvasPress=null;
@@ -4111,10 +4160,12 @@ canvas.addEventListener("lostpointercapture",event=>{
 });
 canvas.addEventListener("pointerleave",()=>{if(!S.work&&!S.drag&&!canvasPress){S.pointer=null;draw();}});
 canvas.addEventListener("contextmenu",event=>{
+  if(event.pointerType==="touch"||matchMedia("(pointer:coarse)").matches||Date.now()-MOB.touchAt<2000){event.preventDefault();return;}
   event.preventDefault();const q=point(event),p=hitStack(q)[0]||selectedLayer();
   if(p)openLayerMenu(p.id,event.clientX,event.clientY);
 });
 canvas.addEventListener("dblclick",()=>{
+  if(Date.now()-MOB.touchAt<800)return;
   if(S.selecting||selectedLayers().length>1)return;
   const p=selectedLayer();if(!p||p.bloqueado||S.tool!=="mover")return;
   if(p.tipo==="tabla")openTable();
@@ -4716,11 +4767,35 @@ const STYLE_KEYS=[
   "sombraBase","acabadoTexto","contornoTexto","colorContorno","metalico"
 ];
 async function action(name,button){
+  if(CO.room){
+    if(["newDesign","new","import","templates","surprise","agencyAdd","projectName","renameProject"].includes(name))throw new Error("Sal de la ayuda antes de abrir o publicar otro proyecto.");
+    const allowed=["closeDialog","closePanel","showPanel","showTools","expandPanel","tab","fit","zoomIn","zoomOut","theme","export","download","save","saveDetails","dismissSaveFeedback","contextHelp","helpTopic","helpGestures","closeHelp","dismissHint","panelExpand","clearSelection","focusCanvas","focusText","deselect","mobileFocus","projects","home"];
+    if(!coEditing()&&!name.startsWith('co')&&!allowed.includes(name))throw new Error("Tu compañera tiene el control. Puedes señalar en el lienzo o pedir el control.");
+  }
   const p=selectedLayer(),v=button?.dataset.value;
   const protectedActions=["textLook","textColor","fontStep","alignText","centerX","centerY","up","down","pasteStyle","imagePreset","restoreImage","cover","removeBackground","tool","editTable"];
   if(selectedLayers().some(p=>p.bloqueado)&&protectedActions.includes(name)){notify("Desbloquea la capa para cambiarla.");return;}
   if(!["helpTopic","dismissHint","helpGestures","contextHelp","resetHints","fontStep","textLook","textColor","divasLook","textSection"].includes(name))dismissHint();
   switch(name){
+    case "mobileMode":mobileMode(v);break;
+    case "mobileEdit":MOB.mode='idle';if(selectedLayers().length>1){S.tab='ajustes';setPanelVisible(true);renderPanel();}else selectLayer(S.selected,{open:true,single:S.isolation===S.selected});refreshMobileControls();break;
+    case "mobileNudge":mobileNudge(v);break;
+    case "mobileScale":mobileScale(Number(v));break;
+    case "mobileRotate":mobileRotate(Number(v));break;
+    case "mobileStraight":mobileRotate(0,true);break;
+    case "mobileFocus":mobileFocus();break;
+    case "coOpen":await run(coOpen);break;
+    case "coRefresh":await coLobby({force:true});coRender();break;
+    case "coInvite":await run(()=>coInvite(button.dataset.id));break;
+    case "coJoin":await run(()=>coJoin(button.dataset.id));break;
+    case "coDecline":await run(async()=>{await coRPC('control',{p_session:button.dataset.id,p_client:CO.client,p_action:'decline'});await coLobby({force:true});});break;
+    case "coControl":await run(()=>coControl('request'));break;
+    case "coGrant":await run(()=>coControl('grant'));break;
+    case "coApply":await run(coApply);break;
+    case "coLeave":await run(()=>coLeave());break;
+    case "coDiscard":await run(()=>coLeave(true));break;
+    case "coBackup":coLocalBackup();break;
+    case "coReconnect":await run(async()=>{await coLobby({force:true});if(CO.room){if(CO.room.dirty)await coFlush();else await coPull(true);}});break;
     case "surprise":await openSurprise();break;
     case "ideaAgain":await nextIdea();break;
     case "ideaExpand":if(I.session){I.session.expanded=!I.session.expanded;ideaControls();}break;
@@ -5051,6 +5126,7 @@ document.addEventListener("click",event=>{
   if(row){const tab=S.tab;selectLayer(row.dataset.layer);S.tab=tab;renderPanel();}
 });
 function handleEditorInput(event){
+  if(CO.room&&!coEditing()&&event.target.closest("#workspace")&&event.target.id!=="zoom"){event.preventDefault();return;}
   const el=event.target;
   if(removalInput(el))return;
   if(el.closest("#resourceEdit")){C.formDirty=true;if(el.id==="resourceFontUse")C.fontUseDirty=true;if(el.id==="resourceFontTikTok")C.fontTikTokDirty=true;$("resourceEditStatus").textContent="Cambios por guardar";return;}
@@ -5132,7 +5208,7 @@ document.addEventListener("change",event=>{
   if(el.id==="alignReference")S.alignTo=el.value;
   if(el.id==="newFormat"||el.name==="resizeMode")previewFormat();
   if(el.id==="showCircle")syncGeometry();
-  if(el.id==="keepRatio")keepRatio=el.checked;
+  if(el.id==="keepRatio"){keepRatio=el.checked;refreshMobileControls();}
   if(el.id==="exportType"||el.id==="exportScale")updateExportPreview();
   if(el.matches('[data-table="filas"],[data-table="columnas"]')&&p?.tipo==="tabla"&&!p.bloqueado){
     const rows=el.dataset.table==="filas"?+el.value:p.tabla.filas;
@@ -5272,6 +5348,7 @@ document.addEventListener("paste",event=>{
 document.addEventListener("keydown",event=>{
   if(event.key==="Escape"){dismissHint();closeHelp();}
   if(S.busy||!S.opened||S.view!=="editor")return;
+  if(CO.room&&!coEditing()){if(event.key!=="Escape")event.preventDefault();return;}
   if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
   if(document.querySelector("dialog[open]"))return;
   const ctrl=event.ctrlKey||event.metaKey,key=event.key.toLowerCase();
@@ -5501,10 +5578,11 @@ function updateAccountUI(){
   $('projectStorageDescription').textContent=signed?'Tus proyectos se guardan en tu cuenta y puedes retomarlos en otro dispositivo.':'Tus proyectos locales se guardan en este navegador. Entra para usar tu cuenta y los recursos privados.';
   $('saveState').textContent=signed?'Proyectos privados de tu cuenta':'Proyectos locales de este navegador';
   $('agencyResourcesButton').setAttribute('title',signed?'Colecciones privadas de Divas':'Entra para ver las colecciones privadas');
-  $('accountMembers').hidden=!isAdmin();queueAccessCheck();
+  $('accountMembers').hidden=!isAdmin();queueAccessCheck();coAccount();
 }
 async function openAccount(){if(A.ready)await A.ready;if(A.user&&!A.ownAuth)await initializeAuth();updateAccountUI();showDialog('accountDialog');if(!A.member&&!A.request)$(J.view==='register'?'registerName':'loginEmail').focus();}
 function clearCloudMemory(){
+  coReset();
   resetFontClassification();$('tiktokDialog').close();$('tiktokFontResults').replaceChildren();
   resetSurpriseMemory();
   resetTemplateMemory();
@@ -6256,6 +6334,7 @@ function stashDraft(record,revision,{attemptId=null,baseVersion=P.versions.get(r
  });P.draftChain=task;return task;
 }
 async function checkpointCurrent(){
+ if(CO.room)return null;
  if(!S.opened||!P.current||S.revision===S.savedRevision)return null;
  if(P.localRevision===S.revision&&P.pending.has(P.current.id))return P.pending.get(P.current.id);
  const record=currentRecord();return stashDraft(record,S.revision,{attemptId:P.activeSave?.attemptId});
@@ -6318,6 +6397,7 @@ async function reconcileDraft(entry){
  const error=new Error('Este proyecto tiene otra versión en la nube.');error.name='ProjectConflict';throw error;
 }
 function saveCurrent({force=false}={}){
+ if(CO.room)return coFlush();
  if(!S.opened||!P.current)return Promise.resolve(null);
  finishBrush();clearTimeout(P.saveTimer);
  const id=P.current.id,owner=projectOwner(),epoch=A.epoch;
@@ -6359,6 +6439,7 @@ function saveCurrent({force=false}={}){
  });job.promise=task;P.saveChain=task;return task;
 }
 async function manualSave(){
+ if(CO.room){try{await coFlush();notify("Copia compartida sincronizada. El original aún se conserva.");return true;}catch(e){notify(e.message);return false;}}
  if(!S.opened)return;
  try{await saveCurrent({force:true});notify(A.member?'Avance guardado en tu cuenta.':'Avance guardado en este navegador.');return true;}
  catch(error){notify(storageMessage(error));return false;}
@@ -6382,6 +6463,7 @@ async function autoSave(){
  try{await saveCurrent();}catch{}
 }
 function savingState(){
+ if(CO.room)return coSavedState();
  const dirty=S.revision!==S.savedRevision,cloud=!!A.member,local=P.localRevision===S.revision&&P.pending.has(P.current?.id);
  const time=P.lastSavedAt?new Date(P.lastSavedAt).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'}):'';
  if(P.saveError)return {label:local?(cloud?'En dispositivo · falta subir':'Recuperación en este navegador'):'Cambios pendientes de guardar',detail:P.saveError+(local?' Hay una copia de recuperación en este dispositivo.':' Descarga un respaldo editable para conservarlo.')+(P.retryTimer?' Volveremos a intentarlo automáticamente.':''),error:true};
@@ -6394,7 +6476,7 @@ function updateProjectToolbar(){
  $('projectName').textContent=projectName()+' · ✎';const state=savingState();
  setSaveText('projectSaveState',state.label);$('projectSaveState').classList.toggle('error',!!state.error);
  $('projectSaveState').setAttribute('title',state.detail);setSaveText('saveState',state.label);
- $('saveProgressButton').disabled=S.saving;$('saveProgressButton').textContent=S.saving?'Guardando…':'Guardar avance';
+ $('saveProgressButton').disabled=S.saving||!!(CO.room&&(!coEditing()||CO.room.writing));$('saveProgressButton').textContent=S.saving?'Guardando…':'Guardar avance';
  $('saveFeedback').hidden=!state.error||P.saveFeedbackDismissed||!!(P.retryTimer&&!P.localError&&P.pending.has(P.current.id));setSaveText('saveFeedbackText',state.error?state.detail:'');
  setSaveText('saveDetailText',state.detail);setSaveText('saveDetailState',state.label);
 }
@@ -6450,6 +6532,7 @@ function renderProjects(){
   }).join(""):`<div class="project-empty"><strong>${search||filter!=="todos"?"No hay diseños con esos filtros":"Tu próximo diseño empieza aquí"}</strong><p>${search||filter!=="todos"?"Prueba otro nombre o selecciona Todos los diseños.":"Crea un flyer o importa uno editable. Cada proyecto tendrá su propio espacio para retomarlo después."}</p><button class="primary" data-action="${search||filter!=="todos"?"clearProjectFilters":"newDesign"}">${search||filter!=="todos"?"Quitar filtros":"Crear mi primer diseño"}</button></div>`;
 }
 async function showProjects(){
+  if(CO.room){await coOpen();return;}
   finishBrush();closeMenus();closeLayerMenu();resetGuidance();
   S.view="projects";$("projects").hidden=false;$("home").hidden=true;$("workspace").hidden=true;$("mobileBar").hidden=true;
   $("sidePanel").classList.remove("mobile-open");renderProjects();updateShell();
@@ -7469,6 +7552,278 @@ $('fontClassDialog').addEventListener('close',renderFontClassification);
 $('creatorFontUse').addEventListener('change',()=>run(async()=>{const value=$('creatorFontUse').value;await saveResourceMetadata();C.managerFontUse=value;renderResourceManager();}));
 
 
+/* v28 · ayuda compartida: copia temporal, control por turnos y presencia visual. */
+const CO={client:crypto.randomUUID(),room:null,people:[],sessions:[],timer:null,polling:false,missing:false,error:'',generation:0,joining:false};
+const CO_VISUAL=['x','y','w','h','rot','tamano','texto','color','color2','fuente','peso','cursiva','subrayado','alineacion','espaciado','interlineado','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraX','sombraY','opacidad','oculto','bloqueado','brillo','contraste','saturacion','desenfoque','bordeImagen','bordeImagenColor','bordeMetalico','esquinas','degradadoTexto','mezcla','ajusteTexto','minTamano'];
+function coOwner(r=CO.room){return !!r&&r.session.owner_id===A.user?.id;}
+function coEditing(r=CO.room){const s=r?.session;return !!s&&s.status==='active'&&s.controller_id===A.user?.id&&s.controller_client===CO.client&&Date.parse(s.lease_until)>Date.now()&&!r.frozen&&!r.switching;}
+function coName(id,s=CO.room?.session){return !s?'Tu compañera':id===s.owner_id?s.owner_name:s.helper_name;}
+function coGuard(r){if(CO.room!==r||r.epoch!==A.epoch||!A.member?.active)throw new Error('La sesión de ayuda cambió.');}
+async function coRPC(name,values){requireMember();try{return await boundedCloud(A.client.rpc('divas_help_'+name,values),45000);}catch(e){if(/PGRST202|Could not find.*function|schema cache|does not exist/.test(e.code+' '+e.message)){CO.missing=true;throw new Error('Falta activar la ayuda compartida: ejecuta 10-divas-ayuda-compartida.sql en Supabase y vuelve a intentar.');}throw e;}}
+function coPack(doc,r){
+  const added={};
+  function visit(v){
+    if(typeof v==='string'&&/^data:(image\/|font\/|application\/)/.test(v)){
+      let id=r.reverse.get(v);if(!id){id=crypto.randomUUID();r.reverse.set(v,id);r.assets[id]=v;}if(!r.sent.has(id))added[id]=v;return 'divas-shared://'+id;
+    }
+    if(Array.isArray(v))return v.map(visit);if(v&&typeof v==='object')return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,visit(x)]));return v;
+  }
+  return {doc:visit(doc),assets:added};
+}
+function coUnpack(doc,r){
+  function visit(v){if(typeof v==='string'&&v.startsWith('divas-shared://')){const id=v.slice(15);if(!r.assets[id])throw new Error('Falta un recurso de la copia. Pulsa Reconectar.');return r.assets[id];}if(Array.isArray(v))return v.map(visit);if(v&&typeof v==='object')return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,visit(x)]));return v;}
+  return normalizeProject(visit(doc));
+}
+function coAssets(r,assets={}){for(const [id,value] of Object.entries(assets)){r.assets[id]=value;r.reverse.set(value,id);r.sent.add(id);}}
+function coSavedState(){const r=CO.room;if(!r)return null;return {label:r.error?'Ayuda · falta sincronizar':r.writing?'Guardando copia compartida…':r.dirty?'Ayuda · cambios pendientes':'Copia compartida · avance confirmado',detail:r.error||'El original solo cambia cuando la persona que pidió ayuda pulsa Guardar en mi proyecto.',error:!!r.error};}
+function coRender(){
+  const r=CO.room,s=r?.session,bar=$('coBar');bar.hidden=!r;$('coEntry').textContent=r?'● Ayuda en vivo':'♧ Ayuda compartida';
+  document.body.classList.toggle('co-viewing',!!r&&!coEditing());
+  if(r){
+    const editing=coEditing();$('coTitle').textContent=s.status==='pending'?'Esperando a '+s.helper_name:s.status==='completed'?'Ayuda terminada · resultado listo':s.status==='cancelled'||s.status==='declined'?'La ayuda terminó':editing?'Tú tienes el control':coName(s.controller_id)+' está editando';
+    $('coStatus').textContent=r.error||(!r.connected?'Reconectando vista en vivo · los avances confirmados se consultan cada 4 segundos.':s.peer_online?'Conectadas · cambios y selección en vivo':'La otra persona está desconectada o cambiando de pestaña.');
+    $('coTake').hidden=s.status!=='active'||editing;$('coTake').textContent=Date.parse(s.lease_until)<Date.now()?'Recuperar control':s.requested_client===CO.client?'Control solicitado':'Pedir control';
+    $('coGrant').hidden=!editing||!s.requested_by;$('coGrant').textContent='Ceder a '+coName(s.requested_by);
+    $('coApply').hidden=!coOwner()||!['active','completed'].includes(s.status);$('coApply').disabled=s.status==='active'&&!editing;
+    $('coActivity').textContent=r.activity||'Toca el lienzo para señalar un lugar a tu compañera.';
+    updateProjectToolbar();
+  }
+  const own=CO.sessions.find(s=>s.id!==r?.session.id);$('coNotice').hidden=!!r||!own;
+  if(own){$('coNoticeText').textContent=own.status==='pending'&&own.helper_id===A.user?.id?own.owner_name+' te pide ayuda con «'+own.title+'».':own.status==='completed'?'Tienes un resultado de ayuda listo para guardar.':'Tienes una ayuda compartida en curso.';$('coNoticeButton').dataset.id=own.id;$('coNoticeButton').textContent=own.status==='pending'&&own.helper_id===A.user?.id?'Ver invitación':'Retomar ayuda';}
+  if($('coDialog').open)coRenderDialog();
+}
+function coRenderDialog(){
+  const r=CO.room;$('coDialogTitle').textContent=r?'Tu sesión de ayuda':'Ayuda compartida';
+  $('coDialogInfo').textContent=r?'Trabajáis sobre una copia temporal. Podéis ceder el control sin salir del diseño.':'Elige una persona conectada. Verá una copia de tu flyer y podrá ayudarte; tu proyecto original se conserva hasta que guardes el resultado.';
+  $('coDialogError').textContent=CO.error||r?.error||'';$('coInviteList').hidden=!!r;$('coLiveActions').hidden=!r;
+  if(r){$('coDiscard').hidden=!coOwner()||!['pending','active'].includes(r.session.status);$('coApplyDialog').hidden=!coOwner()||!['active','completed'].includes(r.session.status);$('coApplyDialog').disabled=r.session.status==='active'&&!coEditing();return;}
+  $('coInviteList').innerHTML=CO.sessions.map(s=>`<div class="co-person"><div><strong>${esc(s.title)}</strong><small>${esc(s.owner_name)} + ${esc(s.helper_name)} · ${s.status==='pending'?'invitación pendiente':s.status==='completed'?'resultado listo':'en curso'}</small></div><button class="primary" data-action="coJoin" data-id="${s.id}">${s.status==='pending'&&s.helper_id===A.user.id?'Aceptar':'Retomar'}</button>${s.status==='pending'&&s.helper_id===A.user.id?`<button data-action="coDecline" data-id="${s.id}">Ahora no</button>`:''}</div>`).join('')+CO.people.map(p=>`<div class="co-person"><div><strong>${esc(p.display_name)}</strong><small>${p.busy?'En otra ayuda':'● Conectada'}</small></div><button data-action="coInvite" data-id="${p.user_id}" ${p.busy||CO.sessions.some(s=>['active','pending'].includes(s.status))||!S.opened||S.view!=='editor'?'disabled':''}>Pedir ayuda</button></div>`).join('')||'<p class="help">No hay otras cuentas aprobadas conectadas. Pide a tu compañera que abra esta versión del editor e inicie sesión.</p>';
+}
+async function coLobby({force=false}={}){
+  if(CO.polling||!A.member?.active||A.switching||(!force&&CO.missing))return;
+  const epoch=A.epoch;CO.polling=true;try{const data=await coRPC('lobby',{p_client:CO.client,p_session:CO.room?.session.id||null});if(epoch!==A.epoch)return;CO.people=data.people||[];CO.sessions=data.sessions||[];CO.missing=false;CO.error='';if(CO.room)await coPull();coRender();}catch(e){if(epoch===A.epoch){CO.error=e.message;coRender();}}finally{CO.polling=false;}
+}
+function coSchedule(){clearTimeout(CO.timer);if(!A.member?.active)return;CO.timer=setTimeout(async()=>{if(!document.hidden||CO.room)await coLobby();coSchedule();},CO.room?4000:15000);}
+function coAccount(){if(!A.member?.active)return;coSchedule();if(!CO.people.length&&!CO.missing&&!CO.polling)setTimeout(()=>coLobby(),250);}
+async function coOpen(){requireMember();CO.error='';showDialog('coDialog');coRenderDialog();await coLobby({force:true});coRenderDialog();}
+function coPrior(){return S.opened&&P.current?{doc:copy(S.doc),project:{...copy(P.current),version:P.versions.get(P.current.id)||0,editor:{tab:S.tab,zoom:S.zoom,fit:S.fit,selected:S.selected}}}:null;}
+async function coInvite(id){
+  requireMember();if(CO.room)throw new Error('Ya tienes una ayuda abierta.');if(!S.opened||S.view!=='editor')throw new Error('Abre el proyecto para el que necesitas ayuda.');
+  await saveCurrent({force:true});const epoch=A.epoch,doc=S.doc,project=P.current.id,prior=coPrior(),r={assets:{},reverse:new Map(),sent:new Set()},packed=coPack(S.doc,r);
+  const s=await coRPC('create',{p_helper:id,p_client:CO.client,p_project:project,p_version:P.versions.get(project)||0,p_doc:packed.doc,p_assets:packed.assets});
+  if(epoch!==A.epoch||doc!==S.doc||P.current?.id!==project)throw new Error('Cambió el proyecto. La invitación quedó disponible en Ayuda compartida.');
+  await coJoin(s.id,{prior});
+}
+async function coJoin(id,{prior=null}={}){
+  if(CO.joining)return;requireMember();if(CO.room){if(CO.room.session.id===id){$('coDialog').close();return;}throw new Error('Sal de la ayuda actual antes de abrir otra.');}
+  CO.joining=true;const epoch=A.epoch;try{
+    if(S.opened)await saveCurrent({force:true});prior=prior||coPrior();
+    let result=await coRPC('read',{p_session:id,p_since:-1,p_known:[]});if(epoch!==A.epoch)throw new Error('La cuenta cambió.');
+    if(result.session.status==='pending'&&result.session.helper_id===A.user.id){await coRPC('control',{p_session:id,p_client:CO.client,p_action:'accept'});result=await coRPC('read',{p_session:id,p_since:-1,p_known:[]});}
+    if(!['pending','active','completed'].includes(result.session.status))throw new Error('Esta invitación ya terminó.');
+    const r={epoch,session:result.session,prior,assets:{},reverse:new Map(),sent:new Set(),revision:result.session.revision,dirty:false,writing:null,pending:null,channel:null,connected:false,frozen:false,error:'',seq:0,remoteSeq:0,visual:null,pull:null,activity:'',backup:null};
+    coAssets(r,result.assets);r.canonical=result.doc;r.original=result.original;const d=coUnpack(result.doc,r);CO.room=r;
+    try{await activateDocument(d,{project:{id:'help_'+id,nombre:'Ayuda · '+r.session.title,manual:true,creado:Date.now(),modificado:Date.now(),version:1},savePrevious:false,guard:()=>coGuard(r)});}catch(e){CO.room=null;throw e;}
+    clearTimeout(P.saveTimer);S.savedRevision=S.revision;S.undo=[];S.redo=[];if(matchMedia('(max-width:760px)').matches)setPanelVisible(false);$('coDialog').close();coConnect(r);coRender();coSchedule();
+  }finally{CO.joining=false;}
+}
+function coBroadcast(event,payload){const r=CO.room;if(r?.connected)r.channel.send({type:'broadcast',event,payload:{...payload,client:CO.client,user:A.user.id,epoch:r.session.control_epoch}}).catch(()=>{});}
+function coConnect(r){
+  const ch=A.client.channel('divas-help:'+r.session.id,{config:{private:true,broadcast:{self:false,ack:false}}});r.channel=ch;
+  ch.on('broadcast',{event:'state'},()=>{if(CO.room===r)coPull(true).catch(()=>{});});
+  ch.on('broadcast',{event:'visual'},({payload})=>coReceive(r,payload));
+  ch.on('broadcast',{event:'point'},({payload})=>{if(CO.room!==r||!payload||payload.client===CO.client||![r.session.owner_id,r.session.helper_id].includes(payload.user))return;r.peer={...payload,at:Date.now()};r.activity=coName(payload.user)+' · '+String(payload.note||'señalando el lienzo').slice(0,100);$('coActivity').textContent=r.activity;if(payload.action&&/^[\w-]{1,50}$/.test(payload.action)){const el=document.querySelector('[data-action="'+CSS.escape(payload.action)+'"]');el?.classList.add('co-highlight');setTimeout(()=>el?.classList.remove('co-highlight'),850);}if(payload.prop&&/^[\w-]{1,50}$/.test(payload.prop)){document.querySelectorAll('[data-prop="'+CSS.escape(payload.prop)+'"]').forEach(el=>{el.classList.add('co-highlight');setTimeout(()=>el.classList.remove('co-highlight'),850);});}draw();});
+  ch.subscribe(status=>{if(CO.room!==r)return;r.connected=status==='SUBSCRIBED';coRender();if(r.connected)coPull(true).catch(()=>{});});
+}
+function coVisualState(){return {lienzo:copy(S.doc.lienzo),fondo:copy(S.doc.fondo),capas:S.doc.capas.map(p=>{const q={id:p.id};for(const k of CO_VISUAL)if(p[k]!==undefined&&JSON.stringify(p[k]).length<8000)q[k]=copy(p[k]);return q;})};}
+function coPreview(){
+  const r=CO.room;if(!coEditing(r)||r.previewTimer||!r.connected)return;
+  r.previewTimer=setTimeout(()=>{r.previewTimer=null;if(CO.room!==r||!coEditing(r))return;const next=coVisualState(),before=r.visual,changes=next.capas.filter(p=>!before||JSON.stringify(p)!==JSON.stringify(before.capas.find(x=>x.id===p.id)));const msg={seq:++r.seq,revision:r.revision,changes,selection:S.selected,tab:S.tab,lienzo:next.lienzo,fondo:next.fondo};
+    if(JSON.stringify(msg).length<45000)coBroadcast('visual',msg);r.visual=next;
+  },90);
+}
+function coReceive(r,m){
+  if(CO.room!==r||r.session.status!=='active'||coEditing(r)||!m||m.user!==r.session.controller_id||m.client!==r.session.controller_client||m.epoch!==r.session.control_epoch||!Number.isFinite(m.seq)||m.seq<=r.remoteSeq||m.revision<r.revision)return;
+  r.remoteSeq=m.seq;const allowed=new Set(CO_VISUAL);
+  for(const q of Array.isArray(m.changes)?m.changes.slice(0,200):[]){const p=S.doc.capas.find(x=>x.id===q.id);if(!p)continue;for(const [k,v] of Object.entries(q))if(allowed.has(k)&&JSON.stringify(v).length<8000){if(typeof v==='number'&&(!Number.isFinite(v)||Math.abs(v)>50000))continue;p[k]=copy(v);}}
+  if(m.lienzo&&Number.isFinite(m.lienzo.ancho)&&Number.isFinite(m.lienzo.alto)&&m.lienzo.ancho>=64&&m.lienzo.alto>=64&&m.lienzo.ancho<=8000&&m.lienzo.alto<=8000)S.doc.lienzo=copy(m.lienzo);
+  if(m.fondo&&['solido','degradado','imagen'].includes(m.fondo.tipo))S.doc.fondo={...S.doc.fondo,...m.fondo};
+  if($('coFollow').checked&&(m.selection===null||S.doc.capas.some(p=>p.id===m.selection))){const changed=S.selected!==m.selection;S.selected=m.selection;if(['textos','logos','figuras','fondo','capas','ajustes','crear','estilo'].includes(m.tab))S.tab=m.tab;if(changed||!document.activeElement?.closest('#panelBody'))renderPanel();}
+  syncGeometry();draw();
+}
+function coChanged(){const r=CO.room;if(!r)return false;if(!coEditing(r)){r.error='No tienes el control. Recupera el avance confirmado antes de editar.';coRender();return true;}S.revision++;r.dirty=true;r.error='';clearTimeout(r.saveTimer);r.saveTimer=setTimeout(()=>coFlush().catch(()=>{}),1200);coPreview();coRender();return true;}
+async function coFlush(){
+  const r=CO.room;if(!r)return;if(r.writing)return r.writing;if(!r.dirty&&!r.pending)return;
+  if(!coEditing(r))throw new Error('Pide el control para guardar cambios en la copia.');
+  clearTimeout(r.saveTimer);
+  r.writing=(async()=>{
+    while(r.dirty||r.pending){coGuard(r);if(!coEditing(r))throw new Error('El control cambió. Descarga tu copia si hay cambios pendientes.');
+      if(!r.pending){const packed=coPack(S.doc,r);r.pending={id:crypto.randomUUID(),revision:r.revision,localRevision:S.revision,packed};}
+      const job=r.pending;const s=await coRPC('write',{p_session:r.session.id,p_client:CO.client,p_epoch:r.session.control_epoch,p_revision:job.revision,p_write:job.id,p_doc:job.packed.doc,p_assets:job.packed.assets});coGuard(r);
+      coAssets(r,job.packed.assets);r.session=s;r.revision=s.revision;r.canonical=job.packed.doc;r.pending=null;r.dirty=S.revision!==job.localRevision;S.savedRevision=job.localRevision;r.error='';coBroadcast('state',{revision:r.revision});
+    }
+  })().catch(e=>{if(CO.room===r){r.error=e.message;coRender();}throw e;}).finally(()=>{r.writing=null;if(CO.room===r)coRender();});coRender();return r.writing;
+}
+async function coPull(force=false){
+  const r=CO.room;if(!r||r.pull)return r?.pull;
+  r.pull=(async()=>{
+    const data=await coRPC('read',{p_session:r.session.id,p_since:force?-1:r.revision,p_known:Object.keys(r.assets)});coGuard(r);
+    if(data.session.control_epoch<r.session.control_epoch||(data.session.control_epoch===r.session.control_epoch&&data.session.revision<r.revision))return;
+    const wasEditing=coEditing(r),changed=data.session.control_epoch!==r.session.control_epoch,interacting=!!S.work||!!S.drag?.saved;
+    if(changed){finishBrush();S.drag=null;canvasPress=null;canvasGesture=null;touchPointers.clear();cancelPressTimer();if(typeof MOB!=='undefined')MOB.defer=false;}
+    if(changed&&(r.dirty||interacting)){r.backup=copy(S.doc);r.error='El control cambió con cambios locales pendientes. Descarga el respaldo local desde Ayuda compartida.';}
+    r.session=data.session;coAssets(r,data.assets);if(data.original)r.original=data.original;
+    if(changed){r.switching=true;r.visual=null;r.remoteSeq=0;S.undo=[];S.redo=[];}
+    if(data.doc){
+      r.canonical=data.doc;
+      if(!coEditing(r)&&!r.writing||changed){
+        const d=coUnpack(data.doc,r);await hydrate(d);coGuard(r);
+        // An active local editor is never replaced by a delayed read.
+        if(!coEditing(r)||changed){S.doc=d;r.revision=data.session.revision;r.pending=null;r.dirty=false;S.savedRevision=S.revision;S.selected=S.doc.capas.some(p=>p.id===S.selected)?S.selected:null;syncGeometry();renderPanel();draw();}
+      }else if(!r.dirty&&!r.writing)r.revision=data.session.revision;
+    }
+    if(changed&&!data.doc){const full=await coRPC('read',{p_session:r.session.id,p_since:-1,p_known:Object.keys(r.assets)});coGuard(r);coAssets(r,full.assets);const d=coUnpack(full.doc,r);await hydrate(d);coGuard(r);S.doc=d;r.canonical=full.doc;r.revision=full.session.revision;r.dirty=false;r.pending=null;S.savedRevision=S.revision;refresh();}
+    if(wasEditing&&!coEditing(r)&&r.session.status==='active'){r.visual=null;if(matchMedia('(max-width:760px)').matches)setPanelVisible(false);}
+    if(!['pending','active'].includes(r.session.status)&&r.channel){A.client.removeChannel(r.channel).catch(()=>{});r.channel=null;r.connected=false;}
+    coRender();
+  })().catch(e=>{if(CO.room===r){r.error=e.message;if(/no tienes acceso|cuenta aprobada|ya no tiene acceso|Una de las cuentas/.test(e.message)){r.frozen=true;r.connected=false;if(r.channel){A.client.removeChannel(r.channel).catch(()=>{});r.channel=null;}}coRender();}throw e;}).finally(()=>{r.pull=null;r.switching=false;if(CO.room===r){coRender();updateHistory();}});return r.pull;
+}
+async function coControl(kind){
+  const r=CO.room;if(!r)return;
+  if(kind==='grant'){r.frozen=true;try{r.frozen=false;await coFlush();r.frozen=true;const s=await coRPC('control',{p_session:r.session.id,p_client:CO.client,p_action:'grant',p_revision:r.revision});coGuard(r);r.session=s;r.visual=null;S.undo=[];S.redo=[];if(matchMedia('(max-width:760px)').matches)setPanelVisible(false);}finally{r.frozen=false;}}
+  else{const action=Date.parse(r.session.lease_until)<Date.now()?'take':'request';const s=await coRPC('control',{p_session:r.session.id,p_client:CO.client,p_action:action,p_revision:r.revision});coGuard(r);r.session=s;if(action==='take'){r.remoteSeq=0;r.visual=null;S.undo=[];S.redo=[];const data=await coRPC('read',{p_session:s.id,p_since:-1,p_known:Object.keys(r.assets)});coGuard(r);coAssets(r,data.assets);const d=coUnpack(data.doc,r);await hydrate(d);coGuard(r);S.doc=d;r.canonical=data.doc;r.revision=data.session.revision;r.dirty=false;r.pending=null;refresh();}}
+  coBroadcast('state',{});coRender();
+}
+async function coApply(){
+  const r=CO.room;if(!coOwner(r))throw new Error('Solo quien pidió ayuda puede guardar el resultado en su proyecto.');
+  if(r.session.status==='active'){if(!coEditing(r))throw new Error('Pide el control antes de guardar el resultado.');await coFlush();r.session=await coRPC('control',{p_session:r.session.id,p_client:CO.client,p_action:'finish',p_revision:r.revision});coGuard(r);coBroadcast('state',{});}
+  if(r.session.status!=='completed')throw new Error('Esta ayuda no tiene un resultado listo.');
+  const data=await coRPC('read',{p_session:r.session.id,p_since:-1,p_known:Object.keys(r.assets)});coGuard(r);coAssets(r,data.assets);
+  const final=coUnpack(data.doc,r),original=coUnpack(data.original||r.original,r),origin=copy(data.session.origin),sid=r.session.id;
+  coResetRoom();await activateDocument(original,{project:origin,savePrevious:false});commit(()=>{S.doc=final;});
+  try{await saveCurrent({force:true});}
+  catch(e){notify('El resultado está abierto, pero falta confirmar su guardado: '+e.message);throw e;}
+  try{await coRPC('control',{p_session:sid,p_client:CO.client,p_action:'applied'});notify('Resultado guardado en tu proyecto. Deshacer recupera la composición anterior.');}
+  catch(e){notify('Tu proyecto se guardó. Quedó pendiente cerrar el aviso de esta ayuda; no vuelvas a aplicar el resultado.');}
+  await coLobby({force:true});
+}
+async function coLeave(discard=false){
+  const r=CO.room;if(!r)return;
+  if(r.backup&&!discard)throw new Error('Descarga el respaldo de la ayuda antes de salir: contiene cambios locales que no se pudieron sincronizar.');
+  if(discard){if(!coOwner(r))return;if(!confirm('¿Descartar esta copia compartida? Tu proyecto original se conserva.'))return;r.session=await coRPC('control',{p_session:r.session.id,p_client:CO.client,p_action:'cancel'});coBroadcast('state',{});}
+  else if(r.dirty||r.pending){await coFlush();}
+  const prior=r.prior;coResetRoom();if(prior)await activateDocument(prior.doc,{project:prior.project,savePrevious:false});else{S.opened=false;P.current=null;S.doc=emptyDocument();await showProjects();}
+  await coLobby({force:true});
+}
+function coResetRoom(){const r=CO.room;CO.room=null;if(r){clearTimeout(r.saveTimer);clearTimeout(r.previewTimer);if(r.channel)A.client?.removeChannel(r.channel).catch(()=>{});}document.body.classList.remove('co-viewing');$('coBar').hidden=true;$('coDialog').close();clearTimeout(P.saveTimer);coRender();}
+function coReset(){CO.generation++;coResetRoom();clearTimeout(CO.timer);CO.people=[];CO.sessions=[];CO.error='';CO.missing=false;CO.polling=false;$('coNotice').hidden=true;$('coInviteList').replaceChildren();}
+function coNavigation(){if(CO.room)throw new Error('Usa Ayuda compartida → Salir y volver a mi proyecto. La copia queda disponible para retomarla.');}
+function coLocalBackup(){const r=CO.room;if(!r)return;const doc=r.backup||S.doc;download(new Blob([JSON.stringify(doc)],{type:'application/json'}),'divas-respaldo-ayuda.json');r.backup=null;}
+function drawCollabOverlay(c){const r=CO.room,p=r?.peer;if(!p||Date.now()-p.at>5000||!Number.isFinite(p.x)||!Number.isFinite(p.y))return;const z=Math.max(.1,S.zoom),radius=6/z;c.save();c.strokeStyle='#17bccc';c.fillStyle='#17bccc';c.lineWidth=2/z;c.beginPath();c.arc(p.x,p.y,radius,0,Math.PI*2);c.fill();c.strokeStyle='#fff';c.stroke();c.font=`600 ${12/z}px Arial`;c.textBaseline='top';const name=coName(p.user).slice(0,32),w=c.measureText(name).width;c.fillStyle='#153641';c.fillRect(p.x+10/z,p.y+10/z,w+12/z,22/z);c.fillStyle='#fff';c.fillText(name,p.x+16/z,p.y+14/z);c.restore();}
+let coPointerAt=0,coPointSignature='';
+function coPoint(event,note='señalando el lienzo',extra={}){const r=CO.room,signature=[extra.action||'',extra.prop||'',note].join('|');if(!r||Date.now()-coPointerAt<100&&signature===coPointSignature)return;coPointerAt=Date.now();coPointSignature=signature;const q=event?.clientX!==undefined?point(event):r.lastPoint||{x:0,y:0};r.lastPoint=q;coBroadcast('point',{x:q.x,y:q.y,selection:S.selected,note,...extra});}
+canvas.addEventListener('pointermove',e=>coPoint(e));
+canvas.addEventListener('pointerdown',e=>{if(CO.room&&!coEditing()){const p=hitStack(point(e))[0];coPoint(e,p?'señala '+p.nombre:'señala el fondo');}},true);
+document.addEventListener('click',e=>{if(!CO.room)return;const el=e.target.closest('[data-action],[data-prop]');if(!el||!el.closest('#workspace'))return;const action=el.dataset.action,prop=el.dataset.prop;if(action?.startsWith('co'))return;coPoint(null,String(el.getAttribute('aria-label')||el.closest('label')?.textContent||el.textContent||prop||'ajustando el diseño').trim().slice(0,80),{action,prop});},true);
+document.addEventListener('input',e=>{if(!coEditing())return;const el=e.target;if(!el.matches('[data-prop]'))return;coPoint(null,'Ajustando '+(el.getAttribute('aria-label')||el.dataset.prop),{prop:el.dataset.prop});});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&A.member?.active){coLobby({force:true});coSchedule();}});
+window.addEventListener('online',()=>{if(CO.room)coLobby({force:true});});
+
+
+/* Controles táctiles: el dedo mueve; las acciones se eligen fuera del lienzo. */
+const MOB={mode:'idle',key:'',touchAt:0,defer:false,html:'',controlPointer:false};
+function mobileCanvas(){return matchMedia('(max-width:760px)').matches;}
+function mobileSelectionUI(){
+  if(MOB.defer||S.drag||canvasPress)return;
+  const dock=$('mobileSelection'),p=selectionFrame(),list=selectedLayers();
+  const visible=mobileCanvas()&&!!p&&!S.selecting&&!S.work&&S.tool==='mover'&&!(CO.room&&!coEditing());
+  dock.hidden=!visible;if(!visible)return;
+  const key=list.map(p=>p.id).join('|');if(MOB.key!==key){MOB.key=key;MOB.mode='idle';}
+  const locked=list.some(p=>p.bloqueado),single=list.length===1,ratio=keepRatio||!single||p.rol==='fondo';
+  const hint=locked?'Está fijo · toca el candado':S.panelHidden?'Toca aquí para editar':'Editando este elemento';
+  const name=single?list[0].nombre:selectionLabel();
+  let extra='';
+  if(!locked&&MOB.mode==='move')extra=`<div class="mobile-precision"><span>Un poco más…</span>${[['←','left','a la izquierda'],['↑','up','hacia arriba'],['↓','down','hacia abajo'],['→','right','a la derecha']].map(([glyph,value,label])=>`<button data-action="mobileNudge" data-value="${value}" aria-label="Mover ${label}">${glyph}</button>`).join('')}<button data-action="mobileFocus" aria-label="Acercar la vista al elemento">⌕</button></div>`;
+  if(!locked&&MOB.mode==='size')extra=`<div class="mobile-size-row"><button data-action="mobileScale" data-value="-1" aria-label="Hacer más pequeño">−</button><span>Tamaño</span><button data-action="mobileScale" data-value="1" aria-label="Hacer más grande">+</button><label class="mobile-ratio"><input type="checkbox" data-mobile-ratio ${ratio?'checked':''} ${!single||p.rol==='fondo'?'disabled':''}>No deformar</label></div>${!ratio?`<div class="mobile-dimensions"><label>Ancho<input data-prop="w" type="number" min="2" max="8192" value="${Math.round(p.w)}" inputmode="decimal"></label><label>Alto<input data-prop="h" type="number" min="2" max="8192" value="${Math.round(p.h)}" inputmode="decimal"></label></div>`:''}`;
+  if(!locked&&MOB.mode==='rotate')extra=`<div class="mobile-rotate-row"><button data-action="mobileRotate" data-value="-15" aria-label="Girar 15 grados a la izquierda">↶</button><label>Giro <input data-mobile-angle type="number" min="-180" max="180" value="${Math.round(p.rot||0)}" inputmode="decimal" aria-label="Grados de giro">°</label><button data-action="mobileRotate" data-value="15" aria-label="Girar 15 grados a la derecha">↷</button><button data-action="mobileStraight">Enderezar</button></div>`;
+  const html=`<div class="mobile-selection-head"><button class="mobile-selected-name" data-action="mobileEdit"><strong>${esc(name)}</strong><small>${esc(hint)}</small></button><button data-action="lock" data-scope="selection" data-id="${esc(list[0].id)}" aria-label="${locked?'Desbloquear elemento':'Fijar elemento para que no se mueva'}" title="${locked?'Desbloquear':'Fijar'}">${uiIcon(locked?'lock':'unlock')}</button><button class="mobile-delete" data-action="delete" ${locked?'disabled':''} aria-label="Eliminar elemento; puedes deshacer">${uiIcon('trash')}</button><button data-action="deselect" aria-label="Quitar selección">×</button></div><div class="mobile-transform-tabs">${[['move','✥','Mover'],['size','↗','Tamaño'],['rotate','↻','Girar']].map(([value,glyph,label])=>`<button data-action="mobileMode" data-value="${value}" aria-pressed="${MOB.mode===value||MOB.mode==='idle'&&value==='move'}" ${locked?'disabled':''}><span aria-hidden="true">${glyph}</span>${label}</button>`).join('')}<button data-action="layerMenu"><span aria-hidden="true">•••</span>Más</button></div>${extra}`;
+  // No sustituir el input mientras la persona escribe o mantiene un control.
+  if(MOB.html!==html&&!MOB.controlPointer&&!(dock.contains(document.activeElement)&&document.activeElement.matches('input,select,textarea'))){dock.innerHTML=html;MOB.html=html;}
+}
+function refreshMobileControls(){
+  const active=document.activeElement;if($('mobileSelection').contains(active))active.blur();
+  mobileSelectionUI();draw();
+}
+function mobileMode(mode){
+  if(!['move','size','rotate'].includes(mode))return;
+  MOB.mode=MOB.mode===mode?'idle':mode;closeLayerMenu();setPanelVisible(false);refreshMobileControls();
+}
+function mobileNudge(direction){
+  const list=selectedLayers();if(!list.length||list.some(p=>p.bloqueado))return;
+  const step=Math.max(1,Math.round(1/S.zoom)),delta={left:[-step,0],right:[step,0],up:[0,-step],down:[0,step]}[direction];if(!delta)return;
+  commit(()=>list.forEach(p=>{p.x=clamp(p.x+delta[0],-32768,32768);p.y=clamp(p.y+delta[1],-32768,32768);if(p.rol==='fondo')p.ajusteFondo='manual';}));
+  refreshMobileControls();
+}
+function mobileScale(direction){
+  if(![-1,1].includes(direction))return;
+  scaleSelection(direction>0?1.1:1/1.1);
+  const p=selectedLayer();if(p?.rol==='fondo')p.ajusteFondo='manual';refreshMobileControls();
+}
+function mobileRotate(angle,straight=false){
+  const list=selectedLayers();if(!list.length||list.some(p=>p.bloqueado)||!Number.isFinite(angle))return;
+  if(straight)commit(()=>list.forEach(p=>{p.rot=0;if(p.rol==='fondo')p.ajusteFondo='manual';}));
+  else if(list.length>1)rotateSelection(angle);
+  else commit(()=>{const p=list[0];p.rot=((p.rot+angle+180)%360+360)%360-180;if(p.rol==='fondo')p.ajusteFondo='manual';});
+  refreshMobileControls();
+}
+function mobileFocus(){
+  const p=selectionFrame();if(!p)return;const vp=$('viewport'),b=boundsOf(p);
+  S.fit=false;applyZoom(Math.min(2,Math.max(S.zoom,Math.min((vp.clientWidth-72)/b.w,(vp.clientHeight-72)/b.h))));
+  requestAnimationFrame(()=>{const r=canvas.getBoundingClientRect(),v=vp.getBoundingClientRect();vp.scrollLeft+=r.left+p.x*S.zoom-(v.left+v.width/2);vp.scrollTop+=r.top+p.y*S.zoom-(v.top+v.height/2);});
+}
+function touchHitStack(q){
+  const exact=hitStack(q);if(freeBackground())return exact;
+  const top=exact[0],topIndex=top?S.doc.capas.indexOf(top):-1;
+  if(top&&top.rol!=='fondo'&&!top.decorativa&&Math.min(top.w,top.h)*S.zoom<44)return exact;
+  const near=[...S.doc.capas].reverse().filter(p=>{
+    if(p.oculto||p.decorativa||p.rol==='fondo'||p.opacidad<=0||S.doc.capas.indexOf(p)<topIndex)return false;
+    const w=p.w*S.zoom,h=p.h*S.zoom;if(Math.max(w,h)>160||Math.min(w,h)>44)return false;
+    const v=local(p,q),pad=12/S.zoom;return Math.abs(v.x)<=Math.max(p.w/2+pad,22/S.zoom)&&Math.abs(v.y)<=Math.max(p.h/2+pad,22/S.zoom);
+  });
+  near.sort((a,b)=>Math.hypot((q.x-a.x)*S.zoom,(q.y-a.y)*S.zoom)-Math.hypot((q.x-b.x)*S.zoom,(q.y-b.y)*S.zoom));
+  return [...near,...exact.filter(p=>!near.includes(p))];
+}
+document.addEventListener('change',event=>{
+  const el=event.target;
+  if(el.matches('[data-mobile-ratio]')){keepRatio=el.checked;refreshMobileControls();}
+  if(el.matches('[data-mobile-angle]')){
+    const value=Number(el.value),p=selectionFrame();if(!p||el.value===''||!Number.isFinite(value)){refreshMobileControls();return;}
+    if(CO.room&&!coEditing())return;mobileRotate(clamp(value,-180,180)-(p.rot||0));
+  }
+});
+// Mantener las acciones estables cuando cambia el tamaño de pantalla o el teclado.
+matchMedia('(max-width:760px)').addEventListener('change',()=>{mobileSelectionUI();updateSelectionUI();});
+$('saveFeedbackDetails').open=!mobileCanvas();
+$('mobileSelection').addEventListener('pointerdown',event=>{
+  MOB.controlPointer=true;MOB.ignoreNative=null;
+  const button=event.target.closest('button[data-action]');
+  MOB.tap=event.pointerType==='touch'&&button&&!button.disabled?{id:event.pointerId,button,x:event.clientX,y:event.clientY}:null;
+});
+$('mobileSelection').addEventListener('pointermove',event=>{if(MOB.tap&&Math.hypot(event.clientX-MOB.tap.x,event.clientY-MOB.tap.y)>8)MOB.tap=null;});
+$('mobileSelection').addEventListener('pointerup',event=>{
+  const tap=MOB.tap;MOB.tap=null;
+  if(tap?.id===event.pointerId&&tap.button.isConnected&&!tap.button.disabled){
+    event.preventDefault();MOB.ignoreNative={until:Date.now()+750,x:event.clientX,y:event.clientY};tap.button.click();
+  }
+});
+document.addEventListener('click',event=>{
+  const skip=MOB.ignoreNative;
+  if(skip&&event.isTrusted&&event.detail>0&&Date.now()<skip.until&&Math.hypot(event.clientX-skip.x,event.clientY-skip.y)<12){event.preventDefault();event.stopImmediatePropagation();MOB.ignoreNative=null;}
+},true);
+document.addEventListener('pointercancel',()=>{MOB.tap=null;MOB.ignoreNative=null;});
+for(const type of ['pointerup','pointercancel'])document.addEventListener(type,()=>{if(MOB.controlPointer)requestAnimationFrame(()=>{MOB.controlPointer=false;mobileSelectionUI();});});
+
+
 async function fetchTemplate(){return null; /* Los recursos oficiales se cargan desde el catálogo privado. */}
 
 async function boot(){
@@ -7509,7 +7864,7 @@ window.addEventListener("online",()=>{
  if(P.saveError&&retryableSave()&&!A.switching&&!A.identityChanging){resetSaveRetry();scheduleSaveRetry();updateProjectToolbar();}
 });
 window.addEventListener("pagehide",()=>{if(S.opened){finishBrush();checkpointCurrent().catch(()=>{});}});
-window.addEventListener("beforeunload",event=>{if(S.opened&&S.revision!==S.savedRevision&&P.localRevision!==S.revision){event.preventDefault();event.returnValue="";}});
+window.addEventListener("beforeunload",event=>{if(CO.room?(CO.room.dirty||CO.room.pending||CO.room.backup):(S.opened&&S.revision!==S.savedRevision&&P.localRevision!==S.revision)){event.preventDefault();event.returnValue="";}});
 /* v26 · Sorpréndeme. Diseño por reglas locales; cada propuesta sigue editable. */
 const IDEA_PALETTES={
   petalo:{name:'Rosa de seda',family:'pastel',a:'#fff3f8',b:'#e8b3cf',ink:'#51283f',accent:'#a92c71',light:'#fff9fc',effect:'rosa'},
