@@ -1254,6 +1254,19 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 }
 @media(max-width:380px){.team-person .team-ask{min-width:120px;padding:8px;font-size:12px}.team-presence{padding-right:128px;font-size:11px}.team-star{width:34px}.team-person-name strong{font-size:13px}}
 
+
+/* v32 · one creative space, visible touch corners */
+.idea-brand-toggle{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:12px;cursor:pointer;background:var(--panel2)}
+.idea-brand-toggle input{width:20px;height:20px;flex-shrink:0;accent-color:var(--pink)}.idea-brand-toggle strong{display:block;font-size:13px}.idea-brand-toggle small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:3px}.idea-brand-toggle i{margin-left:auto;color:var(--pink);font-size:27px;font-style:normal}
+.creator-intro{padding:20px 12px}.creator-intro>span{font-size:10px;letter-spacing:.12em;color:var(--pink)}.creator-intro h3{font-size:25px;line-height:1.12;max-width:220px;margin:16px 0}.creator-intro p{color:var(--muted);font-size:13px;line-height:1.6}.creator-intro small{display:block;text-align:center;color:var(--muted);font-size:10px;margin-top:10px}
+#objectHandles{position:absolute;z-index:5;pointer-events:none;transform-origin:center;box-sizing:border-box}#objectHandles.expanded{border:1px dashed #bd488a99;border-radius:4px}
+.object-handle{position:absolute;width:44px;height:44px;min-height:44px;padding:0;transform:translate(-50%,-50%);pointer-events:auto;touch-action:none;background:transparent!important;border:0;box-shadow:none;border-radius:50%;user-select:none;-webkit-user-select:none}
+.object-handle:after{content:"";position:absolute;left:50%;top:50%;width:15px;height:15px;transform:translate(-50%,-50%);background:#fff;border:2.5px solid #c12f81;border-radius:5px;box-shadow:0 1px 5px #0004}
+.object-handle.nw{left:0;top:0}.object-handle.ne{left:100%;top:0}.object-handle.se{left:100%;top:100%}.object-handle.sw{left:0;top:100%}.object-handle.rotation{left:50%;top:-38px;background:#a92c71!important;color:#fff;font:25px Arial}.object-handle.rotation:after{display:none}
+.object-handle:focus-visible{outline:3px solid #a92c71;outline-offset:1px}.mobile-resize-hint{margin:5px 12px 8px;color:var(--muted);font-size:11px;text-align:center;line-height:1.4}
+.is-cropping #objectHandles{display:none!important}
+@media(max-width:760px){.mobile-size-row>span{font-size:11px}.mobile-dimensions{gap:12px}.idea-brand-toggle small{font-size:12px}}
+
 </style>
 </head>
 <body>
@@ -1313,7 +1326,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v31 · Mi equipo</p>
+        <p class="help" id="appVersion">Divas Editor · v32 · Crear flyer</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -1404,7 +1417,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   <nav id="toolRail" aria-label="Herramientas de edición"></nav>
   <aside id="layerDock" aria-label="Capas del diseño"></aside>
   <section class="canvas-column">
-    <div id="coBar" class="co-bar" hidden><div class="co-info"><strong id="coTitle"></strong><small id="coStatus"></small></div><button id="coTake" data-action="coControl">Pedir control</button><button id="coChatToggle" data-action="coChatToggle" aria-controls="coChat" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3Z"/></svg>Chat<span id="coChatBadge" hidden></span></button><button id="coGrant" data-action="coGrant" hidden>Ceder control</button><button id="coApply" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coOpen" aria-label="Opciones de la ayuda compartida">•••</button><p id="coActivity" role="status"></p></div><div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="coEntry" data-action="coOpen">♧ Ayuda compartida</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button id="surpriseButton" class="surprise-button" data-action="surprise">✦ Sorpréndeme</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
+    <div id="coBar" class="co-bar" hidden><div class="co-info"><strong id="coTitle"></strong><small id="coStatus"></small></div><button id="coTake" data-action="coControl">Pedir control</button><button id="coChatToggle" data-action="coChatToggle" aria-controls="coChat" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3Z"/></svg>Chat<span id="coChatBadge" hidden></span></button><button id="coGrant" data-action="coGrant" hidden>Ceder control</button><button id="coApply" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coOpen" aria-label="Opciones de la ayuda compartida">•••</button><p id="coActivity" role="status"></p></div><div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="coEntry" data-action="coOpen">♧ Ayuda compartida</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button id="surpriseButton" class="surprise-button" data-action="surprise">✦ Crear flyer</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
     <div class="save-toolbar"><button data-action="home" class="quiet">‹ Proyectos</button><button id="saveProgressButton" class="primary" data-action="saveLocal">Guardar avance</button><button data-action="saveDetails" class="save-status"><span id="projectSaveState" role="status" aria-live="polite">Cambios pendientes</span><span aria-hidden="true"> ⓘ</span></button></div>
     </div>
     <div id="saveFeedback" class="save-feedback" role="status" hidden><details id="saveFeedbackDetails"><summary>El guardado necesita atención · Ver opciones</summary><p id="saveFeedbackText"></p><div class="row"><button data-action="saveLocal">Reintentar</button><button data-action="saveCopy">Guardar como copia</button><button data-action="save">Descargar respaldo</button><button class="quiet" data-action="dismissSaveFeedback">Ocultar aviso</button></div></details></div>
@@ -1419,6 +1432,13 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
         <canvas id="canvas" width="1080" height="1080" tabindex="0"
           aria-label="Lienzo de diseño"></canvas>
         <div id="circleGuide" hidden></div>
+        <div id="objectHandles" role="group" aria-label="Arrastra las esquinas para cambiar el tamaño" hidden>
+          <button class="object-handle nw" data-object-handle="0" aria-label="Cambiar tamaño desde arriba a la izquierda"></button>
+          <button class="object-handle ne" data-object-handle="1" aria-label="Cambiar tamaño desde arriba a la derecha"></button>
+          <button class="object-handle se" data-object-handle="2" aria-label="Cambiar tamaño desde abajo a la derecha"></button>
+          <button class="object-handle sw" data-object-handle="3" aria-label="Cambiar tamaño desde abajo a la izquierda"></button>
+          <button class="object-handle rotation" data-object-handle="4" aria-label="Arrastra para girar">↻</button>
+        </div>
         <div id="backgroundFrame" role="group" aria-label="Transformar imagen de fondo" hidden>
           <button class="background-handle nw" data-background-handle="0" aria-label="Cambiar tamaño desde la esquina superior izquierda"></button>
           <button class="background-handle ne" data-background-handle="1" aria-label="Cambiar tamaño desde la esquina superior derecha"></button>
@@ -1480,7 +1500,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 </main>
 
 <nav id="mobileBar" aria-label="Herramientas de edición" hidden>
-  <button data-action="mobile" data-tab="estilo"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"></use></svg>Looks</button>
+  <button data-action="surprise" data-tab="estilo"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"></use></svg>Crear flyer</button>
   <button data-action="mobile" data-tab="textos"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-text"></use></svg>Texto</button>
   <button data-action="mobile" data-tab="logos"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-image"></use></svg>Imágenes</button>
   <button data-action="mobile" data-tab="figuras"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"></use></svg>Figuras</button>
@@ -1644,7 +1664,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 
 <dialog id="createFormatDialog" aria-labelledby="createFormatTitle"><div class="dialog-head"><div><h2 id="createFormatTitle">¿En qué formato lo quieres?</h2><p id="createFormatSubtitle" class="help"></p></div><button data-action="closeDialog" aria-label="Cancelar">×</button></div><div class="dialog-body"><div id="initialFormatCards" class="initial-formats"></div><button id="createFormatButton" class="primary wide" data-action="startChosenProject">Crear mi diseño</button></div></dialog>
 <dialog id="surpriseDialog" aria-labelledby="surpriseTitle">
-  <div class="dialog-head"><div><span class="idea-eyebrow">TU PRÓXIMO FLYER EMPIEZA AQUÍ</span><h2 id="surpriseTitle">✦ Sorpréndeme</h2></div><button data-action="closeDialog" aria-label="Cerrar las propuestas">×</button></div>
+  <div class="dialog-head"><div><span class="idea-eyebrow">TU PRÓXIMO FLYER EMPIEZA AQUÍ</span><h2 id="surpriseTitle">✦ Crear flyer</h2></div><button data-action="closeDialog" aria-label="Cerrar las propuestas">×</button></div>
   <div class="idea-workbench">
     <section class="idea-preview-zone" aria-label="Vista previa de la propuesta">
       <div class="idea-preview-heading"><div><strong id="ideaName">Preparando tu primera idea…</strong><small id="ideaRecipe"></small></div><button id="ideaFavorite" data-action="ideaFavorite" aria-label="Guardar esta idea entre mis favoritas" aria-pressed="false">♡</button></div>
@@ -1654,10 +1674,11 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
     </section>
     <section class="idea-options" aria-label="Personalizar las propuestas">
       <label class="idea-label" for="ideaTheme">¿Qué vamos a celebrar?</label>
-      <select id="ideaTheme"><option value="divas">✦ Estilo Divas</option><option value="halloween">Halloween</option><option value="navidad">Navidad</option><option value="cumple">Cumpleaños</option><option value="gala">Gala y premios</option><option value="neon">Noche neón</option><option value="tropical">Fiesta tropical</option><option value="amor">Amor y amistad</option></select>
+      <select id="ideaTheme"><option value="divas">Agencia / comunidad</option><option value="halloween">Halloween</option><option value="navidad">Navidad</option><option value="cumple">Cumpleaños</option><option value="gala">Gala y premios</option><option value="neon">Noche neón</option><option value="tropical">Fiesta tropical</option><option value="amor">Amor y amistad</option></select>
+      <label class="idea-brand-toggle"><input id="ideaDivas" type="checkbox" checked><span><strong>Estilo Divas</strong><small>Rosas, dorados y brillo. Desmarca para explorar otros estilos.</small></span><i aria-hidden="true">✦</i></label>
       <div class="idea-palette-heading"><span class="idea-label">Tu toque de color</span></div>
       <div id="ideaColorChoices" class="idea-color-choices" role="group" aria-label="Preferencia de color"></div>
-      <div class="idea-keep"><span>¿Algo te encantó? Consérvalo</span><div><button data-action="ideaLock" data-value="palette" aria-pressed="false">Colores</button><button data-action="ideaLock" data-value="layout" aria-pressed="false">Distribución</button><button data-action="ideaLock" data-value="font" aria-pressed="false">Letra</button></div></div>
+      <div class="idea-keep"><span>Mantener en la siguiente propuesta</span><div><button data-action="ideaLock" data-value="palette" aria-pressed="false">Colores</button><button data-action="ideaLock" data-value="layout" aria-pressed="false">Distribución</button><button data-action="ideaLock" data-value="font" aria-pressed="false">Tipografías</button></div></div>
       <details id="ideaData" class="idea-details"><summary>Tus textos y datos <span id="ideaDataHint"></span></summary>
         <label for="ideaTitleInput">Título <button class="idea-suggest quiet" data-action="ideaSuggest" data-value="title" type="button">✦ Dame una frase</button></label><textarea id="ideaTitleInput" rows="2" maxlength="2000" placeholder="Déjalo vacío para recibir ideas"></textarea>
         <label for="ideaWhenInput">Fecha y hora · opcional</label><input id="ideaWhenInput" maxlength="180" placeholder="Ej.: 31 de octubre · 21:00 h">
@@ -1675,7 +1696,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
       <p id="ideaStatus" class="help" role="status" aria-live="polite">Elige un tema o prueba otra idea.</p><ul id="ideaWarnings" class="idea-warnings" hidden></ul>
     </section>
   </div>
-  <div class="idea-footer"><p>Al elegir una idea se crea una copia editable. Tu proyecto original se conserva.</p><div><button id="ideaAgain" data-action="ideaAgain">⤨ Otra idea</button><button id="ideaApply" class="primary" data-action="ideaApply" disabled>Usar esta idea →</button></div></div>
+  <div class="idea-footer"><p>Al elegir una idea se crea una copia editable. Tu proyecto original se conserva.</p><div><button id="ideaAgain" data-action="ideaAgain">✦ Generar otra</button><button id="ideaApply" class="primary" data-action="ideaApply" disabled>Usar esta idea →</button></div></div>
 </dialog>
 
 <dialog id="formatDialog">
@@ -2013,8 +2034,7 @@ function lookDataHTML(){
   return `<div class="look-intro"><strong>Tus palabras, tu flyer</strong><span>Escribe y mira el resultado arriba.</span></div>${texts.map(p=>field(p.campo||p.nombre,`<textarea class="quick-copy" data-text-id="${esc(p.id)}" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)).join("")||'<p class="help">Toca un texto y desbloquéalo para editarlo.</p>'}<button class="primary wide" data-action="focusCanvas">✓ Ver mi flyer</button><button class="wide" data-action="catalog">Elegir logos e imágenes de la agencia</button>`;
 }
 function divasLooksHTML(){
-  const all=S.lookSection!=="datos";
-  return `<button class="surprise-entry" data-action="surprise"><span><strong>✦ Sorpréndeme</strong><small>Tu tema, tus datos y una nueva idea para tu flyer.</small></span><b aria-hidden="true">↗</b></button><div class="edit-segments" aria-label="Crear con un look"><button data-action="lookSection" data-value="looks" aria-pressed="${all}">✦ Looks</button><button data-action="lookSection" data-value="datos" aria-pressed="${!all}">✎ Mis textos</button></div>${!all?lookDataHTML():`<div class="look-intro"><strong>Tu estilo, en un toque</strong><span>Elige un look y pruébalo en tu diseño.</span></div><label class="look-scope">Aplicar a<select id="lookScope"><option value="completo" ${S.lookScope!=="textos"?"selected":""}>Textos, fondo y adornos</option><option value="textos" ${S.lookScope==="textos"?"selected":""}>Solo los textos</option></select></label><div class="look-grid">${Object.entries(DIVAS_LOOKS).map(([id,l])=>`<button class="look-card" data-action="divasLook" data-value="${id}" aria-pressed="${S.doc.asistente.look===id}" style="--look-a:${l.a};--look-b:${l.b}"><span class="look-art"><canvas data-look-preview="${id}" aria-hidden="true"></canvas></span><strong>${esc(l.nombre)}</strong><small>${esc(l.nota)}</small></button>`).join("")}</div><p class="look-note">Fotos, logos y capas bloqueadas se conservan. Puedes deshacer cualquier look con ↶.</p><button class="primary wide" data-action="lookSection" data-value="datos">Escribir mis textos →</button>`}`;
+  return `<div class="creator-intro"><span>✦ ESTUDIO CREATIVO</span><h3>Tu próxima gran idea</h3><p>Elige un tema. Creamos el fondo, las letras y los detalles; tú le das el último toque.</p><button class="primary wide" data-action="surprise">✦ Crear mi flyer</button><small>Tu diseño original se conserva.</small></div><details class="property"><summary>Editar mis textos actuales</summary>${lookDataHTML()}</details>`;
 }
 function paintLookPreviews(){
   document.querySelectorAll("[data-look-preview]").forEach(el=>{
@@ -2452,7 +2472,7 @@ async function loadFont(f){
   await face.load();
   if(old?.face)document.fonts.delete(old.face);
   document.fonts.add(face);fontResources.set(f.nombre,{datos:f.datos,face});
-  textGlowCache.clear();
+  textGlowCache.clear();wrappedTextCache.clear();
 }
 async function hydrate(d){
   const sources=new Set();
@@ -2492,7 +2512,7 @@ function normalizeProject(raw){
   };
   if(Object.hasOwn(DIVAS_LOOKS,raw.asistente?.look))d.asistente.look=raw.asistente.look;
   const surprise=raw.asistente?.sorpresa;
-  if(surprise?.version===1&&Object.hasOwn(IDEA_THEMES,surprise.tema)&&Object.hasOwn(IDEA_PALETTES,surprise.paleta)&&Object.hasOwn(IDEA_LAYOUTS,surprise.composicion)&&['new','style'].includes(surprise.modo))d.asistente.sorpresa={version:1,tema:surprise.tema,paleta:surprise.paleta,composicion:surprise.composicion,semilla:Math.round(finite(surprise.semilla,1,1,999999)),modo:surprise.modo};
+  if(surprise?.version===1&&Object.hasOwn(IDEA_THEMES,surprise.tema)&&Object.hasOwn(IDEA_PALETTES,surprise.paleta)&&Object.hasOwn(IDEA_LAYOUTS,surprise.composicion)&&['new','style'].includes(surprise.modo))d.asistente.sorpresa={version:1,tema:surprise.tema,paleta:surprise.paleta,composicion:surprise.composicion,semilla:Math.round(finite(surprise.semilla,1,1,999999)),modo:surprise.modo,motor:surprise.motor===2?2:1,divas:surprise.divas!==false};
   const tutorial=raw.asistente?.tutorial;
   if(tutorial&&tutorial.version===1&&["activo","pausado","completo"].includes(tutorial.estado)){
     d.asistente.tutorial={version:1,estado:tutorial.estado,
@@ -3121,56 +3141,66 @@ function paintTextRuns(c,p,runs,marks=[]){
   c.shadowColor='transparent';c.shadowBlur=c.shadowOffsetX=c.shadowOffsetY=0;
   ink(c);c.restore();
 }
+/* Text is fitted by its actual ink bounds, including accents and stroke. */
+const wrappedTextCache=new Map();
+
+function fitWrappedText(c,p){
+  const key=JSON.stringify([p.texto,p.fuente,p.peso,p.cursiva,p.w,p.h,p.tamano,p.espaciado,p.interlineado,p.contornoTexto,p.subrayado]);
+  const cached=wrappedTextCache.get(key);if(cached)return cached;
+  const text=String(p.texto||''),ceiling=Math.max(1,p.tamano||40),font=n=>`${p.cursiva?'italic ':''}${p.peso||400} ${n}px "${p.fuente||'Arial'}"`,stroke=Math.min(Math.max(0,p.contornoTexto||0)/2,Math.min(p.w,p.h)*.1);
+  c.save();c.textBaseline='alphabetic';c.textAlign='left';
+  const at=size=>{
+    c.font=font(size);const spacing=(p.espaciado||0)*Math.min(1,size/ceiling),pad=Math.min(Math.min(p.w,p.h)*.2,stroke+size*.06),width=Math.max(.01,p.w-2*pad),lines=wrapLines(c,text,width,spacing);
+    let ascent=0,descent=0,left=0,right=0;
+    const metrics=c.measureText('Ágj');ascent=Math.max(size*.6,metrics.actualBoundingBoxAscent||0);descent=Math.max(size*.15,metrics.actualBoundingBoxDescent||0);
+    for(const line of lines){let x=0;const lineWidth=measure(c,line,spacing);for(const ch of Array.from(line)){const m=c.measureText(ch);ascent=Math.max(ascent,m.actualBoundingBoxAscent||0);descent=Math.max(descent,m.actualBoundingBoxDescent||0);left=Math.max(left,(m.actualBoundingBoxLeft||0)-x);right=Math.max(right,x+(m.actualBoundingBoxRight||0)-lineWidth);x+=m.width+spacing;}}
+    const lh=Math.max(size*(p.interlineado||1.18),ascent+descent+size*.025),height=(lines.length-1)*lh+ascent+descent+(p.subrayado?size*.12:0),maxWidth=Math.max(0,...lines.map(line=>measure(c,line,spacing)),...text.split(/\s+/).map(word=>measure(c,word,spacing)))+left+right;
+    return {size,spacing,lines,lh,ascent,descent,height,pad:pad+left,width:maxWidth,fits:height<=p.h-2*pad+.001&&maxWidth<=width+.001};
+  };
+  let result=at(ceiling);
+  if(!result.fits){let lo=.001,hi=ceiling;result=at(lo);for(let i=0;i<14;i++){const mid=(lo+hi)/2,candidate=at(mid);if(candidate.fits){lo=mid;result=candidate;}else hi=mid;}}
+  c.restore();if(wrappedTextCache.size>=160)wrappedTextCache.delete(wrappedTextCache.keys().next().value);wrappedTextCache.set(key,result);return result;
+}
+function mobileHandles(p){
+  const w=Math.max(p.w,64/S.zoom),h=Math.max(p.h,64/S.zoom);
+  return [[-1,-1],[1,-1],[1,1],[-1,1]].map(([sx,sy])=>({...world(p,sx*w/2,sy*h/2),kind:'resize',sx,sy})).concat({...world(p,0,-h/2-38/S.zoom),kind:'rotate'});
+}
+function mobileObjectHandles(){
+  const el=$('objectHandles'),p=selectionFrame(),visible=mobileCanvas()&&!!p&&!p.bloqueado&&!p.oculto&&p.rol!=='fondo'&&S.tool==='mover'&&!S.selecting&&!CR.session&&!S.work&&['size','rotate'].includes(MOB.mode)&&!(CO.room&&!coEditing());
+  el.hidden=!visible;if(!visible)return;
+  const w=Math.max(p.w*S.zoom,64),h=Math.max(p.h*S.zoom,64);
+  Object.assign(el.style,{left:(p.x*S.zoom-w/2)+'px',top:(p.y*S.zoom-h/2)+'px',width:w+'px',height:h+'px',transform:`rotate(${p.rot||0}deg)`});
+  el.classList.toggle('expanded',p.w*S.zoom<64||p.h*S.zoom<64);
+  el.querySelectorAll('[data-object-handle]').forEach(b=>b.hidden=MOB.mode==='rotate'?b.dataset.objectHandle!=='4':b.dataset.objectHandle==='4');
+}
+function textFrameResize(p,start,w,h){
+  if(p.tipo!=='texto')return;
+  // The first frame resize explicitly opts an imported text into live wrapping.
+  p.ajusteTexto='envolver';p.minTamano=1;p.tamano=clamp(start.tamano*h/start.h,1,1000);
+  p.espaciado=(start.espaciado||0)*Math.min(w/start.w,h/start.h);
+}
+
 function drawText(c,p,track=true){
-  const text=String(p.texto||"");
-  if(!text)return;
-  let size=Math.max(1,p.tamano),spacing=p.espaciado||0,lines,overflow=false;
-  const font=n=>`${p.cursiva?"italic ":""}${p.peso||"400"} ${n}px "${p.fuente||"Arial"}"`;
-  const lineFactor=p.interlineado||1.18;
-  if(p.ajusteTexto==="original"){drawImportedText(c,p,font,track);return;}
-
-  if(p.ajusteTexto==="envolver"){
-    const minimum=Math.min(size,p.minTamano||18);
-    for(let attempts=0;attempts<220;attempts++){
-      c.font=font(size);
-      lines=wrapLines(c,text,p.w,spacing);
-      const width=Math.max(1,...lines.map(t=>measure(c,t,spacing)));
-      if((width<=p.w&&lines.length*size*lineFactor<=p.h)||size<=minimum)break;
-      size=Math.max(minimum,size-1);
-    }
-    c.font=font(size);
-    overflow=lines.length*size*lineFactor>p.h+.5 ||
-      lines.some(t=>measure(c,t,spacing)>p.w+.5);
-  }else{
-    c.font=font(size);lines=text.split("\n");
-    const width=Math.max(1,...lines.map(t=>measure(c,t,spacing)));
-    const fit=Math.min(1,p.w/width,p.h/(lines.length*size*lineFactor));
-    size*=fit;spacing*=fit;
-  }
-
-  if(track&&p.id)textMetrics.set(p.id,{size,overflow});
-  c.save();
-  c.font=font(size);c.textAlign="left";c.textBaseline="middle";
-  if(p.acabadoTexto==="importado"&&p.degradadoTexto)c.fillStyle=importedTextFill(c,p);
-  else if(p.acabadoTexto==="dorado")c.fillStyle=gold(c,p.w,p.h);
-  else if(p.acabadoTexto==="rosa"){
-    const g=c.createLinearGradient(0,-p.h/2,0,p.h/2);
-    g.addColorStop(0,p.color2);g.addColorStop(1,p.color);c.fillStyle=g;
-  }else c.fillStyle=p.color;
-  c.strokeStyle=p.colorContorno;c.lineJoin="round";
-  c.lineWidth=Math.max(.01,p.contornoTexto||0);
-  const lh=size*lineFactor,runs=[],marks=[];
+  const text=String(p.texto||'');if(!text)return;
+  let size=Math.max(1,p.tamano),spacing=p.espaciado||0,lines,fit=null;
+  const font=n=>`${p.cursiva?'italic ':''}${p.peso||'400'} ${n}px "${p.fuente||'Arial'}"`,lineFactor=p.interlineado||1.18;
+  if(p.ajusteTexto==='original'){drawImportedText(c,p,font,track);return;}
+  if(p.ajusteTexto==='envolver'){fit=fitWrappedText(c,p);({size,spacing,lines}=fit);}
+  else{c.font=font(size);lines=text.split('\n');const width=Math.max(1,...lines.map(t=>measure(c,t,spacing))),scale=Math.min(1,p.w/width,p.h/(lines.length*size*lineFactor));size*=scale;spacing*=scale;}
+  if(track&&p.id)textMetrics.set(p.id,{size,overflow:fit?!fit.fits:false,lines:lines.length});
+  c.save();c.font=font(size);c.textAlign='left';c.textBaseline=fit?'alphabetic':'middle';
+  if(p.acabadoTexto==='importado'&&p.degradadoTexto)c.fillStyle=importedTextFill(c,p);
+  else if(p.acabadoTexto==='dorado')c.fillStyle=gold(c,p.w,p.h);
+  else if(p.acabadoTexto==='rosa'){const g=c.createLinearGradient(0,-p.h/2,0,p.h/2);g.addColorStop(0,p.color2);g.addColorStop(1,p.color);c.fillStyle=g;}
+  else c.fillStyle=p.color;
+  c.strokeStyle=p.colorContorno;c.lineJoin='round';c.lineWidth=Math.max(.01,p.contornoTexto||0);
+  const lh=fit?.lh||size*lineFactor,runs=[],marks=[],pad=fit?.pad||0;
   lines.forEach((line,i)=>{
-    const width=measure(c,line,spacing);
-    let x=p.alineacion==="left"?-p.w/2:p.alineacion==="right"?p.w/2-width:-width/2;
-    const y=(i-(lines.length-1)/2)*lh;
-    for(const ch of Array.from(line)){
-      runs.push({ch,x,y});x+=c.measureText(ch).width+spacing;
-    }
-    if(p.subrayado)marks.push({x:x-width-spacing,y:y+size*.4,w:width,h:Math.max(1,size*.04)});
-  });
-  paintTextRuns(c,p,runs,marks);
-  c.restore();
+    const width=measure(c,line,spacing);let x=p.alineacion==='left'?-p.w/2+pad:p.alineacion==='right'?p.w/2-width-pad:-width/2;
+    const y=fit?-fit.height/2+fit.ascent+i*lh:(i-(lines.length-1)/2)*lh,start=x;
+    for(const ch of Array.from(line)){runs.push({ch,x,y});x+=c.measureText(ch).width+spacing;}
+    if(p.subrayado)marks.push({x:start,y:y+(fit?fit.descent+size*.015:size*.4),w:width,h:Math.max(.1,size*.04)});
+  });paintTextRuns(c,p,runs,marks);c.restore();
 }
 function drawShape(c,p){
   const t=p.tipo;
@@ -3405,7 +3435,7 @@ function drawSelection(c){
     c.save();c.lineWidth=1.5/S.zoom;c.strokeStyle=p.bloqueado?"#a2733f":"#a4477a";c.fillStyle="#fff";
     if(p.bloqueado)c.setLineDash([5/S.zoom,4/S.zoom]);
     c.beginPath();points.slice(0,4).forEach((q,i)=>i?c.lineTo(q.x,q.y):c.moveTo(q.x,q.y));c.closePath();c.stroke();
-    if(!p.bloqueado&&(!mobileCanvas()||["size","rotate"].includes(MOB.mode)&&Math.min(p.w,p.h)*S.zoom>=44)){
+    if(!p.bloqueado&&!mobileCanvas()){
       c.setLineDash([]);
       const top=world(p,0,-p.h/2);
       if(!mobileCanvas()||MOB.mode==="rotate"){c.beginPath();c.moveTo(top.x,top.y);c.lineTo(points[4].x,points[4].y);c.stroke();}
@@ -3463,7 +3493,7 @@ function draw(){
   if(S.queued||!S.opened)return;
   S.queued=true;
   requestAnimationFrame(()=>{
-    S.queued=false;render(ctx,{controls:true,track:true});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();mobileSelectionUI();cropUI();renderLayerDock();
+    S.queued=false;render(ctx,{controls:true,track:true});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();mobileSelectionUI();mobileObjectHandles();cropUI();renderLayerDock();
   });
 }
 function syncGeometry(){
@@ -3856,7 +3886,7 @@ function propertiesHTML(){
 let keepRatio=true;
 function tabForLayer(p){if(p?.rol==="fondo")return "fondo";return p?.tipo==="texto"?"textos":p?.tipo==="imagen"?"logos":"figuras";}
 function renderPanel(){
-  const tabs=[["estilo","Looks"],["textos","Texto"],["logos","Imágenes"],["figuras","Figuras"],["fondo","Fondo"],["capas","Capas"]];
+  const tabs=[["estilo","Crear flyer"],["textos","Texto"],["logos","Imágenes"],["figuras","Figuras"],["fondo","Fondo"],["capas","Capas"]];
   const html={textos:simpleTextsHTML,logos:simpleLogosHTML,figuras:shapesHTML,fondo:backgroundHTML,
     capas:()=>mobileCanvas()?layersHTML():desktopLayersHTML(),ajustes:propertiesHTML,crear:createHTML,estilo:simpleStyleHTML,recortar:cropHTML};
   if(!html[S.tab])S.tab="textos";
@@ -3993,7 +4023,7 @@ function readHelpPrefs(){
 }
 const H={...readHelpPrefs(),active:null,target:null,answer:null,query:"",reserve:0};
 const HELP_TOPICS={
-  estilo:{label:"Un look y ya tiene tu estilo",icon:"✦",text:"Toca una tarjeta: verás el cambio en tu flyer.",target:'[data-action="divasLook"]',context:"estilo",related:["texto","decorar"]},
+  estilo:{label:"Tu flyer, en un toque",icon:"✦",text:"Abre Crear flyer, elige tu tema y prueba una propuesta. Puedes desmarcar Estilo Divas para explorar otros colores y letras.",target:'[data-action="surprise"]',context:"estilo",related:["texto","decorar"]},
   texto:{label:"Tu texto, a tu estilo",icon:"T",text:"Escribe aquí. Tu diseño cambia al instante.",target:'[data-prop="texto"]',context:"texto",related:["tamano","fuente","decorar"]},
   textos:{label:"Elige qué quieres decir",icon:"T",text:"Toca un texto de la lista o añade uno nuevo.",target:'[data-action="addText"]',context:"textos",related:["texto","tamano"]},
   tamano:{label:"Un poco más grande",icon:"A+",text:"Toca A+ o A−. También puedes deslizar la barra.",target:'[data-prop="tamano"]',context:"texto",related:["texto","fuente"]},
@@ -4024,7 +4054,7 @@ const HELP_TOPICS={
   editable:{label:"Llévalo a otro dispositivo",icon:"⇩",text:"Descarga el proyecto editable. Después impórtalo para seguir diseñando.",target:'[data-action="save"]',context:"editable",related:[]},
   marca:{label:"El logo oficial de tu agencia",icon:"✧",text:"Carga tu logo en Identidad de agencia. Aparecerá también en la cabecera.",context:"marca",related:[]}
 };
-const HELP_LABELS={estilo:"Looks Divas",recursos:"Recursos de la agencia",tabla:"Editar tabla",crearTabla:"Añadir tabla",texto:"Escribir",textos:"Textos",tamano:"Tamaño",fuente:"Fuente",color:"Color",decorar:"Decorar",fondo:"Fondo",fondoimagen:"Mi foto de fondo",imagenes:"Añadir imagen",imagen:"Reemplazar imagen",medidas:"Medidas",recorte:"Quitar fondo",figuras:"Figuras",pieza:"Editar figura",capas:"Capas",bloquear:"Bloquear",ocultar:"Ocultar",orden:"Orden",duplicar:"Duplicar",eliminar:"Eliminar",zoom:"Zoom",formato:"Formato",descarga:"Descargar",guardar:"Mis proyectos",editable:"Archivo editable",marca:"Logo de agencia"};
+const HELP_LABELS={estilo:"Crear flyer",recursos:"Recursos de la agencia",tabla:"Editar tabla",crearTabla:"Añadir tabla",texto:"Escribir",textos:"Textos",tamano:"Tamaño",fuente:"Fuente",color:"Color",decorar:"Decorar",fondo:"Fondo",fondoimagen:"Mi foto de fondo",imagenes:"Añadir imagen",imagen:"Reemplazar imagen",medidas:"Medidas",recorte:"Quitar fondo",figuras:"Figuras",pieza:"Editar figura",capas:"Capas",bloquear:"Bloquear",ocultar:"Ocultar",orden:"Orden",duplicar:"Duplicar",eliminar:"Eliminar",zoom:"Zoom",formato:"Formato",descarga:"Descargar",guardar:"Mis proyectos",editable:"Archivo editable",marca:"Logo de agencia"};
 function persistHelpPrefs(){try{localStorage.setItem(HELP_PREF_KEY,JSON.stringify({enabled:H.enabled,seen:H.seen}));}catch{}}
 function clearHelpHighlight(){document.querySelectorAll('.help-highlight').forEach(el=>el.classList.remove('help-highlight'));H.target=null;}
 function releaseHintSpace(){
@@ -4275,17 +4305,18 @@ function canvasPointerDown(event){
     if(p?.tipo==="imagen"&&p.src&&!p.bloqueado&&hit(p,q)){startBrush(p,q);canvas.setPointerCapture(event.pointerId);}return;
   }
   if(p&&!p.bloqueado&&!p.oculto&&(p.rol!=="fondo"||S.doc.fondo.tipo==="imagen")){
-    const control=event.target.closest?.("[data-background-handle]");
+    const control=event.target.closest?.("[data-background-handle]"),objectControl=event.target.closest?.("[data-object-handle]");
     // Dentro de una pieza pequeña, tocar su centro debe moverla. El área táctil
     // amplia de las esquinas se conserva hacia fuera del marco de selección.
     const innerTouch=event.pointerType==="touch"&&hit(p,q);
-    let h=control&&p.rol==="fondo"?handles(p)[Number(control.dataset.backgroundHandle)]:handles(p).find(h=>Math.hypot(h.x-q.x,h.y-q.y)<(event.pointerType==="touch"?(innerTouch?9:17):11)/S.zoom);
-    if(event.pointerType==="touch"&&!control){
+    let h=objectControl?mobileHandles(p)[Number(objectControl.dataset.objectHandle)]:control&&p.rol==="fondo"?handles(p)[Number(control.dataset.backgroundHandle)]:handles(p).find(h=>Math.hypot(h.x-q.x,h.y-q.y)<(event.pointerType==="touch"?(innerTouch?9:17):11)/S.zoom);
+    if(event.pointerType==="touch"&&!control&&!objectControl){
       if(innerTouch||Math.min(p.w,p.h)*S.zoom<44||mobileCanvas()&&(!['size','rotate'].includes(MOB.mode)||h?.kind==="rotate"&&MOB.mode!=="rotate"||h?.kind==="resize"&&MOB.mode!=="size"))h=null;
     }
     if(h){
       S.drag={kind:h.kind,id:p.id,start:copy(p),members:p.multiple?selectedLayers().map(copy):null,frame:p.multiple?copy(p):null,sx:h.sx,sy:h.sy,saved:false,
-        anchor:h.kind==="resize"?world(p,-h.sx*p.w/2,-h.sy*p.h/2):null};
+        anchor:h.kind==="resize"?world(p,-h.sx*p.w/2,-h.sy*p.h/2):null,
+        pointerOffset:h.kind==="resize"?{x:q.x-world(p,h.sx*p.w/2,h.sy*p.h/2).x,y:q.y-world(p,h.sx*p.w/2,h.sy*p.h/2).y}:null};
       canvasPress={id:p.id,pointerId:event.pointerId,x:event.clientX,y:event.clientY,moved:false,handle:true};
       canvas.setPointerCapture(event.pointerId);return;
     }
@@ -4302,6 +4333,8 @@ function canvasPointerDown(event){
 
 }
 canvas.addEventListener("pointerdown",canvasPointerDown);
+$('objectHandles').addEventListener('pointerdown',event=>{if(!event.target.closest('[data-object-handle]'))return;canvasPointerDown(event);event.stopPropagation();});
+$('objectHandles').addEventListener('click',event=>{event.preventDefault();event.stopPropagation();});
 $("backgroundFrame").addEventListener("pointerdown",event=>{
   if(!event.target.closest?.("[data-background-handle]"))return;
   canvasPointerDown(event);event.stopPropagation();
@@ -4329,7 +4362,7 @@ canvas.addEventListener("pointermove",event=>{
   if(S.drag.members){
     if(S.drag.members.some(old=>!S.doc.capas.some(p=>p.id===old.id&&!p.bloqueado)))return;
     if(!S.drag.saved){snapshot();S.drag.saved=true;}
-    transformSelectionDrag(S.drag,q,event);markChanged();draw();return;
+    transformSelectionDrag(S.drag,S.drag.pointerOffset?{x:q.x-S.drag.pointerOffset.x,y:q.y-S.drag.pointerOffset.y}:q,event);markChanged();draw();return;
   }
   const p=S.doc.capas.find(x=>x.id===S.drag.id);if(!p||p.bloqueado)return;
   const d=S.drag;
@@ -4344,17 +4377,17 @@ canvas.addEventListener("pointermove",event=>{
     p.rot=((a+540)%360)-180;
   }
   if(d.kind==="resize"){
-    const a=d.start.rot*Math.PI/180,dx=q.x-d.anchor.x,dy=q.y-d.anchor.y;
+    const a=d.start.rot*Math.PI/180,dx=q.x-(d.pointerOffset?.x||0)-d.anchor.x,dy=q.y-(d.pointerOffset?.y||0)-d.anchor.y;
     const lx=dx*Math.cos(a)+dy*Math.sin(a),ly=-dx*Math.sin(a)+dy*Math.cos(a);
     let w,h;
-    if(p.rol==="fondo"||(keepRatio&&!event.shiftKey)){
+    if(p.rol==="fondo"||((mobileCanvas()&&p.tipo==="texto"?MOB.textRatio:keepRatio)&&!event.shiftKey)){
       const factor=clamp((d.sx*lx*d.start.w+d.sy*ly*d.start.h)/(d.start.w**2+d.start.h**2),.02,Math.min(8192/d.start.w,8192/d.start.h));
       w=d.start.w*factor;h=d.start.h*factor;
     }else{w=clamp(d.sx*lx,2,8192);h=clamp(d.sy*ly,2,8192);}
     p.w=w;p.h=h;
     p.x=d.anchor.x+d.sx*w/2*Math.cos(a)-d.sy*h/2*Math.sin(a);
     p.y=d.anchor.y+d.sx*w/2*Math.sin(a)+d.sy*h/2*Math.cos(a);
-    if(p.tipo==="texto")p.tamano=clamp(d.start.tamano*h/d.start.h,1,1000);
+    textFrameResize(p,d.start,w,h);
   }
   markChanged();syncNumericFields();draw();
 });
@@ -5429,8 +5462,9 @@ function handleEditorInput(event){
     beginEdit(p.id+":"+key);
     if(key==="w"||key==="h"){
       value=clamp(value,2,8192);
-      const ratio=value/p[key];
-      if(keepRatio||p.rol==="fondo"){p[key==="w"?"h":"w"]*=ratio;if(p.tipo==="texto")p.tamano*=ratio;}
+      const ratio=value/p[key],start=copy(p);
+      if((mobileCanvas()&&p.tipo==="texto"?MOB.textRatio:keepRatio)||p.rol==="fondo"){p[key==="w"?"h":"w"]*=ratio;if(p.tipo==="texto")p.tamano*=ratio;}
+      if(p.tipo==="texto")textFrameResize(p,start,key==="w"?value:p.w,key==="h"?value:p.h);
     }
     if(key==="tamano")resizeTextTo(p,value);else p[key]=value;
     if(key==="color"&&p.tipo==="texto")p.acabadoTexto="solido";
@@ -8016,7 +8050,7 @@ window.addEventListener('online',()=>{if(CO.room)coLobby({force:true});});
 
 
 /* Controles táctiles: el dedo mueve; las acciones se eligen fuera del lienzo. */
-const MOB={mode:'idle',key:'',touchAt:0,defer:false,html:'',controlPointer:false};
+const MOB={textRatio:false,mode:'idle',key:'',touchAt:0,defer:false,html:'',controlPointer:false};
 function mobileCanvas(){return matchMedia('(max-width:760px)').matches;}
 function mobileSelectionUI(){
   if(MOB.defer||S.drag||canvasPress)return;
@@ -8024,12 +8058,12 @@ function mobileSelectionUI(){
   const visible=mobileCanvas()&&!!p&&!S.selecting&&!S.work&&S.tool==='mover'&&!(CO.room&&!coEditing());
   dock.hidden=!visible;if(!visible)return;
   const key=list.map(p=>p.id).join('|');if(MOB.key!==key){MOB.key=key;MOB.mode='idle';}
-  const locked=list.some(p=>p.bloqueado),single=list.length===1,ratio=keepRatio||!single||p.rol==='fondo';
+  const locked=list.some(p=>p.bloqueado),single=list.length===1,ratio=(single&&p.tipo==='texto'?MOB.textRatio:keepRatio)||!single||p.rol==='fondo';
   const hint=locked?'Está fijo · toca el candado':S.panelHidden?'Toca aquí para editar':'Editando este elemento';
   const name=single?list[0].nombre:selectionLabel();
   let extra='';
   if(!locked&&MOB.mode==='move')extra=`<div class="mobile-precision"><span>Un poco más…</span>${[['←','left','a la izquierda'],['↑','up','hacia arriba'],['↓','down','hacia abajo'],['→','right','a la derecha']].map(([glyph,value,label])=>`<button data-action="mobileNudge" data-value="${value}" aria-label="Mover ${label}">${glyph}</button>`).join('')}<button data-action="mobileFocus" aria-label="Acercar la vista al elemento">⌕</button></div>`;
-  if(!locked&&MOB.mode==='size')extra=`<div class="mobile-size-row"><button data-action="mobileScale" data-value="-1" aria-label="Hacer más pequeño">−</button><span>Tamaño</span><button data-action="mobileScale" data-value="1" aria-label="Hacer más grande">+</button><label class="mobile-ratio"><input type="checkbox" data-mobile-ratio ${ratio?'checked':''} ${!single||p.rol==='fondo'?'disabled':''}>No deformar</label></div>${!ratio?`<div class="mobile-dimensions"><label>Ancho<input data-prop="w" type="number" min="2" max="8192" value="${Math.round(p.w)}" inputmode="decimal"></label><label>Alto<input data-prop="h" type="number" min="2" max="8192" value="${Math.round(p.h)}" inputmode="decimal"></label></div>`:''}`;
+  if(!locked&&MOB.mode==='size')extra=`<div class="mobile-size-row"><button data-action="mobileScale" data-value="-1" aria-label="Hacer más pequeño">−</button><span>${p.tipo==='texto'?'Marco del texto':'Tamaño'}</span><button data-action="mobileScale" data-value="1" aria-label="Hacer más grande">+</button><label class="mobile-ratio"><input type="checkbox" data-mobile-ratio ${ratio?'checked':''} ${!single||p.rol==='fondo'?'disabled':''}>${p.tipo==='texto'?'Misma forma':'No deformar'}</label></div><p class="mobile-resize-hint">${p.tipo==='texto'?'Arrastra las esquinas · el texto se acomoda completo.':'Arrastra las esquinas para ajustar el tamaño.'}</p>${!ratio?`<div class="mobile-dimensions"><label>Ancho<input data-prop="w" type="number" min="2" max="8192" value="${Math.round(p.w)}" inputmode="decimal"></label><label>Alto<input data-prop="h" type="number" min="2" max="8192" value="${Math.round(p.h)}" inputmode="decimal"></label></div>`:''}`;
   if(!locked&&MOB.mode==='rotate')extra=`<div class="mobile-rotate-row"><button data-action="mobileRotate" data-value="-15" aria-label="Girar 15 grados a la izquierda">↶</button><label>Giro <input data-mobile-angle type="number" min="-180" max="180" value="${Math.round(p.rot||0)}" inputmode="decimal" aria-label="Grados de giro">°</label><button data-action="mobileRotate" data-value="15" aria-label="Girar 15 grados a la derecha">↷</button><button data-action="mobileStraight">Enderezar</button></div>`;
   const html=`<div class="mobile-selection-head"><button class="mobile-selected-name" data-action="mobileEdit"><strong>${esc(name)}</strong><small>${esc(hint)}</small></button><button data-action="lock" data-scope="selection" data-id="${esc(list[0].id)}" aria-label="${locked?'Desbloquear elemento':'Fijar elemento para que no se mueva'}" title="${locked?'Desbloquear':'Fijar'}">${uiIcon(locked?'lock':'unlock')}</button><button class="mobile-delete" data-action="delete" ${locked?'disabled':''} aria-label="Eliminar elemento; puedes deshacer">${uiIcon('trash')}</button><button data-action="deselect" aria-label="Quitar selección">×</button></div><div class="mobile-transform-tabs">${[['move','✥','Mover'],['size','↗','Tamaño'],['rotate','↻','Girar']].map(([value,glyph,label])=>`<button data-action="mobileMode" data-value="${value}" aria-pressed="${MOB.mode===value||MOB.mode==='idle'&&value==='move'}" ${locked?'disabled':''}><span aria-hidden="true">${glyph}</span>${label}</button>`).join('')}<button data-action="layerMenu"><span aria-hidden="true">•••</span>Más</button></div>${extra}`;
   // No sustituir el input mientras la persona escribe o mantiene un control.
@@ -8042,6 +8076,7 @@ function refreshMobileControls(){
 function mobileMode(mode){
   if(!['move','size','rotate'].includes(mode))return;
   MOB.mode=MOB.mode===mode?'idle':mode;closeLayerMenu();setPanelVisible(false);refreshMobileControls();
+  const p=selectionFrame();if(['size','rotate'].includes(MOB.mode)&&p&&Math.min(p.w,p.h)*S.zoom<64)requestAnimationFrame(mobileFocus);
 }
 function mobileNudge(direction){
   const list=selectedLayers();if(!list.length||list.some(p=>p.bloqueado))return;
@@ -8063,7 +8098,7 @@ function mobileRotate(angle,straight=false){
 }
 function mobileFocus(){
   const p=selectionFrame();if(!p)return;const vp=$('viewport'),b=boundsOf(p);
-  S.fit=false;applyZoom(Math.min(2,Math.max(S.zoom,Math.min((vp.clientWidth-72)/b.w,(vp.clientHeight-72)/b.h))));
+  S.fit=false;applyZoom(Math.min(2,Math.max(S.zoom,Math.min((vp.clientWidth-88)/Math.max(1,b.right-b.left),(vp.clientHeight-88)/Math.max(1,b.bottom-b.top)))));
   requestAnimationFrame(()=>{const r=canvas.getBoundingClientRect(),v=vp.getBoundingClientRect();vp.scrollLeft+=r.left+p.x*S.zoom-(v.left+v.width/2);vp.scrollTop+=r.top+p.y*S.zoom-(v.top+v.height/2);});
 }
 function touchHitStack(q){
@@ -8080,7 +8115,7 @@ function touchHitStack(q){
 }
 document.addEventListener('change',event=>{
   const el=event.target;
-  if(el.matches('[data-mobile-ratio]')){keepRatio=el.checked;refreshMobileControls();}
+  if(el.matches('[data-mobile-ratio]')){if(selectedLayer()?.tipo==='texto'&&selectedLayers().length===1)MOB.textRatio=el.checked;else keepRatio=el.checked;refreshMobileControls();}
   if(el.matches('[data-mobile-angle]')){
     const value=Number(el.value),p=selectionFrame();if(!p||el.value===''||!Number.isFinite(value)){refreshMobileControls();return;}
     if(CO.room&&!coEditing())return;mobileRotate(clamp(value,-180,180)-(p.rot||0));
@@ -8298,6 +8333,43 @@ const IDEA_THEMES={
   tropical:{name:'Tropical',tag:'BUENA ENERGÍA, GRAN COMPAÑÍA',palettes:['tropical','caribe','fucsia','porcelana'],fontUses:['titulos','manuscrita','elegante'],words:['tropical','palmera','verano','summer','playa','caribe'],titles:['Ritmo\ntropical','Un atardecer\ncon Divas','La fiesta\nnos reúne','Buenas vibras.\nMucho brillo.'],bodies:['Dale un toque tropical a tu noche y conéctate con nosotras.','Una celebración con la energía de nuestra comunidad.','Ven a compartir un momento lleno de color.'],cta:'CONÉCTATE Y DISFRUTA'},
   amor:{name:'Amor y amistad',tag:'LOS MEJORES MOMENTOS SE COMPARTEN',palettes:['petalo','porcelana','cereza','ballet'],fontUses:['manuscrita','elegante'],words:['amor','love','amistad','valentin','corazon'],titles:['Juntas\nbrillamos más','Con mucho\namor, Divas','Celebra lo\nque nos une','Una noche\npara compartir'],bodies:['Celebremos las conexiones que hacen especial a nuestra comunidad.','Un encuentro para compartir alegría y buenos momentos.','El mejor plan es encontrarnos y disfrutar juntas.'],cta:'COMPÁRTELO CON NOSOTRAS'}
 };
+/* v32: one creator, composed scenes, thematic pairs and optional brand styling. */
+const IDEA_FREE_PALETTES={
+  divas:['cobalto','mandarina','lima'],halloween:['calabaza','veneno','eclipse'],navidad:['acebo','bosque','hielo'],
+  cumple:['mandarina','cobalto','lima'],gala:['noche','hielo','acebo'],neon:['laser','lima','cobalto'],tropical:['oceano','mandarina','lima'],amor:['amapola','mandarina','acebo']
+};
+Object.assign(IDEA_PALETTES,{
+  cobalto:{name:'Cobalto eléctrico',family:'free',a:'#091d64',b:'#173cbb',ink:'#ffffff',accent:'#e4ff77',light:'#66dfff',effect:'tinta'},
+  mandarina:{name:'Sol de mandarina',family:'free',a:'#fff3ce',b:'#ffd98b',ink:'#632512',accent:'#b83410',light:'#ff8c31',effect:'tinta'},
+  lima:{name:'Lima futurista',family:'free',a:'#12261b',b:'#284432',ink:'#f6ffe9',accent:'#c5ff67',light:'#abf985',effect:'tinta'},
+  calabaza:{name:'Noche de calabaza',family:'free',a:'#14111a',b:'#392447',ink:'#fff6df',accent:'#ffb36b',light:'#e86622',effect:'tinta'},
+  veneno:{name:'Hechizo ultravioleta',family:'free',a:'#1c0b32',b:'#412366',ink:'#faffdf',accent:'#d0f583',light:'#9c64ff',effect:'tinta'},
+  acebo:{name:'Rojo de celebración',family:'free',a:'#400d19',b:'#711f2b',ink:'#fff5df',accent:'#f7d78f',light:'#ef766a',effect:'tinta'},
+  hielo:{name:'Plata sobre azul',family:'free',a:'#0b2237',b:'#25475d',ink:'#f0fbff',accent:'#bfeaff',light:'#7ab7eb',effect:'tinta'},
+  laser:{name:'Láser azul y lima',family:'free',a:'#101b42',b:'#283c73',ink:'#f4ffff',accent:'#baff43',light:'#59e6ff',effect:'tinta'},
+  oceano:{name:'Turquesa tropical',family:'free',a:'#e2fff6',b:'#a6e5d3',ink:'#113e3a',accent:'#00675b',light:'#ffb150',effect:'tinta'},
+  amapola:{name:'Rojo amapola',family:'free',a:'#ffefdf',b:'#ffc5b6',ink:'#671e29',accent:'#a7193a',light:'#ff7755',effect:'tinta'}
+});
+
+function ideaLuminance(hex){
+  const a=hex.replace('#','').match(/../g).slice(0,3).map(n=>{const v=parseInt(n,16)/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});return a[0]*.2126+a[1]*.7152+a[2]*.0722;
+}
+function ideaContrast(a,b){return (Math.max(ideaLuminance(a),ideaLuminance(b))+.05)/(Math.min(ideaLuminance(a),ideaLuminance(b))+.05);}
+function ideaInk(background,preferred,minimum=4.5){
+  return ideaContrast(background,preferred)>=minimum?preferred:ideaContrast(background,'#ffffff')>ideaContrast(background,'#14121b')?'#ffffff':'#14121b';
+}
+function ideaReadingBoxes(slots,size,layout){
+  const W=size.ancho,H=size.alto,blocks=W/H>3?[['logo','logo'],['idea_kicker','descripcion'],['accion','contacto']]:layout==='escenario'&&W/H<=1.18?[['logo','idea_marca'],['idea_kicker','descripcion'],['accion','contacto']]:[['logo','idea_kicker'],['titulo','descripcion'],['accion','contacto']];
+  return blocks.map(roles=>{const a=slots[roles[0]],b=slots[roles[1]],top=Math.min(a.y-a.h/2,b.y-b.h/2),bottom=Math.max(a.y+a.h/2,b.y+b.h/2);return {x:a.x,y:(top+bottom)/2,w:Math.max(a.w,b.w)+W*.04,h:bottom-top+H*.025};});
+}
+function ideaPlaceOrnament(d,source,box){
+  const raw=source.ideaComponent;
+  if(raw&&Array.isArray(raw.layers)&&raw.layers.length>0&&raw.layers.length<=60&&d.capas.length+raw.layers.length+16<=200&&raw.layers.every(p=>TYPES.includes(p.tipo)&&p.tipo!=='imagen')){
+    const base=emptyDocument();base.capas=copy(raw.layers);const layers=normalizeProject(base).capas,b=piecesBounds(layers),scale=Math.min(box.w/Math.max(1,b.w),box.h/Math.max(1,b.h)),group=uid();
+    for(const p of layers){const x=p.x,y=p.y;scaleLayer(p,scale);p.x=box.x+(x-b.x)*scale;p.y=box.y+(y-b.y)*scale;p.id=uid();p.rol='idea_deco';p.decorativa=true;p.oculto=false;p.bloqueado=false;p.grupo=group;p.grupoNombre=source.nombre;d.capas.push(p);}
+  }else{const p=ideaImage(source,'idea_deco',box);p.decorativa=true;p.nombre='Adorno de la agencia · '+source.nombre;delete p.ideaComponent;d.capas.push(p);}
+}
+
 const IDEA_LAYOUTS={portada:'Portada',editorial:'Editorial',tarjeta:'Invitación',escenario:'Escenario',orbita:'Órbita',split:'Doble escena'};
 const I={session:null,serial:0};
 const ideaPick=(values,rng)=>values[Math.floor(rng()*values.length)];
@@ -8324,11 +8396,13 @@ function ideaDefaultTheme(source,doc){
   return Object.entries(IDEA_THEMES).find(([key,theme])=>key!=='divas'&&theme.words.some(word=>text.includes(ideaClean(word))))?.[0]||'divas';
 }
 function surpriseGuard(r,request=null){
-  if(I.session!==r||r.epoch!==A.epoch||r.baseRef!==S.doc||r.baseRevision!==S.revision||r.baseProject!==P.current?.id||(request!==null&&r.request!==request))throw new Error('El diseño o la sesión cambió. Vuelve a abrir Sorpréndeme.');
+  if(I.session!==r||r.epoch!==A.epoch||r.baseRef!==S.doc||r.baseRevision!==S.revision||r.baseProject!==P.current?.id||(request!==null&&r.request!==request))throw new Error('El diseño o la sesión cambió. Vuelve a abrir Crear flyer.');
 }
 function ideaFormInputs(){return Object.fromEntries([['title','ideaTitleInput'],['when','ideaWhenInput'],['body','ideaBodyInput'],['contact','ideaContactInput'],['action','ideaActionInput']].map(([key,id])=>[key,I.session?.autoFields?.has(key)?'':$(id).value.trim()]));}
 function ideaFillInputs(input){for(const [key,id] of [['title','ideaTitleInput'],['when','ideaWhenInput'],['body','ideaBodyInput'],['contact','ideaContactInput'],['action','ideaActionInput']])$(id).value=input[key]||'';}
-function ideaReadSettings(r){return {theme:$('ideaTheme').value,color:r.color||'auto',format:$('ideaFormat').value,mode:$('ideaMode').value,keepImages:$('ideaKeepImages').checked,keepBackground:$('ideaKeepBackground').checked,agency:$('ideaAgency').checked&&!!A.member?.active,input:ideaFormInputs()};}
+function ideaReadSettings(r){
+  return {theme:$('ideaTheme').value,divas:$('ideaDivas').checked,color:r.color||'auto',format:$('ideaFormat').value,mode:$('ideaMode').value,keepImages:$('ideaKeepImages').checked,keepBackground:$('ideaKeepBackground').checked,agency:$('ideaAgency').checked&&!!A.member?.active,input:ideaFormInputs()};
+}
 function ideaTextData(settings,seed,purpose){
   const theme=IDEA_THEMES[settings.theme],random=seeded(seed+101),input=settings.input;
   const title=purpose==='reclutamiento'&&settings.theme==='divas'?ideaPick(['Tu talento.\nTu momento.','El próximo\nbrillo eres tú','Crece con\nDivas'],random):purpose==='perfil'&&settings.theme==='divas'?'Tu espacio\npara crecer':ideaPick(theme.titles,random);
@@ -8345,14 +8419,16 @@ function ideaAssetScore(a,theme){
 }
 function ideaCandidateAssets(settings,category){
   if(!settings.agency||!A.member?.active)return [];
-  return C.items.filter(a=>availableAsset(a)&&assetCategory(a)===category).map(a=>({a,score:ideaAssetScore(a,settings.theme)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.a.name.localeCompare(b.a.name)).slice(0,12).map(x=>x.a);
+  const choices=C.items.filter(a=>availableAsset(a)&&assetCategory(a)===category).map(a=>({a,score:ideaAssetScore(a,settings.theme)})).filter(x=>x.score>=0),themed=choices.filter(x=>x.score>=10);
+  // Prefer the chosen season, but generic agency assets are usable as a fallback.
+  return (themed.length?themed:choices).map(x=>x.a);
 }
-function ideaFontCandidates(settings){
+function ideaFontCandidates(settings,role='title'){
   if(!settings.agency||!A.member?.active)return [];
-  const uses=IDEA_THEMES[settings.theme].fontUses;
-  const choices=C.items.filter(a=>fontResource(a)&&availableAsset(a)&&uses.includes(a.style.fontUse)&&ideaAssetScore(a,settings.theme)>=0);
-  const thematic=choices.filter(a=>['halloween','navidad'].includes(settings.theme)&&a.style.fontUse===settings.theme);
-  return (thematic.length?thematic:choices).sort((a,b)=>(uses.indexOf(a.style.fontUse)-uses.indexOf(b.style.fontUse))||a.name.localeCompare(b.name)).slice(0,40);
+  const uses=role==='body'?['comun','tiktok']:IDEA_THEMES[settings.theme].fontUses;
+  const choices=C.items.filter(a=>fontResource(a)&&availableAsset(a)&&uses.some(use=>fontHasUse(a,use))&&ideaAssetScore(a,settings.theme)>=0);
+  const themed=choices.filter(a=>['halloween','navidad'].includes(settings.theme)&&fontHasUse(a,settings.theme));
+  return (role==='title'&&themed.length?themed:choices).sort((a,b)=>uses.findIndex(use=>fontHasUse(a,use))-uses.findIndex(use=>fontHasUse(b,use))||a.name.localeCompare(b.name));
 }
 async function ideaWithDeadline(job,ms=6500){let timer;try{return await Promise.race([job,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Este recurso tarda en responder. Usamos una alternativa disponible.')),ms);})]);}finally{clearTimeout(timer);}}
 async function ideaLoadFont(r,a,request){
@@ -8366,114 +8442,145 @@ async function ideaLoadFont(r,a,request){
   try{surpriseGuard(r,request);}catch(error){if(!S.doc.fuentes.some(f=>f.nombre===font.nombre)){const cached=fontResources.get(font.nombre);if(cached?.face)document.fonts.delete(cached.face);fontResources.delete(font.nombre);}throw error;}
   r.fonts.set(a.id,font);return font;
 }
-function ideaFontFallback(theme,variant){const fonts=theme==='neon'?['Arial Black','Trebuchet MS','Verdana']:theme==='halloween'?['Georgia','Arial Black','Garamond']:['Georgia','Trebuchet MS','Palatino Linotype','Arial'];return {nombre:fonts[variant%fonts.length],etiqueta:fonts[variant%fonts.length]};}
+function ideaFontFallback(theme,variant,divas=true){
+  const pairs=theme==='neon'||!divas?[['Anton','TikTok Sans'],['TikTok Sans','Courier Prime'],['DM Serif Display','TikTok Sans']]:[['DM Serif Display','TikTok Sans'],['Anton','TikTok Sans'],['DM Serif Display','Courier Prime'],['TikTok Sans','DM Serif Display']];
+  const [title,body]=pairs[variant%pairs.length];return {...SOCIAL_FONTS[title],body:SOCIAL_FONTS[body]};
+}
 function ideaRecipe(r,settings){
   const seed=crypto.getRandomValues(new Uint32Array(1))[0]%999999+1,random=seeded(seed),last=r.history.find(x=>x.id===r.selected),theme=IDEA_THEMES[settings.theme];
-  const palettePool=settings.color==='auto'?theme.palettes:Object.keys(IDEA_PALETTES).filter(key=>IDEA_PALETTES[key].family===settings.color);
-  const chooseOther=(pool,previous)=>ideaPick(pool.length>1?pool.filter(x=>x!==previous):pool,random);
-  return {seed,settings:copy(settings),palette:r.locks.palette&&last?last.recipe.palette:chooseOther(palettePool,last?.recipe.palette),layout:r.locks.layout&&last?last.recipe.layout:chooseOther(Object.keys(IDEA_LAYOUTS),last?.recipe.layout),font:r.locks.font&&last?last.recipe.font:null,ornament:Math.floor(random()*3),ordinal:++r.counter};
+  const pool=settings.color==='auto'?(settings.divas===false?IDEA_FREE_PALETTES[settings.theme]:theme.palettes):Object.keys(IDEA_PALETTES).filter(key=>IDEA_PALETTES[key].family===settings.color);
+  const choose=(list,old)=>ideaPick(list.length>1?list.filter(x=>x!==old):list,random),same=last&&last.recipe.settings.theme===settings.theme&&last.recipe.settings.divas===settings.divas;
+  const layout=r.locks.layout&&last?last.recipe.layout:choose(Object.keys(IDEA_LAYOUTS),last?.recipe.layout);
+  return {seed,settings:copy(settings),palette:r.locks.palette&&same?last.recipe.palette:choose(pool,last?.recipe.palette),layout,font:r.locks.font&&same?last.recipe.font:null,bodyFont:r.locks.font&&same?last.recipe.bodyFont:null,ornament:Math.floor(random()*3),ordinal:++r.counter};
 }
 // Áreas editoriales con márgenes reservados: la decoración nunca decide
 // dónde van el título, los datos ni las imágenes de la usuaria.
 function ideaSlots(size,layout,count=0){
-  const W=size.ancho,H=size.alto,banner=W/H>3,wide=W/H>1.18,left=['editorial','escenario','split'].includes(layout),card=layout==='tarjeta';
-  const rect=(x,y,w,h)=>({x:x*W,y:y*H,w:w*W,h:h*H}),slots={};
+  const W=size.ancho,H=size.alto,banner=W/H>3,wide=W/H>1.18,R=(x,y,w,h)=>({x:x*W,y:y*H,w:w*W,h:h*H}),s={};
+  // Every design has different type scale, alignment and a reserved visual area.
   if(banner){
-    Object.assign(slots,{logo:rect(.11,.42,.17,.55),idea_marca:rect(.11,.42,.17,.3),idea_kicker:rect(.445,.10,.48,.065),titulo:rect(.445,.315,.48,.32),idea_fecha:rect(.445,.715,.48,.11),descripcion:rect(.445,.565,.48,.15),accion:rect(.865,.79,.22,.105),base_accion:rect(.865,.79,.24,.15),contacto:rect(.865,.94,.25,.065)});
-    slots.imageArea=rect(.865,.36,.23,.49);slots.align=left?'left':'center';slots.brandAlign='center';
+    Object.assign(s,{logo:R(.105,.32,.15,.36),idea_marca:R(.105,.32,.15,.25),idea_kicker:R(.44,.13,.46,.07),titulo:R(.44,.38,.46,.34),idea_fecha:R(.44,.65,.46,.095),descripcion:R(.44,.82,.46,.17),accion:R(.84,.80,.24,.13),base_accion:R(.84,.80,.26,.18),contacto:R(.84,.95,.27,.06),imageArea:R(.84,.32,.23,.42),motif:R(.84,.33,.30,.55),align:layout==='tarjeta'?'center':'left',brandAlign:'center'});
+  }else if((wide&&layout!=='tarjeta'&&layout!=='portada')||layout==='split'){
+    Object.assign(s,{logo:R(.29,.09,.34,.08),idea_marca:R(.29,.09,.43,.055),idea_kicker:R(.29,.19,.43,.04),titulo:R(.29,.365,.43,.25),idea_fecha:R(.29,.55,.43,.05),descripcion:R(.29,.665,.43,.13),accion:R(.29,.85,.39,.055),base_accion:R(.29,.85,.44,.084),contacto:R(.29,.94,.44,.035),imageArea:R(.785,.53,.30,.65),motif:R(.785,.48,.42,.68),align:'left',brandAlign:'left'});
+  }else if(layout==='escenario'){
+    Object.assign(s,{logo:R(.5,.07,.35,.065),idea_marca:R(.5,.07,.80,.04),idea_kicker:R(.5,.465,.82,.032),titulo:R(.5,.585,.84,.18),idea_fecha:R(.5,.723,.80,.042),descripcion:R(.5,.793,.78,.075),accion:R(.5,.89,.72,.05),base_accion:R(.5,.89,.79,.075),contacto:R(.5,.955,.82,.029),imageArea:R(.5,.272,.66,.285),motif:R(.5,.267,.78,.32),align:'center',brandAlign:'center'});
   }else{
-    const split=wide&&left,cx=split?.32:.5,tw=split?.51:card?.71:layout==='editorial'?.79:.82;
-    const titleY=layout==='orbita'?.365:layout==='editorial'?.35:layout==='escenario'?.345:.345;
-    Object.assign(slots,{logo:rect(cx,.105,split?.29:.38,.10),idea_marca:rect(cx,.105,tw,.055),idea_kicker:rect(cx,.20,tw,.041),titulo:rect(cx,titleY,tw,.24),idea_fecha:rect(cx,.51,tw,.05),descripcion:rect(cx,.617,tw,.12),accion:rect(cx,.857,tw*.86,.056),base_accion:rect(cx,.857,tw*.94,.082),contacto:rect(cx,.94,tw,.04)});
-    slots.imageArea=split?rect(.797,.495,.27,.53):rect(.5,.749,.70,.095);slots.align=left?'left':'center';slots.brandAlign=slots.align;
-    if(!count){slots.descripcion=rect(cx,.64,tw,.18);slots.accion.y=slots.base_accion.y=H*.858;}
+    const editorial=layout==='editorial',card=layout==='tarjeta',orbit=layout==='orbita',x=editorial?.40:.5,w=editorial?.64:card?.72:.82;
+    Object.assign(s,{logo:R(x,.09,w*.65,.08),idea_marca:R(x,.09,w,.045),idea_kicker:R(x,.185,w,.035),titulo:R(x,orbit?.32:.35,w,orbit?.20:.25),idea_fecha:R(x,orbit?.465:.535,w,.045),descripcion:R(x,orbit?.56:.63,w,orbit?.11:.10),accion:R(.5,.876,card?.65:.74,.052),base_accion:R(.5,.876,card?.72:.82,.08),contacto:R(.5,.954,.82,.032),imageArea:R(.5,orbit?.735:.755,.70,orbit?.16:.10),motif:editorial?R(.87,.36,.31,.40):orbit?R(.82,.62,.40,.37):R(.89,.275,.28,.24),align:editorial?'left':'center',brandAlign:editorial?'left':'center'});
   }
-  const area=slots.imageArea,maxCols=banner?3:wide&&left?2:5,cols=Math.max(1,Math.min(count,maxCols)),rows=Math.ceil(count/cols)||1;
-  slots.images=Array.from({length:count},(_,i)=>{const row=Math.floor(i/cols),inRow=Math.min(cols,count-row*cols),col=i%cols;return {x:area.x+(col-(inRow-1)/2)*area.w/cols,y:area.y+(row-(rows-1)/2)*area.h/rows,w:area.w/cols*.86,h:area.h/rows*.87};});
-  return slots;
+  const area=s.imageArea,cols=Math.max(1,Math.min(count,area.w/area.h>2?5:2)),rows=Math.ceil(count/cols)||1;
+  s.images=Array.from({length:count},(_,i)=>{const row=Math.floor(i/cols),inRow=Math.min(cols,count-row*cols),col=i%cols;return {x:area.x+(col-(inRow-1)/2)*area.w/cols,y:area.y+(row-(rows-1)/2)*area.h/rows,w:area.w/cols*.92,h:area.h/rows*.92};});
+  return s;
 }
 function fitIdeaText(p,box,size,{align='center',minimum=12}={}){
-  Object.assign(p,box,{tamano:size,ajusteTexto:'envolver',minTamano:minimum,alineacion:align,interlineado:p.rol==='titulo'?1.05:1.22,rot:0});
-  const c=document.createElement('canvas').getContext('2d');let n=size;
-  for(let tries=0;tries<200;tries++){
-    c.font=`${p.cursiva?'italic ':''}${p.peso||400} ${n}px "${p.fuente||'Arial'}"`;
-    const lines=wrapLines(c,p.texto,p.w,p.espaciado||0),width=Math.max(0,...lines.map(text=>measure(c,text,p.espaciado||0))),word=Math.max(0,...p.texto.split(/\s+/).map(text=>measure(c,text,p.espaciado||0)));
-    if(width<=p.w&&word<=p.w&&lines.length*n*p.interlineado<=p.h){p.tamano=n;p.minTamano=n;return {fits:true,size:n};}
-    if(n<=minimum)break;n=Math.max(minimum,n-1);
-  }
-  p.tamano=p.minTamano=minimum;return {fits:false,size:minimum};
+  Object.assign(p,box,{tamano:size,ajusteTexto:'envolver',minTamano:1,alineacion:align,interlineado:p.rol==='titulo'?1.02:1.18,rot:0});
+  const c=document.createElement('canvas').getContext('2d'),fit=fitWrappedText(c,p);p.tamano=Math.max(1,fit.size);p.espaciado=fit.spacing;
+  return {fits:fit.size>=minimum,size:fit.size};
 }
 function ideaText(d,role,text,box,size,palette,recipe,extra={}){
-  const p=layer('texto',{rol:role,nombre:({titulo:'Título del evento',descripcion:'Invitación',idea_fecha:'Fecha y hora',contacto:'Contacto',accion:'Llamada a la acción',idea_kicker:'Texto de cabecera',idea_marca:'Nombre de la agencia'})[role]||role,campo:role,texto:text,fuente:role==='titulo'?recipe.font.nombre:'Arial',color:palette.ink,peso:role==='titulo'&&/Arial|Trebuchet|Verdana/.test(recipe.font.nombre)?'700':'400',requerido:role==='titulo',...extra});
-  const banner=d.lienzo.ancho/d.lienzo.alto>3,u=Math.min(d.lienzo.ancho,d.lienzo.alto)/(banner?400:1080),min=(role==='titulo'?(banner?26:30):(banner?12:17))*u;
-  fitIdeaText(p,box,size,{align:extra.alineacion||'center',minimum:Math.max(6,min)});
-  if(role==='titulo'){
-    putTextLook(p,palette.effect);if(palette.effect==='tinta')p.color=palette.ink;
-    p.glow=Math.min(p.glow||0,68);p.glowRadio=Math.min(p.glowRadio||0,p.tamano*.23);p.glowColor=palette.light;p.contornoTexto=Math.min(p.contornoTexto||0,p.tamano*.014);
+  const headline=role==='titulo',bodyFont=recipe.bodyFont||recipe.font.body||{nombre:'Arial'},u=Math.min(d.lienzo.ancho,d.lienzo.alto)/1080;
+  const p=layer('texto',{rol:role,nombre:({titulo:'Título del evento',descripcion:'Invitación',idea_fecha:'Fecha y hora',contacto:'Contacto',accion:'Llamada a la acción',idea_kicker:'Texto de cabecera',idea_marca:'Nombre de la agencia'})[role]||role,campo:role,texto:text,fuente:headline?recipe.font.nombre:bodyFont.nombre,color:ideaInk(palette.a,palette.ink),peso:headline&&/Arial|Trebuchet|Verdana|Impact/.test(recipe.font.nombre)?'700':'400',requerido:headline,...extra});
+  if(headline){
+    const dark=ideaLuminance(palette.a)<.18,brand=recipe.settings.divas!==false;
+    const candidate=brand?palette.effect:'tinta';putTextLook(p,candidate);
+    // Metallic highlights must remain readable on every background stop.
+    if(!dark||candidate==='tinta'){p.acabadoTexto='solido';p.color=ideaInk(palette.a,palette.ink);delete p.degradadoTexto;p.glow=0;p.contornoTexto=0;}
+    else if(candidate==='neon'||candidate==='perla'){p.acabadoTexto='solido';p.color=ideaInk(palette.a,palette.ink);}
+    p.glow=dark?Math.min(p.glow||0,48):0;p.glowRadio=14*u;p.glowColor=palette.light;p.contornoTexto=0;
   }
-  d.capas.push(p);return p;
+  fitIdeaText(p,box,size,{align:extra.alineacion||'center'});d.capas.push(p);return p;
 }
 function ideaImage(source,role,box){
   const p=copy(source);Object.assign(p,{id:uid(),rol:role,decorativa:false,oculto:false,bloqueado:false,rot:0});delete p.grupo;delete p.grupoNombre;
   const factor=Math.min(box.w/p.w,box.h/p.h);p.x=box.x;p.y=box.y;p.w*=factor;p.h*=factor;return p;
 }
-function decorateIdea(d,recipe,palette,hasImage){
-  const W=d.lienzo.ancho,H=d.lienzo.alto,u=Math.min(W,H)/1080,random=seeded(recipe.seed),layout=recipe.layout;
-  const add=(tipo,extra)=>{const p=layer(tipo,{rol:'idea_deco',nombre:'Detalle · '+IDEA_LAYOUTS[layout],decorativa:true,...extra});d.capas.push(p);return p;};
-  if(hasImage)add('rectangulo',{nombre:'Velo para leer con claridad',x:W/2,y:H/2,w:W,h:H,radio:0,color:palette.a,opacidad:.82});
-  add('luz',{x:W*(.15+random()*.65),y:H*.18,w:W*.95,h:Math.min(H*.9,W*1.2),color:palette.light,opacidad:palette.family==='pastel'?.36:.23});
-  add('luz',{x:W*.91,y:H*.83,w:W*.8,h:H*.7,color:palette.accent,opacidad:.18});
+function decorateIdea(d,recipe,palette,hasImage,imageCount=0){
+  const W=d.lienzo.ancho,H=d.lienzo.alto,u=Math.min(W,H)/1080,random=seeded(recipe.seed),layout=recipe.layout,theme=recipe.settings.theme,slots=ideaSlots(d.lienzo,layout,imageCount),dark=ideaLuminance(palette.a)<.18;
+  const add=(tipo,extra)=>{const label={luz:'Luz ambiental',marco:'Marco decorativo',particulas:'Polvo de estrellas',estrella:'Destello',estrella5:'Estrella',rectangulo:'Panel de color',aro:'Aro',ramas:'Ramas',rayos:'Resplandor',diamante:'Diamante',murcielago:'Murciélago',luna:'Luna',telarana:'Telaraña',corazon:'Corazón',elipse:'Esfera',triangulo:'Triángulo'}[tipo]||tipo;const p=layer(tipo,{rol:'idea_deco',nombre:label+' · '+IDEA_THEMES[theme].name,decorativa:true,...extra});d.capas.push(p);return p;};
+  // Keep official artwork visible; a local reading plate protects the words.
+  if(hasImage){
+    ideaReadingBoxes(slots,d.lienzo,layout).forEach((box,i)=>add('rectangulo',{...box,rol:'idea_reading_'+i,nombre:'Zona de lectura',color:palette.a,radio:5,opacidad:.98}));
+  }
+  add('luz',{x:W*.88,y:H*.16,w:W*.8,h:Math.min(H,W)*.95,color:palette.light,opacidad:dark?.32:.20});
+  add('luz',{x:W*.10,y:H*.95,w:W*.85,h:H*.8,color:palette.accent,opacidad:.16});
   if(layout==='tarjeta'){
-    add('rectangulo',{x:W/2,y:H/2,w:W*.88,h:H*.90,color:palette.a,opacidad:.74,radio:4});
-    add('marco',{x:W/2,y:H/2,w:W*.91,h:H*.94,color:palette.accent,grosor:Math.max(1,1.4*u),opacidad:.55,radio:3});
-  }else if(layout==='orbita'){
-    for(let i=0;i<3;i++)add('aro',{x:W*.5,y:H*.30,w:W*(.74+i*.095),h:Math.min(H*.64,W*(.74+i*.095)),color:palette.accent,grosor:Math.max(.7,(i?1:2)*u),opacidad:i===0?.24:.12,rot:-18+i*16});
-  }else if(layout==='split'){
-    add('rectangulo',{x:W*.92,y:H*.5,w:W*.23,h:H,radio:0,color:palette.accent,opacidad:.14});
-    add('aro',{x:W*.91,y:H*.45,w:W*.64,h:W*.64,color:palette.accent,grosor:Math.max(1,1.4*u),opacidad:.32});
-  }else if(layout==='escenario'){
-    for(let i=0;i<3;i++)add('aro',{x:W*(i%2?.06:.96),y:H*(.22+i*.25),w:W*(.65+i*.12),h:Math.min(H*.75,W*(.65+i*.12)),color:palette.accent,grosor:Math.max(1,2*u),opacidad:.25});
+    add('rectangulo',{x:W*.5,y:H*.50,w:W*.85,h:H*.90,color:palette.a,radio:15,opacidad:.98});
+    add('marco',{x:W*.5,y:H*.5,w:W*.89,h:H*.94,color:palette.accent,grosor:1.6*u,radio:16,opacidad:.8});
+    for(const x of [.10,.90])add('ramas',{x:W*x,y:H*.39,w:W*.085,h:H*.37,color:palette.accent,rot:x<.5?-8:8,opacidad:.65});
   }else if(layout==='editorial'){
-    add('rectangulo',{x:W*.058,y:H*.5,w:Math.max(2,3*u),h:H*.87,radio:0,color:palette.accent,opacidad:.8});
-    add('rectangulo',{x:W*.86,y:H*.09,w:W*.15,h:Math.max(2,3*u),radio:0,color:palette.accent,opacidad:.8});
+    add('rectangulo',{x:W*.055,y:H*.47,w:3*u,h:H*.73,color:palette.accent,radio:0});
+    for(let i=0;i<4;i++)add('aro',{x:W*.97,y:H*.33,w:W*(.24+i*.045),h:H*(.30+i*.045),color:palette.accent,grosor:1.8*u,opacidad:.30});
+  }else if(layout==='split'){
+    add('rectangulo',{x:W*.79,y:H*.5,w:W*.42,h:H,color:palette.b,radio:0});
+    add('rectangulo',{x:W*.575,y:H*.5,w:2*u,h:H*.9,color:palette.accent,radio:0,opacidad:.9});
+  }else if(layout==='orbita'){
+    for(let i=0;i<5;i++)add('aro',{x:W*.83,y:H*.63,w:W*(.48+i*.045),h:H*(.32+i*.033),color:palette.accent,grosor:(i?1:3)*u,rot:-24,opacidad:i?.22:.65});
+  }else if(layout==='escenario'){
+    for(let i=0;i<3;i++)add('aro',{x:slots.motif.x,y:slots.motif.y,w:slots.motif.w*(1+i*.10),h:slots.motif.h*(.9+i*.12),color:palette.accent,grosor:(i?1:3)*u,opacidad:i?.3:.8});
+    add('luz',{x:slots.motif.x,y:slots.motif.y,w:slots.motif.w,h:slots.motif.h*1.4,color:palette.light,opacidad:.35});
   }else{
-    add('marco',{x:W*.5,y:H*.5,w:W*.94,h:H*.945,color:palette.accent,grosor:Math.max(1,u),radio:0,opacidad:.28});
+    for(const x of [.035,.965])add('rectangulo',{x:W*x,y:H*.5,w:1.5*u,h:H*.88,color:palette.accent,radio:0,opacidad:.6});
+    add('marco',{x:W*.5,y:H*.5,w:W*.95,h:H*.94,color:palette.accent,grosor:.8*u,radio:0,opacidad:.24});
   }
-  const theme=recipe.settings.theme;
-  if(theme==='halloween')add('luna',{x:W*.865,y:H*.16,w:Math.min(W,H)*.145,h:Math.min(W,H)*.145,color:palette.accent,color2:palette.accent,opacidad:.28,rot:-18});
-  if(theme==='tropical')for(const x of [.035,.965])add('ramas',{x:W*x,y:H*.65,w:W*.11,h:H*.48,color:palette.accent,opacidad:.21,rot:x<.5?20:-20});
-  if(theme==='amor')for(const [x,y] of [[.06,.32],[.94,.69]])add('corazon',{x:W*x,y:H*y,w:W*.055,h:W*.055,color:palette.accent,opacidad:.25,rot:x<.5?-18:18});
-  const starPositions=[[.08,.16],[.91,.32],[.09,.74],[.88,.86]];
-  for(let i=0;i<starPositions.length;i++){
-    const [x,y]=starPositions[(i+recipe.ornament)%starPositions.length],s=Math.min(W,H)*(.017+random()*.022);
-    add(theme==='navidad'?'estrella5':'estrella',{x:W*x,y:H*y,w:s,h:s,color:palette.accent,opacidad:.7,glow:25,glowColor:palette.light,glowRadio:10*u,rot:random()*30});
+  // A coherent, editable thematic focal point, plus edge details and atmosphere.
+  const compact=['portada','tarjeta','orbita'].includes(layout)&&W/H<=1.18,m=compact?{...slots.imageArea,h:H*(layout==='orbita'?.16:.14)}:slots.motif,mw=Math.min(m.w,m.h*1.4),mh=Math.min(m.h,m.w*1.3),full=['escenario','split'].includes(layout)||W/H>1.18;
+  const themeLayer=(tipo,dx,dy,scale,extra={})=>add(tipo,{x:m.x+dx*mw,y:m.y+dy*mh,w:mw*scale,h:mh*scale,color:palette.accent,color2:palette.light,opacidad:full?.9:.45,...extra});
+  if(compact&&imageCount){/* Photos and logos occupy the reserved illustration area. */}
+  else if(theme==='halloween'){
+    themeLayer('luna',0,0,.77,{metalico:recipe.settings.divas!==false,rot:-12,opacidad:.85});
+    for(let i=0;i<3;i++)themeLayer('murcielago',-.36+i*.30,.24-i*.19,.16,{color:dark?palette.ink:palette.accent,color2:palette.a,rot:-20+i*15});
+    add('telarana',{x:W*.98,y:H*.035,w:W*.27,h:Math.min(W,H)*.27,color:palette.accent,opacidad:.24});
+  }else if(theme==='navidad'){
+    themeLayer('estrella5',0,-.08,.67,{metalico:recipe.settings.divas!==false,rot:12,glow:22,glowRadio:12*u,glowColor:palette.light});
+    for(const side of [-1,1])themeLayer('ramas',side*.29,.14,.65,{w:mw*.24,rot:side*27});
+    for(let i=0;i<5;i++)add('estrella',{x:W*(.06+i*.22),y:H*(.08+(i%2)*.06),w:14*u,h:14*u,color:palette.accent,opacidad:.7});
+  }else if(theme==='tropical'){
+    themeLayer('elipse',0,0,.75,{color:palette.light,opacidad:.60});
+    for(const side of [-1,1])themeLayer('ramas',side*.12,0,.98,{w:mw*.44,rot:side*35,color:palette.accent});
+  }else if(theme==='amor'){
+    themeLayer('corazon',0,0,.65,{metalico:recipe.settings.divas!==false,rot:-14});themeLayer('corazon',.31,.26,.30,{color:palette.light,rot:16});
+  }else if(theme==='neon'){
+    for(let i=0;i<3;i++)themeLayer('triangulo',i*.09,i*.05,.8-i*.13,{rot:12+i*13,color:i===1?palette.a:palette.accent,opacidad:i===1?1:.8});
+    themeLayer('rayos',0,0,1.1,{color:palette.light,opacidad:.45});
+  }else if(theme==='cumple'){
+    themeLayer('elipse',-.12,-.1,.58,{w:mw*.42,h:mh*.57,color:palette.light,opacidad:.85});
+    themeLayer('elipse',.22,.04,.60,{w:mw*.42,h:mh*.55,color:palette.accent,opacidad:.8});
+    themeLayer('estrella',-.29,.26,.22,{metalico:recipe.settings.divas!==false});
+    for(let i=0;i<8;i++)add('rectangulo',{x:W*(i%2?.94:.07),y:H*(.12+i*.09),w:7*u,h:19*u,color:i%2?palette.accent:palette.light,rot:random()*160,radio:0,opacidad:.75});
+  }else{
+    themeLayer('diamante',0,0,.7,{color:palette.accent,color2:palette.light,rot:-8,opacidad:full?.9:.38});
+    themeLayer('rayos',0,0,1.05,{color:palette.accent,opacidad:.3});
   }
+  for(const x of [.035,.965])add('particulas',{x:W*x,y:H*.5,w:W*.08,h:H*.93,color:palette.accent,color2:palette.light,cantidad:35,semilla:recipe.seed,distribucion:'libre',opacidad:.7});
+  for(const [x,y,s] of [[.10,.28,.035],[.91,.63,.027],[.08,.80,.021]])add('estrella',{x:W*x,y:H*y,w:Math.min(W,H)*s,h:Math.min(W,H)*s,color:palette.accent,opacidad:.65});
 }
 function buildSurpriseDocument(r,recipe,assets={}){
   const settings=recipe.settings,pal=IDEA_PALETTES[recipe.palette],size=FORMATS[settings.format]||r.base.lienzo,purpose=r.base.asistente.objetivo==='libre'?'evento':r.base.asistente.objetivo,data=ideaTextData(settings,recipe.seed,purpose);
   if(settings.mode==='style')return styleSurpriseDocument(r,recipe,size,data);
-  const d=emptyDocument();d.lienzo=copy(size);d.asistente={objetivo:purpose,estilo:'rosa',sorpresa:{version:1,tema:settings.theme,paleta:recipe.palette,composicion:recipe.layout,semilla:recipe.seed,modo:'new'}};
-  d.fondo={tipo:'degradado',color1:pal.a,color2:pal.b,angulo:[125,40,160][recipe.ornament],transparente:false};
+  const d=emptyDocument();d.lienzo=copy(size);d.asistente={objetivo:purpose,estilo:'rosa',sorpresa:{version:1,motor:2,divas:settings.divas!==false,tema:settings.theme,paleta:recipe.palette,composicion:recipe.layout,semilla:recipe.seed,modo:'new'}};
+  d.fondo={tipo:'degradado',color1:pal.a,color2:pal.b,angulo:[150,30,115][recipe.ornament],transparente:false};
   const originalBackground=r.base.capas.find(p=>p.rol==='fondo'&&p.src&&!p.oculto),background=settings.keepBackground?originalBackground:assets.background;
   if(settings.keepBackground&&!originalBackground)d.fondo=copy(r.base.fondo);
   if(background){const p=layer('imagen',{...copy(background),id:uid(),rol:'fondo',nombre:background.nombre||'Fondo de la agencia',decorativa:true,bloqueado:true});adaptBackgroundFrame(p,size);d.capas.push(p);d.fondo.tipo='imagen';d.fondo.transparente=false;}
-  decorateIdea(d,recipe,pal,!!background);
-  const sourceBrand=settings.keepImages?r.source.brand:null,brand=sourceBrand||assets.brand;
-  const images=settings.keepImages?r.source.images:[],slots=ideaSlots(size,recipe.layout,images.length),W=size.ancho,H=size.alto,banner=W/H>3,u=Math.min(W,H)/(banner?400:1080);
-  if(brand)d.capas.push(ideaImage(brand,'logo',slots.logo));else ideaText(d,'idea_marca',agency.nombre||'Divas Agency',slots.idea_marca,(banner?26:48)*u,pal,recipe,{fuente:'Georgia',espaciado:1.1*u,alineacion:slots.brandAlign});
-  ideaText(d,'idea_kicker',IDEA_THEMES[settings.theme].tag,slots.idea_kicker,(banner?15:24)*u,pal,recipe,{peso:'700',espaciado:1.8*u,alineacion:slots.align});
-  ideaText(d,'titulo',data.title,slots.titulo,(banner?66:172)*u,pal,recipe,{alineacion:slots.align});
-  if(data.when)ideaText(d,'idea_fecha',data.when,slots.idea_fecha,(banner?23:38)*u,pal,recipe,{peso:'700',alineacion:slots.align});
-  ideaText(d,'descripcion',data.body,slots.descripcion,(banner?24:43)*u,pal,recipe,{alineacion:slots.align});
-  images.forEach((p,i)=>d.capas.push(ideaImage(p,'idea_imagen_'+i,slots.images[i])));
-  if(data.action){d.capas.push(layer('rectangulo',{...slots.base_accion,rol:'base_accion',decorativa:true,nombre:'Base de invitación',color:pal.accent,radio:recipe.layout==='editorial'?3:38}));ideaText(d,'accion',data.action,slots.accion,(banner?21:34)*u,pal,recipe,{color:readableOn(pal.accent),peso:'700'});}
-  if(data.contact)ideaText(d,'contacto',data.contact,slots.contacto,(banner?18:30)*u,pal,recipe);
-  if(assets.ornament){const corner={x:W*.91,y:H*.70,w:Math.min(W,H)*.12,h:Math.min(W,H)*.12};const p=ideaImage(assets.ornament,'idea_deco',corner);p.decorativa=true;d.capas.splice(Math.min(d.capas.length,3),0,p);}
-  d.fuentes=recipe.font.datos?[copy(recipe.font)]:[];
-  // Las imágenes no dependen de las fuentes antiguas; solo se guarda la
-  // tipografía efectivamente utilizada por esta propuesta.
-  d.proyecto={nombre:data.title.replace(/\s+/g,' ').slice(0,62)+' · mi versión'};
-  return d;
+  decorateIdea(d,recipe,pal,!!background||settings.keepBackground,settings.keepImages?r.source.images.length:0);
+  const brand=(settings.keepImages?r.source.brand:null)||assets.brand,images=settings.keepImages?r.source.images:[],slots=ideaSlots(size,recipe.layout,images.length),W=size.ancho,H=size.alto,banner=W/H>3,u=Math.min(W,H)/(banner?400:1080);
+  // Keep source photos fully visible. Their crop, alpha and original bytes survive.
+  images.forEach((p,i)=>{const image=ideaImage(p,'idea_imagen_'+i,slots.images[i]);d.capas.push(image);});
+  const ornamentList=assets.ornaments||[assets.ornament].filter(Boolean);
+  ornamentList.slice(0,3).forEach((source,i)=>{
+    const full=['split','escenario'].includes(recipe.layout)&&!images.length,box=full?slots.motif:{x:W*(i%2?.08:.92),y:H*(.32+i*.24),w:Math.min(W,H)*.14,h:Math.min(W,H)*.17};
+    ideaPlaceOrnament(d,source,box);
+  });
+  // Solid reading plates on busy panels; the surrounding photograph stays visible.
+  if(brand)d.capas.push(ideaImage(brand,'logo',slots.logo));else ideaText(d,'idea_marca',agency.nombre||'Divas Agency',slots.idea_marca,(banner?23:40)*u,pal,recipe,{espaciado:1.6*u,alineacion:slots.brandAlign});
+  ideaText(d,'idea_kicker',IDEA_THEMES[settings.theme].tag,slots.idea_kicker,(banner?14:22)*u,pal,recipe,{peso:'700',espaciado:1.9*u,alineacion:slots.align});
+  ideaText(d,'titulo',data.title,slots.titulo,(banner?72:195)*u,pal,recipe,{alineacion:slots.align});
+  if(data.when)ideaText(d,'idea_fecha',data.when,slots.idea_fecha,(banner?22:36)*u,pal,recipe,{peso:'700',alineacion:slots.align});
+  ideaText(d,'descripcion',data.body,slots.descripcion,(banner?23:39)*u,pal,recipe,{alineacion:slots.align});
+  if(data.action){d.capas.push(layer('rectangulo',{...slots.base_accion,rol:'base_accion',decorativa:true,nombre:'Botón de invitación',color:pal.accent,radio:['editorial','split'].includes(recipe.layout)?2:45}));ideaText(d,'accion',data.action,slots.accion,(banner?20:29)*u,pal,recipe,{color:ideaInk(pal.accent,pal.a),peso:'700',espaciado:.6*u});}
+  if(data.contact)ideaText(d,'contacto',data.contact,slots.contacto,(banner?17:27)*u,pal,recipe);
+  d.fuentes=[recipe.font,recipe.bodyFont].filter((f,i,a)=>f?.datos&&a.findIndex(x=>x?.nombre===f.nombre)===i).map(copy);
+  d.proyecto={nombre:data.title.replace(/\s+/g,' ').slice(0,62)+' · mi versión'};return d;
 }
 function styleSurpriseDocument(r,recipe,size,data){
   const d=copy(r.base),pal=IDEA_PALETTES[recipe.palette],sameSize=d.lienzo.ancho===size.ancho&&d.lienzo.alto===size.alto;
@@ -8484,16 +8591,16 @@ function styleSurpriseDocument(r,recipe,size,data){
     if(p.bloqueado||p.oculto)continue;
     if(p.tipo==='texto'){
       const update=pairs.find(([id])=>id===p.id);if(update)p.texto=update[1];p.pendiente=false;
-      if(p.id===r.source.titleId){p.fuente=recipe.font.nombre;putTextLook(p,pal.effect);if(pal.effect==='tinta')p.color=pal.ink;p.glow=Math.min(68,p.glow);}
+      if(p.id===r.source.titleId){p.fuente=recipe.font.nombre;putTextLook(p,pal.effect);if(pal.effect==='tinta'||ideaLuminance(pal.a)>.18){p.acabadoTexto='solido';p.color=ideaInk(pal.a,pal.ink);p.glow=0;}p.glow=Math.min(48,p.glow);}
       else if(!recipe.settings.keepBackground){p.color=pal.ink;p.acabadoTexto='solido';p.glow=0;}
-      if(update){const oldSize=p.tamano;fitIdeaText(p,{x:p.x,y:p.y,w:p.w,h:p.h},oldSize,{align:p.alineacion,minimum:Math.min(oldSize,12)});p.glowRadio*=p.tamano/oldSize;}
+      if(update){if(p.id!==r.source.titleId)p.fuente=recipe.bodyFont?.nombre||'Arial';const oldSize=p.tamano;fitIdeaText(p,{x:p.x,y:p.y,w:p.w,h:p.h},oldSize,{align:p.alineacion,minimum:Math.min(oldSize,12)});p.glowRadio*=p.tamano/oldSize;}
       if(semanticRole(p)==='accion'&&!recipe.settings.keepBackground){p.color=readableOn(pal.accent);}
     }else if(p.tipo!=='imagen'&&p.decorativa&&!recipe.settings.keepBackground){p.color=pal.accent;p.color2=pal.light;if(p.rol==='base_accion')p.metalico=false;}
   }
-  if(recipe.font.datos&&!d.fuentes.some(f=>f.nombre===recipe.font.nombre))d.fuentes.push(copy(recipe.font));
+  for(const font of [recipe.font,recipe.bodyFont])if(font?.datos&&!d.fuentes.some(f=>f.nombre===font.nombre))d.fuentes.push(copy(font));
   const used=new Set(d.capas.filter(p=>p.tipo==='texto'||p.tipo==='tabla').map(p=>p.fuente));d.fuentes=d.fuentes.filter(f=>used.has(f.nombre));
   if(d.fuentes.length>25){const title=d.capas.find(p=>p.id===r.source.titleId);if(title)title.fuente='Georgia';d.fuentes=d.fuentes.filter(f=>f.nombre!==recipe.font.nombre);}
-  d.asistente.sorpresa={version:1,tema:recipe.settings.theme,paleta:recipe.palette,composicion:recipe.layout,semilla:recipe.seed,modo:'style'};
+  d.asistente.sorpresa={version:1,tema:recipe.settings.theme,paleta:recipe.palette,composicion:recipe.layout,semilla:recipe.seed,modo:'style',divas:recipe.settings.divas!==false,motor:2};
   d.proyecto={nombre:(r.baseName||'Mi diseño').slice(0,60)+' · nueva versión'};return d;
 }
 function currentIdea(){const r=I.session;return r?.history.find(x=>x.id===r.selected)||null;}
@@ -8504,7 +8611,7 @@ function ideaPreview(canvas,doc,max=900){
 }
 function ideaThumbnail(doc){const canvas=document.createElement('canvas');ideaPreview(canvas,doc,140);return canvas.toDataURL('image/png');}
 function ideaCleanupFonts(r){
-  const keep=new Set([...r.history.map(x=>x.recipe.font.nombre),...(S.doc.fuentes||[]).map(f=>f.nombre),...S.undo.flatMap(d=>(d.fuentes||[]).map(f=>f.nombre)),...S.redo.flatMap(d=>(d.fuentes||[]).map(f=>f.nombre))]);
+  const keep=new Set([...r.history.flatMap(x=>[x.recipe.font.nombre,x.recipe.bodyFont?.nombre].filter(Boolean)),...(S.doc.fuentes||[]).map(f=>f.nombre),...S.undo.flatMap(d=>(d.fuentes||[]).map(f=>f.nombre)),...S.redo.flatMap(d=>(d.fuentes||[]).map(f=>f.nombre))]);
   for(const [id,font] of r.fonts)if(!keep.has(font.nombre)){
     const cached=fontResources.get(font.nombre);if(cached?.face)document.fonts.delete(cached.face);fontResources.delete(font.nombre);r.fonts.delete(id);
   }
@@ -8516,7 +8623,7 @@ function resetSurpriseMemory(){
 }
 function ideaApplyForm(recipe){
   const s=recipe.settings,r=I.session;r.color=s.color;r.autoFields=new Set(['title','body','action'].filter(key=>!s.input[key]));ideaFillInputs(s.input);
-  $('ideaTheme').value=s.theme;$('ideaFormat').value=s.format;$('ideaMode').value=s.mode;$('ideaKeepImages').checked=s.keepImages;$('ideaKeepBackground').checked=s.keepBackground;$('ideaAgency').checked=s.agency;
+  $('ideaTheme').value=s.theme;$('ideaDivas').checked=s.divas!==false;$('ideaFormat').value=s.format;$('ideaMode').value=s.mode;$('ideaKeepImages').checked=s.keepImages;$('ideaKeepBackground').checked=s.keepBackground;$('ideaAgency').checked=s.agency;
 }
 function ideaControls(){
   const r=I.session;if(!r)return;const idea=currentIdea(),working=r.loading||r.applying;
@@ -8546,7 +8653,7 @@ function ideaControls(){
 function ideaWarnings(doc,recipe,r){
   const messages=[],settings=recipe.settings,canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
   const editableIds=[r.source.titleId,r.source.bodyId,r.source.whenId,r.source.contactId,r.source.actionId];
-  const crowded=doc.capas.filter(p=>p.tipo==='texto'&&!p.oculto&&(settings.mode!=='style'||(!p.bloqueado&&editableIds.includes(p.id)))).filter(p=>{ctx.font=`${p.cursiva?'italic ':''}${p.peso} ${p.tamano}px "${p.fuente}"`;const lines=wrapLines(ctx,p.texto,p.w,p.espaciado);return lines.length*p.tamano*p.interlineado>p.h+1||[...lines,...p.texto.split(/\s+/)].some(line=>measure(ctx,line,p.espaciado)>p.w+1);});
+  const crowded=doc.capas.filter(p=>p.tipo==='texto'&&!p.oculto&&(settings.mode!=='style'||(!p.bloqueado&&editableIds.includes(p.id)))).filter(p=>!fitWrappedText(ctx,p).fits);
   if(crowded.length)messages.push('Hay texto largo en '+crowded.map(p=>p.nombre).slice(0,3).join(', ')+'. Acórtalo en «Tus textos y datos» o elige otro formato.');
   if(settings.mode==='new'&&r.source.complex)messages.push('La composición nueva usa los textos principales y tus imágenes. Las tablas, grupos y detalles adicionales quedan en el original. Usa «Conservar mi distribución» para incluirlos todos.');
   if(settings.mode==='style')messages.push('Se conservan la distribución, las imágenes, los grupos y las capas bloqueadas. Solo se modifican los textos detectados. Para añadir otros, elige una composición nueva en «Formato y recursos».');
@@ -8558,35 +8665,36 @@ function showIdea(){
   if(idea){const data=ideaTextData(idea.recipe.settings,idea.recipe.seed,r.base.asistente.objetivo);for(const [key,id] of [['title','ideaTitleInput'],['body','ideaBodyInput'],['action','ideaActionInput']])if(r.autoFields?.has(key))$(id).value=data[key];}
   ideaControls();if(!idea)return;
   $('ideaName').textContent=r.comparing?'Tu diseño original':IDEA_PALETTES[idea.recipe.palette].name;
-  $('ideaRecipe').textContent=r.comparing?r.baseName:IDEA_THEMES[idea.recipe.settings.theme].name+' · '+(idea.recipe.settings.mode==='style'?'Tu distribución':IDEA_LAYOUTS[idea.recipe.layout])+' · '+(idea.recipe.font.etiqueta||idea.recipe.font.nombre);
+  $('ideaRecipe').textContent=r.comparing?r.baseName:IDEA_THEMES[idea.recipe.settings.theme].name+' · '+(idea.recipe.settings.mode==='style'?'Tu distribución':IDEA_LAYOUTS[idea.recipe.layout])+' · '+(idea.recipe.font.etiqueta||idea.recipe.font.nombre)+' + '+(idea.recipe.bodyFont?.etiqueta||'Arial');
   ideaPreview($('ideaPreview'),r.comparing?r.base:idea.doc);
   const warnings=[...ideaWarnings(idea.doc,idea.recipe,r),...idea.notes];$('ideaWarnings').hidden=!warnings.length;$('ideaWarnings').innerHTML=warnings.map(text=>`<li>${esc(text)}</li>`).join('');
-  $('ideaStatus').textContent=r.comparing?'Estás viendo el original. Vuelve a la propuesta para usarla.':'Prueba otra idea o guarda lo que te encantó con los botones «Conservar».';
+  $('ideaStatus').textContent=r.comparing?'Estás viendo el original. Vuelve a la propuesta para usarla.':'Todo es editable. Genera otra propuesta o usa la que más te guste.';
 }
 async function ideaImageAsset(r,asset,request){
   if(!asset)return null;const src=await ideaWithDeadline(privateImage(asset));surpriseGuard(r,request);
   const im=await loadImage(src);surpriseGuard(r,request);const size=imageSize(im);
-  return layer('imagen',{nombre:asset.name,src,original:src,w:size.w,h:size.h});
+  return layer('imagen',{nombre:asset.name,src,original:src,w:size.w,h:size.h,...(asset.style?.component?{ideaComponent:copy(asset.style.component)}:{})});
 }
 async function nextIdea(){
   const r=I.session;if(!r||r.loading||r.applying)return;
-  surpriseGuard(r);clearTimeout(r.editTimer);const request=++r.request;r.loading=true;r.comparing=false;ideaControls();$('ideaStatus').textContent='Combinando colores, letras y composición…';
+  surpriseGuard(r);clearTimeout(r.editTimer);const request=++r.request;r.loading=true;r.comparing=false;ideaControls();$('ideaStatus').textContent='Componiendo fondo, tipografías y detalles de tu tema…';
   try{
-    const settings=ideaReadSettings(r),recipe=ideaRecipe(r,settings),assets={},notes=[],random=seeded(recipe.seed+24),previous=currentIdea();
-    const task=async(label,job)=>{try{return await job();}catch(error){surpriseGuard(r,request);notes.push(label+' no estuvo disponible. La propuesta usa una alternativa.');return null;}};
+    const settings=ideaReadSettings(r),recipe=ideaRecipe(r,settings),assets={},notes=[],random=seeded(recipe.seed+24),previous=currentIdea(),fallback=ideaFontFallback(settings.theme,recipe.ordinal,settings.divas);
+    const task=async(label,job)=>{try{return await job();}catch(error){surpriseGuard(r,request);notes.push(label+' no estuvo disponible. Usamos una alternativa.');return null;}};
     const fontJob=(async()=>{
-      if(recipe.font)return recipe.font;
-      const allFonts=ideaFontCandidates(settings),candidates=allFonts.length>1?allFonts.filter(a=>a.id!==previous?.fontId):allFonts;
-      if(candidates.length){const a=ideaPick(candidates,random),font=await task('La fuente de la agencia',()=>ideaLoadFont(r,a,request));if(font){recipe.fontId=a.id;return font;}}
-      const font=ideaFontFallback(settings.theme,recipe.ordinal);return font;
+      if(!recipe.font){const all=ideaFontCandidates(settings),pool=all.length>1?all.filter(a=>a.id!==previous?.fontId):all,a=pool.length?ideaPick(pool,random):null;recipe.font=a?await task('La fuente del título',()=>ideaLoadFont(r,a,request)):null;if(recipe.font)recipe.fontId=a.id;recipe.font=recipe.font||fallback;}
+      if(!recipe.bodyFont){const pool=ideaFontCandidates(settings,'body').filter(a=>a.id!==recipe.fontId),a=pool.length?ideaPick(pool,random):null;recipe.bodyFont=a?await task('La fuente de lectura',()=>ideaLoadFont(r,a,request)):null;recipe.bodyFont=recipe.bodyFont||fallback.body;}
+      if(recipe.bodyFont.nombre===recipe.font.nombre)recipe.bodyFont={nombre:'Verdana',etiqueta:'Verdana'};
+      for(const font of [recipe.font,recipe.bodyFont])if(font.datos){await loadFont(font);surpriseGuard(r,request);}
     })();
-    const imageJobs=[];
+    const jobs=[];
     if(settings.mode==='new'&&settings.agency){
-      if(!settings.keepBackground){const list=ideaCandidateAssets(settings,'fondos');if(list.length)imageJobs.push(task('El fondo de la agencia',async()=>{assets.background=await ideaImageAsset(r,ideaPick(list,random),request);}));}
-      if(!(settings.keepImages&&r.source.brand)){const brands=C.items.filter(a=>a.kind==='image'&&a.is_brand&&availableAsset(a));if(brands.length)imageJobs.push(task('El logo de la agencia',async()=>{assets.brand=await ideaImageAsset(r,brands[0],request);}));}
-      const ornaments=ideaCandidateAssets(settings,'figuras').filter(a=>a.kind==='image');if(ornaments.length)imageJobs.push(task('El adorno de la agencia',async()=>{assets.ornament=await ideaImageAsset(r,ideaPick(ornaments,random),request);}));
+      if(!settings.keepBackground){const list=ideaCandidateAssets(settings,'fondos');if(list.length)jobs.push(task('El fondo de la agencia',async()=>{assets.background=await ideaImageAsset(r,ideaPick(list,random),request);}));}
+      if(!(settings.keepImages&&r.source.brand)){const brands=C.items.filter(a=>a.kind==='image'&&a.is_brand&&availableAsset(a));if(brands.length)jobs.push(task('El logo de la agencia',async()=>{assets.brand=await ideaImageAsset(r,brands[0],request);}));}
+      const ornaments=[...ideaCandidateAssets(settings,'figuras')].filter(a=>a.kind==='image'),ornamentCount=Math.min(3,ornaments.length);assets.ornaments=[];
+      for(let i=0;i<ornamentCount;i++){const [asset]=ornaments.splice(Math.floor(random()*ornaments.length),1);jobs.push(task('Un adorno de la agencia',async()=>{const p=await ideaImageAsset(r,asset,request);if(p)assets.ornaments.push(p);}));}
     }
-    const loaded=await Promise.all([fontJob,...imageJobs]);recipe.font=loaded[0];surpriseGuard(r,request);
+    await Promise.all([fontJob,...jobs]);surpriseGuard(r,request);
     const doc=normalizeProject(buildSurpriseDocument(r,recipe,assets)),item={id:'idea-'+(++I.serial),recipe,assets,notes,doc,fontId:recipe.fontId,thumb:ideaThumbnail(doc),favorite:false};
     r.history.push(item);r.selected=item.id;
     while(r.history.length>8){const oldest=r.history.findIndex(x=>!x.favorite&&x.id!==r.selected);r.history.splice(oldest<0?0:oldest,1);}
@@ -8600,7 +8708,7 @@ async function openSurprise(){
     r=I.session={base,source,baseRef:S.doc,baseRevision:S.revision,baseProject:P.current?.id,baseName:projectName(),epoch:A.epoch,request:0,counter:0,history:[],selected:null,fonts:new Map(),color:'auto',locks:{palette:false,layout:false,font:false},loading:false,applying:false,comparing:false};
     const size=formatKey(base);$('ideaFormat').querySelector('[value="original"]')?.remove();
     if(size==='original')$('ideaFormat').add(new Option('Mi formato · '+base.lienzo.ancho+' × '+base.lienzo.alto,'original'));
-    ideaApplyForm({settings:{theme:ideaDefaultTheme(source,base),color:'auto',format:size,mode:source.complex?'style':'new',keepImages:true,keepBackground:source.complex,agency:!!A.member?.active,input:source.input}});
+    ideaApplyForm({settings:{theme:ideaDefaultTheme(source,base),color:'auto',format:size,mode:'new',divas:base.asistente.sorpresa?.divas!==false,keepImages:true,keepBackground:false,agency:!!A.member?.active,input:source.input}});
     $('ideaData').open=false;$('ideaName').textContent='Tu próxima idea';$('ideaRecipe').textContent='Con tus datos, a tu estilo';ideaPreview($('ideaPreview'),base);
   }
   showDialog('surpriseDialog');ideaControls();if(r.history.length)showIdea();else await nextIdea();
@@ -8636,7 +8744,7 @@ async function applySurprise(){
 }
 $('surpriseDialog').addEventListener('close',()=>{if($('surpriseDialog').open)return;const r=I.session;if(r){r.request++;r.loading=false;clearTimeout(r.editTimer);}});
 $('surpriseDialog').addEventListener('cancel',event=>{if(I.session?.applying)event.preventDefault();});
-for(const id of ['ideaTheme','ideaFormat','ideaMode','ideaKeepImages','ideaKeepBackground','ideaAgency'])$(id).addEventListener('change',()=>{const r=I.session;if(!r)return;if(id==='ideaTheme'){r.locks.palette=false;r.locks.font=false;}nextIdea().catch(e=>{$('ideaStatus').textContent=e.message;});});
+for(const id of ['ideaDivas','ideaTheme','ideaFormat','ideaMode','ideaKeepImages','ideaKeepBackground','ideaAgency'])$(id).addEventListener('change',()=>{const r=I.session;if(!r)return;if(id==='ideaTheme'||id==='ideaDivas'){r.locks.palette=false;r.locks.font=false;r.color='auto';}nextIdea().catch(e=>{$('ideaStatus').textContent=e.message;});});
 for(const [key,id] of [['title','ideaTitleInput'],['when','ideaWhenInput'],['body','ideaBodyInput'],['contact','ideaContactInput'],['action','ideaActionInput']])$(id).addEventListener('input',()=>{I.session?.autoFields?.delete(key);editIdeaData();});
 $('surpriseDialog').addEventListener('focusin',event=>{
   if(!event.target.matches('.idea-options input,.idea-options textarea,.idea-options select')||!matchMedia('(max-width:760px) and (min-height:621px)').matches)return;
@@ -8647,7 +8755,7 @@ function resizeSurpriseLayout(d,next,old){
   const sizes={titulo:banner?66:172,descripcion:banner?24:43,idea_fecha:banner?23:38,accion:banner?21:34,contacto:banner?18:30,idea_kicker:banner?15:24,idea_marca:banner?26:48};
   for(const p of d.capas){
     if(p.rol==='fondo'){fitBackgroundToFormat(p,next,old);continue;}if(p.bloqueado)continue;
-    const box=p.rol.startsWith('idea_imagen_')?slots.images[Number(p.rol.split('_').pop())]:slots[p.rol];
+    const box=p.rol.startsWith('idea_reading_')?ideaReadingBoxes(slots,next,recipe.composicion)[Number(p.rol.split('_').pop())]:p.rol.startsWith('idea_imagen_')?slots.images[Number(p.rol.split('_').pop())]:slots[p.rol];
     if(!box){adaptFreeLayer(p,next,old);continue;}
     if(p.tipo==='imagen'){const scale=Math.min(box.w/p.w,box.h/p.h);p.x=box.x;p.y=box.y;p.w*=scale;p.h*=scale;}
     else if(p.tipo==='texto'){const before=p.tamano;fitIdeaText(p,box,(sizes[p.rol]||22)*u,{align:['titulo','descripcion','idea_kicker','idea_fecha'].includes(p.rol)?slots.align:'center',minimum:Math.max(6,14*u)});p.glowRadio*=p.tamano/before;p.contornoTexto*=p.tamano/before;}
@@ -8961,8 +9069,8 @@ function paintLayerThumbs(){
   });
 }
 function editorRailHTML(active){
-  const items=[['ajustes','Editar','move'],['recortar','Recortar','crop'],['textos','Texto','text'],['logos','Imágenes','image'],['figuras','Figuras','spark'],['fondo','Fondo','background'],['estilo','Looks','spark'],['catalog','Agencia','layers']];
-  return items.map(([id,name,icon])=>`<button data-action="${id==='recortar'?'cropStart':id==='catalog'?'catalog':'tab'}" ${id==='catalog'||id==='recortar'?'':`data-value="${id}"`} title="${name}" aria-pressed="${active===id&&!S.panelHidden}" class="${active===id&&!S.panelHidden?'active':''}">${['crop','move'].includes(icon)?cropIcon(icon):uiIcon(icon)}<span>${name}</span></button>`).join('');
+  const items=[['ajustes','Editar','move'],['recortar','Recortar','crop'],['textos','Texto','text'],['logos','Imágenes','image'],['figuras','Figuras','spark'],['fondo','Fondo','background'],['estilo','Crear flyer','spark'],['catalog','Agencia','layers']];
+  return items.map(([id,name,icon])=>`<button data-action="${id==='estilo'?'surprise':id==='recortar'?'cropStart':id==='catalog'?'catalog':'tab'}" ${id==='catalog'||id==='recortar'?'':`data-value="${id}"`} title="${name}" aria-pressed="${active===id&&!S.panelHidden}" class="${active===id&&!S.panelHidden?'active':''}">${['crop','move'].includes(icon)?cropIcon(icon):uiIcon(icon)}<span>${name}</span></button>`).join('');
 }
 matchMedia('(max-width:760px)').addEventListener('change',()=>{CR.dockKey='';if(S.opened){renderPanel();requestAnimationFrame(fitCanvas);}});
 
