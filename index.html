@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="28">
+<meta name="divas-version" content="29">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -1085,6 +1085,33 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   .co-bar{padding:6px 8px;margin-bottom:5px}.co-bar .co-info{flex-basis:auto;min-width:130px}.co-bar .co-info strong{font-size:11px}.co-bar button{min-height:36px;font-size:10px;flex:none}.co-bar #coApply{display:none}.co-bar #coActivity:empty{display:none}
 }
 
+/* v29 · conversación junto al diseño; nunca sobre él. */
+.co-studio,.co-canvas{display:contents}
+.co-chat-open .co-studio{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;flex:1;min-height:0;min-width:0}
+.co-chat-open .co-canvas{display:flex;flex-direction:column;min-width:0;min-height:0}
+#coChat{min-width:0;min-height:0;border:1px solid var(--line);border-radius:17px;overflow:hidden;background:var(--panel);display:flex;flex-direction:column;box-shadow:0 5px 22px #30102c08}
+.co-chat-heading{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid var(--line);flex-shrink:0}
+.co-chat-avatar{width:34px;height:34px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:var(--pink);color:#48263b;font-size:19px}
+.co-chat-heading>div:nth-child(2){flex:1;min-width:0}.co-chat-heading strong,.co-chat-heading small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.co-chat-heading strong{font-size:13px}.co-chat-heading small{font-size:11px;color:var(--muted);margin-top:2px}.co-chat-heading button{font-size:24px;min-width:44px;min-height:44px;padding:0;line-height:1}
+#coChatList{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:13px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;outline-offset:-3px}
+#coChatEmpty{color:var(--muted);text-align:center;font-size:12px;line-height:1.6;margin:auto 5px;padding:15px 0}
+.co-message{align-self:flex-start;max-width:92%;min-width:90px;background:var(--panel2);border:1px solid var(--line);border-radius:13px 13px 13px 3px;padding:8px 11px}
+.co-message.mine{align-self:flex-end;background:color-mix(in srgb,var(--pink) 22%,var(--panel));border-color:color-mix(in srgb,var(--pink) 48%,var(--line));border-radius:13px 13px 3px 13px}
+.co-message p{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;margin:4px 0 5px;font-size:13px;line-height:1.5;color:var(--text)}.co-message strong{font-size:10px;color:var(--muted)}.co-message footer{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:10px;color:var(--muted)}.co-message time{font-variant-numeric:tabular-nums}.co-message.failed{border-style:dashed}.co-message button{min-height:40px;padding:5px 9px;font-size:11px;margin-top:3px}.co-message[data-pending="true"] p{opacity:.8}
+#coChatForm{padding:9px 10px 7px;border-top:1px solid var(--line);flex-shrink:0}.co-chat-compose{display:flex;gap:7px;align-items:flex-end}#coChatInput{font-size:16px;line-height:1.4;min-height:44px;height:44px;max-height:78px;resize:none;padding:10px;flex:1;overscroll-behavior:contain}#coChatSend{width:44px;min-width:44px;min-height:44px;padding:10px;display:grid;place-items:center}.co-chat-foot{display:flex;justify-content:space-between;gap:6px;margin-top:5px;font-size:10px;color:var(--muted)}
+.co-chat-error{font-size:11px;padding:9px 11px;background:var(--panel2);border-bottom:1px solid var(--line);max-height:110px;overflow:auto;flex-shrink:0}.co-chat-error button{min-height:40px;font-size:11px;padding:5px 9px;margin:5px 0 0;display:block}.co-chat-closed{font-size:11px;color:var(--muted);padding:9px 12px;margin:0;border-top:1px solid var(--line)}
+#coChatLatest{font-size:11px;min-height:36px;margin:0 12px 6px;padding:5px;border-color:var(--pink);flex-shrink:0}#coChatToggle{display:flex;align-items:center;justify-content:center;gap:6px}#coChatToggle svg{width:17px;height:17px}#coChatBadge{border-radius:20px;min-width:20px;height:20px;padding:2px 5px;background:#aa316c;color:#fff;font-size:10px;font-weight:700}#coChatToggle[aria-expanded="true"]{border-color:var(--pink);background:var(--panel2)}
+.co-chat-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:760px){
+ body.co-chat-keyboard{height:var(--co-visible-height,100dvh)}
+ .co-chat-open .co-studio{display:flex;flex-direction:column;gap:5px}.co-chat-open .co-canvas{flex:1;min-height:110px}.co-chat-open #coChat{flex:0 0 min(255px,35dvh);height:min(255px,35dvh);border-radius:14px}.co-chat-open #mobileSelection,.co-chat-open .canvas-footer{display:none!important}.co-chat-open .canvas-tools{margin:3px 0}
+ .co-chat-heading{padding:4px 9px;gap:7px}.co-chat-avatar{width:29px;height:29px;border-radius:10px}.co-chat-heading strong{font-size:12px}.co-chat-heading small{font-size:10px}#coChatList{padding:8px 10px;gap:7px}.co-message{padding:6px 9px}.co-message p{margin:3px 0;font-size:13px}#coChatForm{padding:6px 9px 5px}.co-chat-foot{font-size:9px;margin-top:3px}#coChatLatest{min-height:32px;font-size:10px;margin-bottom:3px}
+ .co-chat-open .co-bar{margin-bottom:4px}.co-chat-open #coActivity{display:none}.co-chat-open #coChatToggle{flex:0 1 90px}
+ .co-chat-keyboard #mobileBar,.co-chat-keyboard .editor-toolbar,.co-chat-keyboard #coStatus,.co-chat-keyboard .canvas-tools{display:none!important}
+ .co-chat-keyboard #workspace{padding-top:3px}.co-chat-keyboard #coBar .co-info{flex-basis:auto}.co-chat-keyboard #coBar{flex-wrap:nowrap;margin-bottom:3px}.co-chat-keyboard #coBar #coTake,.co-chat-keyboard #coBar #coGrant{display:none}
+ .co-chat-keyboard .co-canvas,.co-chat-keyboard .canvas-surface{min-height:70px}.co-chat-keyboard #coChat{flex-basis:min(220px,57dvh);height:min(220px,57dvh)}
+}
+
 </style>
 </head>
 <body>
@@ -1142,7 +1169,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v28 · Móvil y ayuda en vivo</p>
+        <p class="help" id="appVersion">Divas Editor · v29 · Chat en la ayuda</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -1232,13 +1259,13 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 <main id="workspace" hidden>
   <nav id="toolRail" aria-label="Herramientas de edición"></nav>
   <section class="canvas-column">
-    <div id="coBar" class="co-bar" hidden><div class="co-info"><strong id="coTitle"></strong><small id="coStatus"></small></div><button id="coTake" data-action="coControl">Pedir control</button><button id="coGrant" data-action="coGrant" hidden>Ceder control</button><button id="coApply" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coOpen" aria-label="Opciones de la ayuda compartida">•••</button><p id="coActivity" role="status"></p></div><div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="coEntry" data-action="coOpen">♧ Ayuda compartida</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button id="surpriseButton" class="surprise-button" data-action="surprise">✦ Sorpréndeme</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
+    <div id="coBar" class="co-bar" hidden><div class="co-info"><strong id="coTitle"></strong><small id="coStatus"></small></div><button id="coTake" data-action="coControl">Pedir control</button><button id="coChatToggle" data-action="coChatToggle" aria-controls="coChat" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3Z"/></svg>Chat<span id="coChatBadge" hidden></span></button><button id="coGrant" data-action="coGrant" hidden>Ceder control</button><button id="coApply" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coOpen" aria-label="Opciones de la ayuda compartida">•••</button><p id="coActivity" role="status"></p></div><div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="coEntry" data-action="coOpen">♧ Ayuda compartida</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button id="surpriseButton" class="surprise-button" data-action="surprise">✦ Sorpréndeme</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
     <div class="save-toolbar"><button data-action="home" class="quiet">‹ Proyectos</button><button id="saveProgressButton" class="primary" data-action="saveLocal">Guardar avance</button><button data-action="saveDetails" class="save-status"><span id="projectSaveState" role="status" aria-live="polite">Cambios pendientes</span><span aria-hidden="true"> ⓘ</span></button></div>
     </div>
     <div id="saveFeedback" class="save-feedback" role="status" hidden><details id="saveFeedbackDetails"><summary>El guardado necesita atención · Ver opciones</summary><p id="saveFeedbackText"></p><div class="row"><button data-action="saveLocal">Reintentar</button><button data-action="saveCopy">Guardar como copia</button><button data-action="save">Descargar respaldo</button><button class="quiet" data-action="dismissSaveFeedback">Ocultar aviso</button></div></details></div>
     <div id="activeToolBar" class="active-tool" hidden><div><strong id="activeToolName"></strong><span id="activeToolDescription"> · Arrastra sobre la imagen</span></div><button id="activeToolFinish" data-action="tool" data-value="mover">Terminar</button></div>
     <div id="layoutNotice" class="layout-notice" hidden></div>
-    <div id="canvasSurface" class="canvas-surface">
+    <div class="co-studio"><div class="co-canvas"><div id="canvasSurface" class="canvas-surface">
     <div id="selectionModeBar" hidden role="status"></div>
     <div id="selectionStrip" class="selection-strip" hidden></div>
     <div id="viewport">
@@ -1272,6 +1299,19 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
       <span id="canvasSize">1080 × 1080 px</span>
       <span id="interactionHint">Toca un texto o un logo para editarlo.</span>
     </div>
+    </div><aside id="coChat" aria-labelledby="coChatTitle" hidden>
+ <div class="co-chat-heading"><div class="co-chat-avatar" aria-hidden="true">✦</div><div><strong id="coChatTitle">Chat de la ayuda</strong><small id="coChatPresence">Solo ustedes dos</small></div><button class="quiet" data-action="coChatClose" aria-label="Cerrar chat y volver al lienzo" title="Cerrar chat">×</button></div>
+ <div id="coChatError" class="co-chat-error" hidden><span id="coChatErrorText" role="status"></span><button data-action="coChatRefresh">Reintentar</button></div>
+ <div id="coChatList" role="log" aria-label="Mensajes de la ayuda" aria-live="off" tabindex="0"><p id="coChatEmpty">Cargando conversación…</p></div>
+ <button id="coChatLatest" data-action="coChatLatest" hidden>↓ Ver mensajes nuevos</button>
+ <p id="coChatClosed" class="co-chat-closed" hidden>La ayuda terminó. Puedes leer esta conversación.</p>
+ <form id="coChatForm" autocomplete="off">
+  <label for="coChatInput" class="co-chat-sr">Mensaje para tu compañera</label>
+  <div class="co-chat-compose"><textarea id="coChatInput" rows="1" maxlength="2000" placeholder="Escribe a tu compañera…" enterkeyhint="enter"></textarea><button id="coChatSend" type="submit" class="primary" aria-label="Enviar mensaje" title="Enviar mensaje"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 3-7 18-4-7-7-4 18-7ZM10 14 21 3"/></svg></button></div>
+  <div class="co-chat-foot"><span id="coChatHint">Solo ustedes dos · texto</span><span id="coChatCount">0/2000</span></div>
+ </form>
+</aside>
+</div>
   </section>
 
   <aside id="sidePanel">
@@ -1610,10 +1650,11 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   <div class="dialog-footer"><button data-action="resourceManager">Ver recursos</button><button id="pauseFontPack" data-action="pauseFontPack" hidden>Pausar</button><button id="retryFontPack" class="primary" data-action="retryFontPack" hidden>Continuar</button><button id="stopFontPack" data-action="stopFontPack" hidden>Dejar pendientes</button><button id="fontPackDownloadReport" data-action="fontPackReport" hidden>Informe</button></div>
 </dialog>
 <input id="agencyFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2,.zip" multiple hidden>
+<span id="coChatAnnounce" class="co-chat-sr" role="status" aria-live="polite"></span>
 <dialog id="coDialog" aria-labelledby="coDialogTitle">
  <div class="dialog-head"><div><h2 id="coDialogTitle">Ayuda compartida</h2><p class="help">Dos personas · una copia privada</p></div><button data-action="closeDialog" aria-label="Cerrar ayuda compartida">Cerrar</button></div>
  <div class="dialog-body"><p id="coDialogInfo" class="help"></p><p id="coDialogError" class="help error" role="status"></p><div id="coInviteList"></div>
- <div id="coLiveActions" hidden><label class="check"><input id="coFollow" type="checkbox" checked>Seguir la selección de mi compañera</label><p class="help">Una persona edita mientras la otra ve los cambios y puede señalar en el lienzo. «Pedir control» permite intercambiar los papeles. El guardado automático corresponde a esta copia compartida.</p><div class="co-dialog-actions"><button id="coApplyDialog" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coLeave">Salir y volver a mi proyecto</button><button data-action="coBackup">Descargar respaldo de la ayuda</button><button data-action="coReconnect">Reconectar</button><button id="coDiscard" class="danger" data-action="coDiscard">Descartar copia compartida</button></div><p class="help">Puedes retomar una ayuda activa durante las próximas 2 horas sin actividad. El resultado terminado queda disponible 7 días. Si se pierde la conexión con cambios pendientes, descarga un respaldo antes de cerrar o recargar.</p></div>
+ <div id="coLiveActions" hidden><label class="check"><input id="coFollow" type="checkbox" checked>Seguir la selección de mi compañera</label><p class="help">Una persona edita mientras la otra ve los cambios y puede señalar en el lienzo. «Pedir control» permite intercambiar los papeles. El guardado automático corresponde a esta copia compartida.</p><div class="co-dialog-actions"><button data-action="coChatToggle">Abrir chat con mi compañera</button><button id="coApplyDialog" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coLeave">Salir y volver a mi proyecto</button><button data-action="coBackup">Descargar respaldo de la ayuda</button><button data-action="coReconnect">Reconectar</button><button id="coDiscard" class="danger" data-action="coDiscard">Descartar copia compartida</button></div><p class="help">Puedes retomar una ayuda activa durante las próximas 2 horas sin actividad. El resultado terminado queda disponible 7 días. Si se pierde la conexión con cambios pendientes, descarga un respaldo antes de cerrar o recargar.</p></div>
  </div><div class="dialog-footer"><button data-action="coRefresh">Actualizar personas conectadas</button></div>
 </dialog>
 
@@ -3333,6 +3374,7 @@ function updateInteractionHint(){
     :"Arrastra · Mayús + clic: seleccionar varias · Alt + clic: capa inferior";
 }
 function setPanelVisible(visible){
+  if(visible&&CO.room?.chat?.open)coChatClose({focus:false});
   S.panelHidden=!visible;
   $("workspace").classList.toggle("panel-hidden",!visible);
   $("sidePanel").classList.toggle("mobile-open",visible);
@@ -4784,6 +4826,10 @@ async function action(name,button){
     case "mobileRotate":mobileRotate(Number(v));break;
     case "mobileStraight":mobileRotate(0,true);break;
     case "mobileFocus":mobileFocus();break;
+    case "coChatToggle":if(CO.room?.chat?.open)coChatClose();else coChatOpen();break;
+    case "coChatClose":coChatClose();break;
+    case "coChatLatest":coChatJump();break;
+    case "coChatRefresh":case "coChatRetry":await coChatRetry(button.dataset.message);break;
     case "coOpen":await run(coOpen);break;
     case "coRefresh":await coLobby({force:true});coRender();break;
     case "coInvite":await run(()=>coInvite(button.dataset.id));break;
@@ -5126,6 +5172,7 @@ document.addEventListener("click",event=>{
   if(row){const tab=S.tab;selectLayer(row.dataset.layer);S.tab=tab;renderPanel();}
 });
 function handleEditorInput(event){
+  if(event.target.closest("#coChat"))return;
   if(CO.room&&!coEditing()&&event.target.closest("#workspace")&&event.target.id!=="zoom"){event.preventDefault();return;}
   const el=event.target;
   if(removalInput(el))return;
@@ -5321,6 +5368,7 @@ $("panelBody").addEventListener("contextmenu",event=>{
   const row=event.target.closest("[data-layer]");if(row){event.preventDefault();openLayerMenu(row.dataset.layer,event.clientX,event.clientY);}
 });
 document.addEventListener("paste",event=>{
+  if(event.target.closest?.("#coChat"))return;
   const el=event.target;
   if(el.matches("[data-cell-r]")){
     if(selectedLayer()?.bloqueado)return;
@@ -5346,6 +5394,7 @@ document.addEventListener("paste",event=>{
   }
 });
 document.addEventListener("keydown",event=>{
+  if(event.target.closest?.("#coChat"))return;
   if(event.key==="Escape"){dismissHint();closeHelp();}
   if(S.busy||!S.opened||S.view!=="editor")return;
   if(CO.room&&!coEditing()){if(event.key!=="Escape")event.preventDefault();return;}
@@ -5374,7 +5423,7 @@ document.addEventListener("keyup",event=>{if(event.key.startsWith("Arrow"))S.gro
 const outsidePointers=new Set();
 let outsidePress=null;
 function isCanvasMargin(target){
-  return !!target?.matches?.('#viewport,#transformSpace,#canvasSurface,#workspace,.canvas-column,.canvas-footer,.canvas-footer>span,header,body');
+  return !!target?.matches?.('#viewport,#transformSpace,#canvasSurface,#workspace,.canvas-column,.co-canvas,.co-studio,.canvas-footer,.canvas-footer>span,header,body');
 }
 function hasCanvasModal(){return [...document.querySelectorAll("dialog[open]")].some(dialog=>dialog.id!=="helpDialog");}
 document.addEventListener("pointerdown",event=>{
@@ -7553,13 +7602,13 @@ $('creatorFontUse').addEventListener('change',()=>run(async()=>{const value=$('c
 
 
 /* v28 · ayuda compartida: copia temporal, control por turnos y presencia visual. */
-const CO={client:crypto.randomUUID(),room:null,people:[],sessions:[],timer:null,polling:false,missing:false,error:'',generation:0,joining:false};
+const CO={client:crypto.randomUUID(),visualSequence:0,room:null,people:[],sessions:[],timer:null,polling:false,missing:false,error:'',generation:0,joining:false};
 const CO_VISUAL=['x','y','w','h','rot','tamano','texto','color','color2','fuente','peso','cursiva','subrayado','alineacion','espaciado','interlineado','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraX','sombraY','opacidad','oculto','bloqueado','brillo','contraste','saturacion','desenfoque','bordeImagen','bordeImagenColor','bordeMetalico','esquinas','degradadoTexto','mezcla','ajusteTexto','minTamano'];
 function coOwner(r=CO.room){return !!r&&r.session.owner_id===A.user?.id;}
 function coEditing(r=CO.room){const s=r?.session;return !!s&&s.status==='active'&&s.controller_id===A.user?.id&&s.controller_client===CO.client&&Date.parse(s.lease_until)>Date.now()&&!r.frozen&&!r.switching;}
 function coName(id,s=CO.room?.session){return !s?'Tu compañera':id===s.owner_id?s.owner_name:s.helper_name;}
 function coGuard(r){if(CO.room!==r||r.epoch!==A.epoch||!A.member?.active)throw new Error('La sesión de ayuda cambió.');}
-async function coRPC(name,values){requireMember();try{return await boundedCloud(A.client.rpc('divas_help_'+name,values),45000);}catch(e){if(/PGRST202|Could not find.*function|schema cache|does not exist/.test(e.code+' '+e.message)){CO.missing=true;throw new Error('Falta activar la ayuda compartida: ejecuta 10-divas-ayuda-compartida.sql en Supabase y vuelve a intentar.');}throw e;}}
+async function coRPC(name,values){requireMember();try{return await coRequest(name,values);}catch(e){if(/PGRST202|Could not find.*function|schema cache|does not exist/.test(e.code+' '+e.message)){CO.missing=true;throw new Error('Falta activar la ayuda compartida: ejecuta 10-divas-ayuda-compartida.sql en Supabase y vuelve a intentar.');}throw e;}}
 function coPack(doc,r){
   const added={};
   function visit(v){
@@ -7590,6 +7639,7 @@ function coRender(){
   }
   const own=CO.sessions.find(s=>s.id!==r?.session.id);$('coNotice').hidden=!!r||!own;
   if(own){$('coNoticeText').textContent=own.status==='pending'&&own.helper_id===A.user?.id?own.owner_name+' te pide ayuda con «'+own.title+'».':own.status==='completed'?'Tienes un resultado de ayuda listo para guardar.':'Tienes una ayuda compartida en curso.';$('coNoticeButton').dataset.id=own.id;$('coNoticeButton').textContent=own.status==='pending'&&own.helper_id===A.user?.id?'Ver invitación':'Retomar ayuda';}
+  coChatRender();
   if($('coDialog').open)coRenderDialog();
 }
 function coRenderDialog(){
@@ -7601,7 +7651,7 @@ function coRenderDialog(){
 }
 async function coLobby({force=false}={}){
   if(CO.polling||!A.member?.active||A.switching||(!force&&CO.missing))return;
-  const epoch=A.epoch;CO.polling=true;try{const data=await coRPC('lobby',{p_client:CO.client,p_session:CO.room?.session.id||null});if(epoch!==A.epoch)return;CO.people=data.people||[];CO.sessions=data.sessions||[];CO.missing=false;CO.error='';if(CO.room)await coPull();coRender();}catch(e){if(epoch===A.epoch){CO.error=e.message;coRender();}}finally{CO.polling=false;}
+  const epoch=A.epoch;CO.polling=true;try{const data=await coRPC('lobby',{p_client:CO.client,p_session:CO.room?.session.id||null});if(epoch!==A.epoch)return;CO.people=data.people||[];CO.sessions=data.sessions||[];CO.missing=false;CO.error='';if(CO.room){await coPull();void coChatPull();}coRender();}catch(e){if(epoch===A.epoch){CO.error=e.message;coRender();}}finally{CO.polling=false;}
 }
 function coSchedule(){clearTimeout(CO.timer);if(!A.member?.active)return;CO.timer=setTimeout(async()=>{if(!document.hidden||CO.room)await coLobby();coSchedule();},CO.room?4000:15000);}
 function coAccount(){if(!A.member?.active)return;coSchedule();if(!CO.people.length&&!CO.missing&&!CO.polling)setTimeout(()=>coLobby(),250);}
@@ -7624,7 +7674,7 @@ async function coJoin(id,{prior=null}={}){
     const r={epoch,session:result.session,prior,assets:{},reverse:new Map(),sent:new Set(),revision:result.session.revision,dirty:false,writing:null,pending:null,channel:null,connected:false,frozen:false,error:'',seq:0,remoteSeq:0,visual:null,pull:null,activity:'',backup:null};
     coAssets(r,result.assets);r.canonical=result.doc;r.original=result.original;const d=coUnpack(result.doc,r);CO.room=r;
     try{await activateDocument(d,{project:{id:'help_'+id,nombre:'Ayuda · '+r.session.title,manual:true,creado:Date.now(),modificado:Date.now(),version:1},savePrevious:false,guard:()=>coGuard(r)});}catch(e){CO.room=null;throw e;}
-    clearTimeout(P.saveTimer);S.savedRevision=S.revision;S.undo=[];S.redo=[];if(matchMedia('(max-width:760px)').matches)setPanelVisible(false);$('coDialog').close();coConnect(r);coRender();coSchedule();
+    clearTimeout(P.saveTimer);S.savedRevision=S.revision;S.undo=[];S.redo=[];if(matchMedia('(max-width:760px)').matches)setPanelVisible(false);$('coDialog').close();coConnect(r);coRender();void coChatPull(r);coSchedule();
   }finally{CO.joining=false;}
 }
 function coBroadcast(event,payload){const r=CO.room;if(r?.connected)r.channel.send({type:'broadcast',event,payload:{...payload,client:CO.client,user:A.user.id,epoch:r.session.control_epoch}}).catch(()=>{});}
@@ -7632,13 +7682,14 @@ function coConnect(r){
   const ch=A.client.channel('divas-help:'+r.session.id,{config:{private:true,broadcast:{self:false,ack:false}}});r.channel=ch;
   ch.on('broadcast',{event:'state'},()=>{if(CO.room===r)coPull(true).catch(()=>{});});
   ch.on('broadcast',{event:'visual'},({payload})=>coReceive(r,payload));
+  ch.on('broadcast',{event:'chat'},({payload})=>{if(coChatCurrent(r)&&payload&&[r.session.owner_id,r.session.helper_id].includes(payload.user))void coChatPull(r);});
   ch.on('broadcast',{event:'point'},({payload})=>{if(CO.room!==r||!payload||payload.client===CO.client||![r.session.owner_id,r.session.helper_id].includes(payload.user))return;r.peer={...payload,at:Date.now()};r.activity=coName(payload.user)+' · '+String(payload.note||'señalando el lienzo').slice(0,100);$('coActivity').textContent=r.activity;if(payload.action&&/^[\w-]{1,50}$/.test(payload.action)){const el=document.querySelector('[data-action="'+CSS.escape(payload.action)+'"]');el?.classList.add('co-highlight');setTimeout(()=>el?.classList.remove('co-highlight'),850);}if(payload.prop&&/^[\w-]{1,50}$/.test(payload.prop)){document.querySelectorAll('[data-prop="'+CSS.escape(payload.prop)+'"]').forEach(el=>{el.classList.add('co-highlight');setTimeout(()=>el.classList.remove('co-highlight'),850);});}draw();});
-  ch.subscribe(status=>{if(CO.room!==r)return;r.connected=status==='SUBSCRIBED';coRender();if(r.connected)coPull(true).catch(()=>{});});
+  ch.subscribe(status=>{if(CO.room!==r)return;r.connected=status==='SUBSCRIBED';coRender();if(r.connected){coPull(true).catch(()=>{});void coChatPull(r);}});
 }
 function coVisualState(){return {lienzo:copy(S.doc.lienzo),fondo:copy(S.doc.fondo),capas:S.doc.capas.map(p=>{const q={id:p.id};for(const k of CO_VISUAL)if(p[k]!==undefined&&JSON.stringify(p[k]).length<8000)q[k]=copy(p[k]);return q;})};}
 function coPreview(){
   const r=CO.room;if(!coEditing(r)||r.previewTimer||!r.connected)return;
-  r.previewTimer=setTimeout(()=>{r.previewTimer=null;if(CO.room!==r||!coEditing(r))return;const next=coVisualState(),before=r.visual,changes=next.capas.filter(p=>!before||JSON.stringify(p)!==JSON.stringify(before.capas.find(x=>x.id===p.id)));const msg={seq:++r.seq,revision:r.revision,changes,selection:S.selected,tab:S.tab,lienzo:next.lienzo,fondo:next.fondo};
+  r.previewTimer=setTimeout(()=>{r.previewTimer=null;if(CO.room!==r||!coEditing(r))return;const next=coVisualState(),before=r.visual,changes=next.capas.filter(p=>!before||JSON.stringify(p)!==JSON.stringify(before.capas.find(x=>x.id===p.id)));const msg={seq:++CO.visualSequence,revision:r.revision,changes,selection:S.selected,tab:S.tab,lienzo:next.lienzo,fondo:next.fondo};
     if(JSON.stringify(msg).length<45000)coBroadcast('visual',msg);r.visual=next;
   },90);
 }
@@ -7696,6 +7747,7 @@ async function coControl(kind){
 }
 async function coApply(){
   const r=CO.room;if(!coOwner(r))throw new Error('Solo quien pidió ayuda puede guardar el resultado en su proyecto.');
+  if(!coChatBeforeLeave())return;
   if(r.session.status==='active'){if(!coEditing(r))throw new Error('Pide el control antes de guardar el resultado.');await coFlush();r.session=await coRPC('control',{p_session:r.session.id,p_client:CO.client,p_action:'finish',p_revision:r.revision});coGuard(r);coBroadcast('state',{});}
   if(r.session.status!=='completed')throw new Error('Esta ayuda no tiene un resultado listo.');
   const data=await coRPC('read',{p_session:r.session.id,p_since:-1,p_known:Object.keys(r.assets)});coGuard(r);coAssets(r,data.assets);
@@ -7708,7 +7760,7 @@ async function coApply(){
   await coLobby({force:true});
 }
 async function coLeave(discard=false){
-  const r=CO.room;if(!r)return;
+  const r=CO.room;if(!r||!coChatBeforeLeave())return;
   if(r.backup&&!discard)throw new Error('Descarga el respaldo de la ayuda antes de salir: contiene cambios locales que no se pudieron sincronizar.');
   if(discard){if(!coOwner(r))return;if(!confirm('¿Descartar esta copia compartida? Tu proyecto original se conserva.'))return;r.session=await coRPC('control',{p_session:r.session.id,p_client:CO.client,p_action:'cancel'});coBroadcast('state',{});}
   else if(r.dirty||r.pending){await coFlush();}
@@ -7824,6 +7876,126 @@ document.addEventListener('pointercancel',()=>{MOB.tap=null;MOB.ignoreNative=nul
 for(const type of ['pointerup','pointercancel'])document.addEventListener(type,()=>{if(MOB.controlPointer)requestAnimationFrame(()=>{MOB.controlPointer=false;mobileSelectionUI();});});
 
 
+/* v29 · Chat: texto privado, confirmación del servidor y reintentos sin duplicados. */
+function coChatState(r=CO.room){
+ if(!r)return null;
+ if(!r.chat){let readTo=0;try{readTo=Number(sessionStorage.getItem('divas-chat-read:'+A.user.id+':'+r.session.id))||0;}catch{}
+  r.chat={open:false,messages:[],cursor:0,outbox:[],draft:'',readTo,ready:false,canSend:true,missing:false,blocked:false,error:'',pull:null,sending:null,again:false,listKey:'',unread:0};}
+ return r.chat;
+}
+function coChatCurrent(r){return CO.room===r&&r.epoch===A.epoch&&A.member?.active;}
+function coChatCanSend(r=CO.room){const c=r?.chat;return !!c&&coChatCurrent(r)&&!c.missing&&!c.blocked&&c.canSend&&['pending','active'].includes(r.session.status);}
+function coChatAtBottom(){const l=$('coChatList');return l.scrollHeight-l.clientHeight-l.scrollTop<35;}
+function coChatMarkRead(r){const c=r?.chat;if(!c?.open||document.hidden||!coChatAtBottom())return;c.readTo=Math.max(c.readTo,...c.messages.map(m=>m.position));try{sessionStorage.setItem('divas-chat-read:'+A.user.id+':'+r.session.id,String(c.readTo));}catch{}}
+function coChatBadge(r){const c=r?.chat,n=c?.messages.filter(m=>m.sender_id!==A.user.id&&m.position>c.readTo).length||0;if(c)c.unread=n;$('coChatBadge').hidden=!n;$('coChatBadge').textContent=n>99?'99+':String(n);$('coChatToggle').setAttribute('aria-label',(c?.open?'Cerrar':'Abrir')+' chat de la ayuda'+(n?', '+n+' mensajes sin leer':''));$('coChatLatest').hidden=!c?.open||!n;}
+async function coRequest(name,values,ms=45000){
+ const controller=new AbortController();let request=A.client.rpc('divas_help_'+name,values);if(typeof request.abortSignal==='function')request=request.abortSignal(controller.signal);
+ // Preserve RPC error codes: the generic cloud translator otherwise points to SQL 01.
+ const checked=Promise.resolve(request).then(result=>{if(result.error){const e=new Error(result.error.message||'No se pudo completar la solicitud.');e.code=result.error.code;throw e;}return result;});
+ return boundedCloud(checked,ms,controller);
+}
+async function coChatRPC(name,values){
+ requireMember();try{return await coRequest('chat_'+name,values,20000);}catch(e){
+  if(/PGRST202|42883/.test(e.code||'')||/Could not find.*divas_help_chat|function.*divas_help_chat.*does not exist/.test(e.message||'')){const error=new Error('Falta activar el chat. El administrador debe ejecutar 11-divas-chat.sql en Supabase. La ayuda del lienzo sigue disponible.');error.code='CHAT_NOT_INSTALLED';throw error;}throw e;
+ }
+}
+function coChatMerge(r,rows){
+ const c=coChatState(r),known=new Map(c.messages.map(m=>[m.position,m]));let announced='';
+ for(const m of rows||[]){
+  if(!Number.isInteger(m.position)||m.position<1||![r.session.owner_id,r.session.helper_id].includes(m.sender_id)||typeof m.body!=='string')continue;
+  if(!known.has(m.position)&&m.sender_id!==A.user.id)announced=coName(m.sender_id,r.session)+': '+m.body.slice(0,180);
+  known.set(m.position,m);c.outbox=c.outbox.filter(x=>!(x.message_id===m.message_id&&m.sender_id===A.user.id));
+ }
+ c.messages=[...known.values()].sort((a,b)=>a.position-b.position);
+ if(announced&&c.ready)$('coChatAnnounce').textContent=c.open?announced:'Tienes un mensaje nuevo en el chat de la ayuda.';
+}
+function coChatFailure(r,e){
+ const c=coChatState(r);c.missing=e.code==='CHAT_NOT_INSTALLED';c.blocked=e.code==='42501';
+ c.error=c.missing||c.blocked?e.message:'No pudimos actualizar el chat. Reintenta cuando vuelva la conexión.';
+ if(c.blocked){c.messages=[];c.cursor=0;c.ready=false;c.canSend=false;}
+}
+async function coChatPull(r=CO.room,{force=false}={}){
+ if(!r||!coChatCurrent(r))return;const c=coChatState(r);
+ if((c.missing||c.blocked)&&!force)return;
+ if(c.pull){c.again=true;return c.pull;}
+ c.pull=(async()=>{
+  do{c.again=false;const data=await coChatRPC('read',{p_session:r.session.id,p_after:c.cursor});if(!coChatCurrent(r))return;
+   coChatMerge(r,data.messages);c.cursor=data.cursor;c.canSend=!!data.can_send;c.ready=true;c.missing=false;c.blocked=false;c.error='';coChatRender();
+   if(data.has_more)c.again=true;
+  }while(c.again&&coChatCurrent(r));
+ })().catch(e=>{if(coChatCurrent(r)){coChatFailure(r,e);coChatRender();}}).finally(()=>{c.pull=null;});return c.pull;
+}
+function coChatRender(){
+ const r=CO.room,c=r?coChatState(r):null,open=!!c?.open;
+ $('coChat').hidden=!open;$('workspace').classList.toggle('co-chat-open',open);$('coChatToggle').setAttribute('aria-expanded',String(open));
+ if(!r){$('coChatInput').value='';$('coChatList').replaceChildren();$('coChatAnnounce').textContent='';document.body.classList.remove('co-chat-keyboard');document.body.style.removeProperty('--co-visible-height');coChatBadge(null);return;}
+ const peer=r.session.owner_id===A.user.id?r.session.helper_id:r.session.owner_id;
+ $('coChatTitle').textContent='Chat con '+coName(peer,r.session);$('coChatPresence').textContent=c.blocked?'Sin acceso al chat':!['pending','active'].includes(r.session.status)?'Ayuda terminada · solo lectura':!r.connected?'Actualizando por conexión de respaldo':r.session.peer_online?'En línea · solo ustedes dos':'Solo ustedes dos · puede responder al volver';
+ $('coChatError').hidden=!c.error;$('coChatErrorText').textContent=c.error;
+ const canSend=coChatCanSend(r);$('coChatForm').hidden=!canSend;$('coChatClosed').hidden=canSend||c.missing||c.blocked;
+ $('coChatSend').disabled=!canSend||!c.draft.trim();$('coChatCount').textContent=c.draft.length+'/2000';
+ if($('coChatInput').value!==c.draft)$('coChatInput').value=c.draft;
+ const list=$('coChatList'),near=coChatAtBottom(),scroll=list.scrollTop;
+ const key=JSON.stringify([c.ready,c.blocked,c.messages.map(m=>[m.position,m.message_id]),c.outbox.map(m=>[m.message_id,m.state,m.error])]);
+ if(c.listKey!==key){
+  c.listKey=key;const fragment=document.createDocumentFragment();
+  for(const m of [...c.messages,...c.outbox]){
+   const pending=!m.position,mine=pending||m.sender_id===A.user.id,node=document.createElement('article');node.className='co-message'+(mine?' mine':'')+(m.state==='failed'?' failed':'');node.dataset.message=m.message_id;node.dataset.pending=String(pending);
+   const name=document.createElement('strong');name.textContent=mine?'Tú':coName(m.sender_id,r.session);node.append(name);
+   const body=document.createElement('p');body.textContent=m.body;node.append(body);
+   const footer=document.createElement('footer'),time=document.createElement('time');time.dateTime=m.created_at;const date=new Date(m.created_at);time.textContent=date.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});time.title=date.toLocaleString('es');footer.append(time);
+   const status=document.createElement('span');status.textContent=pending?(m.state==='failed'?'Sin confirmar':'Enviando…'):mine?'Enviado':'';footer.append(status);node.append(footer);
+   if(m.state==='failed'){const retry=document.createElement('button');retry.type='button';retry.dataset.action='coChatRetry';retry.dataset.message=m.message_id;retry.textContent='Reintentar envío';retry.title=m.error||'Enviar el mismo mensaje, sin duplicarlo';retry.disabled=!canSend;node.append(retry);}
+   fragment.append(node);
+  }
+  if(!fragment.childNodes.length){const empty=document.createElement('p');empty.id='coChatEmpty';empty.textContent=c.blocked?'El chat ya no está disponible.':c.ready?'¿Qué te gustaría cambiar? Escríbelo aquí mientras ven el flyer.':'Cargando conversación…';fragment.append(empty);}
+  list.replaceChildren(fragment);list.scrollTop=near?list.scrollHeight:scroll;
+ }
+ if(open)coChatMarkRead(r);coChatBadge(r);
+}
+function coChatOpen(){
+ const r=CO.room;if(!r)return;const c=coChatState(r);if($('coDialog').open)$('coDialog').close();finishBrush();closeLayerMenu();dismissHint();setPanelVisible(false);c.open=true;coChatRender();
+ requestAnimationFrame(()=>{if(CO.room===r&&c.open){$('coChatList').scrollTop=$('coChatList').scrollHeight;coChatMarkRead(r);coChatBadge(r);$('coChat').querySelector('[data-action="coChatClose"]').focus({preventScroll:true});}});
+ void coChatPull(r,{force:true});
+}
+function coChatClose({focus=true}={}){const c=CO.room?.chat;if(c)c.open=false;if($('coChat').contains(document.activeElement))document.activeElement.blur();document.body.classList.remove('co-chat-keyboard');document.body.style.removeProperty('--co-visible-height');coChatRender();if(focus&&CO.room)$('coChatToggle').focus({preventScroll:true});}
+function coChatJump(){const r=CO.room;if(!r)return;$('coChatList').scrollTop=$('coChatList').scrollHeight;coChatMarkRead(r);coChatBadge(r);}
+function coChatSend(){
+ const r=CO.room,c=r&&coChatState(r);if(!coChatCanSend(r))return;
+ const body=c.draft.trim();if(!body||body.length>2000)return;
+ c.outbox.push({message_id:crypto.randomUUID(),sender_id:A.user.id,body,created_at:new Date().toISOString(),state:'queued'});c.draft='';$('coChatInput').value='';coChatRender();coChatJump();void coChatDrain(r);
+}
+async function coChatDrain(r=CO.room){
+ if(!r||!coChatCanSend(r))return;const c=coChatState(r);if(c.sending)return c.sending;
+ c.sending=(async()=>{
+  let m;while(coChatCurrent(r)&&coChatCanSend(r)&&(m=c.outbox.find(x=>x.state==='queued'))){
+   m.state='sending';coChatRender();try{
+    const data=await coChatRPC('send',{p_session:r.session.id,p_message:m.message_id,p_body:m.body});if(!coChatCurrent(r))return;
+    coChatMerge(r,[data]);coBroadcast('chat',{});void coChatPull(r);
+   }catch(e){if(!coChatCurrent(r))return;if(c.outbox.includes(m)){m.state='failed';m.error=e.message;}
+    if(e.code==='CHAT_NOT_INSTALLED'||e.code==='42501')coChatFailure(r,e);
+   }finally{if(coChatCurrent(r))coChatRender();}
+  }
+ })().finally(()=>{c.sending=null;if(coChatCurrent(r))coChatRender();});return c.sending;
+}
+async function coChatRetry(id){const r=CO.room;if(!r)return;const c=coChatState(r);await coChatPull(r,{force:true});if(!coChatCurrent(r)||!coChatCanSend(r))return;for(const m of c.outbox)if(m.state==='failed'&&(!id||m.message_id===id))m.state='queued';await coChatDrain(r);}
+function coChatBeforeLeave(){const c=CO.room?.chat;return !c||!c.outbox.length&&!c.draft.trim()||confirm('Hay texto o mensajes sin confirmar en el chat. ¿Salir de todos modos?');}
+function coChatKeyboard(){
+ const active=!!CO.room?.chat?.open&&document.activeElement===$('coChatInput')&&matchMedia('(max-width:760px)').matches;document.body.classList.toggle('co-chat-keyboard',active);
+ if(active)document.body.style.setProperty('--co-visible-height',(window.visualViewport?.height||innerHeight)+'px');else document.body.style.removeProperty('--co-visible-height');
+}
+$('coChatForm').addEventListener('submit',e=>{e.preventDefault();coChatSend();});
+// Keep the virtual keyboard/layout stable between pointerdown and the send click.
+$('coChat').addEventListener('pointerdown',e=>{if(e.target.closest('button')&&document.activeElement===$('coChatInput'))e.preventDefault();});
+$('coChatInput').addEventListener('input',e=>{const c=coChatState();if(!c)return;c.draft=e.target.value;coChatRender();});
+$('coChat').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();coChatClose();return;}if(e.target===$('coChatInput')&&e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&matchMedia('(pointer:fine)').matches){e.preventDefault();coChatSend();}});
+$('coChatInput').addEventListener('focus',coChatKeyboard);$('coChatInput').addEventListener('blur',coChatKeyboard);
+window.visualViewport?.addEventListener('resize',coChatKeyboard);
+$('coChatList').addEventListener('scroll',()=>{if(CO.room){coChatMarkRead(CO.room);coChatBadge(CO.room);}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&CO.room){void coChatPull();coChatMarkRead(CO.room);coChatBadge(CO.room);}});
+window.addEventListener('online',()=>{if(CO.room)void coChatRetry();});
+
+
 async function fetchTemplate(){return null; /* Los recursos oficiales se cargan desde el catálogo privado. */}
 
 async function boot(){
@@ -7864,7 +8036,7 @@ window.addEventListener("online",()=>{
  if(P.saveError&&retryableSave()&&!A.switching&&!A.identityChanging){resetSaveRetry();scheduleSaveRetry();updateProjectToolbar();}
 });
 window.addEventListener("pagehide",()=>{if(S.opened){finishBrush();checkpointCurrent().catch(()=>{});}});
-window.addEventListener("beforeunload",event=>{if(CO.room?(CO.room.dirty||CO.room.pending||CO.room.backup):(S.opened&&S.revision!==S.savedRevision&&P.localRevision!==S.revision)){event.preventDefault();event.returnValue="";}});
+window.addEventListener("beforeunload",event=>{if(CO.room?(CO.room.dirty||CO.room.pending||CO.room.backup||CO.room.chat?.outbox.length||CO.room.chat?.draft.trim()):(S.opened&&S.revision!==S.savedRevision&&P.localRevision!==S.revision)){event.preventDefault();event.returnValue="";}});
 /* v26 · Sorpréndeme. Diseño por reglas locales; cada propuesta sigue editable. */
 const IDEA_PALETTES={
   petalo:{name:'Rosa de seda',family:'pastel',a:'#fff3f8',b:'#e8b3cf',ink:'#51283f',accent:'#a92c71',light:'#fff9fc',effect:'rosa'},
