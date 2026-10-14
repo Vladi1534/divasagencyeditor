@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="30">
+<meta name="divas-version" content="31">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -1205,6 +1205,55 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   #layerDock{display:none!important}
 }
 
+:root{--team-onaccent:#fff}
+:root[data-theme="dark"]{--team-onaccent:#382232}
+/* v31 · Mi equipo: personas visibles, avisos persistentes y conversación. */
+#coDialog{width:min(690px,calc(100vw - 28px));max-height:88dvh}
+#coDialog .dialog-head{padding:18px 22px}#coDialog .dialog-body{padding:16px 22px}
+#coDialog .dialog-footer{padding:10px 22px}#coDialog .dialog-footer button{min-height:40px;font-size:12px}
+#coDialog .dialog-head h2{font:700 22px/1.2 var(--font-ui,Arial,sans-serif);letter-spacing:-.5px}
+#coDialogInfo:empty,#coDialogError:empty{display:none}
+#coDialog .dialog-head .help{margin-bottom:0}
+.team-entry{display:inline-flex;gap:7px;align-items:center}.team-entry svg{width:18px;height:18px;flex-shrink:0}
+.team-count,.team-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border-radius:20px;background:var(--pink);color:var(--team-onaccent);font-size:11px;font-weight:800}
+.team-tabs{display:flex;gap:6px;padding:5px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;margin-bottom:18px}
+.team-tabs button{flex:1;border:0;background:transparent;min-height:44px;border-radius:10px;font-weight:700}
+.team-tabs button[aria-pressed=true]{background:var(--pink);color:var(--team-onaccent)}
+.team-search{display:flex;gap:8px;align-items:center}.team-search label{flex:1;min-width:0}.team-search input{margin:0;width:100%;min-height:44px}.team-search button{min-height:44px;white-space:nowrap}
+.team-search button[aria-pressed=true],.team-star[aria-pressed=true]{color:var(--text);background:var(--accent-soft,rgba(218,151,188,.2));border-color:var(--pink)}
+.team-caption{font-size:12px;line-height:1.5;color:var(--muted);margin:10px 0 14px}
+.team-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.team-person{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--panel);min-width:0}
+.team-person-head{display:flex;align-items:center;gap:10px}.team-person-name{flex:1;min-width:0}.team-person-name strong{display:block;font-size:14px;overflow-wrap:anywhere}.team-person-name small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.team-avatar{height:44px;width:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(140deg,#efc1d7,#d8addf);color:#4d2546;font-size:16px;font-weight:750;border:2px solid rgba(255,255,255,.15)}
+.team-avatar.offline{background:var(--panel2);color:var(--muted)}
+.team-star{width:40px;height:44px;padding:0;font-size:22px;background:transparent;border:0;flex-shrink:0}
+.team-presence{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin:12px 0}
+.team-dot{width:8px;height:8px;border-radius:50%;background:#8c8794;display:inline-block;flex-shrink:0}.team-dot.online{background:#26996b}.team-dot.busy{background:#c49028}
+.team-person .team-ask{width:100%;min-height:44px;font-size:13px}
+.team-empty{grid-column:1/-1;text-align:center;padding:24px 18px;border:1px dashed var(--line);border-radius:14px;color:var(--muted)}.team-empty strong{display:block;color:var(--text);font-size:15px;margin-bottom:7px}.team-empty p{font-size:13px;line-height:1.5;margin:0 0 14px}
+.team-filters,.team-pages{display:flex;gap:8px;align-items:center;margin:12px 0}.team-filters button{min-height:40px;font-size:13px}.team-filters button[aria-pressed=true]{border-color:var(--pink);background:var(--accent-soft,rgba(218,151,188,.18))}.team-pages{justify-content:center;font-size:12px;color:var(--muted)}.team-pages button{min-height:44px;font-size:12px}
+.team-request{display:flex;width:100%;gap:12px;text-align:left;align-items:center;padding:12px;margin:8px 0;border-radius:14px;min-height:86px;background:var(--panel)}.team-request.unread{border-color:var(--pink)}
+.team-thumbnail{width:52px;height:66px;object-fit:contain;border-radius:8px;flex:0 0 52px;background:var(--panel2);border:1px solid var(--line)}
+.team-request-copy{flex:1;min-width:0}.team-request-copy strong{display:block;overflow-wrap:anywhere;font-size:14px}.team-request-copy small{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:3px}.team-state{display:inline-block;font-size:11px;font-weight:650;color:var(--muted);margin-top:5px}.team-request.unread .team-state{color:var(--text)}
+.team-back{border:0;background:transparent;padding:4px 0;min-height:44px;font-size:13px;color:var(--muted)}
+.team-project{display:flex;align-items:center;gap:12px;margin:16px 0;padding:12px;border-radius:12px;border:1px solid var(--line)}.team-project strong{display:block;font-size:14px;overflow-wrap:anywhere}.team-project small{color:var(--muted);font-size:12px}
+#teamComposeForm label{display:block;margin:14px 0;font-size:13px}#teamComposeForm select,#teamComposeForm textarea{margin-top:7px;width:100%;font-size:14px}
+.team-thread-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.team-thread-actions button{min-height:44px;font-size:13px;flex:1}.team-thread-actions button.danger{flex:0 1 auto}
+.team-thread-summary{display:flex;gap:12px;align-items:center}.team-thread-summary h3{margin:0 0 4px;font-size:16px;overflow-wrap:anywhere}.team-thread-summary p{margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+.team-messages{min-height:120px;max-height:260px;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--bg);scrollbar-width:thin}
+.team-message{align-self:flex-start;max-width:88%;background:var(--panel);border:1px solid var(--line);padding:10px 12px;border-radius:12px 12px 12px 3px;font-size:13px}.team-message.mine{align-self:flex-end;background:var(--accent-soft,rgba(218,151,188,.18));border-radius:12px 12px 3px 12px}.team-message p{white-space:pre-wrap;overflow-wrap:anywhere;margin:3px 0;line-height:1.45}.team-message small{font-size:10px;color:var(--muted)}
+.team-message-form{display:flex;gap:8px;margin-top:10px;align-items:end}.team-message-form textarea{flex:1;min-width:0;resize:vertical;max-height:130px;min-height:48px;font-size:14px}.team-message-form button{min-height:48px;flex-shrink:0}
+.team-alert{padding:12px;border:1px solid var(--line);border-radius:12px;font-size:13px;line-height:1.5;margin:10px 0;background:var(--accent-soft,rgba(218,151,188,.12));overflow-wrap:anywhere}.team-alert button{font-size:12px;margin:8px 0 0;min-height:40px}
+.team-latest{display:block;margin:8px auto;font-size:12px;min-height:40px}
+#teamHomeEntry{min-height:40px}#teamThreadHint{margin-bottom:10px}
+@media(max-width:760px){
+ #coDialog{width:calc(100vw - 16px);max-height:calc(100dvh - 20px);border-radius:20px}#coDialog .dialog-head{padding:15px}#coDialog .dialog-head h2{font-size:20px}#coDialog .dialog-body{padding:12px 15px}#coDialog .dialog-footer{padding:8px 15px}
+ .team-grid{grid-template-columns:1fr;gap:10px}.team-person{padding:12px}.team-person .team-ask{width:auto;min-width:130px;margin-left:auto;display:block;margin-top:-38px}.team-presence{padding-right:142px;min-height:36px;margin-bottom:0}.team-tabs{margin-bottom:12px}.team-search{gap:6px}.team-search button{padding:8px;font-size:12px}.team-search input{font-size:16px}.team-message-form textarea,#teamComposeForm textarea,#teamComposeForm select{font-size:16px}.team-messages{max-height:28dvh;min-height:100px;padding:10px}.team-message{max-width:94%}.team-message-form button{padding:10px;font-size:13px}.team-thread-actions button{flex:1 1 45%}.team-thread-actions .danger{flex:1 1 auto}.team-caption{font-size:12px}.team-entry .team-badge{min-width:18px;height:18px}.team-request{padding:10px;gap:10px}
+ #teamHomeEntry .team-entry-label{display:none}#teamHomeEntry{padding:8px;min-width:40px}
+}
+@media(max-width:380px){.team-person .team-ask{min-width:120px;padding:8px;font-size:12px}.team-presence{padding-right:128px;font-size:11px}.team-star{width:34px}.team-person-name strong{font-size:13px}}
+
 </style>
 </head>
 <body>
@@ -1236,6 +1285,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   <div class="header-actions">
     <button id="undoBtn" class="icon-button" data-action="undo" title="Deshacer">↶</button>
     <button id="redoBtn" class="icon-button desktop-only" data-action="redo" title="Rehacer">↷</button>
+    <button id="teamHomeEntry" class="team-entry" data-action="coOpen" hidden>Mi equipo</button>
     <button id="accountButton" class="account-button" data-action="account">Entrar</button>
     <button id="downloadBtn" class="primary" data-action="export">Descargar</button>
     <details id="mainMenu" class="menu">
@@ -1251,6 +1301,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
           <p id="appearanceStatus" role="status">Sigue la apariencia de tu navegador.</p>
         </fieldset>
         <button data-action="home">Mis proyectos</button>
+        <button id="teamMenuEntry" data-action="coOpen" hidden>Mi equipo y solicitudes de ayuda</button>
         <button data-action="newDesign">Crear un diseño</button>
         <button data-action="saveLocal">Guardar avance</button>
         <button data-action="saveCopy">Guardar como copia</button>
@@ -1262,7 +1313,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v30 · Recorte y estudio ordenado</p>
+        <p class="help" id="appVersion">Divas Editor · v31 · Mi equipo</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -1746,12 +1797,52 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 <input id="agencyFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2,.zip" multiple hidden>
 <span id="coChatAnnounce" class="co-chat-sr" role="status" aria-live="polite"></span>
 <dialog id="coDialog" aria-labelledby="coDialogTitle">
- <div class="dialog-head"><div><h2 id="coDialogTitle">Ayuda compartida</h2><p class="help">Dos personas · una copia privada</p></div><button data-action="closeDialog" aria-label="Cerrar ayuda compartida">Cerrar</button></div>
+ <div class="dialog-head"><div><h2 id="coDialogTitle">Ayuda compartida</h2><p class="help">Una mano para tu próximo diseño</p></div><button data-action="closeDialog" aria-label="Cerrar ayuda compartida">Cerrar</button></div>
  <div class="dialog-body"><p id="coDialogInfo" class="help"></p><p id="coDialogError" class="help error" role="status"></p><div id="coInviteList"></div>
+<section id="teamHub" hidden aria-label="Equipo y solicitudes">
+ <nav class="team-tabs" aria-label="Ayuda compartida"><button data-action="coTeamTab" data-value="people" aria-pressed="true">Mi equipo</button><button data-action="coTeamTab" data-value="inbox" aria-pressed="false">Solicitudes <span id="teamPending" class="team-count" hidden></span></button></nav>
+ <div id="teamError" class="team-alert" role="status" hidden><span id="teamErrorText"></span><button data-action="coTeamRetry">Reintentar</button></div>
+ <section id="teamPeopleView">
+  <div id="teamProjectHint" class="team-alert" hidden>Abre un proyecto para pedir ayuda con tu diseño. <button data-action="coTeamProjects">Mis proyectos</button></div>
+  <div class="team-search"><label><span class="co-chat-sr">Buscar en tu equipo</span><input id="teamSearch" type="search" maxlength="80" placeholder="Buscar en tu equipo" autocomplete="off"></label><button id="teamFavorites" data-action="coTeamFavorites" aria-pressed="false">☆ Favoritos</button></div>
+  <p class="team-caption">Las personas de tu agencia siguen aquí aunque se desconecten.</p>
+  <div id="teamPeople" class="team-grid" aria-live="polite"></div>
+  <div id="teamPeoplePages" class="team-pages"></div>
+ </section>
+ <section id="teamInboxView" hidden>
+  <div class="team-filters"><button data-action="coTeamFilter" data-value="pending" aria-pressed="true">Pendientes</button><button data-action="coTeamFilter" data-value="history" aria-pressed="false">Historial</button></div>
+  <div id="teamRequests"></div><div id="teamRequestPages" class="team-pages"></div>
+ </section>
+ <section id="teamComposeView" hidden>
+  <button class="team-back" data-action="coTeamBack">← Volver al equipo</button>
+  <div id="teamComposePerson"></div>
+  <form id="teamComposeForm" autocomplete="off">
+   <div id="teamComposeProject" class="team-project"></div>
+   <label>¿En qué necesitas ayuda?<select id="teamTopic"><option value="otro">Un poco de todo</option><option value="texto">Texto y efectos</option><option value="imagen">Imágenes y fondo</option><option value="recorte">Recortar o encajar una imagen</option></select></label>
+   <label>Cuéntale qué necesitas <span class="help">(opcional)</span><textarea id="teamNote" rows="3" maxlength="2000" placeholder="Por ejemplo: ¿me ayudas a encajar la foto dentro del billete?"></textarea></label>
+   <p class="team-caption">Recibirá el aviso al volver al editor. Puedes seguir trabajando mientras esperas.</p>
+   <button id="teamCreateButton" class="primary wide" type="submit">Enviar solicitud</button>
+  </form>
+ </section>
+ <section id="teamThreadView" hidden>
+  <button class="team-back" data-action="coTeamBack">← Volver a solicitudes</button>
+  <div id="teamThreadSummary"></div><div id="teamThreadActions" class="team-thread-actions"></div>
+  <p id="teamThreadHint" class="team-caption"></p>
+  <div id="teamMessages" class="team-messages" role="log" aria-label="Conversación de la solicitud" aria-live="polite"></div>
+  <button id="teamMessageLatest" class="team-latest" data-action="coTeamLatest" hidden>↓ Mensajes nuevos</button>
+  <form id="teamMessageForm" class="team-message-form" autocomplete="off">
+   <label for="teamMessageInput" class="co-chat-sr">Escribe un mensaje</label><textarea id="teamMessageInput" rows="2" maxlength="2000" placeholder="Escribe un mensaje…"></textarea><button id="teamSendButton" class="primary" type="submit">Enviar</button>
+  </form>
+  <div id="teamMessageRetry" class="team-alert" hidden><span>El envío no está confirmado. Tu mensaje sigue aquí.</span><button data-action="coTeamSend">Reintentar envío</button></div>
+ </section>
+</section>
+<p id="teamSetup" class="team-alert" hidden></p>
+
  <div id="coLiveActions" hidden><label class="check"><input id="coFollow" type="checkbox" checked>Seguir la selección de mi compañera</label><p class="help">Una persona edita mientras la otra ve los cambios y puede señalar en el lienzo. «Pedir control» permite intercambiar los papeles. El guardado automático corresponde a esta copia compartida.</p><div class="co-dialog-actions"><button data-action="coChatToggle">Abrir chat con mi compañera</button><button id="coApplyDialog" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coLeave">Salir y volver a mi proyecto</button><button data-action="coBackup">Descargar respaldo de la ayuda</button><button data-action="coReconnect">Reconectar</button><button id="coDiscard" class="danger" data-action="coDiscard">Descartar copia compartida</button></div><p class="help">Puedes retomar una ayuda activa durante las próximas 2 horas sin actividad. El resultado terminado queda disponible 7 días. Si se pierde la conexión con cambios pendientes, descarga un respaldo antes de cerrar o recargar.</p></div>
- </div><div class="dialog-footer"><button data-action="coRefresh">Actualizar personas conectadas</button></div>
+ </div><div class="dialog-footer"><button data-action="coRefresh">Actualizar</button></div>
 </dialog>
 
+<dialog id="teamResultDialog" aria-labelledby="teamResultTitle"><div class="dialog-head"><h2 id="teamResultTitle">Tu proyecto tiene otro avance</h2><button data-action="closeDialog">Cerrar</button></div><div class="dialog-body"><p>El proyecto original cambió desde que empezó la ayuda, o ya no está disponible. Guarda este resultado como un proyecto nuevo para conservar ambos avances.</p></div><div class="dialog-footer"><button data-action="closeDialog">Volver a la ayuda</button><button class="primary" data-action="coTeamResultCopy">Guardar resultado como copia</button></div></dialog>
 <dialog id="fontClassDialog" aria-labelledby="fontClassTitle">
   <div class="dialog-head"><div><h2 id="fontClassTitle">Organizando tus fuentes</h2><p class="help">Una biblioteca más fácil de usar, también para tu equipo.</p></div><button data-action="closeDialog" aria-label="Cerrar y seguir editando">Cerrar</button></div>
   <div class="dialog-body">
@@ -4926,6 +5017,7 @@ async function action(name,button){
     if(['saveLocal','save','export','download','coApply','coControl','coGrant'].includes(name)){notify('Aplica o cancela el recorte primero.');return;}
     cropClose();
   }
+  if(name.startsWith("coTeam"))return teamAction(name,button);
   const p=selectedLayer(),v=button?.dataset.value;
   const protectedActions=["cropStart","cropRemove","alignToLayer","imageColorReset","textLook","textColor","fontStep","alignText","centerX","centerY","up","down","pasteStyle","imagePreset","restoreImage","cover","removeBackground","tool","editTable"];
   if(selectedLayers().some(p=>p.bloqueado)&&protectedActions.includes(name)){notify("Desbloquea la capa para cambiarla.");return;}
@@ -4956,7 +5048,7 @@ async function action(name,button){
     case "coChatLatest":coChatJump();break;
     case "coChatRefresh":case "coChatRetry":await coChatRetry(button.dataset.message);break;
     case "coOpen":await run(coOpen);break;
-    case "coRefresh":await coLobby({force:true});coRender();break;
+    case "coRefresh":TEAM.error="";await teamRefresh();coRender();break;
     case "coInvite":await run(()=>coInvite(button.dataset.id));break;
     case "coJoin":await run(()=>coJoin(button.dataset.id));break;
     case "coDecline":await run(async()=>{await coRPC('control',{p_session:button.dataset.id,p_client:CO.client,p_action:'decline'});await coLobby({force:true});});break;
@@ -6397,6 +6489,7 @@ function suggestProjectName(d=S.doc){
 function projectName(){return P.current?.manual?P.current.nombre:suggestProjectName();}
 function safeProjectFileName(name){return String(name||"divas-proyecto").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9_-]+/gi,"-").replace(/^-+|-+$/g,"").slice(0,70)||"divas-proyecto";}
 function updateShell(){
+  teamBadges();
   document.body.classList.toggle("editor-open",S.view==="editor");
   $("downloadBtn").disabled=!S.opened||S.view!=="editor";updateHistory();updateProjectToolbar();
   document.title=S.view==="editor"?projectName()+" · Divas Agency":"Divas Agency · Mis proyectos";
@@ -7765,28 +7858,41 @@ function coRender(){
   }
   const own=CO.sessions.find(s=>s.id!==r?.session.id);$('coNotice').hidden=!!r||!own;
   if(own){$('coNoticeText').textContent=own.status==='pending'&&own.helper_id===A.user?.id?own.owner_name+' te pide ayuda con «'+own.title+'».':own.status==='completed'?'Tienes un resultado de ayuda listo para guardar.':'Tienes una ayuda compartida en curso.';$('coNoticeButton').dataset.id=own.id;$('coNoticeButton').textContent=own.status==='pending'&&own.helper_id===A.user?.id?'Ver invitación':'Retomar ayuda';}
-  coChatRender();
+  coChatRender();teamBadges();
   if($('coDialog').open)coRenderDialog();
 }
 function coRenderDialog(){
   const r=CO.room;$('coDialogTitle').textContent=r?'Tu sesión de ayuda':'Ayuda compartida';
   $('coDialogInfo').textContent=r?'Trabajáis sobre una copia temporal. Podéis ceder el control sin salir del diseño.':'Elige una persona conectada. Verá una copia de tu flyer y podrá ayudarte; tu proyecto original se conserva hasta que guardes el resultado.';
   $('coDialogError').textContent=CO.error||r?.error||'';$('coInviteList').hidden=!!r;$('coLiveActions').hidden=!r;
-  if(r){$('coDiscard').hidden=!coOwner()||!['pending','active'].includes(r.session.status);$('coApplyDialog').hidden=!coOwner()||!['active','completed'].includes(r.session.status);$('coApplyDialog').disabled=r.session.status==='active'&&!coEditing();return;}
+  if(r){teamRender();$('coDiscard').hidden=!coOwner()||!['pending','active'].includes(r.session.status);$('coApplyDialog').hidden=!coOwner()||!['active','completed'].includes(r.session.status);$('coApplyDialog').disabled=r.session.status==='active'&&!coEditing();return;}
   $('coInviteList').innerHTML=CO.sessions.map(s=>`<div class="co-person"><div><strong>${esc(s.title)}</strong><small>${esc(s.owner_name)} + ${esc(s.helper_name)} · ${s.status==='pending'?'invitación pendiente':s.status==='completed'?'resultado listo':'en curso'}</small></div><button class="primary" data-action="coJoin" data-id="${s.id}">${s.status==='pending'&&s.helper_id===A.user.id?'Aceptar':'Retomar'}</button>${s.status==='pending'&&s.helper_id===A.user.id?`<button data-action="coDecline" data-id="${s.id}">Ahora no</button>`:''}</div>`).join('')+CO.people.map(p=>`<div class="co-person"><div><strong>${esc(p.display_name)}</strong><small>${p.busy?'En otra ayuda':'● Conectada'}</small></div><button data-action="coInvite" data-id="${p.user_id}" ${p.busy||CO.sessions.some(s=>['active','pending'].includes(s.status))||!S.opened||S.view!=='editor'?'disabled':''}>Pedir ayuda</button></div>`).join('')||'<p class="help">No hay otras cuentas aprobadas conectadas. Pide a tu compañera que abra esta versión del editor e inicie sesión.</p>';
+  teamRender();
 }
 async function coLobby({force=false}={}){
-  if(CO.polling||!A.member?.active||A.switching||(!force&&CO.missing))return;
-  const epoch=A.epoch;CO.polling=true;try{const data=await coRPC('lobby',{p_client:CO.client,p_session:CO.room?.session.id||null});if(epoch!==A.epoch)return;CO.people=data.people||[];CO.sessions=data.sessions||[];CO.missing=false;CO.error='';if(CO.room){await coPull();void coChatPull();}coRender();}catch(e){if(epoch===A.epoch){CO.error=e.message;coRender();}}finally{CO.polling=false;}
+  if(CO.polling){if(force)TEAM.reload=true;return;}if(!A.member?.active||A.switching||(!force&&CO.missing))return;
+  const epoch=A.epoch;CO.polling=true;try{
+    let data,params=teamParams();
+    if(TEAM.available!==false||force){
+      try{data=await teamRPC('lobby',params);teamReceive(data,params);TEAM.error='';}
+      catch(e){if(e.code!=='TEAM_NOT_INSTALLED')throw e;TEAM.available=false;data=await coRPC('lobby',{p_client:CO.client,p_session:CO.room?.session.id||null});}
+    }else data=await coRPC('lobby',{p_client:CO.client,p_session:CO.room?.session.id||null});
+    if(epoch!==A.epoch)return;CO.people=data.people||CO.people;CO.sessions=data.sessions||[];CO.missing=false;CO.error='';
+    if(CO.room){await coPull();void coChatPull();}
+    if(TEAM.available&&TEAM.view==='thread'&&$('coDialog').open&&!CO.room)await teamPullThread().catch(teamThreadError);
+    coRender();
+  }catch(e){if(epoch===A.epoch){CO.error=e.message;TEAM.error=e.message;coRender();}}
+  finally{CO.polling=false;if(TEAM.reload){TEAM.reload=false;setTimeout(()=>coLobby({force:true}),0);}}
 }
-function coSchedule(){clearTimeout(CO.timer);if(!A.member?.active)return;CO.timer=setTimeout(async()=>{if(!document.hidden||CO.room)await coLobby();coSchedule();},CO.room?4000:15000);}
+function coSchedule(){clearTimeout(CO.timer);if(!A.member?.active)return;CO.timer=setTimeout(async()=>{if(!document.hidden||CO.room)await coLobby();coSchedule();},CO.room||$('coDialog').open?4000:15000);}
 function coAccount(){if(!A.member?.active)return;coSchedule();if(!CO.people.length&&!CO.missing&&!CO.polling)setTimeout(()=>coLobby(),250);}
-async function coOpen(){requireMember();CO.error='';showDialog('coDialog');coRenderDialog();await coLobby({force:true});coRenderDialog();}
+async function coOpen(){requireMember();CO.error='';if(!CO.room&&CO.sessions.length&&TEAM.view==='people')TEAM.view='inbox';showDialog('coDialog');coRenderDialog();await coLobby({force:true});coRenderDialog();coSchedule();}
 function coPrior(){return S.opened&&P.current?{doc:copy(S.doc),project:{...copy(P.current),version:P.versions.get(P.current.id)||0,editor:{tab:S.tab,zoom:S.zoom,fit:S.fit,selected:S.selected}}}:null;}
-async function coInvite(id){
+async function coInvite(id,requestId=null){
   requireMember();if(CO.room)throw new Error('Ya tienes una ayuda abierta.');if(!S.opened||S.view!=='editor')throw new Error('Abre el proyecto para el que necesitas ayuda.');
   await saveCurrent({force:true});const epoch=A.epoch,doc=S.doc,project=P.current.id,prior=coPrior(),r={assets:{},reverse:new Map(),sent:new Set()},packed=coPack(S.doc,r);
-  const s=await coRPC('create',{p_helper:id,p_client:CO.client,p_project:project,p_version:P.versions.get(project)||0,p_doc:packed.doc,p_assets:packed.assets});
+  const args={p_client:CO.client,p_project:project,p_version:P.versions.get(project)||0,p_doc:packed.doc,p_assets:packed.assets};
+  const s=requestId?await teamRPC('start',{p_request:requestId,...args}):await coRPC('create',{p_helper:id,...args});
   if(epoch!==A.epoch||doc!==S.doc||P.current?.id!==project)throw new Error('Cambió el proyecto. La invitación quedó disponible en Ayuda compartida.');
   await coJoin(s.id,{prior});
 }
@@ -7871,17 +7977,18 @@ async function coControl(kind){
   else{const action=Date.parse(r.session.lease_until)<Date.now()?'take':'request';const s=await coRPC('control',{p_session:r.session.id,p_client:CO.client,p_action:action,p_revision:r.revision});coGuard(r);r.session=s;if(action==='take'){r.remoteSeq=0;r.visual=null;S.undo=[];S.redo=[];const data=await coRPC('read',{p_session:s.id,p_since:-1,p_known:Object.keys(r.assets)});coGuard(r);coAssets(r,data.assets);const d=coUnpack(data.doc,r);await hydrate(d);coGuard(r);S.doc=d;r.canonical=data.doc;r.revision=data.session.revision;r.dirty=false;r.pending=null;refresh();}}
   coBroadcast('state',{});coRender();
 }
-async function coApply(){
+async function coApply({asCopy=false}={}){
   const r=CO.room;if(!coOwner(r))throw new Error('Solo quien pidió ayuda puede guardar el resultado en su proyecto.');
   if(!coChatBeforeLeave())return;
+  if(!asCopy&&TEAM.available){const check=await teamRPC('result_check',{p_session:r.session.id});coGuard(r);if(!check.unchanged){showDialog('teamResultDialog');return;}}
   if(r.session.status==='active'){if(!coEditing(r))throw new Error('Pide el control antes de guardar el resultado.');await coFlush();r.session=await coRPC('control',{p_session:r.session.id,p_client:CO.client,p_action:'finish',p_revision:r.revision});coGuard(r);coBroadcast('state',{});}
   if(r.session.status!=='completed')throw new Error('Esta ayuda no tiene un resultado listo.');
   const data=await coRPC('read',{p_session:r.session.id,p_since:-1,p_known:Object.keys(r.assets)});coGuard(r);coAssets(r,data.assets);
   const final=coUnpack(data.doc,r),original=coUnpack(data.original||r.original,r),origin=copy(data.session.origin),sid=r.session.id;
-  coResetRoom();await activateDocument(original,{project:origin,savePrevious:false});commit(()=>{S.doc=final;});
+  coResetRoom();if(asCopy){final.proyecto={nombre:origin.nombre+' · ayuda'};await activateDocument(final,{savePrevious:false});}else{await activateDocument(original,{project:origin,savePrevious:false});commit(()=>{S.doc=final;});}
   try{await saveCurrent({force:true});}
   catch(e){notify('El resultado está abierto, pero falta confirmar su guardado: '+e.message);throw e;}
-  try{await coRPC('control',{p_session:sid,p_client:CO.client,p_action:'applied'});notify('Resultado guardado en tu proyecto. Deshacer recupera la composición anterior.');}
+  try{await coRPC('control',{p_session:sid,p_client:CO.client,p_action:'applied'});notify(asCopy?'Resultado guardado como un proyecto nuevo. Tu original se conserva.':'Resultado guardado en tu proyecto. Deshacer recupera la composición anterior.');}
   catch(e){notify('Tu proyecto se guardó. Quedó pendiente cerrar el aviso de esta ayuda; no vuelvas a aplicar el resultado.');}
   await coLobby({force:true});
 }
@@ -7894,7 +8001,7 @@ async function coLeave(discard=false){
   await coLobby({force:true});
 }
 function coResetRoom(){const r=CO.room;CO.room=null;if(r){clearTimeout(r.saveTimer);clearTimeout(r.previewTimer);if(r.channel)A.client?.removeChannel(r.channel).catch(()=>{});}document.body.classList.remove('co-viewing');$('coBar').hidden=true;$('coDialog').close();clearTimeout(P.saveTimer);coRender();}
-function coReset(){CO.generation++;coResetRoom();clearTimeout(CO.timer);CO.people=[];CO.sessions=[];CO.error='';CO.missing=false;CO.polling=false;$('coNotice').hidden=true;$('coInviteList').replaceChildren();}
+function coReset(){teamReset();CO.generation++;coResetRoom();clearTimeout(CO.timer);CO.people=[];CO.sessions=[];CO.error='';CO.missing=false;CO.polling=false;$('coNotice').hidden=true;$('coInviteList').replaceChildren();}
 function coNavigation(){if(CO.room)throw new Error('Usa Ayuda compartida → Salir y volver a mi proyecto. La copia queda disponible para retomarla.');}
 function coLocalBackup(){const r=CO.room;if(!r)return;const doc=r.backup||S.doc;download(new Blob([JSON.stringify(doc)],{type:'application/json'}),'divas-respaldo-ayuda.json');r.backup=null;}
 function drawCollabOverlay(c){const r=CO.room,p=r?.peer;if(!p||Date.now()-p.at>5000||!Number.isFinite(p.x)||!Number.isFinite(p.y))return;const z=Math.max(.1,S.zoom),radius=6/z;c.save();c.strokeStyle='#17bccc';c.fillStyle='#17bccc';c.lineWidth=2/z;c.beginPath();c.arc(p.x,p.y,radius,0,Math.PI*2);c.fill();c.strokeStyle='#fff';c.stroke();c.font=`600 ${12/z}px Arial`;c.textBaseline='top';const name=coName(p.user).slice(0,32),w=c.measureText(name).width;c.fillStyle='#153641';c.fillRect(p.x+10/z,p.y+10/z,w+12/z,22/z);c.fillStyle='#fff';c.fillText(name,p.x+16/z,p.y+14/z);c.restore();}
@@ -8012,7 +8119,7 @@ function coChatState(r=CO.room){
 function coChatCurrent(r){return CO.room===r&&r.epoch===A.epoch&&A.member?.active;}
 function coChatCanSend(r=CO.room){const c=r?.chat;return !!c&&coChatCurrent(r)&&!c.missing&&!c.blocked&&c.canSend&&['pending','active'].includes(r.session.status);}
 function coChatAtBottom(){const l=$('coChatList');return l.scrollHeight-l.clientHeight-l.scrollTop<35;}
-function coChatMarkRead(r){const c=r?.chat;if(!c?.open||document.hidden||!coChatAtBottom())return;c.readTo=Math.max(c.readTo,...c.messages.map(m=>m.position));try{sessionStorage.setItem('divas-chat-read:'+A.user.id+':'+r.session.id,String(c.readTo));}catch{}}
+function coChatMarkRead(r){const c=r?.chat;if(!c?.open||document.hidden||!coChatAtBottom())return;c.readTo=Math.max(c.readTo,...c.messages.map(m=>m.position));try{sessionStorage.setItem('divas-chat-read:'+A.user.id+':'+r.session.id,String(c.readTo));}catch{}teamChatSeen(r);}
 function coChatBadge(r){const c=r?.chat,n=c?.messages.filter(m=>m.sender_id!==A.user.id&&m.position>c.readTo).length||0;if(c)c.unread=n;$('coChatBadge').hidden=!n;$('coChatBadge').textContent=n>99?'99+':String(n);$('coChatToggle').setAttribute('aria-label',(c?.open?'Cerrar':'Abrir')+' chat de la ayuda'+(n?', '+n+' mensajes sin leer':''));$('coChatLatest').hidden=!c?.open||!n;}
 async function coRequest(name,values,ms=45000){
  const controller=new AbortController();let request=A.client.rpc('divas_help_'+name,values);if(typeof request.abortSignal==='function')request=request.abortSignal(controller.signal);
@@ -8046,7 +8153,7 @@ async function coChatPull(r=CO.room,{force=false}={}){
  if(c.pull){c.again=true;return c.pull;}
  c.pull=(async()=>{
   do{c.again=false;const data=await coChatRPC('read',{p_session:r.session.id,p_after:c.cursor});if(!coChatCurrent(r))return;
-   coChatMerge(r,data.messages);c.cursor=data.cursor;c.canSend=!!data.can_send;c.ready=true;c.missing=false;c.blocked=false;c.error='';coChatRender();
+   if(data.request){r.teamRequestId=data.request.id;if(!data.has_more)r.teamRequestVersion=data.request.version;}coChatMerge(r,data.messages);c.cursor=data.cursor;c.canSend=!!data.can_send;c.ready=true;c.missing=false;c.blocked=false;c.error='';coChatRender();
    if(data.has_more)c.again=true;
   }while(c.again&&coChatCurrent(r));
  })().catch(e=>{if(coChatCurrent(r)){coChatFailure(r,e);coChatRender();}}).finally(()=>{c.pull=null;});return c.pull;
@@ -8860,6 +8967,183 @@ function editorRailHTML(active){
 matchMedia('(max-width:760px)').addEventListener('change',()=>{CR.dockKey='';if(S.opened){renderPanel();requestAnimationFrame(fitCanvas);}});
 
 $('workspace').insertBefore(document.querySelector('.editor-toolbar'),$('toolRail'));
+
+/* v31 · Mi equipo: approved agency roster, durable requests, one conversation. */
+const TEAM={available:null,view:'people',query:'',offset:0,favorites:false,filter:'pending',page:0,people:[],requests:[],peopleMore:false,requestsMore:false,unread:0,pending:0,ready:false,error:'',busy:false,compose:null,thread:null,threads:new Map(),listKey:'',peopleKey:'',messagesKey:'',reload:false,searchTimer:null,generation:0};
+const TEAM_TOPICS={texto:'Texto y efectos',imagen:'Imágenes y fondo',recorte:'Recortar o encajar',otro:'Un poco de todo'};
+function teamIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a5 5 0 0 0-4-4"/></svg>';}
+function teamInitials(name){return String(name||'?').trim().split(/\s+/).slice(0,2).map(n=>[...n][0]||'').join('').toLocaleUpperCase();}
+function teamAvatar(p){return '<span class="team-avatar '+(!p.online?'offline':'')+'" aria-hidden="true">'+esc(teamInitials(p.display_name))+'</span>';}
+function teamPresence(p){return '<span class="team-dot '+(p.online?(p.busy?'busy':'online'):'')+'" aria-hidden="true"></span>'+(!p.online?'Desconectada':p.busy?'En otra ayuda':'En el editor');}
+function teamThumb(src){return typeof src==='string'&&src.length<=60000&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(src)?'<img class="team-thumbnail" src="'+src+'" alt="Vista del proyecto">':'<span class="team-thumbnail" aria-hidden="true"></span>';}
+function teamState(r){return {pending:r.owner_id===A.user?.id?'Solicitud enviada':'Te pide ayuda',ready:r.owner_id===A.user?.id?'Aceptó ayudarte':'Has aceptado ayudar',started:'Ayuda iniciada',completed:'Ayuda terminada',closed:'Sesión finalizada',cancelled:'Solicitud cancelada',declined:'Ahora no puede ayudar'}[r.state]||'Solicitud';}
+function teamPeer(r){return r.owner_id===A.user?.id?r.helper_name:r.owner_name;}
+function teamAtBottom(){const e=$('teamMessages');return e.scrollHeight-e.clientHeight-e.scrollTop<40;}
+function teamParams(){const open=$('coDialog').open&&!CO.room;return {p_client:CO.client,p_session:CO.room?.session.id||null,p_query:TEAM.query,p_offset:TEAM.offset,p_favorites:TEAM.favorites,p_people:open&&TEAM.view==='people',p_list:open&&TEAM.view==='inbox'?TEAM.filter:'none',p_page:TEAM.page};}
+async function teamRPC(name,args){
+ requireMember();const epoch=A.epoch,client=A.client,controller=new AbortController();let req=client.rpc('divas_team_'+name,args);if(typeof req.abortSignal==='function')req=req.abortSignal(controller.signal);
+ try{const data=await boundedCloud(Promise.resolve(req).then(r=>{if(r.error){const e=new Error(r.error.message||'No se pudo completar la solicitud.');e.code=r.error.code;throw e;}return r;}),name==='start'?90000:20000,controller);if(epoch!==A.epoch||client!==A.client)throw new Error('La cuenta cambió. Abre Mi equipo de nuevo.');return data;}
+ catch(e){if(/PGRST202|42883/.test(e.code||'')||/Could not find.*divas_team|function.*divas_team.*does not exist/.test(e.message||'')){const err=new Error('Falta activar Mi equipo. Ejecuta 12-divas-mi-equipo.sql en el mismo proyecto Supabase y pulsa Reintentar.');err.code='TEAM_NOT_INSTALLED';throw err;}throw e;}
+}
+function teamReceive(data,params){
+ TEAM.available=true;TEAM.ready=true;TEAM.unread=data.unread||0;TEAM.pending=data.pending||0;
+ const now=teamParams();if(params.p_query===now.p_query&&params.p_offset===now.p_offset&&params.p_favorites===now.p_favorites&&Array.isArray(data.people)){TEAM.people=data.people.slice(0,12);TEAM.peopleMore=data.people.length>12;}
+ if(params.p_list===now.p_list&&params.p_page===now.p_page&&Array.isArray(data.requests)){TEAM.requests=data.requests.slice(0,12);TEAM.requestsMore=data.requests.length>12;}
+}
+function teamBadges(){
+ const signed=!!A.member?.active,n=signed?TEAM.unread:0;
+ for(const id of ['coEntry','teamHomeEntry']){const e=$(id);if(!e)continue;e.classList.add('team-entry');e.innerHTML=teamIcon()+'<span class="team-entry-label">'+(CO.room&&id==='coEntry'?'Ayuda en vivo':'Mi equipo')+'</span>'+(n?'<span class="team-badge">'+(n>99?'99+':n)+'</span>':'');e.setAttribute('aria-label',(CO.room&&id==='coEntry'?'Ayuda en vivo':'Mi equipo')+(n?', '+n+' avisos sin leer':''));}
+ $('teamHomeEntry').hidden=!signed||S.view==='editor';$('teamMenuEntry').hidden=!signed;
+ $('teamProjectHint').hidden=!!S.opened&&!!P.current;
+ $('teamPending').hidden=!TEAM.pending;$('teamPending').textContent=String(TEAM.pending);
+ if(!CO.room&&!CO.sessions.length&&signed&&n){$('coNotice').hidden=false;$('coNoticeText').textContent=n===1?'Tienes un aviso de tu equipo.':'Tienes '+n+' avisos de tu equipo.';$('coNoticeButton').textContent='Ver solicitudes';$('coNoticeButton').dataset.action='coTeamInbox';}
+ else $('coNoticeButton').dataset.action='coOpen';
+}
+function teamPages(offset,more,kind){return offset||more?'<button data-action="coTeamPage" data-value="'+kind+'" data-step="-1" '+(!offset?'disabled':'')+'>← Anterior</button><span>Página '+(Math.floor(offset/12)+1)+'</span><button data-action="coTeamPage" data-value="'+kind+'" data-step="1" '+(!more?'disabled':'')+'>Siguiente →</button>':'';}
+function teamEmpty(title,text,button=''){return '<div class="team-empty"><strong>'+esc(title)+'</strong><p>'+esc(text)+'</p>'+button+'</div>';}
+function teamRender(){
+ teamBadges();const showing=!CO.room;
+ $('teamHub').hidden=!showing||TEAM.available===false;$('teamSetup').hidden=!showing||TEAM.available!==false;
+ $('teamSetup').textContent=A.member?.role==='admin'?'Para activar contactos y solicitudes sin conexión, ejecuta 12-divas-mi-equipo.sql en Supabase. Después pulsa Actualizar.':'Mi equipo está pendiente de activación por la administración. La ayuda en vivo anterior sigue disponible.';
+ if(!showing||TEAM.available===false)return;
+ $('coInviteList').hidden=true;$('coDialogTitle').textContent='Mi equipo';$('coDialogInfo').textContent='';
+ $('teamError').hidden=!TEAM.error;$('teamErrorText').textContent=TEAM.error;
+ for(const [view,id] of [['people','teamPeopleView'],['inbox','teamInboxView'],['compose','teamComposeView'],['thread','teamThreadView']])$(id).hidden=TEAM.view!==view;
+ document.querySelectorAll('[data-action="coTeamTab"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.value===(TEAM.view==='thread'?'inbox':TEAM.view==='compose'?'people':TEAM.view))));
+ document.querySelectorAll('[data-action="coTeamFilter"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.value===TEAM.filter)));
+ $('teamFavorites').setAttribute('aria-pressed',String(TEAM.favorites));$('teamFavorites').textContent=(TEAM.favorites?'★':'☆')+' Favoritos';
+ if(TEAM.view==='people'){
+  const key=JSON.stringify([TEAM.people,TEAM.ready,TEAM.query,TEAM.offset,TEAM.favorites]);if(key!==TEAM.peopleKey){TEAM.peopleKey=key;
+   $('teamPeople').innerHTML=TEAM.people.map(p=>'<article class="team-person"><div class="team-person-head">'+teamAvatar(p)+'<div class="team-person-name"><strong>'+esc(p.display_name)+'</strong><small>'+(p.role==='admin'?'Administración':'Agencia')+'</small></div><button class="team-star" data-action="coTeamFavorite" data-id="'+p.user_id+'" aria-pressed="'+p.favorite+'" aria-label="'+(p.favorite?'Quitar de':'Añadir a')+' favoritos a '+esc(p.display_name)+'">'+(p.favorite?'★':'☆')+'</button></div><div class="team-presence">'+teamPresence(p)+'</div><button class="team-ask '+(p.online&&!p.busy?'primary':'')+'" data-action="coTeamCompose" data-id="'+p.user_id+'">'+(p.online&&!p.busy?'Pedir ayuda':'Dejar solicitud')+'</button></article>').join('')||teamEmpty(!TEAM.ready?'Buscando tu equipo…':TEAM.query?'No encontramos ese nombre':TEAM.favorites?'Tus favoritos aparecerán aquí':'Tu equipo empieza aquí',!TEAM.ready?'':TEAM.query?'Prueba con otro nombre.':TEAM.favorites?'Marca la estrella de las personas con las que trabajas más.':'Las demás cuentas aprobadas de esta agencia aparecerán aquí, estén conectadas o no.',TEAM.favorites?'<button data-action="coTeamFavorites">Ver todo mi equipo</button>':'');
+  }$('teamPeoplePages').innerHTML=teamPages(TEAM.offset,TEAM.peopleMore,'people');
+ }
+ if(TEAM.view==='inbox'){
+  const key=JSON.stringify([TEAM.requests,TEAM.filter,CO.sessions]);if(key!==TEAM.listKey){TEAM.listKey=key;
+   const legacy=CO.sessions.filter(s=>!TEAM.requests.some(r=>r.session_id===s.id)).map(s=>'<button class="team-request" data-action="coJoin" data-id="'+s.id+'"><span class="team-request-copy"><strong>'+esc(s.title)+'</strong><small>'+esc(s.owner_name)+' + '+esc(s.helper_name)+'</small><span class="team-state">'+(s.status==='pending'?'Abrir invitación en vivo':'Retomar ayuda')+'</span></span>→</button>').join('');
+   $('teamRequests').innerHTML=TEAM.requests.map(r=>'<button class="team-request '+(r.unread?'unread':'')+'" data-action="coTeamThread" data-id="'+r.id+'">'+teamThumb(r.thumbnail)+'<span class="team-request-copy"><strong>'+esc(r.title)+'</strong><small>'+esc(teamPeer(r))+' · '+esc(TEAM_TOPICS[r.topic]||'Ayuda')+'</small><span class="team-state">'+(r.unread?'● ':'')+esc(teamState(r))+'</span></span><span aria-hidden="true">›</span></button>').join('')+legacy||teamEmpty(TEAM.filter==='history'?'Aquí quedarán las ayudas terminadas':'Todo al día',TEAM.filter==='history'?'Podrás volver a leer las conversaciones.':'Pide ayuda desde Mi equipo. El aviso seguirá guardado aunque cierres la página.','<button data-action="coTeamTab" data-value="people">Ver mi equipo</button>');
+  }$('teamRequestPages').innerHTML=teamPages(TEAM.page,TEAM.requestsMore,'requests');
+ }
+ if(TEAM.view==='thread')teamRenderThread();
+ $('teamCreateButton').disabled=TEAM.busy;$('teamCreateButton').textContent=TEAM.busy?'Enviando solicitud…':'Enviar solicitud';
+ $('teamHub').setAttribute('aria-busy',String(TEAM.busy));
+}
+function teamRenderThread(){
+ const t=TEAM.thread,r=t?.request;if(!r)return;
+ $('teamThreadSummary').innerHTML='<div class="team-thread-summary">'+teamThumb(r.thumbnail)+'<div><h3>'+esc(r.title)+'</h3><p>'+esc(teamPeer(r))+' · '+(r.peer_online?'En el editor':'Desconectada')+'</p><p>'+esc(teamState(r))+'</p></div></div>';
+ const owner=r.owner_id===A.user.id,open=['pending','ready'].includes(r.state),btn=(name,text,primary=false,disabled=false)=>'<button data-action="coTeam'+name+'" class="'+(primary?'primary':'')+'" '+(disabled||TEAM.busy?'disabled':'')+'>'+text+'</button>';
+ $('teamThreadActions').innerHTML=(open&&!owner?btn('Ready',r.state==='ready'?'Disponibilidad confirmada':'Puedo ayudarte',true,r.state==='ready')+btn('Decline','Ahora no'):open? (r.state==='ready'?btn('Start','Iniciar ayuda en vivo',true,!r.peer_online):'')+btn('Cancel','Cancelar solicitud'):'')+(r.can_join?'<button class="primary" data-action="coJoin" data-id="'+r.session_id+'">'+(r.state==='completed'?'Ver resultado':'Entrar a la ayuda')+'</button>':'');
+ $('teamThreadHint').textContent=open?(owner?(r.state==='ready'?(r.peer_online?'Al iniciar se guardará y compartirá tu último avance.':'Aceptó ayudarte. Podrás iniciar cuando vuelva al editor.'):'Puedes seguir editando. Te avisaremos cuando responda.'):(r.state==='ready'?'Ya le avisamos. Quien pidió ayuda iniciará la sesión con su último avance.':'Puedes responder sin abrir ni cambiar tu proyecto.')):r.state==='started'?'La conversación es la misma que en el chat de la ayuda.':'Solicitud terminada · conversación disponible para leer.';
+ const box=$('teamMessages'),bottom=teamAtBottom(),oldHeight=box.scrollHeight,oldTop=box.scrollTop,key=JSON.stringify([t.messages,t.outbox,t.older]);
+ if(TEAM.messagesKey!==key){TEAM.messagesKey=key;
+  box.innerHTML=(t.older?'<button data-action="coTeamOlder">Ver mensajes anteriores</button>':'')+t.messages.map(m=>'<article class="team-message '+(m.sender_id===A.user.id?'mine':'')+'"><small>'+esc(m.sender_id===A.user.id?'Tú':teamPeer(r))+'</small><p>'+esc(m.body)+'</p><small>'+esc(new Date(m.created_at).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'}))+'</small></article>').join('')+(t.outbox?'<article class="team-message mine"><p>'+esc(t.outbox.body)+'</p><small>'+(t.outbox.failed?'Pendiente de confirmar':'Enviando…')+'</small></article>':'')||'<p class="team-caption">Pueden conversar aquí para ponerse de acuerdo.</p>';
+  if(t.prepending){box.scrollTop=oldTop+box.scrollHeight-oldHeight;t.prepending=false;}else if(bottom||t.scroll){box.scrollTop=box.scrollHeight;t.scroll=false;$('teamMessageLatest').hidden=true;}else $('teamMessageLatest').hidden=false;
+ }
+ $('teamMessageForm').hidden=!t.canSend;$('teamSendButton').disabled=TEAM.busy||!!t.outbox;$('teamMessageInput').disabled=!!t.outbox;
+ $('teamMessageRetry').hidden=!t.outbox?.failed;
+}
+async function teamDo(fn,{editing=false}={}){
+ if(TEAM.busy)return;const generation=TEAM.generation;TEAM.busy=true;TEAM.error='';if(editing)busy(true);teamRender();
+ try{await fn();}catch(e){if(generation===TEAM.generation){TEAM.error=e.message;if(e.code==='42501'&&TEAM.thread){TEAM.thread.messages=[];TEAM.thread.canSend=false;TEAM.thread.outbox=null;TEAM.messagesKey='';}teamRender();}}
+ finally{if(editing)busy(false);if(generation===TEAM.generation){TEAM.busy=false;teamRender();}}
+}
+async function teamRefresh(){if(CO.polling){TEAM.reload=true;return;}await coLobby({force:true});}
+async function teamView(view){TEAM.view=view;TEAM.error='';TEAM.listKey='';TEAM.peopleKey='';teamRender();await teamRefresh();coSchedule();}
+function teamPreview(){try{const d=sizeOf(),c=outputCanvas('jpeg',Math.min(240/d.ancho,240/d.alto)),src=c.toDataURL('image/jpeg',.62);return src.length<=60000?src:'';}catch{return '';}}
+async function teamCompose(id){
+ const p=TEAM.people.find(p=>p.user_id===id);if(!p)return;
+ if(!S.opened||!P.current){
+  TEAM.error='Abre el proyecto para el que necesitas ayuda y vuelve a Mi equipo.';teamRender();return;
+ }
+ if(!TEAM.compose||TEAM.compose.person.user_id!==id||TEAM.compose.project!==P.current.id){TEAM.compose={id:crypto.randomUUID(),person:p,project:P.current.id,topic:'otro',note:'',thumbnail:teamPreview()};}
+ const c=TEAM.compose;TEAM.view='compose';TEAM.error='';
+ $('teamComposePerson').innerHTML='<div class="team-person-head">'+teamAvatar(p)+'<div class="team-person-name"><strong>'+esc(p.display_name)+'</strong><small>Solo ustedes dos verán la solicitud.</small></div></div>';
+ $('teamComposeProject').innerHTML=teamThumb(c.thumbnail)+'<div><small>Ayuda para tu proyecto</small><strong>'+esc(projectName())+'</strong></div>';
+ $('teamTopic').value=c.topic;$('teamNote').value=c.note;teamRender();
+}
+async function teamCreate(){
+ const c=TEAM.compose;if(!c)return;if(P.current?.id!==c.project||CO.room)throw new Error('El proyecto cambió. Vuelve al equipo y selecciona a tu compañera.');
+ c.topic=$('teamTopic').value;c.note=$('teamNote').value;await saveCurrent({force:true});
+ const r=await teamRPC('create',{p_request:c.id,p_helper:c.person.user_id,p_project:c.project,p_topic:c.topic,p_note:c.note,p_thumbnail:c.thumbnail});
+ TEAM.compose=null;await teamOpenThread(r.id,r);await teamRefresh();notify('Solicitud guardada. Puedes seguir editando mientras esperas.');
+}
+async function teamOpenThread(id,request=null){
+ TEAM.view='thread';TEAM.error='';TEAM.messagesKey='';$('teamMessageLatest').hidden=true;
+ let t=TEAM.threads.get(id);if(!t){t={id,request:request||TEAM.requests.find(r=>r.id===id),messages:[],cursor:0,older:false,canSend:false,draft:'',outbox:null,pull:null,scroll:true,loaded:false};TEAM.threads.set(id,t);}
+ TEAM.thread=t;$('teamMessageInput').value=t.draft;teamRender();await teamPullThread(t,{initial:!t.loaded});coSchedule();
+}
+async function teamPullThread(t=TEAM.thread,{initial=false,before=null}={}){
+ if(!t||t.pull)return t?.pull;const generation=TEAM.generation;
+ const seen=TEAM.view==='thread'&&TEAM.thread===t&&$('coDialog').open&&!document.hidden&&(initial||teamAtBottom());
+ t.pull=(async()=>{const data=await teamRPC('thread',{p_request:t.id,p_after:initial?-1:t.cursor,p_seen:seen,p_before:before});if(generation!==TEAM.generation)return;
+  const map=new Map(t.messages.map(m=>[m.position,m]));for(const m of data.messages){map.set(m.position,m);if(t.outbox?.message_id===m.message_id&&m.sender_id===A.user.id){t.outbox=null;t.draft='';if(TEAM.thread===t)$('teamMessageInput').value='';}}
+  t.messages=[...map.values()].sort((a,b)=>a.position-b.position);t.request=data.request;t.canSend=data.can_send;t.loaded=true;if(!before)t.cursor=data.cursor;
+  if(initial||before)t.older=data.has_older;if(before)t.prepending=true;
+  const at=TEAM.requests.findIndex(r=>r.id===t.id);if(at>=0)TEAM.requests[at]=data.request;
+  if(TEAM.thread===t&&TEAM.view==='thread'){teamRenderThread();if(data.has_more&&!before)setTimeout(()=>teamPullThread(t).catch(teamThreadError),0);}
+ })().finally(()=>{t.pull=null;});return t.pull;
+}
+function teamThreadError(e){TEAM.error=e.message;if(e.code==='42501'&&TEAM.thread){TEAM.thread.messages=[];TEAM.thread.canSend=false;TEAM.thread.outbox=null;TEAM.messagesKey='';}teamRender();}
+function teamChatSeen(r){
+ if(!r.teamRequestId||!r.teamRequestVersion||r.teamSeenVersion>=r.teamRequestVersion||r.teamMarking)return;
+ const version=r.teamRequestVersion;r.teamMarking=true;
+ teamRPC('mark_read',{p_request:r.teamRequestId,p_version:version}).then(()=>{r.teamSeenVersion=version;}).catch(()=>{}).finally(()=>{r.teamMarking=false;});
+}
+async function teamSend(){
+ const t=TEAM.thread;if(!t?.canSend)return;
+ if(!t.outbox){const body=$('teamMessageInput').value.trim();if(!body)return;t.outbox={message_id:crypto.randomUUID(),body,failed:false};t.draft=body;}
+ const pending=t.outbox;pending.failed=false;t.scroll=true;teamRenderThread();
+ try{await teamRPC('send',{p_request:t.id,p_message:pending.message_id,p_body:pending.body});t.outbox=null;t.draft='';if(TEAM.thread===t)$('teamMessageInput').value='';await teamPullThread(t);if(CO.room?.teamRequestId===t.id){coBroadcast('chat',{});void coChatPull();}await teamRefresh();}
+ catch(e){if(t.outbox===pending)pending.failed=true;throw e;}
+ finally{teamRenderThread();}
+}
+async function teamRequestAction(action){
+ const t=TEAM.thread;if(!t)return;
+ if(action==='cancel'&&!confirm('¿Cancelar esta solicitud? Tu proyecto se conserva.'))return;
+ if(action==='decline'&&!confirm('¿Indicar que ahora no puedes ayudar? Podrá enviarte otra solicitud más adelante.'))return;
+ t.request=await teamRPC('action',{p_request:t.id,p_action:action});await teamPullThread(t);await teamRefresh();
+}
+async function teamStart(){
+ const t=TEAM.thread,r=t?.request;if(!r)return;if(CO.room)throw new Error('Termina o sal de tu ayuda actual primero.');
+ if(P.current?.id!==r.project_id||!S.opened){if(!confirm('Abrir «'+r.title+'» para compartir su último avance. Tu diseño actual se guardará primero. ¿Continuar?'))return;if(S.opened)await saveCurrent({force:true});await openSavedProject(r.project_id);}
+ if(S.view!=='editor')showEditor();await coInvite(r.helper_id,r.id);
+}
+async function teamAction(name,b){
+ switch(name){
+  case 'coTeamTab':await teamView(b.dataset.value);break;
+  case 'coTeamProjects':$('coDialog').close();await showProjects();break;
+  case 'coTeamInbox':TEAM.view='inbox';await coOpen();break;
+  case 'coTeamBack':await teamView(TEAM.view==='compose'?'people':'inbox');break;
+  case 'coTeamFavorites':TEAM.favorites=!TEAM.favorites;TEAM.offset=0;await teamView('people');break;
+  case 'coTeamFavorite':await teamDo(async()=>{const p=TEAM.people.find(p=>p.user_id===b.dataset.id);if(p)await teamRPC('favorite',{p_contact:p.user_id,p_favorite:!p.favorite});await teamRefresh();});break;
+  case 'coTeamCompose':await teamCompose(b.dataset.id);break;
+  case 'coTeamThread':await teamDo(()=>teamOpenThread(b.dataset.id));break;
+  case 'coTeamFilter':TEAM.filter=b.dataset.value;TEAM.page=0;await teamView('inbox');break;
+  case 'coTeamPage':if(b.dataset.value==='people')TEAM.offset=Math.max(0,TEAM.offset+Number(b.dataset.step)*12);else TEAM.page=Math.max(0,TEAM.page+Number(b.dataset.step)*12);await teamRefresh();break;
+  case 'coTeamRetry':TEAM.available=null;TEAM.error='';await teamRefresh();if(TEAM.view==='thread')await teamDo(()=>teamPullThread());break;
+  case 'coTeamReady':await teamDo(()=>teamRequestAction('ready'));break;
+  case 'coTeamDecline':await teamDo(()=>teamRequestAction('decline'));break;
+  case 'coTeamCancel':await teamDo(()=>teamRequestAction('cancel'));break;
+  case 'coTeamStart':await teamDo(teamStart,{editing:true});break;
+  case 'coTeamSend':await teamDo(teamSend);break;
+  case 'coTeamOlder':await teamDo(()=>teamPullThread(TEAM.thread,{before:TEAM.thread.messages[0]?.position||1}));break;
+  case 'coTeamLatest':$('teamMessages').scrollTop=$('teamMessages').scrollHeight;$('teamMessageLatest').hidden=true;await teamDo(()=>teamPullThread());break;
+  case 'coTeamResultCopy':$('teamResultDialog').close();await run(()=>coApply({asCopy:true}));break;
+ }
+}
+function teamReset(){
+ TEAM.generation++;clearTimeout(TEAM.searchTimer);TEAM.available=null;TEAM.ready=false;TEAM.unread=0;TEAM.pending=0;TEAM.people=[];TEAM.requests=[];TEAM.threads.clear();TEAM.thread=null;TEAM.compose=null;TEAM.view='people';TEAM.query='';TEAM.offset=0;TEAM.page=0;TEAM.favorites=false;TEAM.filter='pending';TEAM.error='';TEAM.busy=false;TEAM.listKey='';TEAM.peopleKey='';TEAM.messagesKey='';TEAM.reload=false;
+ for(const id of ['teamPeople','teamRequests','teamThreadSummary','teamThreadActions','teamMessages','teamComposeProject','teamComposePerson'])$(id).replaceChildren();for(const id of ['teamMessageInput','teamNote','teamSearch'])$(id).value='';$('teamResultDialog').close();teamBadges();
+}
+$('teamComposeForm').addEventListener('submit',e=>{e.preventDefault();teamDo(teamCreate,{editing:true});});
+$('teamNote').addEventListener('input',e=>{if(TEAM.compose)TEAM.compose.note=e.target.value;});
+$('teamTopic').addEventListener('change',e=>{if(TEAM.compose)TEAM.compose.topic=e.target.value;});
+$('teamSearch').addEventListener('input',e=>{TEAM.query=e.target.value;TEAM.offset=0;clearTimeout(TEAM.searchTimer);TEAM.searchTimer=setTimeout(()=>teamRefresh(),250);});
+$('teamMessageInput').addEventListener('input',e=>{if(TEAM.thread)TEAM.thread.draft=e.target.value;});
+$('teamMessageForm').addEventListener('submit',e=>{e.preventDefault();teamDo(teamSend);});
+$('teamMessageInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&!matchMedia('(max-width:760px)').matches){e.preventDefault();e.stopPropagation();teamDo(teamSend);}});
+$('coDialog').addEventListener('close',()=>{coSchedule();});
+
+
 boot().catch(error=>notify(error.message));
 })();
 </script>
