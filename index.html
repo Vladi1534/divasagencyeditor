@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="31">
+<meta name="divas-version" content="35">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -1273,6 +1273,106 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 
 .image-start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}.image-start button{min-height:94px;padding:18px;text-align:left;border-radius:18px}.image-start strong,.image-start small{display:block}.image-start strong{font-size:16px}.image-start small{font-size:12px;font-weight:400;margin-top:7px;opacity:.85}.gold-controls{padding:12px;margin:12px 0;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}
 @media(max-width:760px){.image-start{grid-template-columns:1fr;gap:8px;margin:18px 0}.image-start button{min-height:72px;padding:13px 16px}.image-start small{margin-top:4px}}
+
+/* v35 · Divas Studio. Lightweight surfaces, contextual tools and a stable canvas. */
+:root{--ux-bg:#f9f4f7;--ux-surface:#fffafd;--ux-soft:#f3e6ef;--ux-accent:#b12674;--ux-ink:#382735;--ux-line:#e5d7e1;--ux-canvas:#ede6ec;--ux-muted:#7d6978;--ux-shadow:0 6px 24px #49213b0a}
+html[data-theme=dark]{--ux-bg:#15121b;--ux-surface:#201a28;--ux-soft:#2b2235;--ux-accent:#f2a8d1;--ux-ink:#f8edf6;--ux-line:#3c3047;--ux-canvas:#19151f;--ux-muted:#bba9c5;--ux-shadow:none;--bg:var(--ux-bg);--panel:var(--ux-surface);--panel2:var(--ux-soft);--line:var(--ux-line);--muted:var(--ux-muted);--pink:var(--ux-accent)}
+body{height:100vh;height:var(--app-height,100dvh);color:var(--ux-ink);background:var(--ux-bg)}
+button,summary,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button{transition:transform 110ms ease,background-color 110ms ease;touch-action:manipulation}
+button:active:not(:disabled){transform:scale(.975)}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.ui-icon{flex-shrink:0}
+header,html[data-theme=dark] header{min-height:64px;padding:8px 22px;background:var(--ux-surface);border-color:var(--ux-line)}
+header .brand img{max-width:120px;height:40px}header .brand{max-width:140px}
+#headerBack{display:none}body:not(.editor-open) #undoBtn,body:not(.editor-open) #redoBtn,body:not(.editor-open) #downloadBtn{display:none}
+header #downloadBtn{border-radius:12px;min-height:42px}
+.menu-content{max-height:calc(var(--app-height,100dvh) - 80px);overflow:auto;overscroll-behavior:contain}
+.render-options{grid-template-columns:1fr 1fr}.render-options .appearance-option span{min-height:42px}
+.render-note{font-size:10px;color:var(--muted);line-height:1.5;margin:8px 0 0}
+dialog::backdrop{backdrop-filter:none}
+#projects,html[data-theme=dark] #projects,#home,html[data-theme=dark] #home{background:var(--ux-bg)}
+#projects{padding:34px clamp(18px,4vw,64px)}.projects-inner{max-width:1180px}
+.projects-top{position:relative;display:block;overflow:hidden;padding:28px 30px;border:1px solid var(--ux-line);border-radius:26px;background:linear-gradient(115deg,var(--ux-surface) 30%,var(--ux-soft));margin-bottom:18px}
+.projects-top:after{content:'✧';position:absolute;right:3%;top:4px;font-size:160px;line-height:1;color:var(--ux-accent);opacity:.15;pointer-events:none}
+.projects-top .eyebrow{font-size:10px;letter-spacing:2.1px;text-transform:uppercase;color:var(--ux-accent)}
+.projects-top h1{font-size:36px;font-weight:750;letter-spacing:-1.2px;margin:7px 0 10px}
+.projects-top p.ux-welcome{font-size:14px;margin:0;color:var(--ux-muted)}
+.projects-actions{position:relative;z-index:1;display:flex;gap:10px;margin:22px 0 0;max-width:510px}
+.projects-actions button{min-height:48px;flex:1;display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;border-radius:14px}
+.projects-shortcuts{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:12px 0 20px}
+.projects-shortcuts button{border-color:transparent;background:transparent!important;min-height:40px;padding:8px 11px;color:var(--ux-muted);font-size:12px}
+.projects-shortcuts .ux-bot-shortcut{margin-left:auto;color:var(--ux-accent)}
+.project-storage-note{font-size:11px;margin:10px 2px 20px;color:var(--ux-muted)}.project-storage-note summary{cursor:pointer;padding:8px 0}.project-storage-note p{font-size:11px;margin:5px 0;line-height:1.6}
+#resumeProject{margin:0 0 24px}
+.resume-design{display:flex;align-items:center;gap:18px;width:100%;padding:14px;text-align:left;border-radius:20px;border:1px solid var(--ux-line);background:var(--ux-surface)!important;box-shadow:var(--ux-shadow)}
+.resume-art{width:90px;height:90px;display:grid;place-items:center;background:var(--ux-soft);border-radius:12px;overflow:hidden;flex-shrink:0}.resume-art img{width:100%;height:100%;object-fit:contain;padding:7px}.resume-art .ui-icon{width:30px;height:30px;color:var(--ux-accent)}
+.resume-copy{display:flex;flex-direction:column;gap:6px;min-width:0}.resume-copy small{font-size:9px;letter-spacing:1.3px;color:var(--ux-accent);font-weight:650}.resume-copy strong{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.resume-copy>span{font-size:11px;color:var(--ux-muted)}.resume-arrow{font-size:25px;margin-left:auto;color:var(--ux-accent);padding:0 12px}
+.ux-project-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}.ux-project-heading h2{font-size:18px;margin:0}.ux-project-heading #projectCount{font-size:11px;margin:0;color:var(--ux-muted)}
+.projects-tools{margin:12px 0 17px;display:flex;align-items:flex-start;gap:8px;position:relative}.projects-tools #projectSearch{flex:1;width:100%;font-size:13px;min-height:44px;background:var(--ux-surface);border-color:var(--ux-line);padding-left:14px}
+#projectFilters{flex:none;position:relative}#projectFilterToggle{display:grid;place-items:center;border:1px solid var(--ux-line);background:var(--ux-surface);border-radius:12px;min-height:44px;padding:0 14px;cursor:pointer;list-style:none;font-size:12px}#projectFilterToggle::-webkit-details-marker{display:none}
+.ux-project-filters{position:absolute;right:0;top:50px;width:230px;z-index:10;padding:12px;border:1px solid var(--ux-line);border-radius:16px;background:var(--ux-surface);box-shadow:0 6px 20px #0002;display:grid;gap:10px}.ux-project-filters select{width:100%;max-width:none;min-height:44px;font-size:13px}
+.project-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.project-card,html[data-theme=dark] .project-card{border-radius:18px;border-color:var(--ux-line);box-shadow:none;background:var(--ux-surface)}
+.project-thumb,html[data-theme=dark] .project-thumb{height:200px;padding:14px;background:var(--ux-soft)}.project-thumb img{filter:none}
+.project-info{padding:12px 13px 8px}.project-info strong{font-size:14px}.project-info small{font-size:10px;line-height:1.5}.project-card-foot{padding:0 13px 10px}.project-state{font-size:10px;color:var(--ux-muted)!important}.project-card-foot summary{border:0;min-width:40px;min-height:36px;text-align:center;padding:8px;font-size:16px}
+#moreProjects{display:block;margin:20px auto 0;min-height:44px;padding:8px 25px}
+#home{padding:30px}.home-inner{max-width:1000px}#home h1{font-size:34px}.home-intro{font-size:14px}.image-start{margin:22px 0}.task-card{border-radius:20px}.task-art{height:180px}.task-art strong{font-size:29px}.task-info{padding:16px}.task-info h2{font-size:16px}
+#workspace{background:var(--ux-bg);gap:10px;padding:10px}.editor-toolbar{margin:0;min-width:0}.editor-toolbar #coEntry,.editor-toolbar #agencyResourcesButton,.editor-toolbar #surpriseButton{display:none}.editor-toolbar .project-toolbar{height:38px;min-width:160px}.editor-toolbar .help-pill{color:var(--ux-accent)}.editor-toolbar .save-toolbar{height:38px;min-height:38px}.save-toolbar button{min-height:38px;font-size:11px}#compactSaveStatus{display:none}
+#toolRail,html[data-theme=dark] #toolRail,#sidePanel,html[data-theme=dark] #sidePanel,#layerDock,html[data-theme=dark] #layerDock{background:var(--ux-surface);border:1px solid var(--ux-line);box-shadow:none;border-radius:17px}
+#toolRail{gap:3px;padding:5px}#toolRail button{min-height:57px;border-radius:11px;font-size:9px;padding:6px 1px}#toolRail button svg{width:21px;height:21px}#toolRail button.active{border-color:transparent;background:var(--ux-soft);color:var(--ux-accent)}
+#viewport,html[data-theme=dark] #viewport{background:var(--ux-canvas);border:1px solid var(--ux-line);border-radius:18px;padding:14px}#stage,html[data-theme=dark] #stage{box-shadow:0 3px 18px #0002}
+#sidePanel .panel-heading{min-height:49px;border-color:var(--ux-line);padding:8px 12px}#sidePanel .panel-heading small{display:none}#panelTitle{font-size:13px}#panelBody{padding:14px;overscroll-behavior:contain}#sidePanel #panelTabs:not(.inspector-tabs){display:none}
+#panelTabs.inspector-tabs{padding:6px 9px;border-color:var(--ux-line)}.edit-segments button{min-height:40px}#contextGuide{position:static;margin:6px 10px;padding:9px 10px;border-radius:12px;box-shadow:none;flex:none;max-width:none}#contextGuide:after{display:none}#contextGuide .coach-copy p{font-size:11px;line-height:1.5}#contextGuide .coach-copy strong{font-size:12px}#contextGuide .coach-symbol{display:none}
+.ux-panel-intro{font-size:12px;color:var(--ux-muted);margin:0 0 14px}.ux-tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.ux-tool-card{position:relative;display:flex;flex-direction:column;text-align:left;min-width:0;gap:6px;padding:14px 12px;min-height:114px;background:var(--ux-surface)!important;border-color:var(--ux-line)!important;border-radius:16px}.ux-tool-symbol{display:grid;place-items:center;width:33px;height:33px;border-radius:11px;background:var(--ux-soft);color:var(--ux-accent);margin-bottom:2px}.ux-tool-symbol svg{width:21px;height:21px}.ux-tool-card strong{font-size:12px}.ux-tool-card small{font-size:10px;color:var(--ux-muted);line-height:1.4}.ux-card-arrow{position:absolute;right:12px;top:17px;color:var(--ux-muted);font-size:16px}
+.ux-create-flyer{display:grid;grid-template-columns:36px 1fr 18px;gap:4px 9px;width:100%;padding:16px;text-align:left;margin-bottom:12px;border-radius:18px;background:var(--ux-soft)!important;border-color:var(--ux-line)!important}.ux-create-flyer>span{grid-row:1/3;display:grid;place-items:center;color:var(--ux-accent)}.ux-create-flyer>strong{font-size:14px}.ux-create-flyer>small{grid-column:2;font-size:10px;line-height:1.5;color:var(--ux-muted)}.ux-create-flyer>b{grid-row:1/3;grid-column:3;align-self:center;color:var(--ux-accent)}
+.bot-intro{display:flex;gap:12px;align-items:center;margin:0 0 15px}.bot-orb{display:grid;place-items:center;flex:none;width:42px;height:42px;border:1px solid var(--ux-accent);background:var(--ux-soft);border-radius:16px 16px 16px 5px;color:var(--ux-accent);font-size:29px}.bot-intro strong{font-size:14px}.bot-intro p{font-size:11px;color:var(--ux-muted);margin:4px 0 0;overflow-wrap:anywhere}
+#sidePanel .help-shortcuts{grid-template-columns:1fr 1fr;gap:7px;margin:0 0 12px}.help-choice,html[data-theme=dark] .help-choice{border-radius:12px;min-height:48px;padding:9px;background:var(--ux-soft);border-color:var(--ux-line);font-size:11px;color:var(--ux-ink)}.help-choice span:first-child{font-size:18px;color:var(--ux-accent)}.help-choice span:last-child{color:var(--ux-muted)}.help-search{margin-bottom:12px;gap:6px}.help-search input{min-height:44px}.help-search button{min-width:44px}.help-answer{border-radius:14px;margin-bottom:14px}.help-preferences{gap:9px;flex-wrap:wrap}.help-all summary{min-height:42px;display:flex;align-items:center;font-size:12px}.helper-note{font-size:10px}
+@media(prefers-reduced-motion:no-preference){#sidePanel.mobile-open #panelBody,.resume-design,.project-empty{animation:ux-enter 160ms ease-out both}dialog[open]{animation:ux-enter 160ms ease-out both}@keyframes ux-enter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}}
+html[data-render-mode=fluid] #sidePanel.mobile-open #panelBody{animation-duration:110ms}html[data-render-mode=fluid] .project-card{box-shadow:none}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(min-width:761px){#workspace{grid-template-columns:62px 274px minmax(0,1fr) 212px}#workspace.panel-hidden{grid-template-columns:62px minmax(0,1fr) 212px}#layerDock{padding:9px}#helpDialog{width:340px;right:24px;max-height:70vh}#helpDialog .dialog-head{background:var(--ux-soft)}.editor-toolbar .save-toolbar .save-status{max-width:175px}.editor-toolbar #projectName{max-width:100%}}
+@media(min-width:761px) and (max-width:1050px){#workspace{grid-template-columns:56px 236px minmax(0,1fr) 175px}.project-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){
+ header,html[data-theme=dark] header{min-height:58px;padding:5px 10px;padding-top:max(5px,env(safe-area-inset-top));gap:6px}.brand{min-width:0!important;max-width:94px!important;padding:0!important}.brand img{max-width:90px!important;height:38px!important}.brand-fallback{font-size:21px!important}.brand-fallback small{font-size:8px}
+ body.editor-open header .brand{max-width:56px!important}body.editor-open .brand img{max-width:56px!important;height:31px!important}body.editor-open .brand-fallback{font-size:16px!important}body.editor-open .brand-fallback small{font-size:6px}
+ body.editor-open #headerBack{display:grid;place-items:center;min-width:36px;width:36px;min-height:44px;border:0;background:transparent;font-size:27px;padding:0;color:var(--ux-muted)}
+ .header-actions{gap:4px;margin-left:auto}.header-actions #undoBtn,.header-actions #redoBtn{display:inline-flex;align-items:center;justify-content:center;padding:0;min-width:36px;width:36px;min-height:44px;font-size:23px}.header-actions #downloadBtn{padding:7px 10px;min-height:42px;font-size:12px;border-radius:13px}.menu summary{display:grid;place-items:center;padding:0;min-width:40px;min-height:44px;background:transparent!important;border:0;font-size:20px}
+ body.editor-open #accountButton,body.editor-open #teamHomeEntry{display:none}body:not(.editor-open) #teamHomeEntry{font-size:11px;min-height:42px;padding:6px 8px}
+ #projects{padding:16px 15px 24px}.projects-top{padding:22px 18px;border-radius:23px;margin-bottom:10px}.projects-top:after{font-size:116px;right:-8px;top:5px}.projects-top h1{font-size:28px;letter-spacing:-1px;margin:9px 0}.projects-top .eyebrow{font-size:9px;letter-spacing:1.7px}.projects-top p.ux-welcome{font-size:12px;max-width:90%}.projects-actions{margin-top:18px;gap:8px}.projects-actions button{font-size:12px;min-height:49px;gap:7px;padding:9px}.projects-actions .ui-icon{width:18px;height:18px}
+ .projects-shortcuts{margin:3px 0 14px;gap:0;justify-content:space-between}.projects-shortcuts button{min-height:44px;padding:6px 8px;font-size:10px}.projects-shortcuts .ux-bot-shortcut{margin-left:0}
+ #resumeProject{margin-bottom:22px}.resume-design{padding:11px;gap:12px;border-radius:18px}.resume-art{width:66px;height:76px}.resume-copy{gap:5px}.resume-copy small{font-size:8px;letter-spacing:1px}.resume-copy strong{font-size:15px}.resume-copy>span{font-size:10px}.resume-arrow{font-size:22px;padding:0 4px}
+ .ux-project-heading h2{font-size:17px}.ux-project-heading #projectCount{font-size:10px}.projects-tools{flex-wrap:nowrap;margin:12px 0 14px}.projects-tools #projectSearch{min-width:0;flex-basis:auto;font-size:16px}#projectFilterToggle{font-size:11px;padding:0 12px}.ux-project-filters select{font-size:16px}
+ .project-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.project-thumb,html[data-theme=dark] .project-thumb{height:153px;padding:10px}.project-info{padding:10px 10px 7px}.project-info strong{font-size:12px}.project-info small{font-size:9px}.project-card-foot{padding:0 9px 7px;flex-wrap:nowrap;gap:3px}.project-state{font-size:9px}.project-card-foot summary{min-width:34px;min-height:40px;padding:8px 4px}.project-card{border-radius:16px}.project-options{width:173px}.project-options button{min-height:44px}
+ #home{padding:20px 16px}#home h1{font-size:29px;margin-top:15px}.home-intro{font-size:13px}.image-start{gap:8px;margin:20px 0}.image-start button{min-height:73px;padding:12px}.image-start strong{font-size:12px}.image-start small{font-size:10px}.task-grid{gap:12px}.task-art{height:130px;width:112px;padding:15px}.task-art strong{font-size:22px}.task-art small{font-size:7px}.task-info{padding:14px}.task-info h2{font-size:14px}.task-info p{font-size:11px}.task-art.profile .profile-disc{width:85px;height:85px}.profile-disc>strong{font-size:12px}.profile-disc>span{font-size:22px}.home-bottom{margin-top:15px}.home-bottom .row{gap:5px}
+ #workspace{padding:0 8px;gap:0;min-height:0;display:flex;flex-direction:column}.editor-toolbar{flex:none;margin:0;min-height:38px;gap:0}.editor-toolbar .project-toolbar{height:38px!important;min-height:38px;min-width:0;flex-wrap:nowrap;gap:6px;width:100%}.editor-toolbar #projectName{font-size:11px;padding:5px 2px;flex:1;min-width:0;min-height:36px}.editor-toolbar .help-pill,.editor-toolbar .save-toolbar{display:none}.editor-toolbar #compactSaveStatus{display:flex;align-items:center;gap:5px;min-height:36px;flex:none;max-width:128px;font-size:10px;padding:4px 6px;background:transparent;border:0;color:var(--ux-muted)}
+ #compactSaveStatus i{width:6px;height:6px;border-radius:50%;background:#4d9d7c;flex:none}#compactSaveStatus[data-state=pending] i,#compactSaveStatus[data-state=saving] i{background:#d8ac59}#compactSaveStatus[data-state=error]{color:var(--danger)!important}#compactSaveStatus[data-state=error] i{background:var(--danger)}
+ .canvas-column,.co-studio,.co-canvas,.canvas-surface{min-height:0}.canvas-column{flex:1}.canvas-surface{flex:1}.co-studio,.co-canvas{min-width:0}#viewport,html[data-theme=dark] #viewport{padding:12px;border-radius:16px;border-color:var(--ux-line)}
+ .canvas-tools{height:33px;min-height:33px;margin:3px 0 2px;gap:5px}.canvas-tools button{min-height:32px;padding:5px 8px;font-size:10px;background:transparent!important;border-color:transparent}.canvas-tools #zoom,.canvas-tools #zoomValue,.canvas-tools #canvasPrompt,.canvas-tools #focusTextButton,.canvas-tools #profileGuideToggle,.canvas-tools #showToolsButton{display:none!important}.canvas-tools #formatLabel{color:var(--ux-accent);margin-right:auto;max-width:140px;overflow:hidden;text-overflow:ellipsis}.canvas-tools .canvas-focus{margin-left:0;font-size:10px}.canvas-footer{display:none}
+ #mobileSelection{border:1px solid var(--ux-line);background:var(--ux-surface);margin:5px 0 0;padding:6px 7px;border-radius:15px;box-shadow:none}.mobile-selection-head{gap:2px;margin-bottom:3px}.mobile-selection-head>button:not(.mobile-selected-name){min-width:38px;min-height:40px;padding:7px}.mobile-selected-name{min-width:0;padding:4px 6px}.mobile-selected-name strong{font-size:11px}.mobile-selected-name small{font-size:9px}.mobile-selection-head .ui-icon{width:17px;height:17px}.mobile-transform-tabs{gap:4px}.mobile-transform-tabs button{min-height:42px;padding:6px 3px;font-size:10px;border-radius:11px;gap:4px;display:flex;align-items:center;justify-content:center}.mobile-transform-tabs .ui-icon,.mobile-transform-tabs svg{width:16px;height:16px}.mobile-precision,.mobile-size-row,.mobile-rotate-row{margin-top:6px;gap:5px}.mobile-ratio{font-size:11px}.mobile-size-row>button,.mobile-rotate-row>button{min-height:44px}.mobile-dimensions{margin-top:5px}.mobile-resize-hint{font-size:10px;margin:5px 0 0}.mobile-dimensions input{min-height:36px}
+ #workspace #sidePanel,#workspace:has(#mobileSelection:not([hidden])) #sidePanel{margin:5px 0 4px;flex:0 0 auto;height:min(35dvh,300px);max-height:45%;border-radius:18px;box-shadow:none;overflow:hidden}#workspace #sidePanel.expanded,#workspace:has(#mobileSelection:not([hidden])) #sidePanel.expanded{height:52dvh;max-height:59%}#sidePanel:not(.mobile-open){display:none!important}#sidePanel.mobile-open{display:flex}
+ #sidePanel .panel-heading{padding:5px 10px;min-height:45px}.panel-heading strong{max-width:190px}.panel-controls button{min-width:38px;min-height:38px}.panel-controls [data-action=contextHelp]{display:none}#panelTitle{font-size:12px}#panelBody{padding:12px}.panel-heading:before{content:'';width:24px;height:3px;background:var(--ux-line);border-radius:4px;position:absolute;top:3px;left:calc(50% - 12px);pointer-events:none}
+ #sidePanel[data-panel=anadir] #panelTabs,#sidePanel[data-panel=diseno] #panelTabs,#sidePanel[data-panel=bot] #panelTabs{display:none!important}#contextGuide{margin:3px 9px 6px;padding:7px 9px;max-height:90px;overflow:auto}#contextGuide .coach-copy p{font-size:10px}#contextGuide .coach-copy strong{font-size:11px}#contextGuide .coach-close{min-height:36px;min-width:36px}
+ .ux-panel-intro{font-size:11px;margin-bottom:9px}.ux-tool-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:6px}.ux-tool-card{padding:11px 9px;min-height:103px;gap:4px;border-radius:14px}.ux-tool-symbol{width:29px;height:29px;border-radius:9px}.ux-tool-card strong{font-size:11px}.ux-tool-card small{font-size:9px}.ux-card-arrow{right:8px;top:13px;font-size:13px}.ux-tool-card .ui-icon{width:18px;height:18px}#sidePanel[data-panel=diseno] .ux-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#sidePanel[data-panel=diseno] .ux-tool-card{min-height:91px}.ux-create-flyer{padding:12px;margin-bottom:9px}.ux-create-flyer>strong{font-size:13px}
+ #mobileBar,html[data-theme=dark] #mobileBar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));flex:none;gap:3px;padding:5px 10px;padding-bottom:max(5px,env(safe-area-inset-bottom));background:var(--ux-surface);border-top:1px solid var(--ux-line)}
+ #mobileBar button,html[data-theme=dark] #mobileBar button{min-height:55px;min-width:0;display:flex;flex-direction:column;gap:4px;border:0;border-radius:13px;font-size:10px;padding:6px 1px;letter-spacing:.1px;background:transparent;color:var(--ux-muted)}#mobileBar button.active,html[data-theme=dark] #mobileBar button.active{background:var(--ux-soft);color:var(--ux-accent);border:0}#mobileBar button svg{width:21px;height:21px}#mobileBar .bot-nav-mark{font-size:25px;line-height:21px;color:var(--ux-accent)}
+ .bot-intro{margin-bottom:11px}.bot-intro strong{font-size:13px}.bot-orb{width:36px;height:36px;border-radius:13px 13px 13px 4px;font-size:25px}.help-choice{min-height:44px}.help-search input{font-size:16px}.help-preferences{font-size:11px}.help-preferences button{min-height:40px;font-size:10px}.help-preferences .check{font-size:10px}
+ body.ux-keyboard #mobileBar,body.ux-keyboard .canvas-tools{display:none}body.ux-keyboard #workspace #sidePanel{max-height:65%;height:45dvh}#toast{bottom:calc(76px + env(safe-area-inset-bottom));font-size:11px;max-width:calc(100vw - 28px)}
+}
+@media(max-width:380px){.project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.project-thumb,html[data-theme=dark] .project-thumb{height:136px}.header-actions #redoBtn{display:inline-flex}.projects-top h1{font-size:26px}.projects-actions button{font-size:11px}.mobile-selection-head>button:not(.mobile-selected-name){min-width:34px}.mobile-transform-tabs button{font-size:9px}header{padding-left:6px;padding-right:6px}}
+@media(max-width:760px) and (max-height:530px){#workspace #sidePanel,#workspace:has(#mobileSelection:not([hidden])) #sidePanel{height:39dvh;max-height:44%}#workspace #sidePanel.expanded{height:55dvh;max-height:60%}header{min-height:48px}.editor-toolbar{min-height:30px}.editor-toolbar .project-toolbar{height:30px!important;min-height:30px}#mobileBar button{min-height:43px;flex-direction:row;font-size:9px}#mobileBar{padding:3px 8px}.canvas-tools{height:26px;min-height:26px}.canvas-tools button{min-height:26px}.mobile-selection-head small{display:none}#mobileSelection{padding:3px 6px}.mobile-selection-head>button:not(.mobile-selected-name){min-height:32px}.mobile-transform-tabs button{min-height:34px}}
+@media(max-width:760px){#toast{top:auto;bottom:calc(76px + env(safe-area-inset-bottom));height:auto}.mobile-transform-tabs>button:only-child{grid-column:1/-1}#workspace:has(#sidePanel:not(.mobile-open)) .canvas-focus{display:inline-flex}}
+/* Landscape phones put the panel beside the flyer, keeping both usable. */
+@media(min-width:600px) and (max-width:760px) and (max-height:530px){
+ #workspace{display:grid;grid-template-columns:minmax(0,1fr) 270px;grid-template-rows:30px minmax(0,1fr);gap:0 7px;grid-template-areas:'top top' 'canvas options'}
+ #workspace.panel-hidden{grid-template-columns:minmax(0,1fr);grid-template-areas:'top' 'canvas'}
+ #workspace>.editor-toolbar{grid-area:top}#workspace>.canvas-column{grid-area:canvas;min-height:0}
+ #workspace #sidePanel,#workspace:has(#mobileSelection:not([hidden])) #sidePanel,#workspace #sidePanel.expanded{grid-area:options;height:auto;max-height:none;margin:0 0 4px;min-height:0}
+ #workspace .canvas-tools{height:28px;min-height:28px;flex-shrink:0;margin:0}.canvas-tools button{min-height:28px}
+ #mobileBar,html[data-theme=dark] #mobileBar{padding:3px 8px}#mobileBar button,html[data-theme=dark] #mobileBar button{min-height:44px;flex-direction:row;font-size:10px}
+ #workspace #panelBody{padding:10px}.ux-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ux-tool-card{min-height:92px}
+}
+
 </style>
 </head>
 <body>
@@ -1297,6 +1397,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 
 
 <header>
+  <button id="headerBack" data-action="home" aria-label="Volver a Mis proyectos">‹</button>
   <button class="brand" data-action="home" title="Divas Agency · Ir al inicio" aria-label="Divas Agency · Inicio">
     <img id="brandLogo" alt="Divas Agency" hidden>
     <span id="brandFallback" class="brand-fallback">DIVAS<small>AGENCY</small></span>
@@ -1319,20 +1420,21 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
           </div>
           <p id="appearanceStatus" role="status">Sigue la apariencia de tu navegador.</p>
         </fieldset>
-        <button data-action="home">Mis proyectos</button>
+        <fieldset class="appearance"><legend>Vista previa en el móvil</legend><div class="appearance-options render-options"><label class="appearance-option"><input type="radio" name="renderMode" value="fluid" checked><span>Fluida</span></label><label class="appearance-option"><input type="radio" name="renderMode" value="detail"><span>Más detalle</span></label></div><p class="render-note">La descarga conserva toda su calidad en ambos modos.</p></fieldset>
+        <button data-action="account">Mi cuenta</button><button data-action="home">Mis proyectos</button>
         <button id="teamMenuEntry" data-action="coOpen" hidden>Mi equipo y solicitudes de ayuda</button>
         <button data-action="newDesign">Crear un diseño</button>
         <button data-action="saveLocal">Guardar avance</button>
         <button data-action="saveCopy">Guardar como copia</button>
         <button data-action="save">Descargar respaldo editable</button>
-        <button data-action="open">Abrir proyecto JSON</button>
+        <button data-action="open">Abrir archivo · PXZ o JSON</button>
         <button data-action="agency">Identidad de agencia · logo y datos</button>
         <button data-action="format">Cambiar formato del lienzo</button>
-        <button data-action="helpGestures">Ayuda Divas</button>
+        <button data-action="helpGestures">✧ Divas Bot · Ayuda</button>
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v34 · Dorado 3D</p>
+        <p class="help" id="appVersion">Divas Editor · v35 · Estudio móvil</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -1345,18 +1447,22 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 <section id="projects" aria-labelledby="projectsTitle">
   <div class="projects-inner">
     <div class="projects-top">
-      <div><div class="eyebrow">Tu espacio creativo</div><h1 id="projectsTitle">Mis proyectos</h1><p id="projectStorageDescription">Tus proyectos locales se guardan en este navegador.</p></div>
-      <div class="projects-actions"><button class="primary" data-action="startImage">▧ Cargar mi imagen</button><button class="primary" data-action="newDesign">+ Crear diseño</button><button data-action="open">Importar PXZ / proyecto</button><button data-action="templates">Plantillas de agencia</button></div>
+      <div class="eyebrow">DIVAS · TU ESTUDIO CREATIVO</div><h1 id="projectsTitle">Tu próxima gran idea.</h1><p class="ux-welcome">Un poco de ti. Mucho estilo.</p>
+      <div class="projects-actions"><button class="primary" data-action="newDesign"><span aria-hidden="true">+</span>Crear diseño</button><button data-action="startImage"><svg class="ui-icon" aria-hidden="true"><use href="#i-image"></use></svg>Cargar mi imagen</button></div>
     </div>
-    <div class="row"><button data-action="agency">Logo e identidad de agencia</button><button data-action="helpGestures">Ayuda Divas</button></div>
+    <div class="projects-shortcuts"><button data-action="templates">✧ Plantillas</button><button data-action="open">↥ Abrir archivo</button><button class="ux-bot-shortcut" data-action="helpGestures">Divas Bot ↗</button></div>
+    <div id="resumeProject" hidden></div>
     <p id="storageNotice" class="storage-notice" role="status" hidden></p>
+    <div class="ux-project-heading"><h2>Mis diseños</h2><p id="projectCount" role="status">Preparando…</p></div>
     <div class="projects-tools">
-      <input id="projectSearch" type="search" placeholder="Buscar un proyecto…" aria-label="Buscar proyectos">
-      <select id="projectFilter" aria-label="Filtrar proyectos"><option value="todos">Todos los diseños</option><option value="evento">Eventos</option><option value="reclutamiento">Reclutamiento</option><option value="perfil">Perfiles</option><option value="libre">Diseños libres</option></select>
-      <select id="projectSort" aria-label="Ordenar proyectos"><option value="recientes">Más recientes</option><option value="nombre">Nombre</option><option value="antiguos">Más antiguos</option></select>
+      <input id="projectSearch" type="search" placeholder="Buscar un diseño…" aria-label="Buscar proyectos">
+      <details id="projectFilters"><summary id="projectFilterToggle" aria-expanded="false">Filtrar ≡</summary><div class="ux-project-filters">
+        <label class="co-chat-sr" for="projectFilter">Tipo de proyecto</label><select id="projectFilter"><option value="todos">Todos los diseños</option><option value="evento">Eventos</option><option value="reclutamiento">Reclutamiento</option><option value="perfil">Perfiles</option><option value="libre">Diseños libres</option></select>
+        <label class="co-chat-sr" for="projectSort">Orden</label><select id="projectSort"><option value="recientes">Más recientes</option><option value="nombre">Nombre</option><option value="antiguos">Más antiguos</option></select>
+      </div></details>
     </div>
-    <p id="projectCount" class="help" role="status">Preparando tus proyectos…</p>
-    <div id="projectGrid" class="project-grid"></div>
+    <div id="projectGrid" class="project-grid"></div><button id="moreProjects" data-action="moreProjects" hidden>Ver más diseños</button>
+    <details class="project-storage-note"><summary>¿Dónde están mis diseños?</summary><p id="projectStorageDescription">Tus proyectos locales se guardan en este navegador.</p><button class="quiet" data-action="agency">Logo e identidad de la agencia</button></details>
   </div>
 </section>
 
@@ -1424,7 +1530,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   <nav id="toolRail" aria-label="Herramientas de edición"></nav>
   <aside id="layerDock" aria-label="Capas del diseño"></aside>
   <section class="canvas-column">
-    <div id="coBar" class="co-bar" hidden><div class="co-info"><strong id="coTitle"></strong><small id="coStatus"></small></div><button id="coTake" data-action="coControl">Pedir control</button><button id="coChatToggle" data-action="coChatToggle" aria-controls="coChat" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3Z"/></svg>Chat<span id="coChatBadge" hidden></span></button><button id="coGrant" data-action="coGrant" hidden>Ceder control</button><button id="coApply" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coOpen" aria-label="Opciones de la ayuda compartida">•••</button><p id="coActivity" role="status"></p></div><div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="coEntry" data-action="coOpen">♧ Ayuda compartida</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button id="surpriseButton" class="surprise-button" data-action="surprise">✦ Crear flyer</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Ayuda</button></div>
+    <div id="coBar" class="co-bar" hidden><div class="co-info"><strong id="coTitle"></strong><small id="coStatus"></small></div><button id="coTake" data-action="coControl">Pedir control</button><button id="coChatToggle" data-action="coChatToggle" aria-controls="coChat" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3Z"/></svg>Chat<span id="coChatBadge" hidden></span></button><button id="coGrant" data-action="coGrant" hidden>Ceder control</button><button id="coApply" class="primary" data-action="coApply">Guardar en mi proyecto</button><button data-action="coOpen" aria-label="Opciones de la ayuda compartida">•••</button><p id="coActivity" role="status"></p></div><div class="editor-toolbar"><div class="project-toolbar"><button id="projectName" data-action="renameProject" title="Cambiar nombre del proyecto">Mi diseño · ✎</button><button id="compactSaveStatus" data-action="saveDetails"><i aria-hidden="true"></i><span id="compactSaveLabel" role="status">Guardado</span><span aria-hidden="true">⌄</span></button><button id="coEntry" data-action="coOpen">♧ Ayuda compartida</button><button id="agencyResourcesButton" class="resources-top" data-action="catalog">✦ Recursos de la agencia</button><button id="surpriseButton" class="surprise-button" data-action="surprise">✦ Crear flyer</button><button class="help-pill" data-action="helpGestures" aria-label="Abrir Ayuda Divas"><span aria-hidden="true">✧</span> Divas Bot</button></div>
     <div class="save-toolbar"><button data-action="home" class="quiet">‹ Proyectos</button><button id="saveProgressButton" class="primary" data-action="saveLocal">Guardar avance</button><button data-action="saveDetails" class="save-status"><span id="projectSaveState" role="status" aria-live="polite">Cambios pendientes</span><span aria-hidden="true"> ⓘ</span></button></div>
     </div>
     <div id="saveFeedback" class="save-feedback" role="status" hidden><details id="saveFeedbackDetails"><summary>El guardado necesita atención · Ver opciones</summary><p id="saveFeedbackText"></p><div class="row"><button data-action="saveLocal">Reintentar</button><button data-action="saveCopy">Guardar como copia</button><button data-action="save">Descargar respaldo</button><button class="quiet" data-action="dismissSaveFeedback">Ocultar aviso</button></div></details></div>
@@ -1507,12 +1613,10 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 </main>
 
 <nav id="mobileBar" aria-label="Herramientas de edición" hidden>
-  <button data-action="surprise" data-tab="estilo"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"></use></svg>Crear flyer</button>
-  <button data-action="mobile" data-tab="textos"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-text"></use></svg>Texto</button>
-  <button data-action="mobile" data-tab="logos"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-image"></use></svg>Imágenes</button>
-  <button data-action="mobile" data-tab="figuras"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"></use></svg>Figuras</button>
-  <button data-action="mobile" data-tab="fondo"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-background"></use></svg>Fondo</button>
-  <button data-action="mobile" data-tab="capas"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-layers"></use></svg>Capas</button>
+  <button data-action="uxTab" data-value="anadir" data-ux-tab="anadir"><svg class="ui-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg>Añadir</button>
+  <button data-action="uxTab" data-value="diseno" data-ux-tab="diseno"><svg class="ui-icon" aria-hidden="true"><use href="#i-spark"></use></svg>Diseño</button>
+  <button data-action="uxTab" data-value="capas" data-ux-tab="capas"><svg class="ui-icon" aria-hidden="true"><use href="#i-layers"></use></svg>Elementos</button>
+  <button data-action="uxTab" data-value="bot" data-ux-tab="bot"><span class="bot-nav-mark" aria-hidden="true">✧</span>Divas Bot</button>
 </nav>
 
 <div id="toast" role="status" aria-live="polite" hidden></div>
@@ -1526,7 +1630,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 </dialog>
 
 <dialog id="helpDialog">
-  <div class="dialog-head"><h2><span aria-hidden="true">✧</span> Ayuda Divas</h2><button data-action="closeHelp" aria-label="Cerrar ayuda">×</button></div>
+  <div class="dialog-head"><h2><span aria-hidden="true">✧</span> Divas Bot</h2><button data-action="closeHelp" aria-label="Cerrar ayuda">×</button></div>
   <div id="helpBody" class="dialog-body"></div>
 </dialog>
 
@@ -3516,15 +3620,15 @@ function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQ
 }
 function draw(){
   coPreview();
-  if(S.queued||!S.opened)return;
+  if(S.queued||!S.opened||S.view!=="editor"||document.hidden)return;
   S.queued=true;
   requestAnimationFrame(()=>{
-    S.queued=false;render(ctx,{controls:true,track:true});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();mobileSelectionUI();mobileObjectHandles();cropUI();renderLayerDock();
+    S.queued=false;if(S.view!=="editor"||document.hidden)return;const factor=uxSyncCanvas();render(ctx,{controls:true,track:true,factor});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();mobileSelectionUI();mobileObjectHandles();cropUI();renderLayerDock();
   });
 }
 function syncGeometry(){
   const s=sizeOf();
-  if(canvas.width!==s.ancho||canvas.height!==s.alto){canvas.width=s.ancho;canvas.height=s.alto;}
+  // The preview surface follows its displayed size; export remains full quality.
   $("canvasSize").textContent=s.ancho+" × "+s.alto+" px";
   $("formatLabel").textContent=formatKey()==="banner"?"Banner · 1428 × 400":formatKey()==="original"?"Original · "+s.ancho+" × "+s.alto:formatKey();
   const diameter=Math.min(s.ancho,s.alto);
@@ -3627,7 +3731,7 @@ function setPanelVisible(visible){
   S.panelHidden=!visible;
   $("workspace").classList.toggle("panel-hidden",!visible);
   $("sidePanel").classList.toggle("mobile-open",visible);
-  $("showToolsButton").hidden=visible;
+  $("showToolsButton").hidden=visible;uxPanelState();
   if(!visible)dismissHint();
   requestAnimationFrame(()=>{if(S.fit)fitCanvas();positionSelectionToolbar();});
 }
@@ -3916,7 +4020,7 @@ function tabForLayer(p){if(p?.rol==="fondo")return "fondo";return p?.tipo==="tex
 function renderPanel(){
   const tabs=[["estilo","Crear flyer"],["textos","Texto"],["logos","Imágenes"],["figuras","Figuras"],["fondo","Fondo"],["capas","Capas"]];
   const html={textos:simpleTextsHTML,logos:simpleLogosHTML,figuras:shapesHTML,fondo:backgroundHTML,
-    capas:()=>mobileCanvas()?layersHTML():desktopLayersHTML(),ajustes:propertiesHTML,crear:createHTML,estilo:simpleStyleHTML,recortar:cropHTML};
+    capas:()=>mobileCanvas()?layersHTML():desktopLayersHTML(),ajustes:propertiesHTML,crear:createHTML,estilo:simpleStyleHTML,recortar:cropHTML,anadir:()=>uxHubHTML("anadir"),diseno:()=>uxHubHTML("diseno"),bot:uxBotHTML};
   if(!html[S.tab])S.tab="textos";
   const p=selectedLayer(),active=S.tab==="ajustes"?(mobileCanvas()?(selectedLayers().length>1?"capas":tabForLayer(p)):"ajustes"):S.tab==="crear"?"figuras":S.tab;
   const icons={estilo:"spark",textos:"text",logos:"image",figuras:"spark",fondo:"background",capas:"layers"};
@@ -3924,22 +4028,20 @@ function renderPanel(){
   $("panelTabs").innerHTML=tabs.map(([id,name])=>`<button data-action="tab" data-value="${id}" class="${active===id?"active":""}" aria-pressed="${active===id}">${name}</button>`).join("");
   document.querySelectorAll('#mobileBar [data-tab]').forEach(el=>{el.classList.toggle("active",el.dataset.tab===active&&$("sidePanel").classList.contains("mobile-open"));el.setAttribute("aria-pressed",String(el.dataset.tab===active));});
   $("panelTitle").textContent=selectedLayers().length>1&&S.tab==="ajustes"?selectionLabel():S.tab==="ajustes"&&p?(p.bloqueado?"🔒 ":"")+p.nombre:tabs.find(([id])=>id===active)?.[1]||"Tu diseño";
+  if(["anadir","diseno","bot"].includes(S.tab))$("panelTitle").textContent={anadir:"Añadir a mi diseño",diseno:"Diseño",bot:"Divas Bot"}[S.tab];
   $("panelSubtitle").textContent=S.tab==="ajustes"?"Pulsa Más para fijar, ocultar o duplicar":"Toca una opción y mira el resultado.";
   const panelKey=CR.imageSection+":"+S.textSection+":"+S.lookSection+":"+selectedLayers().map(p=>p.id).join(":")+":"+(wholeGroup()||"")+":"+(S.isolation||"")+":"+S.selecting;
   const samePanel=S.lastPanelTab===S.tab&&S.lastPanelId===S.selected&&S.lastPanelKey===panelKey;
   const scroll=$("panelBody").scrollTop,openDetails=samePanel?[...$("panelBody").querySelectorAll("details")].map((el,i)=>el.open?i:-1).filter(i=>i>=0):[];
-  $("panelBody").innerHTML=html[S.tab]();
+  if(S.tab==="bot")$("helpBody").replaceChildren();
+  $("panelBody").innerHTML=html[S.tab]();uxPanelState();
   const subnav=$("panelBody").querySelector(".edit-segments");
   $("panelTabs").classList.toggle("inspector-tabs",!!subnav);
   if(subnav)$("panelTabs").replaceChildren(subnav);
   const details=$("panelBody").querySelectorAll("details");for(const i of openDetails)if(details[i])details[i].open=true;
   $("panelBody").scrollTop=samePanel?scroll:0;
   S.lastPanelTab=S.tab;S.lastPanelId=S.selected;S.lastPanelKey=panelKey;
-  document.querySelectorAll("[data-mini]").forEach(el=>{
-    const p=layer(el.dataset.mini,{w:100,h:85,color:"#d7b57a",color2:"#fff1d6",cantidad:40,metalico:true});
-    const c=el.getContext("2d");c.translate(70,35);c.scale(.65,.65);drawShape(c,p);
-  });
-  paintLookPreviews();updateSelectionUI();updateTextFeedback();updateCanvasPrompt();cropUI();renderLayerDock();
+  uxPaintPreviews();updateSelectionUI();updateTextFeedback();updateCanvasPrompt();cropUI();renderLayerDock();
   if(S.tab==="recortar")$("panelTitle").textContent="Recortar · "+(p?.nombre||"Imagen");
   if(A.member)loadResourceThumbs($("panelBody"));
   if(H.active)requestAnimationFrame(()=>{if(H.active)highlightHelp(H.active);});
@@ -4082,7 +4184,7 @@ const HELP_TOPICS={
   editable:{label:"Llévalo a otro dispositivo",icon:"⇩",text:"Descarga el proyecto editable. Después impórtalo para seguir diseñando.",target:'[data-action="save"]',context:"editable",related:[]},
   marca:{label:"El logo oficial de tu agencia",icon:"✧",text:"Carga tu logo en Identidad de agencia. Aparecerá también en la cabecera.",context:"marca",related:[]}
 };
-const HELP_LABELS={estilo:"Crear flyer",recursos:"Recursos de la agencia",tabla:"Editar tabla",crearTabla:"Añadir tabla",texto:"Escribir",textos:"Textos",tamano:"Tamaño",fuente:"Fuente",color:"Color",decorar:"Decorar",fondo:"Fondo",fondoimagen:"Mi foto de fondo",imagenes:"Añadir imagen",imagen:"Reemplazar imagen",medidas:"Medidas",recorte:"Quitar fondo",figuras:"Figuras",pieza:"Editar figura",capas:"Capas",bloquear:"Bloquear",ocultar:"Ocultar",orden:"Orden",duplicar:"Duplicar",eliminar:"Eliminar",zoom:"Zoom",formato:"Formato",descarga:"Descargar",guardar:"Mis proyectos",editable:"Archivo editable",marca:"Logo de agencia"};
+const HELP_LABELS={estilo:"Crear flyer",recursos:"Recursos de la agencia",tabla:"Editar tabla",crearTabla:"Añadir tabla",texto:"Escribir",textos:"Textos",tamano:"Tamaño",fuente:"Fuente",color:"Color",decorar:"Decorar",fondo:"Fondo",fondoimagen:"Mi foto de fondo",imagenes:"Añadir imagen",imagen:"Reemplazar imagen",medidas:"Medidas",recorte:"Quitar fondo",figuras:"Figuras",pieza:"Editar figura",capas:"Capas",bloquear:"Bloquear",ocultar:"Ocultar",orden:"Orden",duplicar:"Duplicar",eliminar:"Eliminar",zoom:"Zoom",formato:"Formato",descarga:"Descargar",guardar:"Guardar avance",editable:"Archivo editable",marca:"Logo de agencia"};
 function persistHelpPrefs(){try{localStorage.setItem(HELP_PREF_KEY,JSON.stringify({enabled:H.enabled,seen:H.seen}));}catch{}}
 function clearHelpHighlight(){document.querySelectorAll('.help-highlight').forEach(el=>el.classList.remove('help-highlight'));H.target=null;}
 function releaseHintSpace(){
@@ -4096,7 +4198,7 @@ function dismissHint({keepSpace=false}={}){
 function resetGuidance(){
   dismissHint();closeHelp();
   if(S.tab==="tutorial")S.tab="textos";
-  $("sidePanel").classList.remove("mobile-open","expanded");
+  $("sidePanel").classList.remove("mobile-open","expanded");if(mobileCanvas())setPanelVisible(false);
   $("expandPanelBtn").textContent="↥";$("expandPanelBtn").setAttribute("aria-expanded","false");
   $("expandPanelBtn").setAttribute("aria-label","Ampliar panel");
 }
@@ -4144,15 +4246,19 @@ function closeHelp(){if($("helpDialog").open)$("helpDialog").close();}
 function helpChoice(key){return `<button class="help-choice" data-action="helpTopic" data-value="${key}"><span aria-hidden="true">${esc(HELP_TOPICS[key].icon)}</span>${esc(HELP_LABELS[key])}<span aria-hidden="true">↗</span></button>`;}
 function openHelp(){
   dismissHint();closeMenus();closeLayerMenu();
-  const primary=["estilo","texto","tamano","decorar","fondo","descarga"];
-  $("helpBody").innerHTML=`<label class="helper-label" for="helpQuery">¿Qué quieres hacer?</label><form id="helpForm" class="help-search"><input id="helpQuery" type="search" maxlength="180" autocomplete="off" placeholder="Ej.: poner mi foto de fondo" value="${esc(H.query)}"><button class="primary" type="submit" aria-label="Buscar cómo hacerlo">↗</button></form><div id="helpAnswer" class="help-answer" role="status" aria-live="polite" hidden></div><div class="help-shortcuts">${primary.map(helpChoice).join("")}</div><details class="help-all"><summary>Más herramientas</summary><div class="help-shortcuts">${Object.keys(HELP_TOPICS).filter(k=>!primary.includes(k)&&!["textos","pieza"].includes(k)).map(helpChoice).join("")}</div></details><div class="help-preferences"><label class="check"><input id="autoHints" type="checkbox" ${H.enabled?"checked":""}>Pistas en mi primer uso</label><button class="quiet" data-action="resetHints">Volver a verlas</button></div><p class="helper-note">Ayuda del editor · funciona sin conexión.</p>`;
-  if(!$("helpDialog").open)$("helpDialog").show();
+  if(mobileCanvas()&&S.view==="editor"){
+    if($("helpDialog").open)$("helpDialog").close();$("helpBody").replaceChildren();setTab("bot");
+  }else{
+    if(S.tab==="bot"){S.tab="anadir";renderPanel();}
+    $("helpBody").innerHTML=uxBotHTML();if(!$("helpDialog").open)$("helpDialog").show();
+  }
   if(H.query)answerHelp(H.query);
 }
 function matchHelpQuery(input){
   const q=String(input).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
   if(!q)return null;
   const rules=[
+    ["encuadre",/recortar|encuadr|cortar.*(foto|imagen)|forma.*(foto|imagen)/],
     ["recorte",/(quitar|borrar|eliminar|remover|sacar|sin).*(fondo)|(fondo).*(transparen|borrar|quitar)/],
     ["marca",/(logo|marca).*(oficial|cabecera|pagina|aplicacion|app|agencia)|identidad|cabecera/],
     ["editable",/json|editable|otro (telefono|dispositivo|movil)|exportar.*proyecto/],
@@ -4231,7 +4337,8 @@ async function revealHelp(key){
   else if(topic.context==="formato"){await action("format");$("newFormat").classList.add("help-highlight");return;}
   else if(topic.context==="descarga"){openExport();return;}
   else if(topic.context==="marca"){await action("agency");return;}
-  else if(topic.context==="guardar"){await action("home");return;}
+  else if(topic.context==="encuadre"){await action("cropStart");return;}
+  else if(topic.context==="guardar"){openSaveDetails();return;}
   else if(topic.context==="editable"){$("mainMenu").open=true;highlightHelp(key,{reveal:true});return;}
   else if(topic.context==="zoom"){$("sidePanel").classList.remove("mobile-open");S.fit=true;fitCanvas();}
   showHint(key,{manual:true});
@@ -4309,7 +4416,7 @@ function canvasPointerDown(event){
   if(event.pointerType==="touch"){MOB.touchAt=Date.now();}
   if(CO.room&&!coEditing()){coPoint(event);return;}
   if(S.busy||event.button!==0)return;
-  MOB.defer=event.pointerType==="touch";
+  MOB.defer=mobileCanvas()&&["touch","pen"].includes(event.pointerType);
   event.preventDefault();dismissHint({keepSpace:true});closeHelp();closeLayerMenu();canvas.focus({preventScroll:true});
   if(event.pointerType==="touch"){
     touchPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
@@ -4429,7 +4536,7 @@ function endPointer(event){
     if(event.type==="pointerup"&&!press.moved&&!press.handled&&!press.handle){
       if(press.id){
         const bg=S.doc.capas.find(p=>p.id===press.id)?.rol==="fondo";
-        if(selectedLayers().length>1){S.tab="ajustes";if(!mobileCanvas()||event.pointerType!=="touch")setPanelVisible(true);renderPanel();}else selectLayer(press.id,{open:!mobileCanvas()||event.pointerType!=="touch"||bg,single:S.isolation===press.id});
+        if(selectedLayers().length>1){S.tab="ajustes";if(!mobileCanvas()||!["touch","pen"].includes(event.pointerType))setPanelVisible(true);renderPanel();}else selectLayer(press.id,{open:!mobileCanvas()||!["touch","pen"].includes(event.pointerType)||bg,single:S.isolation===press.id});
         if(bg)requestAnimationFrame(fitCanvas);else if(selectedLayers().length===1&&!mobileCanvas())offerLayerHint();
       }
       else {
@@ -4437,7 +4544,7 @@ function endPointer(event){
         if(bg&&!bg.oculto&&S.doc.fondo.tipo==="imagen")selectLayer(bg.id,{open:true});
         else setTab("fondo");
       }
-      if(event.pointerType!=="touch"&&selectedLayers().length===1&&lastTap?.id===press.id&&Date.now()-lastTap.time<350){
+      if((!mobileCanvas()||!["touch","pen"].includes(event.pointerType))&&selectedLayers().length===1&&lastTap?.id===press.id&&Date.now()-lastTap.time<350){
         const p=selectedLayer();if(p?.tipo==="texto"&&!p.bloqueado){const input=document.querySelector('[data-prop="texto"]');input?.focus();input?.select();}
         if(p?.tipo==="tabla"&&!p.bloqueado)openTable();
       }
@@ -5071,7 +5178,7 @@ const STYLE_KEYS=[
 async function action(name,button){
   if(CO.room){
     if(["startImage","blankStart","goldStart","newDesign","new","import","templates","surprise","agencyAdd","projectName","renameProject"].includes(name))throw new Error("Sal de la ayuda antes de abrir o publicar otro proyecto.");
-    const allowed=["closeDialog","closePanel","showPanel","showTools","expandPanel","tab","fit","zoomIn","zoomOut","theme","export","download","save","saveDetails","dismissSaveFeedback","contextHelp","helpTopic","helpGestures","closeHelp","dismissHint","panelExpand","clearSelection","focusCanvas","focusText","deselect","mobileFocus","projects","home"];
+    const allowed=["closeDialog","closePanel","showPanel","showTools","expandPanel","tab","fit","zoomIn","zoomOut","theme","export","download","save","saveDetails","dismissSaveFeedback","contextHelp","helpTopic","helpGestures","closeHelp","dismissHint","panelExpand","uxTab","uxContext","clearSelection","focusCanvas","focusText","deselect","mobileFocus","projects","home"];
     if(!coEditing()&&!name.startsWith('co')&&!allowed.includes(name))throw new Error("Tu compañera tiene el control. Puedes señalar en el lienzo o pedir el control.");
   }
   if(CR.session&&!name.startsWith('crop')&&!['fit','zoomIn','zoomOut','expandPanel','theme'].includes(name)){
@@ -5097,6 +5204,9 @@ async function action(name,button){
     case "imageColorReset":if(p?.tipo==='imagen')commit(()=>Object.assign(p,{opacidad:1,brillo:100,contraste:100,saturacion:100,mezcla:'source-over'}));break;
     case "alignToLayer":alignToLayer(v);break;
     case "dockSelect":selectLayer(button.dataset.id,{open:true});break;
+    case "uxTab":if(S.busy)break;if(!S.panelHidden&&S.tab===v){setPanelVisible(false);break;}if(v==='bot')openHelp();else setTab(v);break;
+    case "uxContext":uxContext(v);break;
+    case "moreProjects":UX.gridLimit+=24;renderProjects();break;
     case "mobileMode":mobileMode(v);break;
     case "mobileEdit":MOB.mode='idle';if(selectedLayers().length>1){S.tab='ajustes';setPanelVisible(true);renderPanel();}else selectLayer(S.selected,{open:true,single:S.isolation===S.selected});refreshMobileControls();break;
     case "mobileNudge":mobileNudge(v);break;
@@ -5555,7 +5665,7 @@ document.addEventListener("submit",event=>{
   if(forms[event.target.id]){event.preventDefault();run(forms[event.target.id]);return;}
   if(event.target.id==="resourceEdit"){event.preventDefault();run(saveResourceMetadata);return;}
   if(event.target.id!=="helpForm")return;
-  event.preventDefault();answerHelp($("helpQuery").value);$("helpQuery").blur();
+  event.preventDefault();answerHelp($("helpQuery").value);$("helpQuery").blur();if($("sidePanel").contains($("helpAnswer")))requestAnimationFrame(()=>{const a=$("helpAnswer"),b=$("panelBody");b.scrollTop+=a.getBoundingClientRect().top-b.getBoundingClientRect().top-8;});
 });
 // Las pistas permanecen durante la escritura y se completan al confirmar el cambio.
 document.addEventListener("focusout",()=>S.group=null);
@@ -6819,7 +6929,7 @@ function updateProjectToolbar(){
  $('projectSaveState').setAttribute('title',state.detail);setSaveText('saveState',state.label);
  $('saveProgressButton').disabled=S.saving||!!(CO.room&&(!coEditing()||CO.room.writing));$('saveProgressButton').textContent=S.saving?'Guardando…':'Guardar avance';
  $('saveFeedback').hidden=!state.error||P.saveFeedbackDismissed||!!(P.retryTimer&&!P.localError&&P.pending.has(P.current.id));setSaveText('saveFeedbackText',state.error?state.detail:'');
- setSaveText('saveDetailText',state.detail);setSaveText('saveDetailState',state.label);
+ setSaveText('saveDetailText',state.detail);setSaveText('saveDetailState',state.label);uxSaveUI(state);
 }
 function openSaveDetails(){updateProjectToolbar();showDialog('saveDetailsDialog');}
 function projectSummaries(){
@@ -6856,16 +6966,18 @@ async function initializeProjects(){
 }
 function renderProjects(){
   const search=$("projectSearch").value.trim().toLocaleLowerCase("es"),filter=$("projectFilter").value,sort=$("projectSort").value;
+  const gridKey=[search,filter,sort].join("|");if(gridKey!==UX.gridKey){UX.gridKey=gridKey;UX.gridLimit=24;}uxRenderLatest();
   const list=projectSummaries().filter(p=>(filter==="todos"||p.objetivo===filter)&&p.nombre.toLocaleLowerCase("es").includes(search));
   list.sort(sort==="nombre"?(a,b)=>a.nombre.localeCompare(b.nombre,"es"):(a,b)=>sort==="antiguos"?a.creado-b.creado:b.modificado-a.modificado);
   $("projectCount").textContent=!P.initialized?"Preparando tus proyectos…":list.length+" "+(list.length===1?"proyecto":"proyectos")+(search||filter!=="todos"?" encontrados":" disponibles");
   $("projectGrid").classList.toggle("project-grid",list.length>0);
-  $("projectGrid").innerHTML=list.length?list.map(p=>{
+  $("moreProjects").hidden=list.length<=UX.gridLimit;
+  $("projectGrid").innerHTML=list.length?list.slice(0,UX.gridLimit).map(p=>{
     const date=new Date(p.modificado).toLocaleString("es-CL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
     const progress=p.memory?"En esta pestaña · sin guardar":p.pending?(A.member?"Pendiente de subir · en dispositivo":"Recuperación en dispositivo"):A.member?"Guardado en tu cuenta":"Guardado en este navegador";
     return `<article class="project-card"><button class="project-open" data-action="openSavedProject" data-id="${esc(p.id)}" aria-label="Continuar ${esc(p.nombre)}">
-      <div class="project-thumb">${validLogo(p.miniatura)?`<img src="${p.miniatura}" alt="Vista previa de ${esc(p.nombre)}" loading="lazy">`:`<span>${esc(PROJECT_LABELS[p.objetivo]||"Mi diseño")}</span>`}</div>
-      <div class="project-info"><strong>${esc(p.nombre)}</strong><small>${esc(PROJECT_LABELS[p.objetivo]||"Diseño libre")} · ${esc(p.formato)}<br>Último cambio: ${esc(date)}</small></div></button>
+      <div class="project-thumb">${validLogo(p.miniatura)?`<img src="${p.miniatura}" alt="Vista previa de ${esc(p.nombre)}" loading="lazy" decoding="async">`:`<span>${esc(PROJECT_LABELS[p.objetivo]||"Mi diseño")}</span>`}</div>
+      <div class="project-info"><strong>${esc(p.nombre)}</strong><small>${esc(PROJECT_LABELS[p.objetivo]||"Diseño libre")} · ${esc(p.formato)}<br>${esc(date)}</small></div></button>
       <div class="project-card-foot"><span class="project-state">${progress}</span><details><summary aria-label="Opciones de ${esc(p.nombre)}">•••</summary><div class="project-options">
         <button data-action="renameProject" data-id="${esc(p.id)}">Cambiar nombre</button><button data-action="copySavedProject" data-id="${esc(p.id)}">Duplicar proyecto</button>
         <button data-action="exportSavedProject" data-id="${esc(p.id)}">Descargar editable</button><button class="danger" data-action="deleteSavedProject" data-id="${esc(p.id)}">Eliminar proyecto</button>
@@ -8104,7 +8216,7 @@ function mobileSelectionUI(){
   if(!locked&&MOB.mode==='move')extra=`<div class="mobile-precision"><span>Un poco más…</span>${[['←','left','a la izquierda'],['↑','up','hacia arriba'],['↓','down','hacia abajo'],['→','right','a la derecha']].map(([glyph,value,label])=>`<button data-action="mobileNudge" data-value="${value}" aria-label="Mover ${label}">${glyph}</button>`).join('')}<button data-action="mobileFocus" aria-label="Acercar la vista al elemento">⌕</button></div>`;
   if(!locked&&MOB.mode==='size')extra=`<div class="mobile-size-row"><button data-action="mobileScale" data-value="-1" aria-label="Hacer más pequeño">−</button><span>${p.tipo==='texto'?'Marco del texto':'Tamaño'}</span><button data-action="mobileScale" data-value="1" aria-label="Hacer más grande">+</button><label class="mobile-ratio"><input type="checkbox" data-mobile-ratio ${ratio?'checked':''} ${!single||p.rol==='fondo'?'disabled':''}>${p.tipo==='texto'?'Misma forma':'No deformar'}</label></div><p class="mobile-resize-hint">${p.tipo==='texto'?'Arrastra las esquinas · el texto se acomoda completo.':'Arrastra las esquinas para ajustar el tamaño.'}</p>${!ratio?`<div class="mobile-dimensions"><label>Ancho<input data-prop="w" type="number" min="2" max="8192" value="${Math.round(p.w)}" inputmode="decimal"></label><label>Alto<input data-prop="h" type="number" min="2" max="8192" value="${Math.round(p.h)}" inputmode="decimal"></label></div>`:''}`;
   if(!locked&&MOB.mode==='rotate')extra=`<div class="mobile-rotate-row"><button data-action="mobileRotate" data-value="-15" aria-label="Girar 15 grados a la izquierda">↶</button><label>Giro <input data-mobile-angle type="number" min="-180" max="180" value="${Math.round(p.rot||0)}" inputmode="decimal" aria-label="Grados de giro">°</label><button data-action="mobileRotate" data-value="15" aria-label="Girar 15 grados a la derecha">↷</button><button data-action="mobileStraight">Enderezar</button></div>`;
-  const html=`<div class="mobile-selection-head"><button class="mobile-selected-name" data-action="mobileEdit"><strong>${esc(name)}</strong><small>${esc(hint)}</small></button><button data-action="lock" data-scope="selection" data-id="${esc(list[0].id)}" aria-label="${locked?'Desbloquear elemento':'Fijar elemento para que no se mueva'}" title="${locked?'Desbloquear':'Fijar'}">${uiIcon(locked?'lock':'unlock')}</button><button class="mobile-delete" data-action="delete" ${locked?'disabled':''} aria-label="Eliminar elemento; puedes deshacer">${uiIcon('trash')}</button><button data-action="deselect" aria-label="Quitar selección">×</button></div><div class="mobile-transform-tabs">${[['move','✥','Mover'],['size','↗','Tamaño'],['rotate','↻','Girar']].map(([value,glyph,label])=>`<button data-action="mobileMode" data-value="${value}" aria-pressed="${MOB.mode===value||MOB.mode==='idle'&&value==='move'}" ${locked?'disabled':''}><span aria-hidden="true">${glyph}</span>${label}</button>`).join('')}<button data-action="layerMenu"><span aria-hidden="true">•••</span>Más</button></div>${extra}`;
+  const html=`<div class="mobile-selection-head"><button class="mobile-selected-name" data-action="mobileEdit"><strong>${esc(name)}</strong><small>${esc(hint)}</small></button><button data-action="lock" data-scope="selection" data-id="${esc(list[0].id)}" aria-label="${locked?'Desbloquear elemento':'Fijar elemento para que no se mueva'}" title="${locked?'Desbloquear':'Fijar'}">${uiIcon(locked?'lock':'unlock')}</button><button data-action="layerMenu" aria-label="Más opciones del elemento">•••</button><button class="mobile-delete" data-action="delete" ${locked?'disabled':''} aria-label="Eliminar elemento; puedes deshacer">${uiIcon('trash')}</button><button data-action="deselect" aria-label="Quitar selección">×</button></div><div class="mobile-transform-tabs">${uxContextActions(p,locked)||([['move','✥','Mover'],['size','↗','Tamaño'],['rotate','↻','Girar']].map(([value,glyph,label])=>`<button data-action="mobileMode" data-value="${value}" aria-pressed="${MOB.mode===value||MOB.mode==='idle'&&value==='move'}" ${locked?'disabled':''}><span aria-hidden="true">${glyph}</span>${label}</button>`).join('')+'<button data-action="mobileFocus" aria-label="Acercar la vista al elemento">⌕ Acercar</button>')}</div>${extra}`;
   // No sustituir el input mientras la persona escribe o mantiene un control.
   if(MOB.html!==html&&!MOB.controlPointer&&!(dock.contains(document.activeElement)&&document.activeElement.matches('input,select,textarea'))){dock.innerHTML=html;MOB.html=html;}
 }
@@ -9496,6 +9608,103 @@ function addTextCover(){
   notify('Ajusta la zona sobre las letras antiguas y elige el color del fondo. Luego pulsa Añadir texto dorado.');
 }
 function goldControlsHTML(p){return p.acabadoTexto==='oro3d'?`<div class="gold-controls"><strong>Dorado 3D · texto editable</strong>${rangeProp('Relieve del borde','relieveTexto',0,100)}${rangeProp('Profundidad 3D','profundidadTexto',0,100)}<p class="help">El brillo rodea las letras; el relieve mantiene sus bordes definidos. Cambia la fuente en Texto y tamaño.</p></div>`:'';}
+
+/* v35 · Studio shell. UI state never enters a user's document. */
+HELP_TOPICS.encuadre={label:'Recorta a tu medida',icon:'✂',text:'Arrastra el marco o elige una forma. Pulsa Aplicar cuando el encuadre esté listo.',target:'[data-action="cropStart"]',context:'encuadre'};
+HELP_LABELS.encuadre='Recortar imagen';
+const UX={performance:'fluid',gridLimit:24,gridKey:'',latestKey:'',previewObserver:null,viewportQueued:false};
+try{if(localStorage.getItem('divas-render-mode')==='detail')UX.performance='detail';}catch{}
+function uxPreviewFactor(){
+  if(!mobileCanvas())return 1;
+  const s=sizeOf(),density=UX.performance==='detail'?Math.min(devicePixelRatio||1,2.5):Math.min(devicePixelRatio||1,1.5);
+  const budget=UX.performance==='detail'?3500000:1600000,edge=UX.performance==='detail'?2600:1800;
+  return Math.min(1,Math.max(.15,Math.ceil(S.zoom*density*8)/8),edge/Math.max(s.ancho,s.alto),Math.sqrt(budget/(s.ancho*s.alto)));
+}
+function uxSyncCanvas(){
+  const s=sizeOf(),f=uxPreviewFactor(),w=Math.max(1,Math.round(s.ancho*f)),h=Math.max(1,Math.round(s.alto*f));
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+  return f;
+}
+function uxSetPerformance(value){
+  UX.performance=value==='detail'?'detail':'fluid';
+  try{localStorage.setItem('divas-render-mode',UX.performance);}catch{}
+  document.querySelectorAll('[name=renderMode]').forEach(el=>el.checked=el.value===UX.performance);
+  document.documentElement.dataset.renderMode=UX.performance;
+  draw();
+}
+function uxSaveUI(state=savingState()){
+  const label=state.error?'Falta guardar':S.saving?'Guardando…':S.revision!==S.savedRevision?'Pendiente':A.member?'En tu cuenta':'En este equipo';
+  const el=$('compactSaveLabel');if(el&&el.textContent!==label)el.textContent=label;
+  const button=$('compactSaveStatus');if(button){button.dataset.state=state.error?'error':S.saving?'saving':S.revision!==S.savedRevision?'pending':'saved';button.setAttribute('aria-label',state.label+'. Ver detalles de guardado');button.title=state.detail;}
+}
+function uxProjectProgress(p){return p.memory?'Falta guardar':p.pending?'Falta subir':A.member?'En tu cuenta':'En este equipo';}
+function uxRenderLatest(){
+  const el=$('resumeProject'),p=projectSummaries().sort((a,b)=>b.modificado-a.modificado)[0];
+  const key=JSON.stringify([p?.id,p?.modificado,p?.nombre,p?.pending,p?.memory,!!A.member,p?.miniatura]);
+  if(key===UX.latestKey)return;UX.latestKey=key;
+  el.hidden=!p;if(!p){el.replaceChildren();return;}
+  el.innerHTML=`<button data-action="openSavedProject" data-id="${esc(p.id)}" class="resume-design"><span class="resume-art">${validLogo(p.miniatura)?`<img src="${p.miniatura}" alt="" decoding="async">`:uiIcon('image')}</span><span class="resume-copy"><small>CONTINÚA DONDE LO DEJASTE</small><strong>${esc(p.nombre)}</strong><span>${uxProjectProgress(p)}</span></span><span class="resume-arrow" aria-hidden="true">↗</span></button>`;
+}
+function uxHubHTML(kind){
+  const item=(icon,title,detail,action,value='')=>`<button class="ux-tool-card" data-action="${action}" ${value?`data-value="${value}"`:''}><span class="ux-tool-symbol">${uiIcon(icon)}</span><strong>${title}</strong><small>${detail}</small><span class="ux-card-arrow" aria-hidden="true">↗</span></button>`;
+  if(kind==='anadir')return `<p class="ux-panel-intro">¿Qué le sumamos a tu diseño?</p><div class="ux-tool-grid">${item('text','Texto','Escribe tu mensaje','addText')}${item('image','Mi imagen','Carga una foto o un logo','addImage')}${item('spark','Adornos','Formas, luces y destellos','tab','figuras')}${item('text','Dorado 3D','Letras con relieve','addGoldText')}${item('layers','De la agencia','Tu colección de recursos','catalog')}${item('background','Fondo','Cambia el ambiente','tab','fondo')}</div>`;
+  return `<p class="ux-panel-intro">Dale forma a tu próxima idea.</p><button class="ux-create-flyer" data-action="surprise"><span>${uiIcon('spark')}</span><strong>Crear mi flyer</strong><small>Elige un tema y prueba composiciones.</small><b aria-hidden="true">↗</b></button><div class="ux-tool-grid">${item('background','Fondo','Color, imagen y encuadre','tab','fondo')}${item('layers','Plantillas','Empieza con una base','templates')}${item('image','Formato','Historia, cuadrado o banner','format')}${item('layers','Mi equipo','Pide ayuda con tu diseño','coOpen')}</div><button class="wide quiet" data-action="focusCanvas">Ver mi diseño sin controles ↗</button>`;
+}
+function uxBotHTML(){
+  const p=selectedLayer(),type=p?.tipo,locked=p?.bloqueado;
+  const primary=locked?['bloquear','capas','orden']:p?.rol==='fondo'?['fondo','fondoimagen','formato','bloquear']:type==='texto'?['texto','tamano','fuente','decorar']:type==='imagen'?['imagen','medidas','encuadre','recorte']:['estilo','texto','fondo','descarga'];
+  return `<div class="bot-intro"><span class="bot-orb" aria-hidden="true">✧</span><div><strong>Un toque. Yo te guío.</strong><p>${p?'Vamos con '+esc(p.nombre)+'.':'¿Qué quieres hacer hoy?'}</p></div></div><div class="help-shortcuts">${primary.map(helpChoice).join('')}</div><form id="helpForm" class="help-search"><label class="co-chat-sr" for="helpQuery">Pregunta a Divas Bot</label><input id="helpQuery" type="search" maxlength="180" autocomplete="off" placeholder="Ej.: agrandar el título" value="${esc(H.query)}"><button class="primary" type="submit" aria-label="Buscar ayuda">↗</button></form><div id="helpAnswer" class="help-answer" role="status" aria-live="polite" hidden></div><details class="help-all"><summary>Explorar otras herramientas</summary><div class="help-shortcuts">${Object.keys(HELP_TOPICS).filter(k=>!primary.includes(k)&&!['textos','pieza'].includes(k)).map(helpChoice).join('')}</div></details><div class="help-preferences"><label class="check"><input id="autoHints" type="checkbox" ${H.enabled?'checked':''}>Pistas al empezar</label><button data-action="resetHints">Volver a verlas</button></div><p class="helper-note">Guía integrada · abre la herramienta y te muestra dónde tocar.</p>`;
+}
+function uxContextActions(p,locked){
+  if(locked)return `<button data-action="mobileEdit">Ver en Elementos · desbloquear</button>`;
+  if(MOB.mode!=='idle')return '';
+  if(selectedLayers().length>1)return '';
+  const more=`<button data-action="mobileMode" data-value="rotate" aria-pressed="false">↻ Girar</button>`;
+  if(p.tipo==='texto')return `<button data-action="uxContext" data-value="text">${uiIcon('text')} Escribir</button><button data-action="mobileMode" data-value="size" aria-pressed="false">↗ Tamaño</button><button data-action="uxContext" data-value="effects">${uiIcon('spark')} Estilo</button>${more}`;
+  if(p.tipo==='imagen'&&p.rol!=='fondo')return `<button data-action="mobileMode" data-value="size" aria-pressed="false">↗ Tamaño</button><button data-action="uxContext" data-value="color">${uiIcon('background')} Ajustar</button><button data-action="cropStart">${cropIcon('crop')} Recortar</button>${more}`;
+  return '';
+}
+function uxContext(value){
+  const p=selectedLayer();if(!p)return;if(p.bloqueado){setTab('capas');return;}
+  MOB.mode='idle';S.tab='ajustes';
+  if(p.tipo==='texto')S.textSection=value==='effects'?'efectos':'texto';
+  if(p.tipo==='imagen')CR.imageSection=value==='color'?'color':'imagen';
+  setPanelVisible(true);renderPanel();
+  if(value==='text'){const input=$('panelBody').querySelector('[data-prop=texto]');input?.focus({preventScroll:true});}
+}
+function uxPaintPreviews(){
+  UX.previewObserver?.disconnect();
+  const nodes=[...$('panelBody').querySelectorAll('[data-text-style],[data-mini]')];
+  const paint=el=>{
+    if(!el.isConnected||el.dataset.painted)return;el.dataset.painted='1';const c=el.getContext('2d');
+    if(el.dataset.textStyle){const key=el.dataset.textStyle,style=TEXT_LOOKS[key],p=layer('texto',{texto:'Divas',tamano:46,fuente:selectedLayer()?.fuente||'Georgia',peso:'700',x:120,y:45,w:218,h:80});putTextLook(p,key);c.fillStyle=style.fondo;c.fillRect(0,0,240,90);drawLayer(c,p,1,false);}
+    else {const p=layer(el.dataset.mini,{w:100,h:85,color:'#d7b57a',color2:'#fff1d6',cantidad:40,metalico:true});c.save();c.translate(70,35);c.scale(.65,.65);drawShape(c,p);c.restore();}
+  };
+  if(typeof IntersectionObserver==='function'){UX.previewObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){UX.previewObserver.unobserve(e.target);paint(e.target);}},{root:$('panelBody'),rootMargin:'45px'});nodes.forEach(el=>UX.previewObserver.observe(el));}
+  else nodes.forEach(paint);
+}
+function uxPanelState(){
+  $('sidePanel').dataset.panel=S.tab;
+  const nav=S.tab==='bot'?'bot':S.tab==='capas'?'capas':['diseno','estilo','fondo'].includes(S.tab)?'diseno':'anadir';
+  $('mobileBar').querySelectorAll('[data-ux-tab]').forEach(el=>{const active=!S.panelHidden&&el.dataset.uxTab===nav;el.classList.toggle('active',active);el.setAttribute('aria-pressed',String(active));});
+}
+function uxViewport(){
+  if(UX.viewportQueued)return;UX.viewportQueued=true;
+  requestAnimationFrame(()=>{UX.viewportQueued=false;const vv=window.visualViewport;
+    if(vv&&vv.scale===1){document.documentElement.style.setProperty('--app-height',Math.round(vv.height)+'px');}
+    else document.documentElement.style.removeProperty('--app-height');
+    const input=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||'');document.body.classList.toggle('ux-keyboard',mobileCanvas()&&input&&!!vv&&vv.height<window.innerHeight*.78);
+    if(S.fit)fitCanvas();
+  });
+}
+if(window.visualViewport)visualViewport.addEventListener('resize',uxViewport);
+window.addEventListener('resize',uxViewport);
+document.addEventListener('focusin',uxViewport);document.addEventListener('focusout',uxViewport);
+document.addEventListener('change',e=>{if(e.target.matches('[name=renderMode]'))uxSetPerformance(e.target.value);});
+$('projectFilters').addEventListener('toggle',()=>{$('projectFilterToggle').setAttribute('aria-expanded',String($('projectFilters').open));});
+uxSetPerformance(UX.performance);uxViewport();
+
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)draw();});
 
 boot().catch(error=>notify(error.message));
 })();
