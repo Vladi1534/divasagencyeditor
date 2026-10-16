@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="35">
+<meta name="divas-version" content="36">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -1373,6 +1373,25 @@ html[data-render-mode=fluid] #sidePanel.mobile-open #panelBody{animation-duratio
  #workspace #panelBody{padding:10px}.ux-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ux-tool-card{min-height:92px}
 }
 
+/* v36 · Photo controls grouped by intent, with plain labels and reversible changes. */
+.photo-intro{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}.photo-intro strong{font-size:13px}.photo-intro small{font-size:11px;color:var(--muted)}
+.photo-quick{display:grid;grid-template-columns:.8fr .9fr 1.25fr;gap:7px}.photo-quick button{min-height:44px;padding:7px;font-size:11px}.photo-quick button[aria-pressed=true]{border-color:var(--pink);background:var(--panel2);color:var(--pink)}
+#photoStatus{font-size:10px;line-height:1.5;color:var(--muted);min-height:16px;margin:9px 0}#photoStatus.is-error{color:var(--danger)}
+.photo-looks{border:1px solid var(--line);border-radius:12px;padding:10px;margin:10px 0 15px}.photo-looks>summary{cursor:pointer;font-size:11px;min-height:26px;display:flex;align-items:center;gap:5px}.photo-looks>summary:after{content:'⌄';margin-left:auto;color:var(--pink)}
+.photo-look-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}.photo-look-grid button{min-width:0;padding:5px;font-size:10px;min-height:74px;line-height:1.3}.photo-look-grid i{display:block;width:100%;height:37px;border-radius:7px;margin-bottom:6px}
+.photo-groups{position:sticky;top:-14px;z-index:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;background:var(--panel);padding:5px 0 8px;border-bottom:1px solid var(--line);margin-bottom:16px}.photo-groups button{font-size:10px;min-height:42px;padding:6px 2px;background:transparent}.photo-groups [aria-pressed=true]{background:var(--panel2);color:var(--pink);border-color:var(--pink)}
+.photo-control{margin-bottom:17px}.photo-control>div{display:flex;align-items:center;gap:5px}.photo-control label{font-size:12px;flex:1;min-width:0}.photo-control input[type=number]{width:61px;min-height:34px;padding:4px;text-align:center;font-size:12px;font-variant-numeric:tabular-nums}.photo-control button{min-height:34px;min-width:30px;padding:4px;font-size:16px;border:0;background:transparent}.photo-control input[type=range]{display:block;margin:3px 0 1px;min-height:32px;width:100%}.photo-control small{display:block;color:var(--muted);font-size:10px;line-height:1.4}
+.photo-group-body .field{margin-bottom:17px}.photo-group-body .property{margin:10px 0}.photo-reset-row{display:flex;flex-direction:column;gap:7px;margin:17px 0}.photo-reset-row button{min-height:42px;font-size:11px}.photo-reset-row button:last-child{background:transparent;border-color:transparent;color:var(--muted)}
+.photo-welcome{text-align:center;padding:15px 5px}.photo-welcome>span{font-size:28px;color:var(--pink)}.photo-welcome h3{font-size:16px;margin:9px 0}.photo-welcome p{color:var(--muted);font-size:12px;line-height:1.5}.photo-picker{display:flex;flex-direction:column;gap:8px}.photo-picker button{display:flex;align-items:center;gap:9px;text-align:left;min-height:48px;font-size:12px}.photo-picker span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.photo-picker b{color:var(--pink)}
+.ux-find-tool{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:43px;border:1px solid var(--line);padding:9px 12px;border-radius:12px;margin:0 0 12px;background:var(--panel2)!important;color:var(--muted);font-size:12px}
+.photo-active-label{position:absolute;top:8px;left:50%;transform:translateX(-50%);pointer-events:none;z-index:9;background:var(--panel);border:1px solid var(--pink);border-radius:20px;padding:6px 13px;color:var(--pink);font-size:11px;box-shadow:0 2px 9px #0002}
+@media(max-width:760px){.photo-quick button{font-size:12px;min-height:44px}.photo-intro{margin-bottom:9px}.photo-intro strong{font-size:13px}.photo-groups{top:-12px}.photo-groups button{font-size:11px;min-height:44px}.photo-control label{font-size:13px}.photo-control input[type=number]{font-size:16px!important;min-height:40px;width:67px}.photo-control>div>button{min-width:38px;min-height:40px}.photo-control input[type=range]{min-height:38px}.photo-control small{font-size:11px}.photo-looks>summary{font-size:12px;min-height:34px}.photo-look-grid button{min-height:80px;font-size:11px}.photo-groups+div{padding-top:0}#photoStatus{font-size:11px}.photo-reset-row button{min-height:44px}.ux-find-tool{font-size:12px}}
+
+.photo-control,.photo-control input,.photo-looks{scroll-margin-top:64px;scroll-margin-bottom:8px}.photo-quick button{font-size:10px}.photo-groups{scroll-margin-top:6px}
+@media(max-width:760px){.photo-quick button{font-size:11px}}
+
+@media(max-width:760px){#sidePanel:has(.photo-groups):has(#contextGuide[data-photo-guide=true]:not([hidden])) #panelTabs{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -1434,7 +1453,7 @@ html[data-render-mode=fluid] #sidePanel.mobile-open #panelBody{animation-duratio
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v35 · Estudio móvil</p>
+        <p class="help" id="appVersion">Divas Editor · v36 · Ajustar imagen</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -2464,6 +2483,150 @@ function rgba(hex,alpha){
   const n=parseInt(hex.slice(1),16);
   return `rgba(${n>>16},${(n>>8)&255},${n&255},${alpha})`;
 }
+/* v36 · Reversible image adjustments. No source pixels or alpha are overwritten. */
+const PHOTO_SPEC={
+ fotoExposicion:['Exposición',-2,2,.05,'luz','Aclara u oscurece la imagen completa.'],
+ fotoSombras:['Sombras',-100,100,1,'luz','Recupera o profundiza las zonas oscuras.'],
+ fotoLuces:['Altas luces',-100,100,1,'luz','Suaviza o ilumina las zonas más claras.'],
+ fotoBlancos:['Blancos',-100,100,1,'luz','Ajusta los tonos cercanos al blanco.'],
+ fotoNegros:['Negros',-100,100,1,'luz','Levanta o profundiza los tonos más oscuros.'],
+ fotoNiebla:['Reducir neblina',0,100,1,'luz','Refuerza el contraste y la profundidad del color.'],
+ fotoTemperatura:['Temperatura',-100,100,1,'color','Izquierda: fría. Derecha: cálida.'],
+ fotoTinte:['Tinte',-100,100,1,'color','Izquierda: verde. Derecha: rosa.'],
+ fotoVibracion:['Vibración',-100,100,1,'color','Realza sobre todo los colores menos intensos.'],
+ fotoTono:['Tono',-180,180,1,'color','Cambia la familia de los colores.'],
+ fotoNitidez:['Nitidez',0,100,1,'detalle','Define los bordes; no inventa detalles ausentes.'],
+ fotoClaridad:['Claridad',-100,100,1,'detalle','Contraste de los detalles y las texturas.'],
+ fotoSuavizar:['Suavizar',0,100,1,'detalle','Suaviza variaciones pequeñas conservando bordes fuertes.'],
+ fotoDesenfoque:['Desenfocar',0,100,1,'detalle','Difumina el interior de la imagen.'],
+ fotoGrano:['Grano',0,100,1,'ambiente','Añade una textura fotográfica estable.'],
+ fotoVineta:['Viñeta',-100,100,1,'ambiente','Izquierda: bordes claros. Derecha: bordes oscuros.'],
+ fotoGlamour:['Glamour',0,100,1,'ambiente','Luz suave sobre la imagen original.'],
+ fotoResplandor:['Resplandor',0,100,1,'ambiente','Expande la luz de las partes brillantes.']
+};
+const PHOTO_DEFAULTS=Object.fromEntries(Object.keys(PHOTO_SPEC).map(k=>[k,0]));
+const PHOTO_LIMITS=Object.fromEntries(Object.entries(PHOTO_SPEC).map(([k,v])=>[k,[v[1],v[2]]]));
+const PHOTO_BASIC={brillo:100,contraste:100,saturacion:100};
+const PHOTO_GROUPS={luz:'Luz',color:'Color',detalle:'Detalle',ambiente:'Ambiente'};
+const PHOTO_LOOKS={
+ luminoso:{name:'Luminoso',colors:'#fff0d0,#d897bb',props:{fotoExposicion:.2,fotoSombras:22,fotoLuces:-12,contraste:106,fotoVibracion:10}},
+ divas:{name:'Rosa Divas',colors:'#e82997,#f6bfdc',props:{fotoTemperatura:7,fotoTinte:15,fotoVibracion:18,fotoGlamour:15,contraste:106}},
+ pastel:{name:'Pastel',colors:'#edd5f5,#f5c7d8',props:{fotoSombras:16,fotoNegros:14,contraste:92,saturacion:87,fotoTinte:7,fotoGlamour:12}},
+ calido:{name:'Dorado cálido',colors:'#7a4f22,#f2cc83',props:{fotoTemperatura:30,fotoTinte:4,fotoVibracion:12,fotoLuces:-12,fotoVineta:16,contraste:108}},
+ pop:{name:'Pop',colors:'#9355e9,#f53e98',props:{fotoVibracion:35,fotoClaridad:18,fotoNitidez:20,contraste:114}},
+ bn:{name:'Blanco y negro',colors:'#24202c,#ddd6e4',props:{saturacion:0,contraste:115,fotoLuces:-12,fotoSombras:8,fotoGrano:8}}
+};
+const PHOTO={group:'luz',before:null,worker:null,workerFailed:false,seq:0,jobs:new Map(),cache:new Map(),syncCache:new Map(),queue:new Map(),working:false,objectIds:new WeakMap(),objectSeq:0};
+function photoValues(p){return Object.fromEntries(Object.entries(PHOTO_SPEC).map(([k,v])=>[k,finite(p[k],0,v[1],v[2])]));}
+function photoActive(p){return Object.keys(PHOTO_SPEC).some(k=>Number(p[k])!==0&&Number.isFinite(p[k]));}
+function photoEdited(p){return photoActive(p)||Object.keys(PHOTO_BASIC).some(k=>p[k]!==PHOTO_BASIC[k]);}
+function photoObjectId(o){if(!PHOTO.objectIds.has(o))PHOTO.objectIds.set(o,++PHOTO.objectSeq);return PHOTO.objectIds.get(o);}
+/* Alpha-weighted separable blur: colour sampling never introduces black fringes. */
+function photoBlur(src,w,h,r){
+ r=Math.max(1,Math.round(r));const out=new Uint8ClampedArray(src.length),rows=new Map(),sums=new Float64Array(w*4),n=2*r+1;
+ const row=y=>{
+  y=Math.max(0,Math.min(h-1,y));if(rows.has(y))return rows.get(y);
+  const result=new Float32Array(w*4);let sr=0,sg=0,sb=0,sa=0;
+  for(let dx=-r;dx<=r;dx++){const j=(y*w+Math.max(0,Math.min(w-1,dx)))*4,a=src[j+3]/255;sr+=src[j]*a;sg+=src[j+1]*a;sb+=src[j+2]*a;sa+=a;}
+  for(let x=0;x<w;x++){const i=x*4;result[i]=sr/n;result[i+1]=sg/n;result[i+2]=sb/n;result[i+3]=sa/n;const j=(y*w+Math.max(0,x-r))*4,k=(y*w+Math.min(w-1,x+r+1))*4,aa=src[j+3]/255,ab=src[k+3]/255;sr+=src[k]*ab-src[j]*aa;sg+=src[k+1]*ab-src[j+1]*aa;sb+=src[k+2]*ab-src[j+2]*aa;sa+=ab-aa;}
+  rows.set(y,result);return result;
+ };
+ for(let dy=-r;dy<=r;dy++){const a=row(dy);for(let i=0;i<sums.length;i++)sums[i]+=a[i];}
+ for(let y=0;y<h;y++){
+  for(let x=0;x<w;x++){const j=x*4,i=(y*w+x)*4,alpha=sums[j+3];if(src[i+3]&&alpha>1e-7){out[i]=sums[j]/alpha;out[i+1]=sums[j+1]/alpha;out[i+2]=sums[j+2]/alpha;}out[i+3]=src[i+3];}
+  if(y===h-1)break;const prev=row(y-r),next=row(y+r+1);for(let i=0;i<sums.length;i++)sums[i]+=next[i]-prev[i];if(y-r>=0)rows.delete(y-r);
+ }
+ return out;
+}
+function photoProcess(data,w,h,a){
+ const d=new Uint8ClampedArray(data),clip=x=>Math.min(1,Math.max(0,x)),exp=Math.pow(2,a.fotoExposicion||0),lut=new Float32Array(256);
+ for(let i=0;i<256;i++){const s=i/255,l=s<=.04045?s/12.92:Math.pow((s+.055)/1.055,2.4),v=l*exp;lut[i]=clip(v<=.0031308?v*12.92:1.055*Math.pow(v,1/2.4)-.055);}
+ const sh=(a.fotoSombras||0)/100,hi=(a.fotoLuces||0)/100,bl=(a.fotoNegros||0)/100,wh=(a.fotoBlancos||0)/100,temp=(a.fotoTemperatura||0)/100,tint=(a.fotoTinte||0)/100,vib=(a.fotoVibracion||0)/100,haze=(a.fotoNiebla||0)/100;
+ const rad=(a.fotoTono||0)*Math.PI/180,co=Math.cos(rad),si=Math.sin(rad),matrix=[.213+co*.787-si*.213,.715-co*.715-si*.715,.072-co*.072+si*.928,.213-co*.213+si*.143,.715+co*.285+si*.14,.072-co*.072-si*.283,.213-co*.213-si*.787,.715-co*.715+si*.715,.072+co*.928+si*.072];
+ for(let i=0;i<d.length;i+=4){
+  if(!d[i+3])continue;let r=lut[d[i]],g=lut[d[i+1]],b=lut[d[i+2]],y=.2126*r+.7152*g+.0722*b;
+  const low=1-y,adjust=sh*.32*low*low+hi*.28*y*y+bl*.2*Math.pow(low,5)+wh*.2*Math.pow(y,5);
+  r=(r+adjust-.5)*(1+haze*.55)+.5-haze*.02+temp*.12+tint*.05;
+  g=(g+adjust-.5)*(1+haze*.55)+.5-haze*.02-tint*.08;
+  b=(b+adjust-.5)*(1+haze*.55)+.5-haze*.02-temp*.12+tint*.05;
+  if(rad){const rr=r,gg=g;r=matrix[0]*rr+matrix[1]*gg+matrix[2]*b;g=matrix[3]*rr+matrix[4]*gg+matrix[5]*b;b=matrix[6]*rr+matrix[7]*gg+matrix[8]*b;}
+  y=.2126*r+.7152*g+.0722*b;const spread=Math.max(r,g,b)-Math.min(r,g,b),boost=1+(vib+.1*haze)*.9*(1-clip(spread));
+  d[i]=clip(y+(r-y)*boost)*255;d[i+1]=clip(y+(g-y)*boost)*255;d[i+2]=clip(y+(b-y)*boost)*255;
+ }
+ const scale=Math.max(.25,Math.min(w,h)/1000);
+ if(a.fotoClaridad){const blur=photoBlur(d,w,h,Math.max(2,scale*15)),strength=a.fotoClaridad/100;for(let i=0;i<d.length;i+=4){if(!d[i+3])continue;for(let c=0;c<3;c++)d[i+c]+=strength*.9*(d[i+c]-blur[i+c]);}}
+ if(a.fotoSuavizar){const blur=photoBlur(d,w,h,Math.max(1,scale*3)),strength=a.fotoSuavizar/100*.85;for(let i=0;i<d.length;i+=4){if(!d[i+3])continue;const diff=(Math.abs(d[i]-blur[i])+Math.abs(d[i+1]-blur[i+1])+Math.abs(d[i+2]-blur[i+2]))/3,blend=strength*Math.max(0,1-diff/42);for(let c=0;c<3;c++)d[i+c]+=blend*(blur[i+c]-d[i+c]);}}
+ if(a.fotoNitidez){const blur=photoBlur(d,w,h,Math.max(1,scale)),strength=a.fotoNitidez/100*1.8;for(let i=0;i<d.length;i+=4){if(!d[i+3])continue;for(let c=0;c<3;c++)d[i+c]+=strength*(d[i+c]-blur[i+c]);}}
+ if(a.fotoDesenfoque){const blur=photoBlur(d,w,h,Math.max(1,scale*a.fotoDesenfoque*.3));d.set(blur);}
+ if(a.fotoGlamour||a.fotoResplandor){const blur=photoBlur(d,w,h,Math.max(2,scale*18)),glam=(a.fotoGlamour||0)/100*.3,bloom=(a.fotoResplandor||0)/100*.8;for(let i=0;i<d.length;i+=4){if(!d[i+3])continue;const y=(blur[i]*.2126+blur[i+1]*.7152+blur[i+2]*.0722)/255,amount=glam+bloom*Math.max(0,(y-.45)/.55);for(let c=0;c<3;c++)d[i+c]+=(255-d[i+c])*(blur[i+c]/255)*amount;}}
+ const v=(a.fotoVineta||0)/100,grain=(a.fotoGrano||0)/100;
+ if(v||grain)for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+  const i=(y*w+x)*4;if(!d[i+3])continue;const nx=(x+.5)/w*2-1,ny=(y+.5)/h*2-1,t=clip((Math.sqrt((nx*nx+ny*ny)/2)-.25)/.75),mask=t*t*(3-2*t);
+  let seed=Math.imul((x+1)^Math.imul(y+1,374761393),668265263);seed=Math.imul(seed^(seed>>>13),1274126177);const noise=((seed>>>0)/4294967295-.5)*grain*60;
+  for(let c=0;c<3;c++){let value=d[i+c];value=v>=0?value*(1-v*.8*mask):value+(255-value)*(-v)*.7*mask;d[i+c]=value+noise;}
+ }
+ return d;
+}
+function photoWorker(){
+ if(PHOTO.worker||PHOTO.workerFailed)return PHOTO.worker;
+ if(typeof Worker!=='function'){PHOTO.workerFailed=true;return null;}
+ let url;
+ try{url=URL.createObjectURL(new Blob([photoBlur.toString()+'\n'+photoProcess.toString()+`\nonmessage=e=>{const {id,data,w,h,values}=e.data;try{const result=photoProcess(new Uint8ClampedArray(data),w,h,values);postMessage({id,data:result.buffer},[result.buffer]);}catch(error){postMessage({id,error:String(error.message||error)});}};`],{type:'text/javascript'}));
+  const worker=new Worker(url);PHOTO.worker=worker;
+  worker.onmessage=e=>{const job=PHOTO.jobs.get(e.data.id);if(!job)return;PHOTO.jobs.delete(e.data.id);e.data.error?job.reject(new Error(e.data.error)):job.resolve(new Uint8ClampedArray(e.data.data));};
+  worker.onerror=()=>{PHOTO.workerFailed=true;worker.terminate();PHOTO.worker=null;for(const job of PHOTO.jobs.values())job.reject(new Error('No se pudo procesar la vista previa. Vuelve a intentar el ajuste.'));PHOTO.jobs.clear();};return worker;
+ }catch{PHOTO.workerFailed=true;return null;}finally{if(url)URL.revokeObjectURL(url);}
+}
+function photoCompute(data,w,h,values){const worker=photoWorker();if(!worker)return new Promise((resolve,reject)=>setTimeout(()=>{try{resolve(photoProcess(data,w,h,values));}catch(e){reject(e);}},0));return new Promise((resolve,reject)=>{const id=++PHOTO.seq;PHOTO.jobs.set(id,{resolve,reject});worker.postMessage({id,data:data.buffer,w,h,values},[data.buffer]);});}
+function photoStatus(){const el=$('photoStatus');if(!el)return;const p=selectedLayer(),entry=p&&PHOTO.cache.get(p.id);el.textContent=PHOTO.before===p?.id?'Antes · se muestran los colores sin ajustes.':entry?.error?'No se pudo preparar la vista previa. Cambia un ajuste para reintentar.':entry?.pending?'Actualizando vista previa…':'Ajustes editables · puedes deshacer cada cambio.';el.classList.toggle('is-error',!!entry?.error);}
+function photoTrim(map,max=8){while(map.size>max){const [id,e]=map.entries().next().value;clearTimeout(e.timer);map.delete(id);}}
+function photoRaster(im,w,h){const out=document.createElement('canvas');out.width=w;out.height=h;const c=out.getContext('2d',{willReadFrequently:true});c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(im,0,0,w,h);return out;}
+function photoBitmap(p,im,factor=1,live=false){
+ if(!photoActive(p)||S.work?.id===p.id)return im;
+ const d=imageSize(im),values=photoValues(p),cap=mobileCanvas()?(UX.performance==='detail'?1200:800):1400;
+ const k=live?Math.min(1,cap/Math.max(d.w,d.h)):Math.min(1,Math.max(p.w*factor/d.w,p.h*factor/d.h));
+ const w=Math.max(1,Math.round(d.w*k)),h=Math.max(1,Math.round(d.h*k)),base=photoObjectId(im)+'|'+w+'|'+h,key=base+'|'+JSON.stringify(values);
+ if(!live){const old=PHOTO.syncCache.get(key);if(old)return old.canvas;const out=photoRaster(im,w,h),c=out.getContext('2d'),pixels=c.getImageData(0,0,w,h),result=photoProcess(pixels.data,w,h,values);c.putImageData(new ImageData(result,w,h),0,0);if(w*h<=300000){PHOTO.syncCache.set(key,{canvas:out});photoTrim(PHOTO.syncCache,6);}return out;}
+ let entry=PHOTO.cache.get(p.id);if(entry?.key===key)return entry.canvas||im;
+ if(entry)clearTimeout(entry.timer);const old=entry?.base===base?entry.canvas:null;
+ entry={base,key,canvas:old,pending:true,error:false,timer:null};PHOTO.cache.delete(p.id);PHOTO.cache.set(p.id,entry);photoTrim(PHOTO.cache);photoStatus();
+ entry.timer=setTimeout(()=>{PHOTO.queue.set(p.id,{p,im,w,h,values,entry});photoPump();},70);
+ return old||im;
+}
+async function photoPump(){
+ if(PHOTO.working)return;PHOTO.working=true;
+ try{while(PHOTO.queue.size){const [id,job]=PHOTO.queue.entries().next().value;PHOTO.queue.delete(id);const {im,w,h,values,entry}=job;if(PHOTO.cache.get(id)!==entry)continue;
+  try{const out=photoRaster(im,w,h),c=out.getContext('2d'),pixels=c.getImageData(0,0,w,h),result=await photoCompute(pixels.data,w,h,values);if(PHOTO.cache.get(id)!==entry)continue;c.putImageData(new ImageData(result,w,h),0,0);entry.canvas=out;entry.pending=false;entry.error=false;draw();}
+  catch(error){if(PHOTO.cache.get(id)===entry){entry.pending=false;entry.error=true;notify('No se pudo ajustar esta imagen: '+error.message);}}
+  photoStatus();
+ }}finally{PHOTO.working=false;}
+}
+function photoBefore(p){return PHOTO.before===p.id&&S.view==='editor';}
+function photoStopCompare(){if(!PHOTO.before)return;PHOTO.before=null;document.querySelectorAll('[data-action=photoCompare]').forEach(b=>{b.setAttribute('aria-pressed','false');b.textContent='◐ Antes / después';});photoStatus();draw();}
+function photoCompare(){const p=selectedLayer();if(p?.tipo!=='imagen')return;if(PHOTO.before===p.id){photoStopCompare();return;}PHOTO.before=p.id;document.querySelectorAll('[data-action=photoCompare]').forEach(b=>{b.setAttribute('aria-pressed','true');b.textContent='◑ Volver al resultado';});photoStatus();draw();}
+function photoOpen(group='luz'){
+ const p=selectedLayer();PHOTO.group=Object.hasOwn(PHOTO_GROUPS,group)?group:'luz';photoStopCompare();
+ if(!p||p.tipo!=='imagen'||!p.src||selectedLayers().length>1){setTab('foto');return;}
+ CR.imageSection='color';S.tab=p.rol==='fondo'?'foto':'ajustes';setPanelVisible(true);renderPanel();
+}
+function photoPanel(){const p=selectedLayer();if(p?.tipo==='imagen'&&p.src&&selectedLayers().length===1)return imageInspectorHTML(p);
+ const images=S.doc.capas.filter(p=>p.tipo==='imagen'&&p.src&&!p.oculto);
+ return `<div class="photo-welcome"><span aria-hidden="true">◐</span><h3>¿Qué imagen mejoramos?</h3><p>Toca una foto o un logo en el lienzo, o elígelo aquí.</p></div>${images.length?`<div class="photo-picker">${images.map(p=>`<button data-action="photoChoose" data-id="${esc(p.id)}">${uiIcon('image')}<span>${esc(p.nombre)}${p.bloqueado?' · bloqueada':''}</span><b>↗</b></button>`).join('')}</div>`:'<button class="primary wide" data-action="addImage">Cargar mi imagen</button>'}`;
+}
+function photoSlider(key){const s=PHOTO_SPEC[key],p=selectedLayer(),value=finite(p[key],0,s[1],s[2]);return `<div class="photo-control" id="photo-control-${key}"><div><label for="photo-${key}">${s[0]}</label><input id="photo-number-${key}" data-prop="${key}" type="number" inputmode="decimal" min="${s[1]}" max="${s[2]}" step="${s[3]}" value="${value}" aria-label="Valor de ${s[0]}"><button data-action="photoResetOne" data-value="${key}" title="Restablecer ${s[0]}" aria-label="Restablecer ${s[0]}">↺</button></div><input id="photo-${key}" data-prop="${key}" type="range" min="${s[1]}" max="${s[2]}" step="${s[3]}" value="${value}" aria-describedby="photo-help-${key}"><small id="photo-help-${key}">${s[5]}</small></div>`;}
+function photoHTML(p){
+ const group=PHOTO.group,items=Object.keys(PHOTO_SPEC).filter(k=>PHOTO_SPEC[k][4]===group),first={luz:['fotoExposicion','fotoSombras','fotoLuces'],color:['fotoTemperatura','fotoVibracion'],detalle:items,ambiente:items}[group],more=items.filter(k=>!first.includes(k));
+ return `<div class="photo-quick"><button class="primary" data-action="photoAuto" ${p.src?'':'disabled'}>✦ Auto</button><button data-action="photoPresets">✧ Acabados</button><button data-action="photoCompare" aria-pressed="${PHOTO.before===p.id}">${PHOTO.before===p.id?'◑ Volver al resultado':'◐ Antes / después'}</button></div><p id="photoStatus" role="status">Ajustes editables · puedes deshacer cada cambio.</p><nav class="photo-groups" aria-label="Ajustes fotográficos">${Object.entries(PHOTO_GROUPS).map(([id,label])=>`<button data-action="photoGroup" data-value="${id}" aria-pressed="${group===id}">${label}</button>`).join('')}</nav><div class="photo-group-body">${group==='luz'?rangeProp('Brillo','brillo',0,250)+rangeProp('Contraste','contraste',0,250):group==='color'?rangeProp('Saturación','saturacion',0,300):''}${first.map(photoSlider).join('')}${more.length?`<details class="property"><summary>Más ajustes de ${PHOTO_GROUPS[group].toLowerCase()}</summary>${more.map(photoSlider).join('')}</details>`:''}</div><details class="photo-looks"><summary>✧ Acabados rápidos · Divas, pastel y más</summary><div class="photo-look-grid">${Object.entries(PHOTO_LOOKS).map(([id,l])=>`<button data-action="photoLook" data-value="${id}"><i style="background:linear-gradient(135deg,${l.colors})" aria-hidden="true"></i>${l.name}</button>`).join('')}</div></details><div class="photo-reset-row"><button data-action="photoResetGroup" data-value="${group}">↺ Restablecer ${PHOTO_GROUPS[group].toLowerCase()}</button><button data-action="photoReset">Restablecer todo</button></div><details class="property"><summary>Opacidad y mezcla</summary>${imageVisibilityHTML(p)}${selectProp('Mezcla','mezcla',[['source-over','Normal'],['screen','Trama'],['multiply','Multiplicar'],['soft-light','Luz suave'],['overlay','Superponer']])}</details><p class="help">El original, el recorte y la transparencia se conservan.</p>`;
+}
+function photoChange(kind,value){const p=selectedLayer();if(p?.tipo!=='imagen'||p.bloqueado||selectedLayers().length!==1||CO.room&&!coEditing())return;photoStopCompare();commit(()=>{
+ if(kind==='look'&&PHOTO_LOOKS[value])Object.assign(p,PHOTO_DEFAULTS,PHOTO_BASIC,PHOTO_LOOKS[value].props);
+ else if(kind==='reset')Object.assign(p,PHOTO_DEFAULTS,PHOTO_BASIC);
+ else if(kind==='one'&&PHOTO_SPEC[value])p[value]=0;
+ else if(kind==='group'){for(const [k,s] of Object.entries(PHOTO_SPEC))if(s[4]===value)p[k]=0;if(value==='luz'){p.brillo=100;p.contraste=100;}if(value==='color')p.saturacion=100;}
+ });photoStatus();}
+function photoAuto(){const p=selectedLayer();if(p?.tipo!=='imagen'||p.bloqueado||selectedLayers().length!==1||CO.room&&!coEditing())return;const im=sourceImage(p);if(!im){notify('Carga una imagen primero.');return;}const d=imageSize(im),r=cropRect(p),k=Math.min(1,180/Math.max(d.w*r.w,d.h*r.h)),w=Math.max(1,Math.round(d.w*r.w*k)),h=Math.max(1,Math.round(d.h*r.h*k)),c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.drawImage(im,r.x*d.w,r.y*d.h,r.w*d.w,r.h*d.h,0,0,w,h);const data=ctx.getImageData(0,0,w,h).data,hist=new Uint32Array(256);let count=0,dark=0,bright=0;for(let i=0;i<data.length;i+=4){if(data[i+3]<32)continue;const y=Math.round(.2126*data[i]+.7152*data[i+1]+.0722*data[i+2]);hist[y]++;count++;if(y<55)dark++;if(y>220)bright++;}if(!count){notify('Esta imagen no tiene píxeles visibles para ajustar.');return;}const percentile=t=>{let n=0;for(let i=0;i<256;i++){n+=hist[i];if(n>=count*t)return i;}return 255;};const med=percentile(.5)/255,range=percentile(.98)-percentile(.02);photoStopCompare();commit(()=>Object.assign(p,PHOTO_DEFAULTS,PHOTO_BASIC,{fotoExposicion:Math.round(clamp(Math.log2(.5/Math.max(.03,med))*.55,-.65,.65)*20)/20,fotoSombras:Math.round(dark/count*32),fotoLuces:-Math.round(bright/count*24),fotoVibracion:10,contraste:range<160?110:103,fotoNitidez:12}));notify('Ajuste automático aplicado. Compara el resultado o pulsa Deshacer.');}
+function photoSyncInputs(key,value,active){if(!PHOTO_SPEC[key])return;if(H.active?.startsWith('foto_'))dismissHint();photoStopCompare();document.querySelectorAll(`[data-prop="${key}"]`).forEach(el=>{if(el!==active||Number(el.value)!==Number(value))el.value=value;});}
+
 function layer(tipo,extra={}){
   return {
     id:uid(),tipo,nombre:tipo,x:540,y:540,w:200,h:200,rot:0,
@@ -2472,7 +2635,7 @@ function layer(tipo,extra={}){
     glow:0,glowRadio:30,glowColor:"#ecc0da",sombraY:0,sombraX:0,
     desenfoque:0,mezcla:"source-over",
     texto:"",fuente:"Arial",peso:"400",tamano:40,espaciado:0,alineacion:"center",
-    brillo:100,contraste:100,saturacion:100,src:"",original:"",
+    ...PHOTO_DEFAULTS,brillo:100,contraste:100,saturacion:100,src:"",original:"",
     metalico:false,imagenForma:"original",recorte:null,esquinas:20,placa:false,placaColor:"#fff8fc",
     bordeImagen:0,bordeImagenColor:"#d6b36d",bordeMetalico:true,
     decoracion:"ninguna",intensidadDecoracion:.75,sombraBase:0,
@@ -2643,7 +2806,7 @@ function normalizeProject(raw){
   ).map(f=>({nombre:f.nombre,etiqueta:String(f.etiqueta||"Fuente").slice(0,70),datos:f.datos}));
   const fonts=new Set([...FONT_LIST,...d.fuentes.map(f=>f.nombre)]);
   const ids=new Set();
-  const limits={
+  const limits={...PHOTO_LIMITS,
     x:[-32768,32768],y:[-32768,32768],w:[2,8192],h:[2,8192],rot:[-3600,3600],
     opacidad:[0,1],grosor:[0,100],radio:[0,50],glow:[0,100],glowRadio:[0,500],
     sombraY:[-500,500],sombraX:[-500,500],interlineado:[.3,4],desenfoque:[0,100],tamano:[1,1000],espaciado:[-30,100],
@@ -3501,7 +3664,8 @@ function decoration(c,p,factor){
   }
   c.restore();
 }
-function drawLayer(c,p,factor=1,track=true,fullQuality=false){
+function drawLayer(c,p,factor=1,track=true,fullQuality=false,livePreview=false){
+  if(livePreview&&photoBefore(p))p={...p,...PHOTO_DEFAULTS,...PHOTO_BASIC};
   if(p.oculto||p.opacidad<=0)return;
   c.save();c.translate(p.x,p.y);c.rotate(p.rot*Math.PI/180);
   c.globalAlpha=p.opacidad;c.globalCompositeOperation=p.mezcla;
@@ -3520,7 +3684,7 @@ function drawLayer(c,p,factor=1,track=true,fullQuality=false){
   }
   if(p.tipo==="imagen"){
     const im=fullQuality||p.recorte?sourceImage(p):previewImage(p),quality=fullQuality?factor:0;
-    if(im)c.drawImage(imageBitmap(p,backgroundFrameBitmap(p,im,quality),quality),-p.w/2,-p.h/2,p.w,p.h);
+    if(im){const shaped=imageBitmap(p,backgroundFrameBitmap(p,im,quality),quality),adjusted=photoBitmap(p,shaped,factor,livePreview);c.drawImage(adjusted,-p.w/2,-p.h/2,p.w,p.h);}
     else{
       c.shadowColor="transparent";c.strokeStyle="#a77b9670";c.lineWidth=1.5;c.setLineDash([7,7]);
       rounded(c,-p.w/2,-p.h/2,p.w,p.h,12);c.stroke();c.setLineDash([]);
@@ -3590,7 +3754,7 @@ function drawSelection(c){
     c.strokeStyle="#82456e";c.lineWidth=1/S.zoom;c.stroke();c.restore();
   }
 }
-function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQuality=false,document:doc=S.doc}={}){
+function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQuality=false,photoPreview=false,document:doc=S.doc}={}){
   const {ancho:W,alto:H}=doc.lienzo;
   c.save();c.setTransform(1,0,0,1,0,0);
   c.globalAlpha=1;c.globalCompositeOperation="source-over";c.filter="none";
@@ -3611,9 +3775,9 @@ function render(c,{controls=false,factor=1,offsetX=0,offsetY=0,track=false,fullQ
     if(p.rol==="fondo"&&doc.fondo.tipo!=="imagen")return;
     if(cropping&&p.id===CR.session.id){
       const draft=cropPiece();
-      drawLayer(c,{...p,...CR.session.frame,recorte:null,imagenForma:'original',marcoFondo:false,opacidad:p.opacidad*.15,decoracion:'ninguna',glow:0,sombraBase:0},factor,false,fullQuality);
-      drawLayer(c,draft,factor,track,fullQuality);
-    }else drawLayer(c,p,factor,track,fullQuality);
+      drawLayer(c,{...p,...CR.session.frame,recorte:null,imagenForma:'original',marcoFondo:false,opacidad:p.opacidad*.15,decoracion:'ninguna',glow:0,sombraBase:0},factor,false,fullQuality,photoPreview);
+      drawLayer(c,draft,factor,track,fullQuality,photoPreview);
+    }else drawLayer(c,p,factor,track,fullQuality,photoPreview);
   });
   if(controls){if(cropping)drawCrop(c);else drawSelection(c);drawCollabOverlay(c);}
   c.restore();
@@ -3623,7 +3787,7 @@ function draw(){
   if(S.queued||!S.opened||S.view!=="editor"||document.hidden)return;
   S.queued=true;
   requestAnimationFrame(()=>{
-    S.queued=false;if(S.view!=="editor"||document.hidden)return;const factor=uxSyncCanvas();render(ctx,{controls:true,track:true,factor});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();mobileSelectionUI();mobileObjectHandles();cropUI();renderLayerDock();
+    S.queued=false;if(S.view!=="editor"||document.hidden)return;const factor=uxSyncCanvas();render(ctx,{controls:true,track:true,factor,photoPreview:true});updateCanvasPrompt();updateTextFeedback();positionSelectionToolbar();mobileSelectionUI();mobileObjectHandles();cropUI();renderLayerDock();
   });
 }
 function syncGeometry(){
@@ -3744,6 +3908,7 @@ function setTab(tab,open=true){
   S.tab=tab;renderPanel();
 }
 function selectLayer(id,{open=false,single=false}={}){
+  photoStopCompare();
   if(CR.session)cropClose(false);
   if(S.selected!==id)CR.imageSection="imagen";
   if(S.selected!==id)S.textSection="texto";
@@ -3845,7 +4010,7 @@ function layersHTML(){
 }
 function backgroundAdjustHTML(bg){
   const id=esc(bg.id),disabled=bg.bloqueado||bg.oculto,editing=!!freeBackground();
-  return `<section class="background-adjust" aria-label="Ajustar el fondo">
+  return `<section class="background-adjust" aria-label="Ajustar el fondo"><button class="wide" data-action="photoOpen" data-value="luz">◐ Ajustar luz, color y efectos</button>
     ${bg.bloqueado?`<button class="wide primary" data-action="showBackgroundLock" data-id="${id}">${uiIcon("lock")} Ver candado en Capas</button><p class="help">Desbloquea el fondo para ajustar su tamaño.</p>`:""}
     ${bg.oculto?`<p class="help">El fondo está oculto. <button data-action="visible" data-id="${id}">Mostrar fondo</button></p>`:""}
     <fieldset class="editable-properties" ${disabled?"disabled hidden":""}>
@@ -4020,7 +4185,7 @@ function tabForLayer(p){if(p?.rol==="fondo")return "fondo";return p?.tipo==="tex
 function renderPanel(){
   const tabs=[["estilo","Crear flyer"],["textos","Texto"],["logos","Imágenes"],["figuras","Figuras"],["fondo","Fondo"],["capas","Capas"]];
   const html={textos:simpleTextsHTML,logos:simpleLogosHTML,figuras:shapesHTML,fondo:backgroundHTML,
-    capas:()=>mobileCanvas()?layersHTML():desktopLayersHTML(),ajustes:propertiesHTML,crear:createHTML,estilo:simpleStyleHTML,recortar:cropHTML,anadir:()=>uxHubHTML("anadir"),diseno:()=>uxHubHTML("diseno"),bot:uxBotHTML};
+    capas:()=>mobileCanvas()?layersHTML():desktopLayersHTML(),ajustes:propertiesHTML,crear:createHTML,estilo:simpleStyleHTML,recortar:cropHTML,anadir:()=>uxHubHTML("anadir"),diseno:()=>uxHubHTML("diseno"),bot:uxBotHTML,foto:photoPanel};
   if(!html[S.tab])S.tab="textos";
   const p=selectedLayer(),active=S.tab==="ajustes"?(mobileCanvas()?(selectedLayers().length>1?"capas":tabForLayer(p)):"ajustes"):S.tab==="crear"?"figuras":S.tab;
   const icons={estilo:"spark",textos:"text",logos:"image",figuras:"spark",fondo:"background",capas:"layers"};
@@ -4030,7 +4195,7 @@ function renderPanel(){
   $("panelTitle").textContent=selectedLayers().length>1&&S.tab==="ajustes"?selectionLabel():S.tab==="ajustes"&&p?(p.bloqueado?"🔒 ":"")+p.nombre:tabs.find(([id])=>id===active)?.[1]||"Tu diseño";
   if(["anadir","diseno","bot"].includes(S.tab))$("panelTitle").textContent={anadir:"Añadir a mi diseño",diseno:"Diseño",bot:"Divas Bot"}[S.tab];
   $("panelSubtitle").textContent=S.tab==="ajustes"?"Pulsa Más para fijar, ocultar o duplicar":"Toca una opción y mira el resultado.";
-  const panelKey=CR.imageSection+":"+S.textSection+":"+S.lookSection+":"+selectedLayers().map(p=>p.id).join(":")+":"+(wholeGroup()||"")+":"+(S.isolation||"")+":"+S.selecting;
+  const panelKey=PHOTO.group+":"+CR.imageSection+":"+S.textSection+":"+S.lookSection+":"+selectedLayers().map(p=>p.id).join(":")+":"+(wholeGroup()||"")+":"+(S.isolation||"")+":"+S.selecting;
   const samePanel=S.lastPanelTab===S.tab&&S.lastPanelId===S.selected&&S.lastPanelKey===panelKey;
   const scroll=$("panelBody").scrollTop,openDetails=samePanel?[...$("panelBody").querySelectorAll("details")].map((el,i)=>el.open?i:-1).filter(i=>i>=0):[];
   if(S.tab==="bot")$("helpBody").replaceChildren();
@@ -4042,6 +4207,7 @@ function renderPanel(){
   $("panelBody").scrollTop=samePanel?scroll:0;
   S.lastPanelTab=S.tab;S.lastPanelId=S.selected;S.lastPanelKey=panelKey;
   uxPaintPreviews();updateSelectionUI();updateTextFeedback();updateCanvasPrompt();cropUI();renderLayerDock();
+  photoStatus();if(S.tab==="foto")$("panelTitle").textContent="Ajustar foto"+(p?.tipo==="imagen"?" · "+p.nombre:"");
   if(S.tab==="recortar")$("panelTitle").textContent="Recortar · "+(p?.nombre||"Imagen");
   if(A.member)loadResourceThumbs($("panelBody"));
   if(H.active)requestAnimationFrame(()=>{if(H.active)highlightHelp(H.active);});
@@ -4226,7 +4392,7 @@ function showHint(key,{manual=false}={}){
   if(!manual&&(!H.enabled||H.seen.includes(key)))return;
   if(!H.seen.includes(key)){H.seen.push(key);persistHelpPrefs();}
   if(manual)setPanelVisible(true);
-  H.active=key;
+  H.active=key;$("contextGuide").dataset.photoGuide=String(key.startsWith("foto_"));
   $("contextGuide").dataset.complete="false";
   const title=key==="texto"&&semanticRole(selectedLayer()||{})==="titulo"?"Tu título empieza aquí":topic.label;
   $("contextGuide").innerHTML=`<div class="coach-copy"><span class="coach-symbol" aria-hidden="true">${esc(topic.icon)}</span><div><strong>${esc(title)}</strong><p>${esc(helpTopicText(key))}</p></div><button class="coach-close" data-action="dismissHint" aria-label="Cerrar esta pista">×</button></div>`;
@@ -4257,6 +4423,7 @@ function openHelp(){
 function matchHelpQuery(input){
   const q=String(input).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
   if(!q)return null;
+  const photoIntent=photoHelpMatch(q);if(photoIntent)return photoIntent;
   const rules=[
     ["encuadre",/recortar|encuadr|cortar.*(foto|imagen)|forma.*(foto|imagen)/],
     ["recorte",/(quitar|borrar|eliminar|remover|sacar|sin).*(fondo)|(fondo).*(transparen|borrar|quitar)/],
@@ -4337,6 +4504,7 @@ async function revealHelp(key){
   else if(topic.context==="formato"){await action("format");$("newFormat").classList.add("help-highlight");return;}
   else if(topic.context==="descarga"){openExport();return;}
   else if(topic.context==="marca"){await action("agency");return;}
+  else if(topic.context?.startsWith("foto:")){photoOpen(topic.context.split(":")[1]);if(selectedLayer()?.tipo==="imagen")showHint(key,{manual:true});return;}
   else if(topic.context==="encuadre"){await action("cropStart");return;}
   else if(topic.context==="guardar"){openSaveDetails();return;}
   else if(topic.context==="editable"){$("mainMenu").open=true;highlightHelp(key,{reveal:true});return;}
@@ -5169,16 +5337,17 @@ async function exportFile(){
    10. EVENTOS Y ACCIONES DE LA INTERFAZ
    ========================================================= */
 
-const STYLE_KEYS=[
+const STYLE_KEYS=[...Object.keys(PHOTO_SPEC),"brillo","contraste","saturacion",
   "color","color2","glow","glowRadio","glowColor","sombraY","sombraX","desenfoque","mezcla","degradadoTexto",
   "fuente","peso","cursiva","subrayado","espaciado","imagenForma","esquinas","placa","placaColor",
   "bordeImagen","bordeMetalico","bordeImagenColor","decoracion","intensidadDecoracion",
   "sombraBase","acabadoTexto","contornoTexto","colorContorno","metalico","relieveTexto","profundidadTexto"
 ];
 async function action(name,button){
+  if(!["photoCompare","expandPanel","contextHelp","dismissHint"].includes(name))photoStopCompare();
   if(CO.room){
     if(["startImage","blankStart","goldStart","newDesign","new","import","templates","surprise","agencyAdd","projectName","renameProject"].includes(name))throw new Error("Sal de la ayuda antes de abrir o publicar otro proyecto.");
-    const allowed=["closeDialog","closePanel","showPanel","showTools","expandPanel","tab","fit","zoomIn","zoomOut","theme","export","download","save","saveDetails","dismissSaveFeedback","contextHelp","helpTopic","helpGestures","closeHelp","dismissHint","panelExpand","uxTab","uxContext","clearSelection","focusCanvas","focusText","deselect","mobileFocus","projects","home"];
+    const allowed=["closeDialog","closePanel","showPanel","showTools","expandPanel","tab","fit","zoomIn","zoomOut","theme","export","download","save","saveDetails","dismissSaveFeedback","contextHelp","helpTopic","helpGestures","closeHelp","dismissHint","panelExpand","uxTab","uxContext","photoOpen","photoGroup","photoChoose","photoCompare","photoPresets","clearSelection","focusCanvas","focusText","deselect","mobileFocus","projects","home"];
     if(!coEditing()&&!name.startsWith('co')&&!allowed.includes(name))throw new Error("Tu compañera tiene el control. Puedes señalar en el lienzo o pedir el control.");
   }
   if(CR.session&&!name.startsWith('crop')&&!['fit','zoomIn','zoomOut','expandPanel','theme'].includes(name)){
@@ -5187,10 +5356,20 @@ async function action(name,button){
   }
   if(name.startsWith("coTeam"))return teamAction(name,button);
   const p=selectedLayer(),v=button?.dataset.value;
-  const protectedActions=["cropStart","cropRemove","alignToLayer","imageColorReset","textLook","textColor","fontStep","alignText","centerX","centerY","up","down","pasteStyle","imagePreset","restoreImage","cover","removeBackground","tool","editTable"];
+  const protectedActions=["photoAuto","photoLook","photoReset","photoResetOne","photoResetGroup","cropStart","cropRemove","alignToLayer","imageColorReset","textLook","textColor","fontStep","alignText","centerX","centerY","up","down","pasteStyle","imagePreset","restoreImage","cover","removeBackground","tool","editTable"];
   if(selectedLayers().some(p=>p.bloqueado)&&protectedActions.includes(name)){notify("Desbloquea la capa para cambiarla.");return;}
   if(!["helpTopic","dismissHint","helpGestures","contextHelp","resetHints","fontStep","textLook","textColor","divasLook","textSection"].includes(name))dismissHint();
   switch(name){
+    case "photoOpen":photoOpen(v);break;
+    case "photoChoose":selectLayer(button.dataset.id,{single:true});photoOpen(PHOTO.group);break;
+    case "photoGroup":if(Object.hasOwn(PHOTO_GROUPS,v)){dismissHint();PHOTO.group=v;renderPanel();}break;
+    case "photoPresets":{dismissHint();const box=document.querySelector(".photo-looks");if(box){box.open=true;box.scrollIntoView({block:"start",behavior:"instant"});}}break;
+    case "photoLook":photoChange('look',v);break;
+    case "photoAuto":photoAuto();break;
+    case "photoReset":photoChange('reset');break;
+    case "photoResetGroup":photoChange('group',v);break;
+    case "photoResetOne":photoChange('one',v);break;
+    case "photoCompare":photoCompare();break;
     case "cropStart":cropStart();break;
     case "cropCancel":cropClose();canvas.focus({preventScroll:true});break;
     case "cropApply":cropApply();break;
@@ -5201,7 +5380,7 @@ async function action(name,button){
     case "cropPolygonDone":if(cropAlive())cropFinishPolygon();break;
     case "cropReset":if(cropAlive()){Object.assign(CR.session,{rect:{x:0,y:0,w:1,h:1},shape:'rectangulo',points:[],polygon:[],drawing:false,ratio:'libre',frame:cropFullFrame(CR.session.base)});renderPanel();draw();}break;
     case "imageSection":CR.imageSection=['imagen','color','efectos'].includes(v)?v:'imagen';renderPanel();break;
-    case "imageColorReset":if(p?.tipo==='imagen')commit(()=>Object.assign(p,{opacidad:1,brillo:100,contraste:100,saturacion:100,mezcla:'source-over'}));break;
+    case "imageColorReset":if(p?.tipo==='imagen')commit(()=>Object.assign(p,PHOTO_DEFAULTS,{opacidad:1,brillo:100,contraste:100,saturacion:100,mezcla:'source-over'}));break;
     case "alignToLayer":alignToLayer(v);break;
     case "dockSelect":selectLayer(button.dataset.id,{open:true});break;
     case "uxTab":if(S.busy)break;if(!S.panelHidden&&S.tab===v){setPanelVisible(false);break;}if(v==='bot')openHelp();else setTab(v);break;
@@ -5599,7 +5778,7 @@ function handleEditorInput(event){
     if(key==='fuente'&&el.value.startsWith('agency:')){if(event.type==='input')run(()=>insertResource(el.value.slice(7)));return;}
     let value=el.type==="checkbox"?el.checked:["range","number"].includes(el.type)?Number(el.value):el.value;
     if(typeof value==="number"&&(!Number.isFinite(value)||el.value===""))return;
-    const limits={tamano:[1,1000],minTamano:[1,200],marcoProteccion:[15,42],interlineado:[.3,4],espaciado:[-30,100],w:[2,8192],h:[2,8192],x:[-32768,32768],y:[-32768,32768]};
+    const limits={...PHOTO_LIMITS,tamano:[1,1000],minTamano:[1,200],marcoProteccion:[15,42],interlineado:[.3,4],espaciado:[-30,100],w:[2,8192],h:[2,8192],x:[-32768,32768],y:[-32768,32768]};
     if(limits[key])value=clamp(value,...limits[key]);
     if(p[key]===value&&key!=="tamano"){if(event.type==="change")guideDid(key==="texto"?"texto":key==="glow"?"efecto":key);return;}
     beginEdit(p.id+":"+key);
@@ -5610,6 +5789,7 @@ function handleEditorInput(event){
       if(p.tipo==="texto")textFrameResize(p,start,key==="w"?value:p.w,key==="h"?value:p.h);
     }
     if(key==="tamano")resizeTextTo(p,value);else p[key]=value;
+    photoSyncInputs(key,value,el);if(p.tipo==="imagen"&&["brillo","contraste","saturacion"].includes(key))photoStopCompare();
     if(key==="color"&&p.tipo==="texto")p.acabadoTexto="solido";
     if(p.rol==="fondo"&&["x","y","w","h","rot"].includes(key))p.ajusteFondo="manual";
     if(key==="texto")p.pendiente=!p.texto.trim()||(p.ejemplo&&p.texto===p.ejemplo);
@@ -7384,7 +7564,7 @@ function assetCategory(a){return fontResource(a)?'fuentes':a.category;}
 function imageVisibilityHTML(p){
   return `<div class="image-visibility">${rangeProp('Opacidad de la capa','opacidad',0,1,.01)}<p class="help" data-image-visibility>${Math.round(p.opacidad*100)} % · ${p.mezcla==='source-over'?'Mezcla normal':'Mezcla: '+esc(p.mezcla)}</p><button class="wide" data-action="restoreVisibility">Restaurar opacidad y color</button><small class="help">Conserva los píxeles transparentes y el fondo que ya quitaste.</small></div>`;
 }
-function resetImageVisibility(p){Object.assign(p,{opacidad:1,mezcla:'source-over',brillo:100,contraste:100,saturacion:100,desenfoque:0});}
+function resetImageVisibility(p){Object.assign(p,PHOTO_DEFAULTS,{opacidad:1,mezcla:'source-over',brillo:100,contraste:100,saturacion:100,desenfoque:0});}
 function metal(c,w,h,hex){
   if(!/^#[0-9a-f]{6}$/i.test(hex||'')||hex.toLowerCase()==='#d6b36d')return gold(c,w,h);
   const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));
@@ -8007,7 +8187,7 @@ $('creatorFontUse').addEventListener('change',()=>run(async()=>{const value=$('c
 
 /* v28 · ayuda compartida: copia temporal, control por turnos y presencia visual. */
 const CO={client:crypto.randomUUID(),visualSequence:0,room:null,people:[],sessions:[],timer:null,polling:false,missing:false,error:'',generation:0,joining:false};
-const CO_VISUAL=['recorte','imagenForma','x','y','w','h','rot','tamano','texto','color','color2','fuente','peso','cursiva','subrayado','alineacion','espaciado','interlineado','relieveTexto','profundidadTexto','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraX','sombraY','opacidad','oculto','bloqueado','brillo','contraste','saturacion','desenfoque','bordeImagen','bordeImagenColor','bordeMetalico','esquinas','degradadoTexto','mezcla','ajusteTexto','minTamano'];
+const CO_VISUAL=[...Object.keys(PHOTO_SPEC),'recorte','imagenForma','x','y','w','h','rot','tamano','texto','color','color2','fuente','peso','cursiva','subrayado','alineacion','espaciado','interlineado','relieveTexto','profundidadTexto','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraX','sombraY','opacidad','oculto','bloqueado','brillo','contraste','saturacion','desenfoque','bordeImagen','bordeImagenColor','bordeMetalico','esquinas','degradadoTexto','mezcla','ajusteTexto','minTamano'];
 function coOwner(r=CO.room){return !!r&&r.session.owner_id===A.user?.id;}
 function coEditing(r=CO.room){const s=r?.session;return !!s&&s.status==='active'&&s.controller_id===A.user?.id&&s.controller_client===CO.client&&Date.parse(s.lease_until)>Date.now()&&!r.frozen&&!r.switching;}
 function coName(id,s=CO.room?.session){return !s?'Tu compañera':id===s.owner_id?s.owner_name:s.helper_name;}
@@ -8116,7 +8296,7 @@ function coReceive(r,m){
   for(const q of Array.isArray(m.changes)?m.changes.slice(0,200):[]){const p=S.doc.capas.find(x=>x.id===q.id);if(!p)continue;for(const [k,v] of Object.entries(q))if(allowed.has(k)&&JSON.stringify(v).length<8000){if(typeof v==='number'&&(!Number.isFinite(v)||Math.abs(v)>50000))continue;p[k]=k==='recorte'?normalizeCrop(v):copy(v);}}
   if(m.lienzo&&Number.isFinite(m.lienzo.ancho)&&Number.isFinite(m.lienzo.alto)&&m.lienzo.ancho>=64&&m.lienzo.alto>=64&&m.lienzo.ancho<=8000&&m.lienzo.alto<=8000)S.doc.lienzo=copy(m.lienzo);
   if(m.fondo&&['solido','degradado','imagen'].includes(m.fondo.tipo))S.doc.fondo={...S.doc.fondo,...m.fondo};
-  if($('coFollow').checked&&(m.selection===null||S.doc.capas.some(p=>p.id===m.selection))){const changed=S.selected!==m.selection;S.selected=m.selection;if(['textos','logos','figuras','fondo','capas','ajustes','crear','estilo'].includes(m.tab))S.tab=m.tab;if(changed||!document.activeElement?.closest('#panelBody'))renderPanel();}
+  if($('coFollow').checked&&(m.selection===null||S.doc.capas.some(p=>p.id===m.selection))){const changed=S.selected!==m.selection;S.selected=m.selection;if(['textos','logos','figuras','fondo','capas','ajustes','crear','estilo','foto'].includes(m.tab))S.tab=m.tab;if(changed||!document.activeElement?.closest('#panelBody'))renderPanel();}
   syncGeometry();draw();
 }
 function coChanged(){const r=CO.room;if(!r)return false;if(!coEditing(r)){r.error='No tienes el control. Recupera el avance confirmado antes de editar.';coRender();return true;}S.revision++;r.dirty=true;r.error='';clearTimeout(r.saveTimer);r.saveTimer=setTimeout(()=>coFlush().catch(()=>{}),1200);coPreview();coRender();return true;}
@@ -8717,7 +8897,7 @@ Object.assign(IDEA_LAYOUTS,{impacto:'Impacto streamer',impacto_lateral:'Impacto 
 const STUDIO_MODELS={impacto:'Impacto streamer',editorial:'Editorial elegante'};
 const STUDIO_NAMES={luxury:'Divas Luxury',pearl:'Divas Pearl',neon:'Divas Neon'};
 function ideaTextKey(text){return ideaClean(text).replace(/https?:\/\//g,'').replace(/[\s\p{P}\p{S}]+/gu,'');}
-function ideaImageKey(p){return (p.src||p.original||'')+'|'+JSON.stringify([p.recorte||null,p.imagenForma,p.brillo,p.contraste,p.saturacion,p.opacidad]);}
+function ideaImageKey(p){return (p.src||p.original||'')+'|'+JSON.stringify([p.recorte||null,p.imagenForma,p.brillo,p.contraste,p.saturacion,p.opacidad,photoValues(p)]);}
 function ideaUniqueImages(images){const seen=new Set();return images.filter(p=>{const key=ideaImageKey(p);if(seen.has(key))return false;seen.add(key);return true;});}
 function ideaSource(doc){
   const texts=doc.capas.filter(p=>p.tipo==='texto'&&!p.oculto&&!p.decorativa),byRole=role=>texts.find(p=>semanticRole(p)===role),used=new Set();
@@ -9323,7 +9503,7 @@ function imageInspectorHTML(p){
     <details class="property"><summary>Posición y giro</summary>${inputProp('Nombre de la capa','nombre','text')}<div class="grid2">${inputProp('Posición X','x')}${inputProp('Posición Y','y')}</div>${rangeProp('Giro','rot',-180,180)}<div class="grid2"><button data-action="centerX">Centrar horizontal</button><button data-action="centerY">Centrar vertical</button></div><button class="wide" data-action="cover">Cubrir todo el lienzo</button></details>
     <details class="property"><summary>Borrador y recuperación</summary><p class="help">Pinta para borrar o recuperar detalles de la imagen.</p><div class="grid3"><button data-action="tool" data-value="borrar">Borrar</button><button data-action="tool" data-value="recuperar">Recuperar</button><button data-action="tool" data-value="mover">Terminar</button></div>${field('Tamaño del pincel',`<input id="brushSize" type="range" min="5" max="180" value="${brushSize}">`)}${field('Dureza',`<input id="brushHardness" type="range" min="0" max="100" value="${brushHardness}">`)}<button class="wide" data-action="restoreImage">Restaurar imagen original</button></details>
     <details class="property"><summary>Recomendadas de la agencia</summary>${resourceSuggestionsHTML(assetContext(p.id).category,p.id)}</details>`;
-  else if(section==='color')html=`${imageVisibilityHTML(p)}${rangeProp('Brillo','brillo',0,250)}${rangeProp('Contraste','contraste',0,250)}${rangeProp('Saturación','saturacion',0,300)}${selectProp('Mezcla','mezcla',[['source-over','Normal'],['screen','Trama'],['multiply','Multiplicar'],['soft-light','Luz suave'],['overlay','Superponer']])}<button class="wide" data-action="imageColorReset">Restablecer color</button>`;
+  else if(section==='color')html=photoHTML(p);
   else html=`<div class="grid2"><button data-action="imagePreset" data-value="champan">Halo champán</button><button data-action="imagePreset" data-value="rosa">Cristal rosa</button><button data-action="imagePreset" data-value="editorial">Editorial</button><button data-action="imagePreset" data-value="ninguno">Sin acabado</button></div>
     <details class="property" open><summary>Borde</summary>${rangeProp('Grosor','bordeImagen',0,14,.5)}${checkProp('Borde metálico','bordeMetalico')}${metalPresetsHTML()}${inputProp('Color del borde','bordeImagenColor','color')}</details>
     <details class="property"><summary>Forma y base</summary>${p.recorte?'<button class="wide" data-action="cropStart">Cambiar forma del recorte</button>':selectProp('Forma','imagenForma',[['original','Original'],['redondeada','Redondeada'],['circular','Círculo / óvalo']])+rangeProp('Esquinas','esquinas',0,50)}${checkProp('Base de color','placa')}${inputProp('Color de la base','placaColor','color')}</details>
@@ -9332,7 +9512,7 @@ function imageInspectorHTML(p){
     <div class="grid2"><button data-action="copyStyle">Copiar estilo</button><button data-action="pasteStyle" ${S.styleCopy?'':'disabled'}>Pegar estilo</button></div>`;
   return `${p.grupo?'<button class="wide" data-action="backToGroup">← Volver al grupo</button>':''}
     ${p.bloqueado?`<div class="selection-card"><strong>Imagen bloqueada</strong><button data-action="lock" data-id="${esc(p.id)}">Desbloquear</button></div>`:''}${p.oculto?`<button class="wide" data-action="visible" data-id="${esc(p.id)}">Mostrar imagen oculta</button>`:''}
-    <div class="edit-segments" role="group" aria-label="Ajustes de imagen">${[['imagen','Imagen'],['color','Color'],['efectos','Efectos']].map(([id,name])=>`<button data-action="imageSection" data-value="${id}" class="${section===id?'active':''}" aria-pressed="${section===id}">${name}</button>`).join('')}</div>
+    <div class="edit-segments" role="group" aria-label="Ajustes de imagen">${[['imagen','Imagen'],['color','Ajustar'],['efectos','Decorar']].map(([id,name])=>`<button data-action="imageSection" data-value="${id}" class="${section===id?'active':''}" aria-pressed="${section===id}">${name}</button>`).join('')}</div>
     <fieldset class="editable-properties" ${p.bloqueado?'disabled':''}>${html}</fieldset>
     <details class="property" ${p.rol==='imagen_original'?'open':''}><summary>Cambiar letras de una imagen</summary><p class="help">Un PNG o JPG no tiene texto editable. Puedes cubrir las letras con un color liso y escribir encima. Para fondos con textura, usa el borrador o una base sin texto.</p><div class="grid2"><button data-action="addTextCover">1 · Cubrir texto anterior</button><button data-action="addGoldText">2 · Añadir dorado 3D</button></div><p class="help">La imagen original se conserva. No detectamos ni extraemos su fuente automáticamente.</p></details>
     <details class="property"><summary>Guardar y organizar</summary>${agencyAddHTML()}${compositionHTML()}<button class="wide" data-action="multiSelect">Seleccionar varias</button><div class="grid2"><button data-action="duplicate">Duplicar</button><button class="danger" data-action="delete" ${p.bloqueado?'disabled':''}>Eliminar</button></div></details>`;
@@ -9360,8 +9540,8 @@ function paintLayerThumbs(){
   });
 }
 function editorRailHTML(active){
-  const items=[['ajustes','Editar','move'],['recortar','Recortar','crop'],['textos','Texto','text'],['logos','Imágenes','image'],['figuras','Figuras','spark'],['fondo','Fondo','background'],['estilo','Crear flyer','spark'],['catalog','Agencia','layers']];
-  return items.map(([id,name,icon])=>`<button data-action="${id==='estilo'?'surprise':id==='recortar'?'cropStart':id==='catalog'?'catalog':'tab'}" ${id==='catalog'||id==='recortar'?'':`data-value="${id}"`} title="${name}" aria-pressed="${active===id&&!S.panelHidden}" class="${active===id&&!S.panelHidden?'active':''}">${['crop','move'].includes(icon)?cropIcon(icon):uiIcon(icon)}<span>${name}</span></button>`).join('');
+  const items=[['ajustes','Editar','move'],['foto','Ajustar','background'],['recortar','Recortar','crop'],['textos','Texto','text'],['logos','Imágenes','image'],['figuras','Figuras','spark'],['fondo','Fondo','background'],['estilo','Crear flyer','spark'],['catalog','Agencia','layers']];
+  return items.map(([id,name,icon])=>`<button data-action="${id==='foto'?'photoOpen':id==='estilo'?'surprise':id==='recortar'?'cropStart':id==='catalog'?'catalog':'tab'}" ${id==='catalog'||id==='recortar'?'':`data-value="${id}"`} title="${name}" aria-pressed="${active===id&&!S.panelHidden}" class="${active===id&&!S.panelHidden?'active':''}">${['crop','move'].includes(icon)?cropIcon(icon):uiIcon(icon)}<span>${name}</span></button>`).join('');
 }
 matchMedia('(max-width:760px)').addEventListener('change',()=>{CR.dockKey='';if(S.opened){renderPanel();requestAnimationFrame(fitCanvas);}});
 
@@ -9648,12 +9828,12 @@ function uxRenderLatest(){
 function uxHubHTML(kind){
   const item=(icon,title,detail,action,value='')=>`<button class="ux-tool-card" data-action="${action}" ${value?`data-value="${value}"`:''}><span class="ux-tool-symbol">${uiIcon(icon)}</span><strong>${title}</strong><small>${detail}</small><span class="ux-card-arrow" aria-hidden="true">↗</span></button>`;
   if(kind==='anadir')return `<p class="ux-panel-intro">¿Qué le sumamos a tu diseño?</p><div class="ux-tool-grid">${item('text','Texto','Escribe tu mensaje','addText')}${item('image','Mi imagen','Carga una foto o un logo','addImage')}${item('spark','Adornos','Formas, luces y destellos','tab','figuras')}${item('text','Dorado 3D','Letras con relieve','addGoldText')}${item('layers','De la agencia','Tu colección de recursos','catalog')}${item('background','Fondo','Cambia el ambiente','tab','fondo')}</div>`;
-  return `<p class="ux-panel-intro">Dale forma a tu próxima idea.</p><button class="ux-create-flyer" data-action="surprise"><span>${uiIcon('spark')}</span><strong>Crear mi flyer</strong><small>Elige un tema y prueba composiciones.</small><b aria-hidden="true">↗</b></button><div class="ux-tool-grid">${item('background','Fondo','Color, imagen y encuadre','tab','fondo')}${item('layers','Plantillas','Empieza con una base','templates')}${item('image','Formato','Historia, cuadrado o banner','format')}${item('layers','Mi equipo','Pide ayuda con tu diseño','coOpen')}</div><button class="wide quiet" data-action="focusCanvas">Ver mi diseño sin controles ↗</button>`;
+  return `<button class="ux-find-tool" data-action="helpGestures">¿Dónde está…? Buscar una herramienta <span>⌕</span></button><p class="ux-panel-intro">Dale forma a tu próxima idea.</p><button class="ux-create-flyer" data-action="surprise"><span>${uiIcon('spark')}</span><strong>Crear mi flyer</strong><small>Elige un tema y prueba composiciones.</small><b aria-hidden="true">↗</b></button><div class="ux-tool-grid">${item('background','Ajustar foto','Luz, color y efectos','photoOpen')}${item('background','Fondo','Color, imagen y encuadre','tab','fondo')}${item('layers','Plantillas','Empieza con una base','templates')}${item('image','Formato','Historia, cuadrado o banner','format')}${item('layers','Mi equipo','Pide ayuda con tu diseño','coOpen')}</div><button class="wide quiet" data-action="focusCanvas">Ver mi diseño sin controles ↗</button>`;
 }
 function uxBotHTML(){
   const p=selectedLayer(),type=p?.tipo,locked=p?.bloqueado;
-  const primary=locked?['bloquear','capas','orden']:p?.rol==='fondo'?['fondo','fondoimagen','formato','bloquear']:type==='texto'?['texto','tamano','fuente','decorar']:type==='imagen'?['imagen','medidas','encuadre','recorte']:['estilo','texto','fondo','descarga'];
-  return `<div class="bot-intro"><span class="bot-orb" aria-hidden="true">✧</span><div><strong>Un toque. Yo te guío.</strong><p>${p?'Vamos con '+esc(p.nombre)+'.':'¿Qué quieres hacer hoy?'}</p></div></div><div class="help-shortcuts">${primary.map(helpChoice).join('')}</div><form id="helpForm" class="help-search"><label class="co-chat-sr" for="helpQuery">Pregunta a Divas Bot</label><input id="helpQuery" type="search" maxlength="180" autocomplete="off" placeholder="Ej.: agrandar el título" value="${esc(H.query)}"><button class="primary" type="submit" aria-label="Buscar ayuda">↗</button></form><div id="helpAnswer" class="help-answer" role="status" aria-live="polite" hidden></div><details class="help-all"><summary>Explorar otras herramientas</summary><div class="help-shortcuts">${Object.keys(HELP_TOPICS).filter(k=>!primary.includes(k)&&!['textos','pieza'].includes(k)).map(helpChoice).join('')}</div></details><div class="help-preferences"><label class="check"><input id="autoHints" type="checkbox" ${H.enabled?'checked':''}>Pistas al empezar</label><button data-action="resetHints">Volver a verlas</button></div><p class="helper-note">Guía integrada · abre la herramienta y te muestra dónde tocar.</p>`;
+  const primary=locked?['bloquear','capas','orden']:p?.rol==='fondo'?['fondo','fondoimagen','formato','bloquear']:type==='texto'?['texto','tamano','fuente','decorar']:type==='imagen'?['foto_luz','foto_color','encuadre','recorte']:['estilo','texto','fondo','descarga'];
+  return `<div class="bot-intro"><span class="bot-orb" aria-hidden="true">✧</span><div><strong>Un toque. Yo te guío.</strong><p>${p?'Vamos con '+esc(p.nombre)+'.':'¿Qué quieres hacer hoy?'}</p></div></div><form id="helpForm" class="help-search"><label class="co-chat-sr" for="helpQuery">Pregunta a Divas Bot</label><input id="helpQuery" type="search" maxlength="180" autocomplete="off" placeholder="Busca: recortar, nitidez, dorado…" value="${esc(H.query)}"><button class="primary" type="submit" aria-label="Buscar ayuda">↗</button></form><div class="help-shortcuts">${primary.map(helpChoice).join('')}</div><div id="helpAnswer" class="help-answer" role="status" aria-live="polite" hidden></div><details class="help-all"><summary>Explorar otras herramientas</summary><div class="help-shortcuts">${Object.keys(HELP_TOPICS).filter(k=>!primary.includes(k)&&!['textos','pieza'].includes(k)).map(helpChoice).join('')}</div></details><div class="help-preferences"><label class="check"><input id="autoHints" type="checkbox" ${H.enabled?'checked':''}>Pistas al empezar</label><button data-action="resetHints">Volver a verlas</button></div><p class="helper-note">Guía integrada · abre la herramienta y te muestra dónde tocar.</p>`;
 }
 function uxContextActions(p,locked){
   if(locked)return `<button data-action="mobileEdit">Ver en Elementos · desbloquear</button>`;
@@ -9685,7 +9865,7 @@ function uxPaintPreviews(){
 }
 function uxPanelState(){
   $('sidePanel').dataset.panel=S.tab;
-  const nav=S.tab==='bot'?'bot':S.tab==='capas'?'capas':['diseno','estilo','fondo'].includes(S.tab)?'diseno':'anadir';
+  const nav=S.tab==='bot'?'bot':S.tab==='capas'?'capas':['diseno','estilo','fondo','foto'].includes(S.tab)?'diseno':'anadir';
   $('mobileBar').querySelectorAll('[data-ux-tab]').forEach(el=>{const active=!S.panelHidden&&el.dataset.uxTab===nav;el.classList.toggle('active',active);el.setAttribute('aria-pressed',String(active));});
 }
 function uxViewport(){
@@ -9705,6 +9885,29 @@ $('projectFilters').addEventListener('toggle',()=>{$('projectFilterToggle').setA
 uxSetPerformance(UX.performance);uxViewport();
 
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)draw();});
+
+const PHOTO_HELP={
+ foto_luz:{label:'Mejora la luz',icon:'☀',text:'Prueba Auto o mueve Exposición para aclarar u oscurecer.',target:'#photo-control-fotoExposicion',context:'foto:luz'},
+ foto_color:{label:'Encuentra tu color',icon:'◐',text:'Temperatura: a la izquierda enfría, a la derecha calienta.',target:'#photo-control-fotoTemperatura',context:'foto:color'},
+ foto_detalle:{label:'Define o suaviza',icon:'◇',text:'Mueve Nitidez para definir los bordes. Prueba poco a poco.',target:'#photo-control-fotoNitidez',context:'foto:detalle'},
+ foto_ambiente:{label:'Dale ambiente',icon:'✧',text:'Mueve Viñeta para aclarar u oscurecer los bordes.',target:'#photo-control-fotoVineta',context:'foto:ambiente'},
+ foto_auto:{label:'Un buen punto de partida',icon:'✦',text:'Auto propone luz y contraste. Puedes afinarlos después.',target:'[data-action="photoAuto"]',context:'foto:luz'},
+ foto_acabados:{label:'Un acabado en un toque',icon:'✧',text:'Pulsa Acabados y elige un estilo. Puedes deshacerlo.',target:'[data-action=photoPresets]',context:'foto:color'},
+ foto_comparar:{label:'Antes y después',icon:'◐',text:'Pulsa Antes / después para ver la imagen sin estos ajustes. Vuelve a pulsar para recuperar el resultado.',target:'[data-action="photoCompare"]',context:'foto:luz'}
+};
+Object.assign(HELP_TOPICS,PHOTO_HELP);Object.assign(HELP_LABELS,{foto_luz:'Luz y exposición',foto_color:'Color y temperatura',foto_detalle:'Nitidez y suavidad',foto_ambiente:'Viñeta y brillo',foto_auto:'Ajuste automático',foto_acabados:'Acabados de foto',foto_comparar:'Antes / después'});
+function photoHelpMatch(q){
+ if(/(texto|titulo|letra|fuente|tipograf)/.test(q))return null;
+ if(/nitidez|nitid|enfocar|claridad|suaviz|desenfoc/.test(q))return 'foto_detalle';
+ if(/vineta|glamour|resplandor|grano/.test(q))return 'foto_ambiente';
+ if(/temperatura|vibracion|tinte|tono|saturacion/.test(q))return 'foto_color';
+ if(/exposicion|altas luces|sombras|neblina|contraste|aclarar|oscurecer/.test(q))return 'foto_luz';
+ if(/antes.*despues|comparar/.test(q))return 'foto_comparar';
+ if(/automatic|autoajust/.test(q))return 'foto_auto';
+ if((selectedLayer()?.tipo==='imagen'||/foto|imagen/.test(q))&&/pastel|dorado|blanco y negro|filtro|acabado/.test(q))return 'foto_acabados';
+ if((selectedLayer()?.tipo==='imagen'||/foto|imagen/.test(q))&&/color|brillo/.test(q))return /color/.test(q)?'foto_color':'foto_luz';
+ return null;
+}
 
 boot().catch(error=>notify(error.message));
 })();
