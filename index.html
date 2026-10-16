@@ -1270,6 +1270,9 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
 .idea-studio-intro{padding:0 0 12px}.idea-studio-intro span{font-size:9px;letter-spacing:.13em;color:var(--pink);font-weight:700}.idea-studio-intro p{font-size:13px;line-height:1.4;margin:5px 0 0;color:var(--muted)}
 .idea-options #ideaModel{margin-bottom:16px;font-weight:600}.idea-options select{min-height:44px}.idea-preview-heading strong{font-size:14px;line-height:1.3}.idea-preview-heading small{line-height:1.4;margin-top:4px}
 @media(max-width:760px){.idea-studio-intro{display:none}.idea-options #ideaModel{font-size:12px}.idea-preview-heading strong{font-size:12px}}
+
+.image-start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}.image-start button{min-height:94px;padding:18px;text-align:left;border-radius:18px}.image-start strong,.image-start small{display:block}.image-start strong{font-size:16px}.image-start small{font-size:12px;font-weight:400;margin-top:7px;opacity:.85}.gold-controls{padding:12px;margin:12px 0;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}
+@media(max-width:760px){.image-start{grid-template-columns:1fr;gap:8px;margin:18px 0}.image-start button{min-height:72px;padding:13px 16px}.image-start small{margin-top:4px}}
 </style>
 </head>
 <body>
@@ -1329,7 +1332,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v33 · Impacto streamer</p>
+        <p class="help" id="appVersion">Divas Editor · v34 · Dorado 3D</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -1343,7 +1346,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   <div class="projects-inner">
     <div class="projects-top">
       <div><div class="eyebrow">Tu espacio creativo</div><h1 id="projectsTitle">Mis proyectos</h1><p id="projectStorageDescription">Tus proyectos locales se guardan en este navegador.</p></div>
-      <div class="projects-actions"><button class="primary" data-action="newDesign">+ Crear diseño</button><button data-action="open">Importar PXZ / proyecto</button><button data-action="templates">Plantillas de agencia</button></div>
+      <div class="projects-actions"><button class="primary" data-action="startImage">▧ Cargar mi imagen</button><button class="primary" data-action="newDesign">+ Crear diseño</button><button data-action="open">Importar PXZ / proyecto</button><button data-action="templates">Plantillas de agencia</button></div>
     </div>
     <div class="row"><button data-action="agency">Logo e identidad de agencia</button><button data-action="helpGestures">Ayuda Divas</button></div>
     <p id="storageNotice" class="storage-notice" role="status" hidden></p>
@@ -1373,6 +1376,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
         <option value="16:9">Evento horizontal · 16:9</option><option value="banner">Banner de agencia · 1428 × 400</option>
       </select>
     </div>
+    <div class="image-start"><button class="primary" data-action="startImage"><strong>▧ Cargar mi imagen</strong><small>PNG, JPG o WEBP · empieza con tu archivo</small></button><button data-action="blankStart"><strong>＋ Lienzo en blanco</strong><small>Sin plantilla ni elementos añadidos</small></button><button data-action="goldStart"><strong>✦ Texto para mi directo</strong><small>Dorado 3D editable · fondo transparente</small></button></div>
     <div class="task-grid">
       <button class="task-card" data-action="new" data-purpose="reclutamiento">
         <div class="task-art">
@@ -1776,6 +1780,7 @@ body.is-processing #agencyAddDialog .dialog-head button,body.is-processing #agen
   </div>
 </dialog>
 
+<input id="startImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
 <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
 <input id="brandInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
 <input id="projectInput" type="file" accept=".json,.pxz" multiple hidden>
@@ -1966,6 +1971,7 @@ const PALETTES={
 };
 /* Looks Divas: efectos nativos que también se guardan y exportan. */
 const TEXT_LOOKS={
+  oro3d:{nombre:"Dorado 3D",fondo:"#171114",color:"#e8bf62",acabadoTexto:"oro3d",contornoTexto:0,relieveTexto:70,profundidadTexto:45,glow:28,glowRadio:8,glowColor:"#edbd52"},
   rosa:{nombre:"Rosa satinado",fondo:"#fff0f7",color:"#bd367d",color2:"#ffd2e9",acabadoTexto:"rosa",contornoTexto:.55,colorContorno:"#9e3068"},
   fucsia:{nombre:"Rosa fuerte",fondo:"#fff0f7",color:"#e51888",acabadoTexto:"solido",contornoTexto:.4,colorContorno:"#af1464"},
   oro:{nombre:"Dorado",fondo:"#261c29",color:"#d8af64",acabadoTexto:"dorado",contornoTexto:.65,colorContorno:"#79502a"},
@@ -2057,7 +2063,7 @@ function paintLookPreviews(){
 function textEssentialsHTML(p){
   const effects=S.textSection==="efectos";
   const size=Math.round(textMetrics.get(p.id)?.size||p.tamano);
-  return `<div class="edit-segments" aria-label="Editar texto"><button data-action="textSection" data-value="texto" aria-pressed="${!effects}">Aa Texto y tamaño</button><button data-action="textSection" data-value="efectos" aria-pressed="${effects}">✦ Efectos</button></div>${effects?`<div class="look-intro"><strong>Dale ese toque Divas</strong><span>Toca un acabado. Se aplica al instante.</span></div><div class="text-look-grid">${Object.entries(TEXT_LOOKS).map(([id,l])=>`<button data-action="textLook" data-value="${id}"><canvas width="240" height="90" data-text-style="${id}" aria-hidden="true"></canvas><span>${esc(l.nombre)}</span></button>`).join("")}</div><div class="glow-controls">${rangeProp("Intensidad del glow","glow",0,100,1)}${rangeProp("Tamaño del halo","glowRadio",0,150,1)}${inputProp("Color del glow","glowColor","color")}<p class="help">Más brillo alrededor; las letras conservan su nitidez.</p></div><button class="wide" data-action="textSection" data-value="texto">Aa Cambiar tamaño y letra</button>`:`${field("¿Qué quieres decir?",`<textarea class="text-content" data-prop="texto" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)}<div class="font-size-block"><div class="size-control"><button data-action="fontStep" data-value="-1" aria-label="Reducir tamaño de letra">A−</button><label><span>Tamaño</span><input data-prop="tamano" aria-label="Tamaño de letra" type="number" inputmode="numeric" min="1" max="1000" step="1" value="${size}"></label><button data-action="fontStep" data-value="1" aria-label="Aumentar tamaño de letra">A+</button></div><label class="font-size-slider"><span>A</span><input data-prop="tamano" aria-label="Desliza para cambiar tamaño de letra" type="range" min="6" max="${Math.min(1000,Math.max(180,size*2))}" step="1" value="${size}"><span>A</span></label></div><div class="text-font-color">${selectProp("Tipo de letra","fuente",fontOptions())}${inputProp("Color","color","color")}</div><div class="font-library-actions"><button data-action="tiktok">♪ TikTok · letras y estilos</button><button data-action="catalog" data-value="fuentes">Fuentes de agencia</button><button data-action="font">Cargar fuente</button></div><div class="text-swatches" aria-label="Colores Divas">${["#f4bdd8","#e51888","#ffe8a6","#ffffff","#59304d","#15121c"].map(c=>`<button data-action="textColor" data-value="${c}" style="--swatch:${c}" aria-label="Color ${c}" title="${c}"></button>`).join("")}<button class="effect-link" data-action="textSection" data-value="efectos">✦ Dorado y glow</button></div><div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>`}<p id="textFeedback" class="help" aria-live="polite"></p>`;
+  return `<div class="edit-segments" aria-label="Editar texto"><button data-action="textSection" data-value="texto" aria-pressed="${!effects}">Aa Texto y tamaño</button><button data-action="textSection" data-value="efectos" aria-pressed="${effects}">✦ Efectos</button></div>${effects?`${goldControlsHTML(p)}<div class="look-intro"><strong>Dale ese toque Divas</strong><span>Toca un acabado. Se aplica al instante.</span></div><div class="text-look-grid">${Object.entries(TEXT_LOOKS).map(([id,l])=>`<button data-action="textLook" data-value="${id}"><canvas width="240" height="90" data-text-style="${id}" aria-hidden="true"></canvas><span>${esc(l.nombre)}</span></button>`).join("")}</div><div class="glow-controls">${rangeProp("Intensidad del glow","glow",0,100,1)}${rangeProp("Tamaño del halo","glowRadio",0,150,1)}${inputProp("Color del glow","glowColor","color")}<p class="help">Más brillo alrededor; las letras conservan su nitidez.</p></div><button class="wide" data-action="textSection" data-value="texto">Aa Cambiar tamaño y letra</button>`:`${field("¿Qué quieres decir?",`<textarea class="text-content" data-prop="texto" maxlength="2000" rows="2">${esc(p.texto)}</textarea>`)}<div class="font-size-block"><div class="size-control"><button data-action="fontStep" data-value="-1" aria-label="Reducir tamaño de letra">A−</button><label><span>Tamaño</span><input data-prop="tamano" aria-label="Tamaño de letra" type="number" inputmode="numeric" min="1" max="1000" step="1" value="${size}"></label><button data-action="fontStep" data-value="1" aria-label="Aumentar tamaño de letra">A+</button></div><label class="font-size-slider"><span>A</span><input data-prop="tamano" aria-label="Desliza para cambiar tamaño de letra" type="range" min="6" max="${Math.min(1000,Math.max(180,size*2))}" step="1" value="${size}"><span>A</span></label></div><div class="text-font-color">${selectProp("Tipo de letra","fuente",fontOptions())}${inputProp("Color","color","color")}</div><div class="font-library-actions"><button data-action="tiktok">♪ TikTok · letras y estilos</button><button data-action="catalog" data-value="fuentes">Fuentes de agencia</button><button data-action="font">Cargar fuente</button></div><div class="text-swatches" aria-label="Colores Divas">${["#f4bdd8","#e51888","#ffe8a6","#ffffff","#59304d","#15121c"].map(c=>`<button data-action="textColor" data-value="${c}" style="--swatch:${c}" aria-label="Color ${c}" title="${c}"></button>`).join("")}<button class="effect-link" data-action="textSection" data-value="efectos">✦ Dorado y glow</button></div><div class="align-buttons" role="group" aria-label="Alineación">${[["left","Izquierda"],["center","Centro"],["right","Derecha"]].map(([v,n])=>`<button data-action="alignText" data-value="${v}" class="${p.alineacion===v?"active":""}" aria-pressed="${p.alineacion===v}">${n}</button>`).join("")}</div>`}<p id="textFeedback" class="help" aria-live="polite"></p>`;
 }
 function resizeTextTo(p,next){
   // Escala la caja junto a la letra: el autoajuste ya no cancela A+.
@@ -2367,7 +2373,7 @@ function layer(tipo,extra={}){
     bordeImagen:0,bordeImagenColor:"#d6b36d",bordeMetalico:true,
     decoracion:"ninguna",intensidadDecoracion:.75,sombraBase:0,
     cantidad:70,semilla:21,distribucion:"anillo",
-    acabadoTexto:"solido",contornoTexto:0,colorContorno:"#a16c35",
+    relieveTexto:70,profundidadTexto:45,acabadoTexto:"solido",contornoTexto:0,colorContorno:"#a16c35",
     rol:"",campo:"",requerido:false,pendiente:false,ejemplo:"",
     ajusteTexto:"ajustar",minTamano:12,interlineado:1.18,cursiva:false,subrayado:false,ajusteFondo:"completa",marcoFondo:false,marcoProteccion:32,...extra
   };
@@ -2478,7 +2484,7 @@ async function loadFont(f){
   await face.load();
   if(old?.face)document.fonts.delete(old.face);
   document.fonts.add(face);fontResources.set(f.nombre,{datos:f.datos,face});
-  textGlowCache.clear();wrappedTextCache.clear();
+  textGlowCache.clear();wrappedTextCache.clear();reliefCache.clear();
 }
 async function hydrate(d){
   const sources=new Set();
@@ -2539,14 +2545,14 @@ function normalizeProject(raw){
     sombraY:[-500,500],sombraX:[-500,500],interlineado:[.3,4],desenfoque:[0,100],tamano:[1,1000],espaciado:[-30,100],
     brillo:[0,400],contraste:[0,400],saturacion:[0,400],esquinas:[0,50],
     bordeImagen:[0,100],intensidadDecoracion:[0,1],sombraBase:[0,100],
-    cantidad:[1,350],semilla:[1,999999],contornoTexto:[0,30],minTamano:[1,200],marcoProteccion:[15,42]
+    relieveTexto:[0,100],profundidadTexto:[0,100],cantidad:[1,350],semilla:[1,999999],contornoTexto:[0,30],minTamano:[1,200],marcoProteccion:[15,42]
   };
   const enums={
     peso:["400","600","700"],alineacion:["left","center","right"],
     mezcla:["source-over","screen","multiply","soft-light","overlay","darken","lighten","color-dodge","color-burn","hard-light","difference","exclusion","hue","saturation","color","luminosity"],
     imagenForma:["original","redondeada","circular"],
     decoracion:["ninguna","aura","orbita"],distribucion:["anillo","libre"],
-    acabadoTexto:["solido","dorado","rosa","importado"],ajusteTexto:["ajustar","envolver","original"],
+    acabadoTexto:["solido","dorado","oro3d","rosa","importado"],ajusteTexto:["ajustar","envolver","original"],
     ajusteFondo:["completa","manual","cubrir","adaptar"]
   };
   for(const r of raw.capas){
@@ -3145,7 +3151,7 @@ function paintTextRuns(c,p,runs,marks=[]){
     c.drawImage(halo.canvas,halo.left,halo.top,halo.w,halo.h);
   }
   c.shadowColor='transparent';c.shadowBlur=c.shadowOffsetX=c.shadowOffsetY=0;
-  ink(c);c.restore();
+  if(p.acabadoTexto==='oro3d')paintGoldRelief(c,p,runs,marks);else ink(c);c.restore();
 }
 /* Text is fitted by its actual ink bounds, including accents and stroke. */
 const wrappedTextCache=new Map();
@@ -3665,7 +3671,7 @@ function clearSelection({closePanel=false}={}){
 }
 function simpleTextsHTML(){
   const list=visibleTexts();
-  return `<button class="primary wide" data-action="addText">+ Añadir texto</button>
+  return `<div class="grid2"><button class="primary" data-action="addText">+ Texto</button><button data-action="addGoldText">✦ Dorado 3D</button></div>
     <p class="help">Toca un texto para cambiar su contenido, tamaño, color y fuente.</p>`+
     (list.length?list.map(p=>`<button class="text-card ${S.selected===p.id?"active":""}" data-action="select" data-id="${esc(p.id)}">
       <strong>${esc(p.campo||p.nombre)} ${p.bloqueado?"🔒":""}</strong><small>${esc(p.texto||"Texto vacío")}</small>
@@ -3861,13 +3867,15 @@ function propertiesHTML(){
   const p=selectedLayer();if(!p)return `<div class="inspector-empty">${cropIcon("move")}<h3>Tu próxima idea empieza aquí</h3><p class="help">Selecciona algo en el lienzo para editarlo, o elige una herramienta a la izquierda.</p><div class="grid2"><button data-action="addText">+ Texto</button><button data-action="addImage">+ Imagen</button></div></div>`;
   if(p.tipo==="imagen")return imageInspectorHTML(p);
   let essential="",advanced="";
+  if(p.rol==='cobertura_texto'&&!p.bloqueado)return `<div class="selection-card"><strong>1 · Cubre solo las letras antiguas</strong><p class="help">Mueve este rectángulo y ajusta las esquinas. Evita tapar el beso y los logos. Funciona sobre un fondo de color liso.</p></div>${inputProp('Color del fondo que vas a cubrir','color','color')}<div class="grid2">${inputProp('Ancho','w')}${inputProp('Alto','h')}</div><button class="wide" data-action="mobileMode" data-value="size">Ajustar tamaño en el lienzo</button><button class="primary wide" data-action="addGoldText">2 · Añadir texto dorado aquí</button><details class="property"><summary>Posición y giro</summary>${geometryHTML()}</details><button class="danger wide" data-action="delete">Eliminar cobertura</button>`;
+
   if(p.tipo==="texto"){
     essential=textEssentialsHTML(p);
     advanced=`<div class="grid2">${inputProp("Espaciado","espaciado")}${selectProp("Peso","peso",[["400","Normal"],["600","Seminegrita"],["700","Negrita"]])}</div>
       ${selectProp("Ajuste de líneas","ajusteTexto",[["ajustar","Ajustar líneas existentes"],["envolver","Distribuir palabras en líneas"],["original","Conservar disposición importada"]])}
       ${inputProp("Tamaño mínimo automático","minTamano","number",'min="1" max="200"')}${inputProp("Interlineado","interlineado","number",'min="0.3" max="4" step="0.05"')}${checkProp("Cursiva","cursiva")}${checkProp("Subrayado","subrayado")}
       ${inputProp("Color secundario","color2","color")}
-      ${selectProp("Acabado","acabadoTexto",[["solido","Normal"],["dorado","Dorado"],["rosa","Degradado"],["importado","Degradado importado"]])}
+      ${selectProp("Acabado","acabadoTexto",[["solido","Normal"],["dorado","Dorado"],["oro3d","Dorado 3D"],["rosa","Degradado"],["importado","Degradado importado"]])}
       ${rangeProp("Contorno","contornoTexto",0,6,.25)}${inputProp("Color del contorno","colorContorno","color")}
       <button class="wide" data-action="font">Cargar mi propia fuente</button>`;
   }else if(p.tipo==="imagen"){
@@ -5058,11 +5066,11 @@ const STYLE_KEYS=[
   "color","color2","glow","glowRadio","glowColor","sombraY","sombraX","desenfoque","mezcla","degradadoTexto",
   "fuente","peso","cursiva","subrayado","espaciado","imagenForma","esquinas","placa","placaColor",
   "bordeImagen","bordeMetalico","bordeImagenColor","decoracion","intensidadDecoracion",
-  "sombraBase","acabadoTexto","contornoTexto","colorContorno","metalico"
+  "sombraBase","acabadoTexto","contornoTexto","colorContorno","metalico","relieveTexto","profundidadTexto"
 ];
 async function action(name,button){
   if(CO.room){
-    if(["newDesign","new","import","templates","surprise","agencyAdd","projectName","renameProject"].includes(name))throw new Error("Sal de la ayuda antes de abrir o publicar otro proyecto.");
+    if(["startImage","blankStart","goldStart","newDesign","new","import","templates","surprise","agencyAdd","projectName","renameProject"].includes(name))throw new Error("Sal de la ayuda antes de abrir o publicar otro proyecto.");
     const allowed=["closeDialog","closePanel","showPanel","showTools","expandPanel","tab","fit","zoomIn","zoomOut","theme","export","download","save","saveDetails","dismissSaveFeedback","contextHelp","helpTopic","helpGestures","closeHelp","dismissHint","panelExpand","clearSelection","focusCanvas","focusText","deselect","mobileFocus","projects","home"];
     if(!coEditing()&&!name.startsWith('co')&&!allowed.includes(name))throw new Error("Tu compañera tiene el control. Puedes señalar en el lienzo o pedir el control.");
   }
@@ -5207,6 +5215,11 @@ async function action(name,button){
     case "dismissRecoveryLink":await run(closeRecovery);break;
     case "recoveryLogin":await run(recoveryLogin);break;
     case "home":case "projects":await showProjects().catch(e=>notify(storageMessage(e)));break;
+    case "startImage":coNavigation();$("startImageInput").click();break;
+    case "blankStart":coNavigation();chooseInitialFormat("libre");break;
+    case "goldStart":coNavigation();chooseInitialFormat("oro3d");break;
+    case "addGoldText":await run(addGoldText);break;
+    case "addTextCover":addTextCover();break;
     case "newDesign":await run(showHome);break;
     case "openSavedProject":await run(()=>openSavedProject(button.dataset.id));break;
     case "renameProject":await openProjectName(button.dataset.id||P.current?.id);break;
@@ -5557,6 +5570,7 @@ $("projectSearch").addEventListener("input",renderProjects);
 $("projectFilter").addEventListener("change",renderProjects);
 $("projectSort").addEventListener("change",renderProjects);
 $("projectNameInput").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();run(renameProject);}});
+$("startImageInput").onchange=event=>{const file=event.target.files[0];event.target.value="";if(file)run(()=>startFromImage(file));};
 $("imageInput").onchange=event=>run(async()=>{
   if(event.target.files.length)await importImages(event.target.files);
 }).finally(()=>event.target.value="");
@@ -6062,7 +6076,7 @@ async function openCatalog(category='todos'){
   $('resourceManager').close();$('accountDialog').close();renderCatalog();showDialog('catalogDialog');
 }
 function safeTextStyle(raw={},fonts=S.doc?.fuentes||[]){
-  const p=layer('texto');const keys=['color','color2','fuente','peso','cursiva','subrayado','tamano','espaciado','alineacion','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraY','sombraX','degradadoTexto'];
+  const p=layer('texto');const keys=['color','color2','fuente','peso','cursiva','subrayado','tamano','espaciado','alineacion','relieveTexto','profundidadTexto','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraY','sombraX','degradadoTexto'];
   const out={};for(const k of keys)if(Object.hasOwn(raw,k))out[k]=raw[k];
   if(!FONT_LIST.includes(out.fuente)&&!fonts.some(f=>f.nombre===out.fuente))out.fuente='Georgia';
   const d=emptyDocument();d.fuentes=copy(fonts);d.capas=[{...p,...out,texto:'Tu título'}];const clean=normalizeProject(d).capas[0];return Object.fromEntries(keys.map(k=>[k,clean[k]]));
@@ -6510,7 +6524,7 @@ const F={purpose:null,format:'1:1',busy:false};
 function chooseInitialFormat(purpose){
  F.purpose=purpose;F.format=FORMATS[$('initialFormat').value]?$('initialFormat').value:'1:1';
  $('createFormatTitle').textContent='¿En qué formato lo quieres?';
- $('createFormatSubtitle').textContent=PROJECT_LABELS[purpose]+' · puedes cambiarlo después';
+ $('createFormatSubtitle').textContent=(purpose==='oro3d'?'Texto dorado 3D para tu directo':PROJECT_LABELS[purpose])+' · puedes cambiarlo después';
  renderInitialFormats();showDialog('createFormatDialog');
 }
 function renderInitialFormats(){
@@ -6523,6 +6537,11 @@ async function startChosenProject(){
  if(F.busy||!F.purpose)return;F.busy=true;$('createFormatButton').disabled=true;
  try{
   await ensureProjectSaved();await Promise.allSettled([P.ready,C.ready]);
+  if(['libre','oro3d'].includes(F.purpose)){
+    const d=emptyDocument();d.lienzo={...FORMATS[F.format]};d.fondo={tipo:'solido',color1:'#ffffff',color2:'#ffffff',angulo:0,transparente:F.purpose==='oro3d'};d.proyecto={nombre:F.purpose==='oro3d'?'Texto para mi directo':'Mi diseño en blanco'};
+    S.mode='avanzado';S.tab='textos';$('showCircle').checked=false;await activateDocument(d,{savePrevious:false});$('createFormatDialog').close();
+    if(F.purpose==='oro3d')await addGoldText();else setTab('textos');return;
+  }
   if(A.member)try{await refreshCloudCatalog(false);}catch{notify('No se pudo actualizar el catálogo. Puedes continuar con las imágenes disponibles.');}
   if(C.published.brandLogo||P.brandLogo)await loadImage(C.published.brandLogo||P.brandLogo);
   const d=createMission(F.purpose,F.format);if(!S.template||F.purpose!=="perfil")makeDivasLook(d,"pastel");S.lookSection="looks";$('initialFormat').value=F.format;
@@ -7876,7 +7895,7 @@ $('creatorFontUse').addEventListener('change',()=>run(async()=>{const value=$('c
 
 /* v28 · ayuda compartida: copia temporal, control por turnos y presencia visual. */
 const CO={client:crypto.randomUUID(),visualSequence:0,room:null,people:[],sessions:[],timer:null,polling:false,missing:false,error:'',generation:0,joining:false};
-const CO_VISUAL=['recorte','imagenForma','x','y','w','h','rot','tamano','texto','color','color2','fuente','peso','cursiva','subrayado','alineacion','espaciado','interlineado','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraX','sombraY','opacidad','oculto','bloqueado','brillo','contraste','saturacion','desenfoque','bordeImagen','bordeImagenColor','bordeMetalico','esquinas','degradadoTexto','mezcla','ajusteTexto','minTamano'];
+const CO_VISUAL=['recorte','imagenForma','x','y','w','h','rot','tamano','texto','color','color2','fuente','peso','cursiva','subrayado','alineacion','espaciado','interlineado','relieveTexto','profundidadTexto','acabadoTexto','contornoTexto','colorContorno','glow','glowRadio','glowColor','sombraX','sombraY','opacidad','oculto','bloqueado','brillo','contraste','saturacion','desenfoque','bordeImagen','bordeImagenColor','bordeMetalico','esquinas','degradadoTexto','mezcla','ajusteTexto','minTamano'];
 function coOwner(r=CO.room){return !!r&&r.session.owner_id===A.user?.id;}
 function coEditing(r=CO.room){const s=r?.session;return !!s&&s.status==='active'&&s.controller_id===A.user?.id&&s.controller_client===CO.client&&Date.parse(s.lease_until)>Date.now()&&!r.frozen&&!r.switching;}
 function coName(id,s=CO.room?.session){return !s?'Tu compañera':id===s.owner_id?s.owner_name:s.helper_name;}
@@ -9203,6 +9222,7 @@ function imageInspectorHTML(p){
     ${p.bloqueado?`<div class="selection-card"><strong>Imagen bloqueada</strong><button data-action="lock" data-id="${esc(p.id)}">Desbloquear</button></div>`:''}${p.oculto?`<button class="wide" data-action="visible" data-id="${esc(p.id)}">Mostrar imagen oculta</button>`:''}
     <div class="edit-segments" role="group" aria-label="Ajustes de imagen">${[['imagen','Imagen'],['color','Color'],['efectos','Efectos']].map(([id,name])=>`<button data-action="imageSection" data-value="${id}" class="${section===id?'active':''}" aria-pressed="${section===id}">${name}</button>`).join('')}</div>
     <fieldset class="editable-properties" ${p.bloqueado?'disabled':''}>${html}</fieldset>
+    <details class="property" ${p.rol==='imagen_original'?'open':''}><summary>Cambiar letras de una imagen</summary><p class="help">Un PNG o JPG no tiene texto editable. Puedes cubrir las letras con un color liso y escribir encima. Para fondos con textura, usa el borrador o una base sin texto.</p><div class="grid2"><button data-action="addTextCover">1 · Cubrir texto anterior</button><button data-action="addGoldText">2 · Añadir dorado 3D</button></div><p class="help">La imagen original se conserva. No detectamos ni extraemos su fuente automáticamente.</p></details>
     <details class="property"><summary>Guardar y organizar</summary>${agencyAddHTML()}${compositionHTML()}<button class="wide" data-action="multiSelect">Seleccionar varias</button><div class="grid2"><button data-action="duplicate">Duplicar</button><button class="danger" data-action="delete" ${p.bloqueado?'disabled':''}>Eliminar</button></div></details>`;
 }
 function desktopLayersHTML(){
@@ -9410,6 +9430,72 @@ $('teamMessageForm').addEventListener('submit',e=>{e.preventDefault();teamDo(tea
 $('teamMessageInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&!matchMedia('(max-width:760px)').matches){e.preventDefault();e.stopPropagation();teamDo(teamSend);}});
 $('coDialog').addEventListener('close',()=>{coSchedule();});
 
+
+/* Gold typography stays text. Bevels are silhouette differences, not a blurred label. */
+const reliefCache=new Map();
+function paintGoldRelief(c,p,runs,marks){
+  if(!runs.length)return;
+  const m=c.measureText('Ág'),size=Math.max(1,(m.actualBoundingBoxAscent||0)+(m.actualBoundingBoxDescent||0));
+  const depth=size*.075*(p.profundidadTexto??45)/100,bevel=size*.04*(p.relieveTexto??70)/100;
+  let left=Infinity,top=Infinity,right=-Infinity,bottom=-Infinity;
+  for(const r of runs){const a=c.measureText(r.ch);left=Math.min(left,r.x-a.actualBoundingBoxLeft);top=Math.min(top,r.y-a.actualBoundingBoxAscent);right=Math.max(right,r.x+a.actualBoundingBoxRight);bottom=Math.max(bottom,r.y+a.actualBoundingBoxDescent);}
+  for(const r of marks){left=Math.min(left,r.x);top=Math.min(top,r.y);right=Math.max(right,r.x+r.w);bottom=Math.max(bottom,r.y+r.h);}
+  const margin=depth+bevel+size*.025+2;left=Math.floor(left-margin);top=Math.floor(top-margin);
+  const w=Math.max(1,Math.ceil(right-left+margin)),h=Math.max(1,Math.ceil(bottom-top+margin)),t=c.getTransform();
+  const requested=Math.max(.1,Math.hypot(t.a,t.b)),scale=Math.min(requested,8192/w,8192/h,Math.sqrt(16000000/(w*h)));
+  const key=JSON.stringify([runs,marks,c.font,c.textBaseline,w,h,left,top,scale,p.relieveTexto,p.profundidadTexto]);
+  let result=reliefCache.get(key);
+  if(!result){
+    const make=()=>{const a=document.createElement('canvas');a.width=Math.ceil(w*scale);a.height=Math.ceil(h*scale);return a;};
+    const out=make(),mask=make(),edge=make(),oc=out.getContext('2d'),mc=mask.getContext('2d'),ec=edge.getContext('2d');
+    const setup=x=>{x.scale(scale,scale);x.translate(-left,-top);x.font=c.font;x.textBaseline=c.textBaseline;x.textAlign='left';x.lineJoin='round';};
+    setup(mc);mc.fillStyle='#fff';for(const r of runs)mc.fillText(r.ch,r.x,r.y);for(const r of marks)mc.fillRect(r.x,r.y,r.w,r.h);
+    setup(oc);oc.lineWidth=Math.max(.4,size*.016);
+    // A real, directional extrusion behind the face. No shadow blur on the ink.
+    const steps=Math.max(1,Math.ceil(depth*scale));
+    for(let i=steps;i>=0;i--){const d=depth*i/steps;oc.save();oc.translate(d*.72,d);oc.fillStyle=i%3===0?'#916121':'#55330d';oc.strokeStyle='#80551c';for(const r of runs){oc.strokeText(r.ch,r.x,r.y);oc.fillText(r.ch,r.x,r.y);}oc.restore();}
+    // Reflection restarts on each text line, so wrapping doesn't change its material.
+    for(const r of runs){const a=oc.measureText(r.ch),y=r.y-a.actualBoundingBoxAscent,hh=Math.max(1,a.actualBoundingBoxAscent+a.actualBoundingBoxDescent),g=oc.createLinearGradient(0,y,0,y+hh);
+      [[0,'#fff3be'],[.16,'#c29235'],[.34,'#f2d67f'],[.46,'#fff8cf'],[.50,'#8c5e1c'],[.66,'#bc8b2b'],[.84,'#f8e39a'],[1,'#aa7628']].forEach(([at,col])=>g.addColorStop(at,col));oc.fillStyle=g;oc.fillText(r.ch,r.x,r.y);}
+    oc.fillStyle='#e4bc61';for(const r of marks)oc.fillRect(r.x,r.y,r.w,r.h);
+    oc.setTransform(1,0,0,1,0,0);
+    const edgePass=(dx,dy,color,alpha)=>{
+      ec.clearRect(0,0,edge.width,edge.height);ec.globalCompositeOperation='source-over';ec.drawImage(mask,0,0);ec.globalCompositeOperation='destination-out';ec.drawImage(mask,dx*scale,dy*scale);ec.globalCompositeOperation='source-in';ec.fillStyle=color;ec.fillRect(0,0,edge.width,edge.height);ec.globalCompositeOperation='source-over';oc.globalAlpha=alpha;oc.drawImage(edge,0,0);
+    };
+    edgePass(-bevel,-bevel,'#53320b',.9);edgePass(bevel*.78,bevel,'#fff4ba',.93);
+    edgePass(bevel*.22,bevel*.22,'#fffce9',.85);oc.globalAlpha=1;
+    result={canvas:out,left,top,w:out.width/scale,h:out.height/scale};
+    reliefCache.set(key,result);while(reliefCache.size>3)reliefCache.delete(reliefCache.keys().next().value);
+    mask.width=mask.height=edge.width=edge.height=1;
+  }
+  c.drawImage(result.canvas,result.left,result.top,result.w,result.h);
+}
+async function startFromImage(file){
+  coNavigation();const epoch=A.epoch,asset=await importAsset(file),im=resources.get(asset.src),s=imageSize(im);
+  const factor=Math.min(1,8192/s.w,8192/s.h,Math.sqrt(32000000/(s.w*s.h))),w=Math.max(16,Math.floor(s.w*factor)),h=Math.max(16,Math.floor(s.h*factor));
+  const d=emptyDocument();d.lienzo={ancho:w,alto:h};d.proyecto={nombre:asset.nombre.slice(0,80)};
+  d.fondo={tipo:'solido',color1:'#000000',color2:'#000000',angulo:0,transparente:true};
+  const p=layer('imagen',{...asset,rol:'imagen_original',nombre:'Mi imagen · '+asset.nombre,x:w/2,y:h/2,w:s.w*Math.min(w/s.w,h/s.h),h:s.h*Math.min(w/s.w,h/s.h)});d.capas=[p];
+  await activateDocument(d,{guard:()=>{if(epoch!==A.epoch)throw new Error('La sesión cambió. Vuelve a cargar tu imagen.');}});
+  S.mode='avanzado';selectLayer(p.id,{open:true});
+  notify('Imagen abierta. Sus letras son píxeles; añade texto editable encima o usa Cubrir texto anterior.');
+}
+async function addGoldText(){
+  if(!S.opened)return;const doc=S.doc,epoch=A.epoch,font=SOCIAL_FONTS['TikTok Sans'];
+  if(font)await loadFont(font);if(doc!==S.doc||epoch!==A.epoch)throw new Error('El proyecto cambió. Vuelve a añadir el texto.');
+  const s=sizeOf(),cover=selectedLayer()?.rol==='cobertura_texto'?selectedLayer():null;
+  const p=layer('texto',{nombre:'Texto dorado 3D',texto:'Genera verdecitos aquí,\ndesde tu casa',fuente:font?.nombre||'Arial',peso:'600',x:cover?.x||s.ancho/2,y:cover?.y||s.alto*.35,w:cover?.w||s.ancho*.82,h:cover?.h||s.alto*.3,tamano:Math.min(200,s.ancho*.09),ajusteTexto:'envolver',minTamano:1,interlineado:1.12});
+  putTextLook(p,'oro3d');commit(()=>{if(font&&!S.doc.fuentes.some(f=>f.nombre===font.nombre))S.doc.fuentes.push(copy(font));S.doc.capas.push(p);S.selected=p.id;});
+  selectLayer(p.id,{open:true});S.textSection='texto';renderPanel();
+}
+function addTextCover(){
+  if(!S.opened)return;
+  const s=sizeOf(),p=layer('rectangulo',{rol:'cobertura_texto',nombre:'Cubrir texto anterior · ajusta esta zona',x:s.ancho/2,y:s.alto*.3,w:s.ancho*.65,h:s.alto*.24,color:'#000000',radio:0});
+  commit(()=>{S.doc.capas.push(p);S.selected=p.id;});selectLayer(p.id,{open:true});
+  if(mobileCanvas())mobileMode('size');
+  notify('Ajusta la zona sobre las letras antiguas y elige el color del fondo. Luego pulsa Añadir texto dorado.');
+}
+function goldControlsHTML(p){return p.acabadoTexto==='oro3d'?`<div class="gold-controls"><strong>Dorado 3D · texto editable</strong>${rangeProp('Relieve del borde','relieveTexto',0,100)}${rangeProp('Profundidad 3D','profundidadTexto',0,100)}<p class="help">El brillo rodea las letras; el relieve mantiene sus bordes definidos. Cambia la fuente en Texto y tamaño.</p></div>`:'';}
 
 boot().catch(error=>notify(error.message));
 })();
