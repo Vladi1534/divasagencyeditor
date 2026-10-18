@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Divas Agency · Mis proyectos</title>
-<meta name="divas-version" content="36">
+<meta name="divas-version" content="37">
 <meta name="theme-color" content="#fbf5f5" id="browserThemeColor">
 <script id="appearance-script">
 /* Preferencia del dispositivo: se aplica antes de pintar y nunca toca el diseño. */
@@ -1392,6 +1392,12 @@ html[data-render-mode=fluid] #sidePanel.mobile-open #panelBody{animation-duratio
 
 @media(max-width:760px){#sidePanel:has(.photo-groups):has(#contextGuide[data-photo-guide=true]:not([hidden])) #panelTabs{display:none!important}}
 
+/* v37 · Global team access stays at the beginning of the main menu. */
+#mainMenu>summary{position:relative}#menuTeamDot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 2px var(--panel)}
+#teamMenuEntry{display:flex;align-items:center;gap:9px;min-height:66px;padding:10px;margin:0 0 6px;background:var(--ux-soft);border:1px solid var(--ux-line);border-radius:12px;color:var(--text)}
+.menu-team-icon{display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:10px;background:var(--panel);color:var(--ux-accent)}.menu-team-icon svg{width:24px;height:24px}.menu-team-copy{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}.menu-team-copy strong{font-size:14px}.menu-team-copy small{font-size:10px;color:var(--muted);line-height:1.4}.menu-team-arrow{font-size:22px;color:var(--ux-accent)}
+#mainMenu .menu-tool-finder{display:flex;align-items:center;gap:9px;min-height:53px;padding:8px 10px;margin:3px 0 10px;border-bottom:1px solid var(--ux-line);border-radius:0}.menu-tool-finder>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:3px}.menu-tool-finder strong{font-size:12px}.menu-tool-finder small{font-size:10px;color:var(--muted)}.menu-tool-finder>span:first-child{font-size:22px;color:var(--ux-accent)}.menu-tool-finder>span:last-child{font-size:20px}
+html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(--ux-line)}
 </style>
 </head>
 <body>
@@ -1428,8 +1434,13 @@ html[data-render-mode=fluid] #sidePanel.mobile-open #panelBody{animation-duratio
     <button id="accountButton" class="account-button" data-action="account">Entrar</button>
     <button id="downloadBtn" class="primary" data-action="export">Descargar</button>
     <details id="mainMenu" class="menu">
-      <summary aria-label="Abrir menú">☰</summary>
+      <summary aria-label="Abrir menú" title="Mi equipo, cuenta y apariencia">☰<span id="menuTeamDot" aria-hidden="true" hidden></span></summary>
       <div class="menu-content">
+        <button id="teamMenuEntry" data-action="coOpen" aria-label="Mi equipo">
+          <span class="menu-team-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a5 5 0 0 0-4-4"/></svg></span>
+          <span class="menu-team-copy"><strong>Mi equipo</strong><small id="menuTeamHint">Personas, solicitudes y chat</small></span><span id="menuTeamBadge" class="team-badge" aria-hidden="true" hidden></span><span class="menu-team-arrow" aria-hidden="true">›</span>
+        </button>
+        <button class="menu-tool-finder" data-action="helpGestures"><span aria-hidden="true">✧</span><span><strong>Divas Bot</strong><small>Encontrar una función</small></span><span aria-hidden="true">⌕</span></button>
         <fieldset class="appearance" aria-describedby="appearanceStatus">
           <legend>Apariencia</legend>
           <div class="appearance-options">
@@ -1441,7 +1452,6 @@ html[data-render-mode=fluid] #sidePanel.mobile-open #panelBody{animation-duratio
         </fieldset>
         <fieldset class="appearance"><legend>Vista previa en el móvil</legend><div class="appearance-options render-options"><label class="appearance-option"><input type="radio" name="renderMode" value="fluid" checked><span>Fluida</span></label><label class="appearance-option"><input type="radio" name="renderMode" value="detail"><span>Más detalle</span></label></div><p class="render-note">La descarga conserva toda su calidad en ambos modos.</p></fieldset>
         <button data-action="account">Mi cuenta</button><button data-action="home">Mis proyectos</button>
-        <button id="teamMenuEntry" data-action="coOpen" hidden>Mi equipo y solicitudes de ayuda</button>
         <button data-action="newDesign">Crear un diseño</button>
         <button data-action="saveLocal">Guardar avance</button>
         <button data-action="saveCopy">Guardar como copia</button>
@@ -1449,11 +1459,10 @@ html[data-render-mode=fluid] #sidePanel.mobile-open #panelBody{animation-duratio
         <button data-action="open">Abrir archivo · PXZ o JSON</button>
         <button data-action="agency">Identidad de agencia · logo y datos</button>
         <button data-action="format">Cambiar formato del lienzo</button>
-        <button data-action="helpGestures">✧ Divas Bot · Ayuda</button>
         <button id="membersMenuButton" data-action="manageMembers" hidden>Cuentas y solicitudes</button>
         <button id="agencyAddMenu" data-action="agencyAdd" hidden>＋ Agregar contenido a la agencia</button>
         <button id="adminMenuButton" data-action="resourceManager" hidden>Administrar agencia</button>
-        <p class="help" id="appVersion">Divas Editor · v36 · Ajustar imagen</p>
+        <p class="help" id="appVersion">Divas Editor · v37 · Mi equipo a mano</p>
         <p id="saveState">Los diseños se editan en este navegador.</p>
       </div>
     </details>
@@ -2694,6 +2703,7 @@ async function history(direction){
   await hydrate(S.doc);markChanged();refresh();
 }
 function closeMenus(){$("mainMenu").open=false;}
+$('mainMenu').querySelector('summary').addEventListener('click',()=>{if(!$('mainMenu').open)requestAnimationFrame(()=>{$('mainMenu').querySelector('.menu-content').scrollTop=0;});});
 function showDialog(id){dismissHint();closeHelp();closeMenus();closeLayerMenu();const d=$(id);if(!d.open)d.showModal();}
 function closeDialog(button){const d=button.closest("dialog");if(S.busy&&["importDialog","templatesDialog","agencyAddDialog","agencyFontsDialog","surpriseDialog"].includes(d?.id))return;d?.close();}
 $("formatDialog").addEventListener("close",()=>{if(S.opened)renderPanel();});
@@ -8251,7 +8261,7 @@ async function coLobby({force=false}={}){
 }
 function coSchedule(){clearTimeout(CO.timer);if(!A.member?.active)return;CO.timer=setTimeout(async()=>{if(!document.hidden||CO.room)await coLobby();coSchedule();},CO.room||$('coDialog').open?4000:15000);}
 function coAccount(){if(!A.member?.active)return;coSchedule();if(!CO.people.length&&!CO.missing&&!CO.polling)setTimeout(()=>coLobby(),250);}
-async function coOpen(){requireMember();CO.error='';if(!CO.room&&CO.sessions.length&&TEAM.view==='people')TEAM.view='inbox';showDialog('coDialog');coRenderDialog();await coLobby({force:true});coRenderDialog();coSchedule();}
+async function coOpen(){if(A.ready)await A.ready;if(!A.user||!A.member?.active){await openAccount();return;}requireMember();CO.error='';if(!CO.room&&CO.sessions.length&&TEAM.view==='people')TEAM.view='inbox';showDialog('coDialog');coRenderDialog();await coLobby({force:true});coRenderDialog();coSchedule();}
 function coPrior(){return S.opened&&P.current?{doc:copy(S.doc),project:{...copy(P.current),version:P.versions.get(P.current.id)||0,editor:{tab:S.tab,zoom:S.zoom,fit:S.fit,selected:S.selected}}}:null;}
 async function coInvite(id,requestId=null){
   requireMember();if(CO.room)throw new Error('Ya tienes una ayuda abierta.');if(!S.opened||S.view!=='editor')throw new Error('Abre el proyecto para el que necesitas ayuda.');
@@ -9572,7 +9582,11 @@ function teamReceive(data,params){
 function teamBadges(){
  const signed=!!A.member?.active,n=signed?TEAM.unread:0;
  for(const id of ['coEntry','teamHomeEntry']){const e=$(id);if(!e)continue;e.classList.add('team-entry');e.innerHTML=teamIcon()+'<span class="team-entry-label">'+(CO.room&&id==='coEntry'?'Ayuda en vivo':'Mi equipo')+'</span>'+(n?'<span class="team-badge">'+(n>99?'99+':n)+'</span>':'');e.setAttribute('aria-label',(CO.room&&id==='coEntry'?'Ayuda en vivo':'Mi equipo')+(n?', '+n+' avisos sin leer':''));}
- $('teamHomeEntry').hidden=!signed||S.view==='editor';$('teamMenuEntry').hidden=!signed;
+ $('teamHomeEntry').hidden=!signed||S.view==='editor';$('teamMenuEntry').hidden=false;
+ $('menuTeamHint').textContent=signed?'Personas, solicitudes y chat':A.request?'Revisa el estado de tu acceso':'Entra para conectar con tu agencia';
+ $('menuTeamBadge').hidden=!n;$('menuTeamBadge').textContent=n>99?'99+':String(n);$('menuTeamDot').hidden=!n;
+ $('teamMenuEntry').setAttribute('aria-label','Mi equipo'+(n?', '+n+' avisos sin leer':''));
+ $('mainMenu').querySelector('summary').setAttribute('aria-label','Abrir menú'+(n?'. Mi equipo: '+n+' avisos sin leer':''));
  $('teamProjectHint').hidden=!!S.opened&&!!P.current;
  $('teamPending').hidden=!TEAM.pending;$('teamPending').textContent=String(TEAM.pending);
  if(!CO.room&&!CO.sessions.length&&signed&&n){$('coNotice').hidden=false;$('coNoticeText').textContent=n===1?'Tienes un aviso de tu equipo.':'Tienes '+n+' avisos de tu equipo.';$('coNoticeButton').textContent='Ver solicitudes';$('coNoticeButton').dataset.action='coTeamInbox';}
@@ -9828,7 +9842,7 @@ function uxRenderLatest(){
 function uxHubHTML(kind){
   const item=(icon,title,detail,action,value='')=>`<button class="ux-tool-card" data-action="${action}" ${value?`data-value="${value}"`:''}><span class="ux-tool-symbol">${uiIcon(icon)}</span><strong>${title}</strong><small>${detail}</small><span class="ux-card-arrow" aria-hidden="true">↗</span></button>`;
   if(kind==='anadir')return `<p class="ux-panel-intro">¿Qué le sumamos a tu diseño?</p><div class="ux-tool-grid">${item('text','Texto','Escribe tu mensaje','addText')}${item('image','Mi imagen','Carga una foto o un logo','addImage')}${item('spark','Adornos','Formas, luces y destellos','tab','figuras')}${item('text','Dorado 3D','Letras con relieve','addGoldText')}${item('layers','De la agencia','Tu colección de recursos','catalog')}${item('background','Fondo','Cambia el ambiente','tab','fondo')}</div>`;
-  return `<button class="ux-find-tool" data-action="helpGestures">¿Dónde está…? Buscar una herramienta <span>⌕</span></button><p class="ux-panel-intro">Dale forma a tu próxima idea.</p><button class="ux-create-flyer" data-action="surprise"><span>${uiIcon('spark')}</span><strong>Crear mi flyer</strong><small>Elige un tema y prueba composiciones.</small><b aria-hidden="true">↗</b></button><div class="ux-tool-grid">${item('background','Ajustar foto','Luz, color y efectos','photoOpen')}${item('background','Fondo','Color, imagen y encuadre','tab','fondo')}${item('layers','Plantillas','Empieza con una base','templates')}${item('image','Formato','Historia, cuadrado o banner','format')}${item('layers','Mi equipo','Pide ayuda con tu diseño','coOpen')}</div><button class="wide quiet" data-action="focusCanvas">Ver mi diseño sin controles ↗</button>`;
+  return `<button class="ux-find-tool" data-action="helpGestures">¿Dónde está…? Buscar una herramienta <span>⌕</span></button><p class="ux-panel-intro">Dale forma a tu próxima idea.</p><button class="ux-create-flyer" data-action="surprise"><span>${uiIcon('spark')}</span><strong>Crear mi flyer</strong><small>Elige un tema y prueba composiciones.</small><b aria-hidden="true">↗</b></button><div class="ux-tool-grid">${item('background','Ajustar foto','Luz, color y efectos','photoOpen')}${item('background','Fondo','Color, imagen y encuadre','tab','fondo')}${item('layers','Plantillas','Empieza con una base','templates')}${item('image','Formato','Historia, cuadrado o banner','format')}</div><button class="wide quiet" data-action="focusCanvas">Ver mi diseño sin controles ↗</button>`;
 }
 function uxBotHTML(){
   const p=selectedLayer(),type=p?.tipo,locked=p?.bloqueado;
