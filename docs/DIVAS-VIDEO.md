@@ -1,51 +1,58 @@
-# Divas Video · primera integración (v39)
+# Divas Video · v40
 
-Esta actualización añade edición de video dentro del editor Divas Agency. Esta entrega integra Video junto a la versión 38 «Manuales → flyers», conservando su biblioteca privada, su migración SQL y sus pruebas.
+Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada de documentos conservan su funcionamiento. Esta actualización no requiere SQL ni cambios en Supabase.
 
-## Uso
+## Quitar el fondo de un vídeo
 
-1. Abre **Crear video** en Mis proyectos, **Video** en el editor o **Divas Video** en el menú.
-2. Pulsa **Flyer abierto** para incorporar el diseño actual, o **Fotos / clips** para añadir archivos.
-3. Selecciona una escena. Ajusta duración, inicio/final, encuadre, movimiento, fundido y texto. Las flechas cambian su orden; **Dividir en el cabezal** corta la escena en la posición elegida.
-4. En móvil, **Escena y texto** abre sus controles; **Música y salida** permite elegir música y calidad. **Vista previa** devuelve espacio al video.
-5. Exporta. El formato disponible aparece junto a las dimensiones: MP4 (H.264/AAC) cuando el navegador puede codificarlo; WebM (VP8/Opus) en caso contrario. El archivo se genera a 30 fps con tiempos fijos, independientemente de la velocidad de la vista previa.
+1. Añade un vídeo con **Fotos / clips**, o usa **Capa** para colocarlo sobre otro fondo o vídeo.
+2. Selecciona ese clip y pulsa el botón rosa **Quitar fondo**, visible sobre el lienzo en PC y móvil.
+3. **Elegir color** muestra el fotograma original. Toca el color del fondo con el dedo, lápiz o ratón. **Automático** busca un color uniforme predominante en los bordes. Si no encuentra uno suficientemente consistente, pide usar el cuentagotas.
+4. Ajusta **Intensidad**, **Suavizar bordes** y **Limpiar reflejo del color**. Los botones verde, azul, blanco y negro son accesos directos. Se puede introducir otro color.
+5. Compara con **Ver antes** o usa **Ver recorte** para ver la transparencia sobre una cuadrícula. **Restablecer fondo** recupera el original.
+6. Coloca otra capa debajo o elige el color de fondo en Audio → Salida. La exportación conserva el recorte y las capas.
 
-El flyer se incorpora como una imagen de su composición. Sus capas siguen editables en el editor original; si lo cambias, añade su versión nueva al video. El texto añadido sobre una escena sí se edita dentro de Video.
+El recorte es por color, no segmentación de personas mediante IA. Un fondo complejo y un sujeto con el mismo color requieren otro tipo de recorte. El archivo original no cambia. La cuadrícula es una ayuda de vista previa: la exportación actual genera el vídeo compuesto sobre su fondo, sin canal alfa independiente.
 
-## Guardado y traslado
+## Capas y línea de tiempo
 
-- Los videos y sus archivos se guardan automáticamente en IndexedDB, **en este navegador y dispositivo**, separados por cuenta. El estado confirma cuándo terminó la escritura. **Mis videos** permite reabrirlos.
-- No se suben videos a Supabase ni se modifica el guardado de flyers.
-- **Respaldo** descarga un `.divasvideo` con el proyecto, las fotos, los clips y la música. **Abrir respaldo** lo recupera como una copia nueva, incluso en otro dispositivo.
-- Un conflicto entre dos pestañas no sobrescribe la otra versión. **Guardar** muestra la opción **Guardar copia**.
-- El almacenamiento del navegador puede borrarse o quedarse sin espacio. Conserva un respaldo de los videos importantes.
+- **Fotos / clips** añade escenas consecutivas a la pista base.
+- **Capa** añade imágenes o vídeos superpuestos con su propia hora de inicio y duración. **T Texto** añade un texto independiente.
+- Arrastra una capa en la línea de tiempo para moverla; arrastra sus extremos para recortarla. En **Tiempo** también hay campos numéricos, dividir, duplicar y eliminar. En las escenas, las flechas cambian el orden temporal; en las capas cambian el orden visual (izquierda detrás, derecha delante).
+- Arrastra sobre el lienzo para mover una capa. Sus esquinas cambian el tamaño manteniendo la proporción. **Mover** incluye encuadre, giro, opacidad, posición y máscaras circulares o con esquinas redondeadas.
+- El candado bloquea las modificaciones; el botón × elimina la selección. El ojo oculta la capa. **Vista limpia** permite revisar sin el marco de selección.
+- **Deshacer / Rehacer**, también Ctrl Z y Ctrl Shift Z fuera de campos de texto, recupera los cambios y los archivos de las capas eliminadas mientras permanezcan en el historial.
+- En móvil, **Lienzo** cierra los controles; **Editar capa** los recupera. **Capas** despliega o pliega las pistas. Los controles de fondo, texto y movimiento pliegan las pistas para dar espacio al vídeo.
 
-## Alcance
+## Animación, texto y sonido
 
-- Fotos PNG, JPG y WebP; clips MP4, WebM y MOV si el navegador los puede leer; música compatible con el navegador.
-- Tres formatos: 9:16, 1:1 y 16:9. Salida HD (720p) o Full HD (1080p).
-- Hasta 30 escenas, 3 minutos y 150 MB de recursos por proyecto. Por archivo: foto 20 MB, video 80 MB y audio 30 MB.
-- Un mensaje por escena, con posición, tamaño, color, fondo o brillo y entrada suave; acercamiento o desplazamiento de la imagen; fundido al fondo o corte directo.
-- Una pista de música, con volumen, inicio y repetición, mezclada con el audio recortado de los clips.
-- Esta entrega todavía no incluye varias pistas visuales simultáneas, edición de capas del flyer en la línea de tiempo, subtítulos automáticos, eliminación de fondos de video ni generación con IA.
-- La exportación necesita WebCodecs y los codificadores correspondientes. Un navegador sin ellos puede editar y descargar el respaldo para exportar en uno compatible. Full HD puede tardar más en equipos modestos.
+- **Animar flyer** captura el flyer abierto y crea una escena de siete segundos con acercamiento y fundido. Esa captura es una imagen; las capas originales siguen editables en el editor de flyers.
+- **Animar de inicio a final** interpola posición, tamaño, giro y opacidad. **Editar inicio / Editar final** permite establecer ambos estados. En el modo Editar final se muestra la pose final sin el fundido para poder ajustarla; la exportación conserva la transición elegida.
+- Los textos tienen estilos Dorado Divas, Glow, Neón, fondo oscuro y limpio; cuatro familias tipográficas, color, tamaño y entrada suave, desde abajo o con zoom. El brillo se dibuja detrás de un frente nítido. Los textos se ajustan a varias líneas.
+- Se puede ajustar luz, contraste y saturación por capa. Los ajustes no modifican el archivo original.
+- Se conservan los audios de los clips, una música de fondo con recorte y repetición, y hasta cuatro pistas independientes para voces y efectos. Cada clip o pista tiene volumen y entradas/salidas suaves.
 
-## Publicación y mantenimiento
+## Guardado, compatibilidad y traslado
 
-Publica `index.html` junto con la carpeta `assets` que acompaña esta actualización. No basta con reemplazar el HTML. Conserva los otros archivos existentes del repositorio. No se requiere SQL ni cambiar permisos de Supabase.
+Los proyectos y sus archivos se guardan automáticamente en IndexedDB, **en este navegador y dispositivo**, separados por cuenta. **Guardar** confirma el estado. **Mis videos** permite retomarlos. No se suben vídeos a Supabase.
 
-Los módulos se cargan al final de la página. El exportador y Mediabunny 1.62.0 se descargan al abrir Video. La biblioteca está incluida en `assets/vendor/mediabunny`, con su licencia MPL-2.0 y referencia al código fuente. No se depende de un CDN para exportar y no se utiliza código de Concat.
+**Respaldo** descarga un `.divasvideo` con clips, imágenes, audio, capas, efectos y animaciones. **Abrir respaldo** crea una copia nueva. Los respaldos v39 se migran al abrirlos con el fondo intacto y sin añadir opacidad. v39 no puede abrir un proyecto creado con el formato v40.
 
-## Validación realizada
+Los conflictos entre dos pestañas no sobrescriben el otro proyecto; aparece **Guardar copia**. El historial mantiene hasta 35 estados, con límite adicional de memoria para archivos anteriores. No se guarda como historial de versiones después de cerrar el navegador. El almacenamiento local puede borrarse o llenarse; conserva respaldos de lo importante.
 
-- Carga mixta de foto, clip con sonido y música; recorte, división, cambio de orden, duplicación y eliminación.
-- Guardado de los archivos reales, recarga de la página y reapertura; respaldo portátil y recuperación.
-- Captura de un flyer abierto usando el renderizador real; el lienzo del editor conserva exactamente sus píxeles.
-- Conflicto de edición en dos pestañas y recuperación como copia; separación local por cuenta y limpieza al cambiar de identidad.
-- Exportación WebM de 5 segundos verificada con FFprobe: 150 fotogramas, 30 fps, 720 × 1280, pista Opus y duración de 5,02 s por el relleno del códec de audio. Se verificó la presencia de la música y del sonido del clip en sus posiciones previstas.
-- Cancelación de exportación, archivos inválidos y límites del proyecto.
-- Interfaz de escritorio y vistas de 390 y 360 px sin desbordamiento horizontal.
+## Exportación y límites
 
-La codificación MP4 depende del navegador y no estuvo disponible en el Chromium de prueba; se validó la alternativa WebM. Las pruebas usaron archivos sintéticos y cuentas locales simuladas, sin modificar usuarios, proyectos o recursos reales de Supabase. No sustituyen una prueba en el teléfono físico.
+- Formatos 9:16, 1:1 y 16:9. HD 720p o Full HD 1080p, 30 fps.
+- MP4 (H.264/AAC) cuando el navegador puede codificarlo; WebM (VP8/Opus) como alternativa. El formato disponible se indica sobre el lienzo.
+- 30 escenas, 12 capas visuales adicionales, 4 pistas de audio y hasta 4 clips de vídeo simultáneos. Duración total máxima: 3 minutos.
+- Máximo 150 MB de recursos usados por proyecto: foto 20 MB, clip 80 MB, audio 30 MB.
+- Imágenes PNG/JPG/WebP; MP4/WebM/MOV y audio cuando el navegador puede decodificarlos.
+- Vista previa y exportación comparten el renderizador de recorte, máscaras, color, composición y texto. La salida usa tiempos fijos, no una grabación de la pantalla. WebGL acelera los efectos y existe una alternativa por píxeles si no está disponible.
+- No incluye generación con IA, subtítulos automáticos, seguimiento de personas ni exportación de transparencia. Full HD y varias capas pueden tardar más en equipos modestos.
 
-Pruebas: `node tests/video-model.cjs`. Las pruebas de navegador necesitan Playwright, un Chromium local y los fixtures descritos en `tests/README-video.md`.
+## Publicación
+
+`npx wrangler deploy` usa `scripts/build-static.mjs` para generar el paquete completo. El nuevo `assets/divas-video-render.mjs` es obligatorio y está incluido en la verificación de empaquetado. No reemplaces solo el HTML.
+
+Se utiliza Mediabunny 1.62.0, incluido con su licencia MPL-2.0 y referencias al código fuente. El editor y sus efectos no usan código ni servicios de CapCut.
+
+Consulta `tests/README-video.md` para reproducir las comprobaciones. Las pruebas usan archivos sintéticos y Supabase simulado; no alteran cuentas ni datos reales.

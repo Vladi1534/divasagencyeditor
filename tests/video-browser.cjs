@@ -18,16 +18,16 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
   await page.goto(base);await until(page,()=>document.querySelector('[data-dv-open]'));
   await page.locator('[data-dv-open]').filter({hasText:'Crear video'}).click();await until(page,()=>document.getElementById('divasVideoDialog').open);
   await page.locator('#dvFiles').setInputFiles([path.join(fixtures,'photo.png'),path.join(fixtures,'clip.mp4')]);
-  await until(page,()=>document.querySelectorAll('.dv-scene').length===2);
+  await until(page,()=>document.querySelectorAll('.dv-scene').length===2&&!document.getElementById('dvBody').inert);
   assert.equal(await page.locator('#dvIn').inputValue(),'0');await change(page,'#dvIn',.5);await change(page,'#dvOut',3.5);
-  await page.locator('#dvTitle').fill('Bienvenidas a Divas 🌸');await page.locator('#dvTitlePosition').selectOption('center');
+  await page.locator('[data-dv=tool][data-tool=text]').click();await page.locator('#dvTitle').fill('Bienvenidas a Divas 🌸');await page.locator('#dvTitlePosition').selectOption('center');
   await page.locator('#dvName').fill('Prueba integrada Divas');await page.locator('#dvAudioFile').setInputFiles(path.join(fixtures,'music.wav'));
-  await until(page,()=>document.getElementById('dvAudioName').textContent==='music.wav');await page.locator('#dvAudioLoop').check();
-  await page.locator('.dv-scene').first().click();await change(page,'#dvDuration',2);
+  await until(page,()=>document.getElementById('dvAudioName').textContent==='music.wav');await page.locator('[data-dv=tool][data-tool=audio]').click();await page.locator('#dvAudioLoop').check();
+  await page.locator('.dv-scene').first().click();await page.locator('[data-dv=tool][data-tool=clip]').click();await change(page,'#dvDuration',2);
   await page.locator('#dvSeek').fill('1');await page.locator('#dvSeek').dispatchEvent('input');await page.locator('[data-dv=split]').click();
   await until(page,()=>document.querySelectorAll('.dv-scene').length===3);assert.match(await page.locator('#dvTime').textContent(),/0:05.0$/);
   await page.locator('[data-dv=right]').click();await page.locator('[data-dv=left]').click();await page.locator('[data-dv=duplicate]').click();
-  await until(page,()=>document.querySelectorAll('.dv-scene').length===4);await page.locator('[data-dv=remove]').click();await until(page,()=>document.querySelectorAll('.dv-scene').length===3);
+  await until(page,()=>document.querySelectorAll('.dv-scene').length===4);await page.locator('.dv-clip-tools [data-dv=remove]').click();await until(page,()=>document.querySelectorAll('.dv-scene').length===3);
   await page.locator('[data-dv=save]').click();await until(page,()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');
   const saved=await stored(page);assert.equal(saved.length,1);assert.equal(saved[0].project.scenes.length,3);assert.equal(saved[0].assets.length,3);assert.ok(saved[0].assets.every(a=>a.blobSize===a.size));assert.equal(saved[0].project.music.loop,true);assert.deepEqual(saved[0].project.scenes.slice(0,2).map(c=>c.duration),[1,1]);
   console.log('PASS mixed media, trim, split, reorder, duplicate, remove, music and IndexedDB blobs');
@@ -35,7 +35,7 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
   const backupEvent=page.waitForEvent('download');await page.locator('[data-dv=backup]').click();const backup=await backupEvent;const backupPath=path.join(out,'roundtrip.divasvideo');await backup.saveAs(backupPath);
   assert.ok(fs.statSync(backupPath).size>10000);
   await page.locator('[data-dv=library]').click();await page.locator('[data-dv=new]').click();assert.equal(await page.locator('.dv-scene').count(),0);
-  await page.locator('#dvBackupFile').setInputFiles(backupPath);await until(page,()=>document.querySelectorAll('.dv-scene').length===3&&!document.getElementById('dvBody').inert);
+  await until(page,()=>!document.getElementById('dvBody').inert);await page.locator('#dvBackupFile').setInputFiles(backupPath);await until(page,()=>document.querySelectorAll('.dv-scene').length===3&&!document.getElementById('dvBody').inert);
   assert.equal(await page.locator('#dvName').inputValue(),'Prueba integrada Divas');assert.equal(await page.locator('#dvAudioLoop').isChecked(),true);
   assert.equal(await page.locator('#canvas').evaluate(c=>c.toDataURL()),flyerBefore);
   console.log('PASS portable backup restores all media and leaves flyer canvas intact');
@@ -51,5 +51,5 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
   for(const width of [360,390]){await page.setViewportSize({width,height:780});assert.equal(await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);assert.ok(await page.locator('#dvCanvas').boundingBox());}
   console.log('PASS mobile layout 360/390, desktop, no horizontal overflow');
   assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'result.json'),JSON.stringify({passed:true,errors,exportFormat:video.suggestedFilename().split('.').pop(),output:out},null,2));
- }finally{await browser.close();server.close();}
+ }catch(e){console.error('UI:',await page.locator('#dvMessage').textContent());await page.screenshot({path:path.join(out,'failure.png')});throw e;}finally{await browser.close();server.close();}
 })().catch(e=>{console.error(e);server.close();process.exit(1);});

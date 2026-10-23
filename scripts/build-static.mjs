@@ -9,6 +9,7 @@ const references = [...html.matchAll(/(?:src|href)=["'](assets\/[^"'?#]+)(?:[^"'
 const required = [...new Set([
   'index.html', 'plantilla-divas.json', ...references,
   'assets/divas-video-export.mjs',
+  'assets/divas-video-render.mjs',
   'assets/vendor/mediabunny/mediabunny.min.mjs',
   'assets/vendor/pdfjs/pdf.min.mjs',
   'assets/vendor/pdfjs/pdf.worker.min.mjs'

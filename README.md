@@ -8,6 +8,10 @@ El comando de despliegue es `npx wrangler deploy`, ejecutado desde la raíz del 
 
 No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulos, estilos y bibliotecas locales. Un despliegue verde debe comprobarse abriendo ambos botones en la web publicada. `public/` se genera; no se edita ni se sube a Git.
 
+## v40 · Vídeo con capas y recorte de fondo
+
+Botón destacado **Quitar fondo** con cuentagotas, detección de color uniforme, bordes suaves y comparación. Añade capas de vídeo, imagen y texto, línea de tiempo, animación entre dos poses, audio independiente, máscaras y deshacer/rehacer. Los proyectos v39 siguen abriendo. No requiere SQL. Consulta [la guía de Divas Video](docs/DIVAS-VIDEO.md).
+
 ## v38 · Del manual al flyer
 
 - Biblioteca privada desde el inicio y desde **☰ → Manuales → flyers**.

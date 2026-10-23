@@ -5,7 +5,8 @@
     "test": "node documents-security.cjs && node documents-browser.cjs",
     "test:video:model": "node video-model.cjs",
     "test:video": "node video-model.cjs && node video-integration.cjs && node video-browser.cjs",
-    "test:delivery": "node static-delivery.cjs"
+    "test:delivery": "node static-delivery.cjs",
+    "test:video:v40": "node video-model.cjs && node video-effects.mjs && node video-v40.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.8",

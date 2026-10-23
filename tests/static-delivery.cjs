@@ -23,7 +23,7 @@ const server = http.createServer(async (req, res) => {
   const base = 'http://127.0.0.1:' + server.address().port;
   let browser;
   try {
-    for (const name of ['assets/divas-documents.js', 'assets/divas-documents.css', 'assets/divas-video.js', 'assets/divas-video.css', 'assets/divas-video-export.mjs', 'assets/vendor/pdfjs/pdf.min.mjs', 'assets/vendor/pdfjs/pdf.worker.min.mjs', 'assets/vendor/mediabunny/mediabunny.min.mjs', 'assets/vendor/pdfjs/wasm/openjpeg.wasm']) {
+    for (const name of ['assets/divas-documents.js', 'assets/divas-documents.css', 'assets/divas-video.js', 'assets/divas-video.css', 'assets/divas-video-export.mjs', 'assets/divas-video-render.mjs', 'assets/vendor/pdfjs/pdf.min.mjs', 'assets/vendor/pdfjs/pdf.worker.min.mjs', 'assets/vendor/mediabunny/mediabunny.min.mjs', 'assets/vendor/pdfjs/wasm/openjpeg.wasm']) {
       const response = await fetch(base + '/' + name + '?deployment-check=1');
       assert.equal(response.status, 200, name);
       assert.ok(response.headers.get('Content-Type').startsWith(types[path.extname(name)]), name);
