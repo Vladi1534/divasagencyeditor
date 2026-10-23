@@ -1,0 +1,23 @@
+name: Prepare verified Divas v39 release
+on:
+  push:
+    branches: [codex/transport-divas-v39-20261023]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read transfer parts
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          path: transfer
+          persist-credentials: false
+      - name: Check out the unchanged production base
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ac09eec2849a32029417ebedfc93f7bb647088c5
+          path: release
+      - name: Verify every file and prepare the review branch
+        run: python3 transfer/.codex-upload/apply-release.py release
