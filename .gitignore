@@ -1,2 +1,4 @@
 test-output/
 tests/node_modules/
+public/
+.wrangler/

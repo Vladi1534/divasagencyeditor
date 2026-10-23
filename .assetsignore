@@ -1,0 +1,6 @@
+# Also keep a legacy --assets . deployment limited to the actual website.
+*
+!index.html
+!plantilla-divas.json
+!assets/
+!assets/**

@@ -1,6 +1,12 @@
 # Divas Agency Editor
 
-Editor estático para proyectos, recursos privados de agencia y flyers editables. El acceso y los archivos compartidos utilizan la instalación Supabase existente. Cloudflare Pages publica los archivos del repositorio; no hay un paso de compilación.
+Editor estático para proyectos, recursos privados de agencia y flyers editables. El acceso y los archivos compartidos utilizan la instalación Supabase existente. Cloudflare Workers publica el paquete estático completo mediante la configuración del repositorio.
+
+## Publicación en Cloudflare
+
+El comando de despliegue es `npx wrangler deploy`, ejecutado desde la raíz del repositorio. `wrangler.jsonc` prepara automáticamente `public/` con `index.html`, la plantilla y **todos los archivos de assets/**. El empaquetado falla si falta un módulo esencial de Manuales o Video. No se requieren dependencias de compilación ni otro SQL para esta corrección.
+
+No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulos, estilos y bibliotecas locales. Un despliegue verde debe comprobarse abriendo ambos botones en la web publicada. `public/` se genera; no se edita ni se sube a Git.
 
 ## v38 · Del manual al flyer
 
@@ -37,6 +43,8 @@ npm --prefix tests test
 ```
 
 Para usar un Chromium ya instalado, define `DIVAS_TEST_BROWSER` con su ruta. Las capturas y los resultados se guardan en `test-output/`.
+
+La prueba de publicación sirve exclusivamente la carpeta generada: ejecuta `node scripts/build-static.mjs` y después `npm --prefix tests run test:delivery`. Comprueba los módulos y sus tipos de contenido, abre Video y Manuales en móvil y escritorio, y verifica que SQL, pruebas y configuración no se incluyan como archivos públicos.
 
 ## Divas Video · v39
 
