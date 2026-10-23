@@ -1,0 +1,13 @@
+{
+  "name": "divas-editor-tests",
+  "private": true,
+  "scripts": {
+    "test": "node documents-security.cjs && node documents-browser.cjs",
+    "test:video:model": "node video-model.cjs",
+    "test:video": "node video-model.cjs && node video-integration.cjs && node video-browser.cjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "playwright": "1.62.1"
+  }
+}

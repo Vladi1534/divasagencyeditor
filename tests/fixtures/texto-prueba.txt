@@ -1,0 +1,5 @@
+Un título de ejemplo
+
+Texto seguro <script>alert(1)</script>. Importe exacto: 125,50.
+
+Segunda sección.
