@@ -1,4 +1,4 @@
-# Divas Video · v40
+# Divas Video · v41
 
 Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada de documentos conservan su funcionamiento. Esta actualización no requiere SQL ni cambios en Supabase.
 
@@ -33,7 +33,7 @@ El recorte es por color, no segmentación de personas mediante IA. Un fondo comp
 
 ## Guardado, compatibilidad y traslado
 
-Los proyectos y sus archivos se guardan automáticamente en IndexedDB, **en este navegador y dispositivo**, separados por cuenta. **Guardar** confirma el estado. **Mis videos** permite retomarlos. No se suben vídeos a Supabase.
+Los proyectos y sus archivos se guardan automáticamente en IndexedDB, **en este navegador y dispositivo**, separados por cuenta. **Guardar** confirma el estado. **Mis proyectos**, en el inicio, reúne los vídeos y los diseños. Usa los filtros **Todos / Diseños / Vídeos**, busca por nombre o cambia el orden. Las tarjetas de vídeo muestran su duración, abren el vídeo correspondiente y permiten descargar su respaldo o eliminarlo desde el menú •••. El botón **Mis proyectos** de Video regresa a esa misma lista. **Crear video** empieza un proyecto nuevo; no reemplaza el anterior. Los vídeos guardados antes de v41 aparecen automáticamente en la misma cuenta y navegador. No se suben vídeos a Supabase.
 
 **Respaldo** descarga un `.divasvideo` con clips, imágenes, audio, capas, efectos y animaciones. **Abrir respaldo** crea una copia nueva. Los respaldos v39 se migran al abrirlos con el fondo intacto y sin añadir opacidad. v39 no puede abrir un proyecto creado con el formato v40.
 

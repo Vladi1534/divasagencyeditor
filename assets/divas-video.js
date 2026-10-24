@@ -8,7 +8,16 @@
  let renderModule=import(renderURL);
  const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const V={bridge:null,project:null,assets:new Map(),players:new Map(),owner:null,epoch:0,selected:null,history:[],future:[],lastEdit:null,picking:false,original:false,isolate:false,endPose:false,zoom:32,time:0,playing:false,starting:false,playback:0,raf:0,clock:0,start:0,active:null,busy:false,exporting:false,cancelled:false,dirty:false,revision:0,savedVersion:0,saveTask:null,timer:0,ctx:null,master:null,destination:null,monitor:null,sources:new Map(),wake:null,operation:0};
- let dbPromise;
+ let dbPromise,projectChannel;
+ try{projectChannel=new BroadcastChannel('divas-video-projects');projectChannel.onmessage=e=>{if(e.data?.owner===owner())V.bridge?.projectsChanged?.();};}catch{}
+ function projectsChanged(){V.bridge?.projectsChanged?.();try{projectChannel?.postMessage({owner:owner()});}catch{}}
+ // Summaries never load media blobs or initialize the editor. Query only this account's keys.
+ async function summaries(){
+  const expected=owner(),d=await db(),prefix=expected+':';
+  const records=await new Promise((resolve,reject)=>{const r=d.transaction('summaries').objectStore('summaries').getAll(IDBKeyRange.bound(prefix,prefix+'\uffff'));r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
+  if(expected!==owner())throw Error('La cuenta cambió. Actualiza Mis proyectos.');
+  return records.filter(p=>p.owner===expected);
+ }
  const id='divasVideoDialog',selected=()=>[...V.project?.scenes||[],...V.project?.layers||[],...V.project?.audio||[]].find(c=>c.id===V.selected),total=()=>V.project?M.total(V.project):0;
  const owner=()=>String(V.bridge?.session()?.owner||'local');
  const guard=epoch=>{if(epoch!==V.epoch||V.owner!==owner())throw Error('La cuenta cambió. Abre nuevamente tus videos.');};
@@ -73,30 +82,54 @@
   const task=(async()=>{
   const epoch=V.epoch,revision=V.revision,project=structuredClone(V.project),assets=assetList(project),key=V.owner+':'+project.id,expected=V.savedVersion,d=await db();guard(epoch);
   const image=assets.find(a=>a.id===project.scenes[0]?.assetId)?.thumb||'';
-  const record={key,owner:V.owner,project,assets,version:expected+1,modified:Date.now()};
-  const summary={key,owner:V.owner,id:project.id,name:project.name,modified:record.modified,scenes:project.scenes.length,seconds:M.total(project),thumb:image};
+  const record={key,owner:V.owner,project,assets,version:expected+1,created:Date.now(),modified:Date.now()};
+  const summary={key,owner:V.owner,id:project.id,name:project.name,modified:record.modified,scenes:project.scenes.length,seconds:M.total(project),thumb:image,ratio:project.ratio,created:record.created};
   await new Promise((resolve,reject)=>{let problem;const tx=d.transaction(['projects','summaries'],'readwrite'),s=tx.objectStore('projects'),r=s.get(key);
-   r.onsuccess=()=>{if((r.result?.version||0)!==expected){problem=Error('Este video cambió en otra pestaña. Descarga un respaldo o usa Guardar copia para conservar tus cambios.');tx.abort();return;}s.put(record);tx.objectStore('summaries').put(summary);};
+   r.onsuccess=()=>{if((r.result?.version||0)!==expected){problem=Error('Este video cambió en otra pestaña. Descarga un respaldo o usa Guardar copia para conservar tus cambios.');tx.abort();return;}record.created=r.result?.created||r.result?.modified||record.created;summary.created=record.created;s.put(record);tx.objectStore('summaries').put(summary);};
    tx.oncomplete=resolve;tx.onabort=tx.onerror=()=>reject(problem||Error('No se pudo guardar en este dispositivo. Revisa el espacio disponible y descarga un respaldo.'));
   });
-  guard(epoch);V.savedVersion=expected+1;if(V.revision===revision)V.dirty=false;savedLabel();})();
+  guard(epoch);V.savedVersion=expected+1;if(V.revision===revision)V.dirty=false;savedLabel();projectsChanged();})();
   V.saveTask=task;try{await task;}finally{if(V.saveTask===task)V.saveTask=null;}
  }
  async function listProjects(){
-  const epoch=V.epoch,d=await db();const all=await new Promise((resolve,reject)=>{const r=d.transaction('summaries').objectStore('summaries').getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});guard(epoch);
-  const records=all.filter(p=>p.owner===V.owner).sort((a,b)=>b.modified-a.modified);
+  const records=(await summaries()).sort((a,b)=>b.modified-a.modified);
   $('dvProjects').innerHTML=records.length?records.map(p=>`<article class="dv-project">${p.thumb?`<img src="${esc(p.thumb)}" alt="" loading="lazy">`:''}<h3>${esc(p.name)}</h3><small>${p.scenes} escenas · ${stamp(p.seconds)} · ${new Date(p.modified).toLocaleDateString('es-CL')}</small><div class="dv-project-buttons"><button data-dv="load" data-id="${esc(p.id)}">Abrir</button><button data-dv="delete" data-id="${esc(p.id)}" class="dv-danger">Eliminar</button></div></article>`).join(''):'<p>Aún no hay videos guardados. Crea el primero con tus fotos, clips o un flyer.</p>';
  }
  function disposePlayers(){for(const p of V.players.values()){if(p.el.pause)p.el.pause();p.el.removeAttribute?.('src');if(p.el.load)p.el.load();URL.revokeObjectURL(p.url);}V.players.clear();for(const s of V.sources.values()){try{s.source.disconnect();s.gain.disconnect();}catch{}}V.sources.clear();V.active=null;}
  function discard(){V.history=[];V.future=[];V.lastEdit=null;V.picking=false;V.original=false;V.isolate=false;stop();clearTimeout(V.timer);disposePlayers();V.assets.clear();V.project=null;V.selected=null;V.time=0;V.dirty=false;V.revision=0;V.savedVersion=0;}
  async function open(){
+  if(V.busy||V.exporting)throw Error('Espera a que termine la operación del video.');
   makeUI();if(!renderer){try{const {Renderer}=await renderModule;renderer=new Renderer(M,$('dvCanvas'));}catch(e){renderModule=import(renderURL);throw Error('No se pudo cargar el motor de video. Recarga la página e inténtalo de nuevo.');}}await V.bridge.ready?.();if(V.bridge.session()?.blocked)throw Error('Termina la ayuda compartida antes de abrir el editor de video.');
   if(V.owner!==owner()){discard();V.owner=owner();V.epoch++;}
   if(!V.project){V.project=M.blank();V.selected=null;}
   $('dvLibrary').hidden=true;refresh();V.bridge.show(id);message('Guardado en este navegador. Usa Respaldo para llevar el video a otro dispositivo.');
  }
- async function close(){if(V.busy||V.exporting)return;stop();try{await save();$(id).close();}catch(e){message(e.message+' Pulsa Respaldo antes de salir.',true);}}
+ async function close(){if(V.busy||V.exporting)return false;stop();try{await save();$(id).close();return true;}catch(e){message(e.message+' Pulsa Respaldo antes de salir.',true);return false;}}
  async function newProject(){stop();await save();discard();V.project=M.blank();refresh();$('dvLibrary').hidden=true;message('Añade fotos, clips o el flyer abierto para comenzar.');}
+ async function openProject(projectId){
+  await open();V.busy=true;setBusy();try{await loadProject(projectId);}catch(e){message(e.message,true);throw e;}finally{V.busy=false;setBusy();}
+ }
+ async function storedProject(projectId){
+  const expected=owner(),epoch=V.epoch;
+  if(V.project?.id===projectId&&V.owner===expected)await save();
+  const record=await getRecord(expected+':'+projectId);
+  if(expected!==owner()||epoch!==V.epoch)throw Error('La cuenta cambió. Actualiza Mis proyectos.');
+  if(!record||record.owner!==expected)throw Error('Este video ya no está disponible en este dispositivo.');
+  return record;
+ }
+ async function downloadProject(projectId){const record=await storedProject(projectId);await download(backupBlob(record.project,record.assets),filename(record.project.name)+'.divasvideo');}
+ async function deleteProject(projectId){
+  if(V.busy||V.exporting)throw Error('Espera a que termine la operación del video.');
+  const record=await storedProject(projectId),expected=owner(),epoch=V.epoch;
+  if(!confirm('¿Eliminar «'+record.project.name+'» de este dispositivo? Descarga un respaldo antes si quieres conservarlo.'))return false;
+  const d=await db();if(expected!==owner()||epoch!==V.epoch)throw Error('La cuenta cambió. Actualiza Mis proyectos.');
+  await new Promise((resolve,reject)=>{let problem;const tx=d.transaction(['projects','summaries'],'readwrite'),r=tx.objectStore('projects').get(record.key);
+   r.onsuccess=()=>{if(r.result?.version!==record.version){problem=Error('Este video cambió en otra pestaña. Actualiza Mis proyectos antes de eliminarlo.');tx.abort();return;}tx.objectStore('projects').delete(record.key);tx.objectStore('summaries').delete(record.key);};
+   tx.oncomplete=resolve;tx.onabort=tx.onerror=()=>reject(problem||tx.error||Error('No se pudo eliminar el video.'));
+  });
+  if(expected!==owner()||epoch!==V.epoch)return true;
+  if(V.project?.id===projectId){discard();V.project=M.blank();refresh();}projectsChanged();return true;
+ }
  async function loadProject(projectId){
   stop();await save();const epoch=V.epoch,record=await getRecord(V.owner+':'+projectId);guard(epoch);if(!record||record.owner!==V.owner)throw Error('No se encontró este video en tu cuenta local.');
   const p=M.normalize(record.project,record.assets);discard();V.project=p;V.savedVersion=record.version;V.assets=new Map(record.assets.map(a=>[a.id,a]));V.selected=p.scenes[0]?.id||p.layers[0]?.id||null;
@@ -243,7 +276,7 @@
   catch(e){V.probeKey=null;V.probeDone=true;exportModule=null;exportInfo();message('No se pudo cargar la exportación. Comprueba la conexión y vuelve a abrir Video.',true);}
  }
  async function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
- const filename=()=>M.clean(V.project.name,60).replace(/[^\p{L}\p{N} _-]/gu,'').trim()||'divas-video';
+ const filename=(name=V.project.name)=>M.clean(name,60).replace(/[^\p{L}\p{N} _-]/gu,'').trim()||'divas-video';
  async function exportVideo(){
   if(V.busy||V.exporting)return;if(!total())throw Error('Añade una escena o capa.');if(!V.output)throw Error('La exportación todavía no está disponible en este navegador.');
   stop();await save();V.exporting=true;V.cancelled=false;setBusy();const epoch=V.epoch,dim=size(true),canvas=$('dvCanvas'),config=V.output;
@@ -257,9 +290,12 @@
   }finally{stop();try{await V.wake?.release();}catch{}V.wake=null;V.exporting=false;setBusy();refresh();}
  }
  const MAGIC=new TextEncoder().encode('DIVASVIDEO1\n');
+ function backupBlob(project,assets){
+  const manifest={project,assets:assets.map(({blob,thumb,...a})=>a)},json=new TextEncoder().encode(JSON.stringify(manifest)),length=new Uint8Array(4);new DataView(length.buffer).setUint32(0,json.length,true);
+  return new Blob([MAGIC,length,json,...assets.map(a=>a.blob)],{type:'application/octet-stream'});
+ }
  async function backup(){
-  const assets=assetList();const manifest={project:V.project,assets:assets.map(({blob,thumb,...a})=>a)},json=new TextEncoder().encode(JSON.stringify(manifest)),length=new Uint8Array(4);new DataView(length.buffer).setUint32(0,json.length,true);
-  await download(new Blob([MAGIC,length,json,...assets.map(a=>a.blob)],{type:'application/octet-stream'}),filename()+'.divasvideo');message('Respaldo descargado con todos los clips, imágenes y música. Ábrelo con Abrir respaldo.');
+  await download(backupBlob(V.project,assetList()),filename()+'.divasvideo');message('Respaldo descargado con todos los clips, imágenes y música. Ábrelo con Abrir respaldo.');
  }
  async function restore(file){
   if(!file)return;if(file.size>M.LIMITS.totalBytes+1048576)throw Error('El respaldo supera los 150 MB permitidos.');const head=new Uint8Array(await file.slice(0,MAGIC.length+4).arrayBuffer());if(head.length<MAGIC.length+4||MAGIC.some((v,i)=>v!==head[i]))throw Error('Este archivo no es un respaldo de video Divas.');
@@ -281,6 +317,7 @@
   if(action==='play')return play();if(action==='close')return close();if(action==='panel'){panel(b.dataset.panel);return;}if(action==='tool'){tool(b.dataset.tool);return;}
   if(action==='media'){$('dvFiles').click();return;}if(action==='overlay'){$('dvOverlayFiles').click();return;}if(action==='audio'){$('dvAudioFile').click();return;}if(action==='audioTrack'){$('dvTrackFile').click();return;}if(action==='restore'){$('dvBackupFile').click();return;}
   if(action==='export')return exportVideo();
+  if(action==='library'&&V.bridge.projects){if(await close())await V.bridge.projects();return;}
   if(action==='library'){stop();try{await save();}catch(e){message(e.message,true);}await listProjects();$('dvLibrary').hidden=false;return;}
   if(action==='hideLibrary'){$('dvLibrary').hidden=true;return;}
   if(action==='new')return job(newProject);if(action==='load')return job(()=>loadProject(b.dataset.id));if(action==='capture')return job(capture);if(action==='backup')return job(backup);
@@ -288,7 +325,7 @@
   if(action==='addText'){stop();const c=M.textLayer(V.time);if(total()>V.time)c.duration=Math.min(5,total()-V.time);if(c.duration<.25)c.duration=5;if(commitChange(()=>V.project.layers.push(c))){V.selected=c.id;resetViewing();refresh();tool('text');await seekSelected();$('dvTitle').focus();$('dvTitle').select();}return;}
   if(action==='save'){try{await save();message('Video guardado en este dispositivo.');}catch(e){message(e.message,true);const copy=document.createElement('button');copy.dataset.dv='saveCopy';copy.textContent='Guardar copia';$('dvMessage').append(' ',copy);}return;}
   if(action==='saveCopy'){V.project.id=M.uid();V.savedVersion=0;changed();await save();message('Copia guardada en este dispositivo.');return;}
-  if(action==='delete'){if(!confirm('¿Eliminar este video guardado en este dispositivo?'))return;const epoch=V.epoch,d=await db(),key=V.owner+':'+b.dataset.id;guard(epoch);await new Promise((resolve,reject)=>{const tx=d.transaction(['projects','summaries'],'readwrite');tx.objectStore('projects').delete(key);tx.objectStore('summaries').delete(key);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});if(V.project.id===b.dataset.id){discard();V.project=M.blank();refresh();}await listProjects();return;}
+  if(action==='delete'){await deleteProject(b.dataset.id);await listProjects();return;}
   stop();if(action==='rewind'){V.time=0;await seek();return;}if(action==='select'){V.selected=b.dataset.id;resetViewing();refresh();if(selected()?.kind==='audio')tool('audio');await seekSelected();return;}
   if(action==='cutout'){if(!['image','video'].includes(selected()?.kind))V.selected=M.active(V.project,V.time).find(r=>r.scene.kind!=='text')?.scene.id||V.project.scenes[0]?.id;refresh();tool('cutout');if(!selected())message('Añade y selecciona un clip o una imagen para quitar su fondo.');return;}
   if(action==='toggleTimeline'){$(id).dataset.compact=$(id).dataset.compact==='true'?'false':'true';b.setAttribute('aria-expanded',$(id).dataset.compact!=='true');return;}
@@ -334,5 +371,5 @@
   });timeline.addEventListener('pointerup',()=>finish());timeline.addEventListener('pointercancel',()=>finish(true));
  }
  function reset(){V.epoch++;V.cancelled=true;stop();discard();V.owner=null;$(id)?.close();}
- window.DivasVideo={init(bridge){V.bridge=bridge;makeUI();document.addEventListener('click',e=>{const b=e.target.closest('[data-dv-open]');if(!b)return;e.preventDefault();e.stopPropagation();open().catch(err=>V.bridge.notify(err.message));});},open,reset};
+ window.DivasVideo={init(bridge){V.bridge=bridge;makeUI();$(id).querySelector('[data-dv=library]').textContent=bridge.projects?'Mis proyectos':'Mis videos';document.addEventListener('click',e=>{const b=e.target.closest('[data-dv-open]');if(!b)return;e.preventDefault();e.stopPropagation();open().then(()=>b.hasAttribute('data-dv-new')?job(newProject):null).catch(err=>V.bridge.notify(err.message));});},open,openProject,summaries,downloadProject,deleteProject,reset};
 })();

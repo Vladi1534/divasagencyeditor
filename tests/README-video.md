@@ -35,3 +35,7 @@ ffmpeg -f lavfi -i color=c=0x00ff00:s=180x320:r=30:d=3 -f lavfi -i color=c=red:s
 La prueba comprueba píxeles reales del canvas para el cuentagotas, automático, comparación original y cuadrícula; también recorre arrastre, bloqueo, máscaras, recorte de extremos, deshacer, texto independiente, animación, audio, persistencia, respaldo y exportación. Genera capturas a 360 y 390 px y exige un lienzo visible de más de 180 px con los controles de fondo abiertos. No simula un teléfono físico.
 
 La salida WebM de prueba se decodificó con FFmpeg: 720 × 1280, 30 fps, 3 segundos, fondo azul visible y sujeto rojo conservado en todos los fotogramas muestreados a 2 fps. Se midió también la atenuación del audio al inicio y al final. El Chromium de pruebas no ofrece codificación MP4; ese formato sigue dependiendo del navegador.
+
+## v41 · inicio unificado
+
+`CHROMIUM_EXECUTABLE=/ruta/chromium npm --prefix tests run test:projects` recorre la página real con Supabase bloqueado. Crea un diseño y dos vídeos con archivos de prueba, verifica filtros, búsqueda, orden, duración, retomar el proyecto correcto, renombrar, respaldo directo, recarga, resúmenes anteriores a v41, separación por cuenta, aviso entre pestañas, eliminación y recuperación de errores de almacenamiento. Comprueba los filtros y el retorno a Mis proyectos en 360, 390 y 1440 px. Los ganchos de pruebas se inyectan solo por el servidor local; no se publican.

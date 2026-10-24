@@ -34,12 +34,12 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
   const flyerBefore=await page.locator('#canvas').evaluate(c=>c.toDataURL());
   const backupEvent=page.waitForEvent('download');await page.locator('[data-dv=backup]').click();const backup=await backupEvent;const backupPath=path.join(out,'roundtrip.divasvideo');await backup.saveAs(backupPath);
   assert.ok(fs.statSync(backupPath).size>10000);
-  await page.locator('[data-dv=library]').click();await page.locator('[data-dv=new]').click();assert.equal(await page.locator('.dv-scene').count(),0);
+  await page.locator('[data-dv=library]').click();await page.locator('.projects-shortcuts [data-dv-new]').click();await until(page,()=>document.querySelectorAll('.dv-scene').length===0&&!document.getElementById('dvBody').inert);
   await until(page,()=>!document.getElementById('dvBody').inert);await page.locator('#dvBackupFile').setInputFiles(backupPath);await until(page,()=>document.querySelectorAll('.dv-scene').length===3&&!document.getElementById('dvBody').inert);
   assert.equal(await page.locator('#dvName').inputValue(),'Prueba integrada Divas');assert.equal(await page.locator('#dvAudioLoop').isChecked(),true);
   assert.equal(await page.locator('#canvas').evaluate(c=>c.toDataURL()),flyerBefore);
   console.log('PASS portable backup restores all media and leaves flyer canvas intact');
-  await page.locator('[data-dv=close]').click();await page.reload();await page.locator('[data-dv-open]').filter({hasText:'Crear video'}).click();await page.locator('[data-dv=library]').click();await until(page,()=>document.querySelectorAll('.dv-project').length===2);await page.locator('[data-dv=load]').first().click();await until(page,()=>document.querySelectorAll('.dv-scene').length===3&&!document.getElementById('dvBody').inert);
+  await page.locator('[data-dv=close]').click();await page.reload();await until(page,()=>document.querySelectorAll('#projectGrid .project-card[data-kind=video]').length===2);await page.locator('#projectGrid .project-card[data-kind=video] .project-open').first().click();await until(page,()=>document.querySelectorAll('.dv-scene').length===3&&!document.getElementById('dvBody').inert);
   assert.equal(await page.locator('#dvName').inputValue(),'Prueba integrada Divas');console.log('PASS reload and reopen');
   const event=page.waitForEvent('download',{timeout:60000});await page.locator('[data-dv=export]').click();const video=await Promise.race([event,page.waitForFunction(()=>document.getElementById('dvMessage').classList.contains('dv-error'),{},{timeout:60000}).then(async()=>{throw new Error(await page.locator('#dvMessage').textContent());})]);await video.saveAs(path.join(out,video.suggestedFilename()));console.log('PASS video export',video.suggestedFilename()); 
   await until(page,()=>document.getElementById('dvProgress').hidden);assert.equal(await page.locator('#dvExport').isEnabled(),true);
