@@ -1,0 +1,23 @@
+name: Prepare verified Divas video v42
+on:
+  push:
+    branches: [codex/transport-divas-video-v42]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read verified patch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          path: transfer
+          persist-credentials: false
+      - name: Check out production base
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 3f6e08d3c3451c4fc7d7c15d3d3ca973fa3bf5ee
+          path: release
+      - name: Reconstruct and verify release branch
+        run: python3 transfer/.codex-upload/apply-release.py release

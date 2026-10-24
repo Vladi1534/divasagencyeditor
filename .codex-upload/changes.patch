@@ -1,0 +1,404 @@
+diff --git a/README.md b/README.md
+index 5204092..0c73ef4 100644
+--- a/README.md
++++ b/README.md
+@@ -10,0 +11,6 @@ No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulo
++## v42 · Recorte comprobable y capas delante/detrás
++
++**Quitar fondo** identifica siempre el elemento seleccionado y ofrece **Antes / Después / Comparar / Transparencia**. Elegir un color prepara una vista previa; **Confirmar recorte** la aplica y **Cancelar** conserva el estado anterior. El indicador avisa cuando el color casi no aparece. Los botones de colores se ven también en tema oscuro.
++
++**Capas** permite arrastrar el orden o usar **Delante / Detrás**, incluso respecto al vídeo principal. El orden visual se guarda, se exporta y viaja en el respaldo sin modificar los tiempos. Si el elemento seleccionado no aparece en el momento actual, **Ver esta capa** lleva a su fotograma. No requiere SQL. Consulta [la guía de Divas Video](docs/DIVAS-VIDEO.md).
++
+diff --git a/assets/divas-video-model.js b/assets/divas-video-model.js
+index d59c019..f7af5f5 100644
+--- a/assets/divas-video-model.js
++++ b/assets/divas-video-model.js
+@@ -14 +14,3 @@
+- const rows=p=>[...timeline(p),...(p.layers||[]).map(c=>({scene:c,start:c.start,end:c.start+duration(c)}))];
++ const stackOrder=p=>{const ids=['base',...(p.layers||[]).map(c=>c.id)],seen=new Set();return [...(Array.isArray(p.visualOrder)?p.visualOrder:[]),...ids].filter(id=>ids.includes(id)&&!seen.has(id)&&seen.add(id));};
++ const stackId=(p,id)=>p.scenes.some(c=>c.id===id)?'base':id;
++ const rows=p=>{const order=stackOrder(p);return [...timeline(p),...(p.layers||[]).map(c=>({scene:c,start:c.start,end:c.start+duration(c)}))].sort((a,b)=>order.indexOf(stackId(p,a.scene.id))-order.indexOf(stackId(p,b.scene.id)));};
+@@ -20 +22 @@
+- const blank=()=>({format:'divas-video-2',id:uid(),name:'Mi video Divas',ratio:'9:16',background:'#201424',scenes:[],layers:[],audio:[],music:null,quality:720});
++ const blank=()=>({format:'divas-video-2',id:uid(),name:'Mi video Divas',ratio:'9:16',background:'#201424',scenes:[],layers:[],visualOrder:['base'],audio:[],music:null,quality:720});
+@@ -42 +44 @@
+-  const ids=new Set();
++  const ids=new Set(['base']);
+@@ -56 +58 @@
+-  p.scenes=raw.scenes.map(v=>visual(v));p.layers=(raw.layers||[]).map(v=>visual(v,true));
++  p.scenes=raw.scenes.map(v=>visual(v));p.layers=(raw.layers||[]).map(v=>visual(v,true));p.visualOrder=stackOrder({...p,visualOrder:raw.visualOrder});
+@@ -72 +74 @@
+-  list.splice(list.findIndex(c=>c.id===id),1,left,right);return right.id;
++  if(overlay){const order=stackOrder(p);order.splice(order.indexOf(id)+1,0,right.id);p.visualOrder=order;}list.splice(list.findIndex(c=>c.id===id),1,left,right);return right.id;
+@@ -76 +78 @@
+- const api={LIMITS,uid,number,clean,color,formats,kindOf,duration,timeline,rows,audioRows,total,at,active,blank,scene,layer,textLayer,audioLayer,normalize,validateAsset,split,pose,animatedPose,envelope,usedIds,keyer};
++ const api={LIMITS,uid,number,clean,color,formats,kindOf,duration,timeline,stackOrder,stackId,rows,audioRows,total,at,active,blank,scene,layer,textLayer,audioLayer,normalize,validateAsset,split,pose,animatedPose,envelope,usedIds,keyer};
+diff --git a/assets/divas-video-render.mjs b/assets/divas-video-render.mjs
+index 7924098..4b55f54 100644
+--- a/assets/divas-video-render.mjs
++++ b/assets/divas-video-render.mjs
+@@ -75,0 +76,6 @@ export class Renderer {
++  if(options.compareId){
++   const before=this.before||(this.before=document.createElement('canvas'));before.width=w;before.height=h;
++   this.render(p,time,assets,sources,{...options,compareId:null,originalId:options.compareId,selectedId:null});before.getContext('2d').drawImage(this.canvas,0,0);
++   this.render(p,time,assets,sources,{...options,compareId:null,originalId:null,selectedId:null});
++   const split=w*clamp(options.compareSplit??.5,.02,.98);x.save();x.beginPath();x.rect(0,0,split,h);x.clip();x.drawImage(before,0,0);x.restore();x.fillStyle='#ffffff';x.fillRect(split-1,0,2,h);return;
++  }
+@@ -82 +88 @@ export class Renderer {
+-   if(c.kind!=='text'&&source){x.save();if(c.mask==='circle'){x.beginPath();x.arc(0,0,Math.min(g.width,g.height)/2,0,Math.PI*2);x.clip();}else if(c.mask==='rounded'){x.beginPath();if(x.roundRect)x.roundRect(-g.width/2,-g.height/2,g.width,g.height,Math.min(g.width,g.height)*.12);else x.rect(-g.width/2,-g.height/2,g.width,g.height);x.clip();}const image=options.originalId===c.id?source:this.effects.apply(source,c,w,h);x.drawImage(image,-g.width/2,-g.height/2,g.width,g.height);x.restore();}
++   if(c.kind!=='text'&&source){x.save();if(c.mask==='circle'){x.beginPath();x.arc(0,0,Math.min(g.width,g.height)/2,0,Math.PI*2);x.clip();}else if(c.mask==='rounded'){x.beginPath();if(x.roundRect)x.roundRect(-g.width/2,-g.height/2,g.width,g.height,Math.min(g.width,g.height)*.12);else x.rect(-g.width/2,-g.height/2,g.width,g.height);x.clip();}const effective=options.keyerId===c.id?{...c,keyer:options.keyer}:c;const image=options.originalId===c.id?source:this.effects.apply(source,effective,w,h);x.drawImage(image,-g.width/2,-g.height/2,g.width,g.height);x.restore();}
+@@ -88,0 +95,4 @@ export class Renderer {
++ measureKeyer(source,keyer){
++  const c=this.sourceCanvas(source,160),x=c.getContext('2d'),original=x.getImageData(0,0,c.width,c.height).data,after=new Uint8ClampedArray(original);processPixels(after,keyer);let input=0,removed=0;
++  for(let i=3;i<original.length;i+=4){input+=original[i];removed+=Math.max(0,original[i]-after[i]);}return {removed:input?removed/input:0,empty:input===0};
++ }
+diff --git a/assets/divas-video.css b/assets/divas-video.css
+index 5659a29..5c3e701 100644
+--- a/assets/divas-video.css
++++ b/assets/divas-video.css
+@@ -107,0 +108,16 @@ html[data-theme=dark] dialog.dv-shell{--dv-bg:#201923;--dv-surface:#2a222d;--dv-
++
++/* v42: explicit edit target, verifiable cutout and one visual stacking order. */
++.dv-targetbar{display:flex;align-items:center;gap:8px;min-height:42px;padding:5px 14px;background:var(--dv-soft);border-bottom:1px solid var(--dv-line);flex:none}
++.dv-targetbar label{font-size:11px;color:var(--dv-muted);font-weight:700}.dv-shell .dv-targetbar select{width:min(420px,60%);min-height:32px;padding:5px 8px}.dv-targetbar span{font-size:11px;color:var(--dv-muted)}.dv-targetbar button{margin-left:auto;min-height:32px;padding:4px 9px;font-size:11px}
++.dv-compare-bar{display:flex;gap:7px;align-items:center;justify-content:space-between;flex-wrap:wrap;flex:none}.dv-compare-modes,.dv-compare-confirm{display:flex;gap:4px;align-items:center}.dv-compare-bar button{font-size:11px;min-height:36px;padding:6px 10px}.dv-compare-confirm span{font-size:10px;color:var(--dv-muted)}.dv-compare-confirm .dv-primary{color:#fff!important;background:#a92f72!important}.dv-compare-labels{position:absolute;top:8px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none;z-index:1}.dv-compare-labels span{padding:4px 10px;border-radius:6px;background:#201424dd;color:#fff;font-size:11px}.dv-shell .dv-compare-slider{position:absolute;bottom:4px;left:10%;width:80%;height:28px;min-height:28px;margin:0;accent-color:#ed8bbd;opacity:.85;cursor:ew-resize;z-index:1}
++.dv-key-status{background:var(--dv-soft);border-radius:8px;padding:8px;color:var(--dv-text);font-size:11px;line-height:1.5}
++.dv-shell .dv-swatches{gap:5px}.dv-shell .dv-swatches button,html[data-theme=dark] .dv-shell .dv-swatches button{flex:1;width:auto;min-width:0;display:flex;align-items:center;flex-direction:column;gap:4px;background:var(--dv-surface)!important;border:1px solid var(--dv-line);border-radius:8px;color:var(--dv-text);box-shadow:none;padding:5px;font-size:10px}.dv-shell .dv-swatches button span{display:block;width:23px;height:23px;border-radius:50%;background:var(--swatch)!important;border:1px solid #b395aa;box-shadow:0 0 0 2px var(--dv-surface)}
++.dv-inspector[data-tool=layers] [data-content=layers]{display:flex}.dv-inspector[data-tool=layers] .dv-scene-fields{display:none}.dv-layer-fields{padding:12px}.dv-stack-row{display:flex;align-items:stretch;gap:4px;border:1px solid var(--dv-line);border-radius:9px;margin-bottom:6px;min-height:52px;background:var(--dv-surface)}.dv-stack-row.selected{border-color:var(--dv-accent);background:var(--dv-soft)}.dv-shell .dv-stack-row>button[data-dv]{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;border:0;padding:6px;background:transparent}.dv-stack-row strong{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.dv-stack-row small{font-size:10px;color:var(--dv-muted)}.dv-shell .dv-stack-handle{touch-action:none;cursor:grab;font-size:19px;min-height:36px;min-width:27px;padding:3px;border:0;flex-shrink:0;background:transparent;color:var(--dv-accent)}.dv-track-label{padding:4px 2px;gap:1px}.dv-track-label>span{overflow:hidden;overflow-wrap:anywhere}.dv-shell .dv-layer-bar{touch-action:none}.dv-drop-before{box-shadow:0 -3px 0 var(--dv-accent);border-top-color:var(--dv-accent)}.dv-drop-after{box-shadow:0 3px 0 var(--dv-accent)}.dv-dragging{opacity:.55}.dv-timeline-guide{font-size:10px;color:var(--dv-accent);padding:0 2px 5px}.dv-timeline-guide span{color:var(--dv-muted);margin-left:12px}
++@media(max-width:760px){
++ .dv-targetbar{padding:4px 9px;gap:6px;min-height:38px}.dv-targetbar label{font-size:10px}.dv-shell .dv-targetbar select{flex:1;width:100%;font-size:11px;min-height:30px}.dv-targetbar span{display:none}.dv-targetbar button{font-size:10px;max-width:65px}
++ .dv-compare-bar{gap:4px}.dv-compare-modes{width:100%;gap:3px}.dv-compare-bar button{min-height:34px;font-size:10px;padding:5px 6px;flex:1}.dv-compare-confirm{width:100%}.dv-compare-confirm span{display:none}.dv-compare-labels span{font-size:10px;padding:3px 6px}
++ .dv-shell[data-cutout=true] .dv-stage-head{display:none}.dv-shell[data-cutout=true] .dv-inspector{max-height:130px}.dv-shell[data-cutout=true] .dv-tool-tabs{display:none}.dv-shell[data-cutout=true] .dv-feature-heading,.dv-shell[data-cutout=true] [data-content=cutout]>.dv-hint{display:none}.dv-shell[data-cutout=true] [data-content=cutout]>.dv-cutout-actions{order:-3}.dv-shell[data-cutout=true] [data-content=cutout]>.dv-swatches{order:-2}.dv-shell[data-cutout=true] [data-content=cutout]>.dv-key-status{order:-1;font-size:10px;padding:5px}
++ .dv-shell[data-cutout=true] .dv-quickbar{display:none}.dv-shell[data-cutout=true] .dv-timeline-guide{display:none}.dv-shell[data-compact=true] .dv-timeline-guide{display:none}.dv-timeline-guide span{display:none}.dv-stack-row{min-height:48px}.dv-shell .dv-stack-handle{min-width:32px}.dv-layer-fields{padding:8px}
++}
++
++.dv-shell[data-cutout=true] .dv-canvas-tools{display:none}
+diff --git a/assets/divas-video.js b/assets/divas-video.js
+index 0490219..bd6db72 100644
+--- a/assets/divas-video.js
++++ b/assets/divas-video.js
+@@ -5,2 +5,2 @@
+- const exportURL=new URL('./divas-video-export.mjs?v=40',document.currentScript.src).href;
+- const renderURL=new URL('./divas-video-render.mjs?v=40',document.currentScript.src).href;
++ const exportURL=new URL('./divas-video-export.mjs?v=42',document.currentScript.src).href;
++ const renderURL=new URL('./divas-video-render.mjs?v=42',document.currentScript.src).href;
+@@ -10 +10 @@
+- const V={bridge:null,project:null,assets:new Map(),players:new Map(),owner:null,epoch:0,selected:null,history:[],future:[],lastEdit:null,picking:false,original:false,isolate:false,endPose:false,zoom:32,time:0,playing:false,starting:false,playback:0,raf:0,clock:0,start:0,active:null,busy:false,exporting:false,cancelled:false,dirty:false,revision:0,savedVersion:0,saveTask:null,timer:0,ctx:null,master:null,destination:null,monitor:null,sources:new Map(),wake:null,operation:0};
++ const V={bridge:null,project:null,assets:new Map(),players:new Map(),owner:null,epoch:0,selected:null,history:[],future:[],lastEdit:null,picking:false,original:false,isolate:false,endPose:false,zoom:32,time:0,playing:false,starting:false,playback:0,raf:0,clock:0,start:0,active:null,busy:false,exporting:false,cancelled:false,dirty:false,revision:0,savedVersion:0,saveTask:null,timer:0,ctx:null,master:null,destination:null,monitor:null,sources:new Map(),wake:null,operation:0,keyDraft:null,compare:'after',compareSplit:.5,cutoutActive:false};
+@@ -35,2 +35,3 @@
+-   <div class="dv-quickbar"><button class="dv-cutout-entry" data-dv="cutout">✦ Quitar fondo</button><button data-dv="overlay">+ Capa</button><button data-dv="addText">T Texto</button><button data-dv="animateFlyer">✧ Animar flyer</button></div>
+-   <div class="dv-body" id="dvBody"><div class="dv-stage"><div class="dv-stage-head"><label>Formato <select id="dvRatio"><option value="9:16">9:16 · Reel</option><option value="1:1">1:1</option><option value="16:9">16:9</option></select></label><small id="dvDimensions"></small><button data-dv="cleanPreview" aria-pressed="false" title="Ocultar controles de selección">Vista limpia</button></div><div class="dv-preview-wrap"><canvas id="dvCanvas" width="360" height="640" aria-label="Vista previa del video"></canvas><div class="dv-pick-banner" id="dvPickBanner" hidden>Toca el color que quieres quitar <button data-dv="cancelPick">Cancelar</button></div><div class="dv-empty" id="dvEmpty"><strong>Dale movimiento a tu idea</strong><p>Añade un clip, un flyer o un texto. Después combina tus capas.</p></div><div class="dv-canvas-tools" id="dvCanvasTools" hidden><button data-dv="lock" aria-label="Bloquear o desbloquear capa">♧</button><button data-dv="remove" aria-label="Eliminar elemento seleccionado">×</button></div></div><div class="dv-transport"><button data-dv="rewind" aria-label="Ir al inicio">↤</button><button data-dv="play" id="dvPlay" aria-label="Reproducir">▶</button><input id="dvSeek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Posición en el video"><span class="dv-time" id="dvTime">0:00.0 / 0:00.0</span></div></div>
++   <div class="dv-quickbar"><button class="dv-cutout-entry" data-dv="cutout">✦ Quitar fondo</button><button data-dv="overlay">+ Capa</button><button data-dv="addText">T Texto</button><button data-dv="layers">☷ Capas</button><button data-dv="animateFlyer">✧ Animar flyer</button></div>
++   <div class="dv-targetbar"><label for="dvTarget">Editando</label><select id="dvTarget" aria-label="Elemento que estás editando"></select><span id="dvTargetStatus"></span><button data-dv="endCutout" id="dvCutoutDone" aria-label="Volver a las herramientas" hidden>Listo</button><button data-dv="reveal" id="dvReveal" hidden>Ver esta capa</button></div>
++   <div class="dv-body" id="dvBody"><div class="dv-stage"><div class="dv-stage-head"><label>Formato <select id="dvRatio"><option value="9:16">9:16 · Reel</option><option value="1:1">1:1</option><option value="16:9">16:9</option></select></label><small id="dvDimensions"></small><button data-dv="cleanPreview" aria-pressed="false" title="Ocultar controles de selección">Vista limpia</button></div><div id="dvCompareBar" class="dv-compare-bar" hidden><div class="dv-compare-modes" role="group" aria-label="Comparación del recorte"><button data-dv="compareBefore" aria-pressed="false">Antes</button><button data-dv="compareAfter" aria-pressed="true">Después</button><button data-dv="compareSplit" aria-pressed="false">Comparar</button><button data-dv="isolate" aria-pressed="false">Transparencia</button></div><div class="dv-compare-confirm" id="dvKeyConfirm" hidden><span>Vista previa · sin aplicar</span><button data-dv="cancelKey">Cancelar</button><button class="dv-primary" data-dv="confirmKey">Confirmar recorte</button></div></div><div class="dv-preview-wrap"><div class="dv-compare-labels" id="dvCompareLabels" hidden><span>Antes</span><span>Después</span></div><canvas id="dvCanvas" width="360" height="640" aria-label="Vista previa del video"></canvas><input id="dvCompareSplit" class="dv-compare-slider" type="range" min="2" max="98" value="50" aria-label="División antes y después" hidden><div class="dv-pick-banner" id="dvPickBanner" hidden>Toca el color que quieres quitar <button data-dv="cancelPick">Cancelar</button></div><div class="dv-empty" id="dvEmpty"><strong>Dale movimiento a tu idea</strong><p>Añade un clip, un flyer o un texto. Después combina tus capas.</p></div><div class="dv-canvas-tools" id="dvCanvasTools" hidden><button data-dv="lock" aria-label="Bloquear o desbloquear capa">♧</button><button data-dv="remove" aria-label="Eliminar elemento seleccionado">×</button></div></div><div class="dv-transport"><button data-dv="rewind" aria-label="Ir al inicio">↤</button><button data-dv="play" id="dvPlay" aria-label="Reproducir">▶</button><input id="dvSeek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Posición en el video"><span class="dv-time" id="dvTime">0:00.0 / 0:00.0</span></div></div>
+@@ -38 +39 @@
+-   <aside class="dv-inspector" aria-label="Ajustes del video" data-tool="clip"><div class="dv-tool-tabs" role="tablist" aria-label="Ajustes de la capa"><button role="tab" data-dv="tool" data-tool="clip" aria-selected="true">Tiempo</button><button role="tab" data-dv="tool" data-tool="cutout" aria-selected="false">Fondo</button><button role="tab" data-dv="tool" data-tool="transform" aria-selected="false">Mover</button><button role="tab" data-dv="tool" data-tool="text" aria-selected="false">Texto</button><button role="tab" data-dv="tool" data-tool="color" aria-selected="false">Color</button><button role="tab" data-dv="tool" data-tool="audio" aria-selected="false">Audio</button></div>
++   <aside class="dv-inspector" aria-label="Ajustes del video" data-tool="clip"><div class="dv-tool-tabs" role="tablist" aria-label="Ajustes de la capa"><button role="tab" data-dv="tool" data-tool="clip" aria-selected="true">Tiempo</button><button role="tab" data-dv="tool" data-tool="cutout" aria-selected="false">Fondo</button><button role="tab" data-dv="tool" data-tool="transform" aria-selected="false">Mover</button><button role="tab" data-dv="tool" data-tool="text" aria-selected="false">Texto</button><button role="tab" data-dv="tool" data-tool="color" aria-selected="false">Color</button><button role="tab" data-dv="tool" data-tool="audio" aria-selected="false">Audio</button><button role="tab" data-dv="tool" data-tool="layers" aria-selected="false">Capas</button></div>
+@@ -41 +42 @@
+-   <section class="dv-fields dv-tool-content" data-content="cutout"><div class="dv-feature-heading"><span>✦</span><h3>Quitar fondo por color</h3></div><p class="dv-hint">Para fondos de un color: tócalo en el video o usa Automático.</p><div class="dv-cutout-actions"><button class="dv-primary" data-dv="pickColor" title="Toca el color que quieres quitar en el video">◎ Elegir color</button><button data-dv="autoColor" title="Detectar el color de un fondo uniforme">✧ Automático</button></div><div class="dv-swatches"><button data-dv="keyColor" data-color="#00ff00" style="--swatch:#00ff00" aria-label="Quitar verde"></button><button data-dv="keyColor" data-color="#0000ff" style="--swatch:#0000ff" aria-label="Quitar azul"></button><button data-dv="keyColor" data-color="#ffffff" style="--swatch:#ffffff" aria-label="Quitar blanco"></button><button data-dv="keyColor" data-color="#000000" style="--swatch:#000000" aria-label="Quitar negro"></button></div><label class="dv-check"><input id="dvKeyEnabled" type="checkbox">Quitar este color</label><label>Color elegido<input id="dvKeyColor" type="color" value="#00ff00"></label><label>Intensidad <output id="dvKeyToleranceValue"></output><input id="dvKeyTolerance" type="range" min="0.005" max="0.8" step="0.005"></label><label>Suavizar bordes <output id="dvKeySoftnessValue"></output><input id="dvKeySoftness" type="range" min="0.005" max="0.4" step="0.005"></label><label>Limpiar reflejo del color <input id="dvKeySpill" type="range" min="0" max="1" step="0.01"></label><div class="dv-row"><button data-dv="original" aria-pressed="false">Ver antes</button><button data-dv="isolate" aria-pressed="false">Ver recorte</button></div><button data-dv="resetKey">Restablecer fondo</button><p class="dv-hint">Si desaparece parte del sujeto, baja la intensidad. «Ver recorte» muestra transparencia solo en la vista previa; el vídeo final usa el fondo o las capas de debajo.</p></section>
++   <section class="dv-fields dv-tool-content" data-content="cutout"><div class="dv-feature-heading"><span>✦</span><h3>Quitar fondo por color</h3></div><p class="dv-hint">1. Elige el color. 2. Compara sobre la cuadrícula. 3. Confirma el recorte.</p><p id="dvKeyStatus" class="dv-key-status" role="status">El recorte solo afecta al elemento indicado arriba.</p><div class="dv-cutout-actions"><button class="dv-primary" data-dv="pickColor" title="Toca el color que quieres quitar en el video">◎ Elegir color</button><button data-dv="autoColor" title="Detectar el color de un fondo uniforme">✧ Automático</button></div><div class="dv-swatches"><button data-dv="keyColor" data-color="#00ff00" style="--swatch:#00ff00" aria-label="Quitar verde"><span></span>Verde</button><button data-dv="keyColor" data-color="#0000ff" style="--swatch:#0000ff" aria-label="Quitar azul"><span></span>Azul</button><button data-dv="keyColor" data-color="#ffffff" style="--swatch:#ffffff" aria-label="Quitar blanco"><span></span>Blanco</button><button data-dv="keyColor" data-color="#000000" style="--swatch:#000000" aria-label="Quitar negro"><span></span>Negro</button></div><label class="dv-check"><input id="dvKeyEnabled" type="checkbox">Quitar este color</label><label>Color elegido<input id="dvKeyColor" type="color" value="#00ff00"></label><label>Intensidad <output id="dvKeyToleranceValue"></output><input id="dvKeyTolerance" type="range" min="0.005" max="0.8" step="0.005"></label><label>Suavizar bordes <output id="dvKeySoftnessValue"></output><input id="dvKeySoftness" type="range" min="0.005" max="0.4" step="0.005"></label><label>Limpiar reflejo del color <input id="dvKeySpill" type="range" min="0" max="1" step="0.01"></label><button data-dv="resetKey">Restablecer fondo</button><p class="dv-hint">La cuadrícula indica transparencia. Si también desaparecen detalles blancos del sujeto, baja la intensidad. El vídeo final usa el fondo y las capas de debajo.</p></section>
+@@ -44,0 +46 @@
++   <section class="dv-layer-fields dv-fields dv-tool-content" data-content="layers"><h2>Delante y detrás</h2><p class="dv-hint">Arriba = delante. Arrastra por ⋮⋮ o usa los botones. El tiempo no cambia.</p><div id="dvLayerStack"></div><div class="dv-row"><button data-dv="forward">↑ Delante</button><button data-dv="backward">↓ Detrás</button></div><p id="dvStackHint" class="dv-hint"></p></section>
+@@ -46 +48 @@
+-   <div class="dv-timeline" id="dvTimeline"><div class="dv-timeline-head"><h2>Línea de tiempo <span id="dvCount"></span></h2><button class="dv-toggle-timeline" data-dv="toggleTimeline" aria-expanded="true">Capas ▾</button><label class="dv-zoom">Zoom <input id="dvZoom" type="range" min="12" max="100" step="4" value="32" aria-label="Zoom de línea de tiempo"></label><button data-dv="capture">+ Flyer</button><button data-dv="media" class="dv-primary">+ Fotos / clips</button></div><div class="dv-timeline-scroll" id="dvTimelineScroll"><div id="dvRuler" class="dv-ruler"></div><div class="dv-main-track"><span class="dv-track-label">Vídeo base</span><div class="dv-scenes" id="dvScenes" aria-label="Escenas del video"></div></div><div id="dvLayers" aria-label="Capas y pistas independientes"></div><div class="dv-playhead" id="dvPlayhead"></div></div></div>
++   <div class="dv-timeline" id="dvTimeline"><div class="dv-timeline-head"><h2>Capas y tiempo <span id="dvCount"></span></h2><button class="dv-toggle-timeline" data-dv="toggleTimeline" aria-expanded="true">Capas ▾</button><label class="dv-zoom">Zoom <input id="dvZoom" type="range" min="12" max="100" step="4" value="32" aria-label="Zoom de línea de tiempo"></label><button data-dv="capture">+ Flyer</button><button data-dv="media" class="dv-primary">+ Fotos / clips</button></div><p class="dv-timeline-guide">↑ Delante · ↓ Detrás <span>↔ Arrastra el clip para cambiar cuándo aparece</span></p><div class="dv-timeline-scroll" id="dvTimelineScroll"><div id="dvRuler" class="dv-ruler"></div><div id="dvLayers" aria-label="Capas ordenadas de delante hacia detrás"></div><div class="dv-playhead" id="dvPlayhead"></div></div></div>
+@@ -56,0 +59,2 @@
++  $('dvTarget').addEventListener('change',()=>{if(V.keyDraft){$('dvTarget').value=V.selected;message('Confirma o cancela el recorte antes de cambiar de elemento.',true);return;}perform('select',{dataset:{id:$('dvTarget').value}}).catch(e=>message(e.message,true));});
++  $('dvCompareSplit').addEventListener('input',()=>{V.compareSplit=+$('dvCompareSplit').value/100;draw();});
+@@ -69 +73 @@
+-  window.addEventListener('beforeunload',e=>{if(V.dirty||V.exporting){e.preventDefault();e.returnValue='';}});
++  window.addEventListener('beforeunload',e=>{if(V.dirty||V.exporting||V.keyDraft){e.preventDefault();e.returnValue='';}});
+@@ -72 +76 @@
+- function setBusy(){if(!$(id))return;const on=V.busy||V.exporting;$('dvBody').inert=on;$('dvTimeline').inert=on;$(id).querySelectorAll('.dv-topbar button,.dv-topbar input,.dv-quickbar button,.dv-footer button,.dv-library button').forEach(b=>b.disabled=on);$('dvProgress').hidden=!V.exporting;exportInfo();historyButtons();}
++ function setBusy(){if(!$(id))return;const on=V.busy||V.exporting;$('dvBody').inert=on;$('dvTimeline').inert=on||!!V.keyDraft;$('dvTarget').disabled=on||!!V.keyDraft;$(id).querySelectorAll('.dv-topbar button,.dv-topbar input,.dv-quickbar button,.dv-footer button,.dv-library button').forEach(b=>b.disabled=on);$('dvProgress').hidden=!V.exporting;exportInfo();historyButtons();}
+@@ -99 +103 @@
+- function discard(){V.history=[];V.future=[];V.lastEdit=null;V.picking=false;V.original=false;V.isolate=false;stop();clearTimeout(V.timer);disposePlayers();V.assets.clear();V.project=null;V.selected=null;V.time=0;V.dirty=false;V.revision=0;V.savedVersion=0;}
++ function discard(){V.keyDraft=null;V.cutoutActive=false;V.compare='after';V.history=[];V.future=[];V.lastEdit=null;V.picking=false;V.original=false;V.isolate=false;stop();clearTimeout(V.timer);disposePlayers();V.assets.clear();V.project=null;V.selected=null;V.time=0;V.dirty=false;V.revision=0;V.savedVersion=0;}
+@@ -100,0 +105 @@
++  if(V.keyDraft)throw Error('Confirma o cancela el recorte antes de abrir otro proyecto.');
+@@ -107 +112 @@
+- async function close(){if(V.busy||V.exporting)return false;stop();try{await save();$(id).close();return true;}catch(e){message(e.message+' Pulsa Respaldo antes de salir.',true);return false;}}
++ async function close(){if(V.keyDraft){message('Confirma o cancela el recorte antes de salir.',true);return false;}if(V.busy||V.exporting)return false;stop();try{await save();$(id).close();return true;}catch(e){message(e.message+' Pulsa Respaldo antes de salir.',true);return false;}}
+@@ -180,0 +186 @@
++  updateTarget();renderStack();
+@@ -183,2 +189,2 @@
+-   $('dvKeyEnabled').checked=c.keyer.enabled;for(const [n,k] of [['Color','color'],['Tolerance','tolerance'],['Softness','softness'],['Spill','spill']])$('dvKey'+n).value=c.keyer[k];
+-   $('dvKeyToleranceValue').value=Math.round(c.keyer.tolerance*100)+'%';$('dvKeySoftnessValue').value=Math.round(c.keyer.softness*100)+'%';
++   const keyer=effectiveKey(c);$('dvKeyEnabled').checked=keyer.enabled;for(const [n,k] of [['Color','color'],['Tolerance','tolerance'],['Softness','softness'],['Spill','spill']])$('dvKey'+n).value=keyer[k];
++   $('dvKeyToleranceValue').value=Math.round(keyer.tolerance*100)+'%';$('dvKeySoftnessValue').value=Math.round(keyer.softness*100)+'%';
+@@ -195,5 +201,15 @@
+- function renderTimeline(){
+-  const seconds=Math.max(8,total()),width=Math.max(300,seconds*V.zoom),rows=M.timeline(V.project);$('dvCount').textContent='· '+V.project.scenes.length+' escenas';
+-  $('dvTimelineScroll').style.setProperty('--dv-track-width',width+'px');$('dvRuler').innerHTML=Array.from({length:Math.floor(seconds/ (V.zoom<24?10:5))+1},(_,i)=>{const t=i*(V.zoom<24?10:5);return '<span style="left:'+(88+t*V.zoom)+'px">'+stamp(t).slice(0,-2)+'</span>';}).join('');
+-  $('dvScenes').innerHTML=rows.length?rows.map(({scene:c,start},i)=>`<button class="dv-scene" data-dv="select" data-id="${esc(c.id)}" aria-pressed="${c.id===V.selected}" aria-label="Escena ${i+1}: ${esc(c.name)}" style="left:${start*V.zoom}px;width:${Math.max(22,M.duration(c)*V.zoom)}px"><img src="${esc(V.assets.get(c.assetId)?.thumb||'')}" alt=""><strong>${esc(c.name)}</strong><small>${M.duration(c).toFixed(1)} s</small></button>`).join(''):'<p class="dv-scene-empty">Añade fotos o clips, o empieza con una capa.</p>';
+-  $('dvLayers').innerHTML=[...V.project.layers,...V.project.audio].map((c,i)=>`<div class="dv-layer-track"><span class="dv-track-label">${c.kind==='audio'?'♫ Audio':c.kind==='text'?'T Texto':'◈ Capa'} ${i+1}</span><div class="dv-track-lane"><button class="dv-layer-bar ${c.hidden?'dv-hidden-layer':''}" data-dv="select" data-id="${c.id}" aria-label="${esc(c.name)} · ${c.kind==='audio'?'audio':'capa'}" aria-pressed="${V.selected===c.id}" style="left:${c.start*V.zoom}px;width:${Math.max(24,M.duration(c)*V.zoom)}px"><span class="dv-trim-handle" data-edge="start" title="Ajustar inicio"></span><span>${c.locked?'🔒 ':''}${esc(c.kind==='text'?c.title:c.name)}</span><span class="dv-trim-handle" data-edge="end" title="Ajustar final"></span></button></div></div>`).join('');
++ function stackName(key){if(key==='base')return V.project.scenes.length===1?V.project.scenes[0].name:'Vídeo base · '+V.project.scenes.length+' clips';const c=V.project.layers.find(c=>c.id===key);return c?.kind==='text'?c.title||'Texto':c?.name||'Capa';}
++ function stackSelected(){return M.stackId(V.project,V.selected);}
++ function stackLocked(key){return key==='base'?V.project.scenes.some(c=>c.locked):V.project.layers.find(c=>c.id===key)?.locked;}
++ function renderStack(){
++  if(!V.project)return;const order=M.stackOrder(V.project).slice().reverse(),key=stackSelected();
++  $('dvLayerStack').innerHTML=order.map((k,i)=>`<div class="dv-stack-row ${k===key?'selected':''}" data-stack="${esc(k)}"><button class="dv-stack-handle" data-stack-drag="${esc(k)}" aria-label="Arrastrar ${esc(stackName(k))} para ordenar" ${stackLocked(k)?'disabled':''}>⋮⋮</button><button data-dv="stackSelect" data-id="${esc(k)}" aria-pressed="${k===key}"><strong>${esc(stackName(k))}</strong><small>${i===0?'Delante':i===order.length-1?'Detrás':'Capa intermedia'}${k==='base'?' · clips consecutivos':''}</small></button></div>`).join('');
++  for(const [action,limit] of [['forward',0],['backward',order.length-1]])$(id).querySelector('[data-dv='+action+']').disabled=!order.includes(key)||order.indexOf(key)===limit||stackLocked(key)||!!V.keyDraft;
++  $('dvStackHint').textContent=key!=='base'&&order.indexOf(key)>order.indexOf('base')?'Esta capa está detrás del vídeo base. Se verá donde ese vídeo tenga transparencia.':'Si una estrella o logo está dentro de un vídeo, forma parte de ese clip. Quita su fondo para ver las capas de detrás.';
++ }
++ function updateTarget(){
++  const c=selected(),rows=[...M.rows(V.project).slice().reverse(),...M.audioRows(V.project)];
++  const html='<option value="">Selecciona un elemento</option>'+rows.map(r=>`<option value="${esc(r.scene.id)}">${r.scene.kind==='audio'?'♫ ':''}${esc(r.scene.kind==='text'?r.scene.title||'Texto':r.scene.name)}</option>`).join('');
++  if($('dvTarget').innerHTML!==html)$('dvTarget').innerHTML=html;$('dvTarget').value=c?.id||'';
++  const row=rows.find(r=>r.scene.id===c?.id),outside=row&&(V.time<row.start||V.time>=row.end);
++  $('dvTargetStatus').textContent=c?(outside?'No aparece en este momento':c.hidden?'Capa oculta':c.locked?'Capa bloqueada':'Seleccionada'):'Elige el clip al que quieres aplicar cambios';$('dvReveal').hidden=!outside;$('dvReveal').disabled=!!V.keyDraft;
+@@ -200,0 +217,24 @@
++ function renderTimeline(){
++  const seconds=Math.max(8,total()),width=Math.max(300,seconds*V.zoom),rows=M.timeline(V.project);$('dvCount').textContent='· '+V.project.scenes.length+' clips';
++  $('dvTimelineScroll').style.setProperty('--dv-track-width',width+'px');$('dvRuler').innerHTML=Array.from({length:Math.floor(seconds/(V.zoom<24?10:5))+1},(_,i)=>{const t=i*(V.zoom<24?10:5);return '<span style="left:'+(88+t*V.zoom)+'px">'+stamp(t).slice(0,-2)+'</span>';}).join('');
++  const handle=k=>`<button class="dv-stack-handle" data-stack-drag="${esc(k)}" aria-label="Ordenar ${esc(stackName(k))}" ${stackLocked(k)?'disabled':''}>⋮⋮</button>`;
++  const base=`<div class="dv-main-track" data-stack="base"><div class="dv-track-label">${handle('base')}<span>Vídeo base</span></div><div class="dv-scenes" id="dvScenes" aria-label="Escenas del video">${rows.length?rows.map(({scene:c,start},i)=>`<button class="dv-scene" data-dv="select" data-id="${esc(c.id)}" aria-pressed="${c.id===V.selected}" aria-label="Escena ${i+1}: ${esc(c.name)}" style="left:${start*V.zoom}px;width:${Math.max(22,M.duration(c)*V.zoom)}px"><img src="${esc(V.assets.get(c.assetId)?.thumb||'')}" alt=""><strong>${esc(c.name)}</strong><small>${M.duration(c).toFixed(1)} s</small></button>`).join(''):'<p class="dv-scene-empty">Añade fotos o clips.</p>'}</div></div>`;
++  const layer=c=>`<div class="dv-layer-track" ${c.kind==='audio'?'':`data-stack="${c.id}"`}><div class="dv-track-label">${c.kind==='audio'?'♫':handle(c.id)}<span>${c.kind==='audio'?'Audio':c.kind==='text'?'Texto':'Capa'}</span></div><div class="dv-track-lane"><button class="dv-layer-bar ${c.hidden?'dv-hidden-layer':''}" data-dv="select" data-id="${c.id}" aria-label="${esc(c.name)} · ${c.kind==='audio'?'audio':'capa'}" aria-pressed="${V.selected===c.id}" style="left:${c.start*V.zoom}px;width:${Math.max(24,M.duration(c)*V.zoom)}px"><span class="dv-trim-handle" data-edge="start" title="Ajustar inicio"></span><span>${c.locked?'🔒 ':''}${esc(c.kind==='text'?c.title:c.name)}</span><span class="dv-trim-handle" data-edge="end" title="Ajustar final"></span></button></div></div>`;
++  $('dvLayers').innerHTML=M.stackOrder(V.project).slice().reverse().map(k=>k==='base'?base:layer(V.project.layers.find(c=>c.id===k))).join('')+V.project.audio.map(layer).join('');renderStack();
++ }
++ const effectiveKey=c=>V.keyDraft?.id===c?.id?V.keyDraft.keyer:c?.keyer;
++ function cutoutUI(measure=false){
++  const c=selected(),valid=c&&['image','video'].includes(c.kind);$('dvCompareBar').hidden=!V.cutoutActive||!valid;$(id).dataset.cutout=String(V.cutoutActive&&!!valid);
++  $('dvKeyConfirm').hidden=!V.keyDraft;$('dvCutoutDone').hidden=!V.cutoutActive||!!V.keyDraft;$('dvCompareLabels').hidden=!(V.cutoutActive&&V.compare==='split'&&!V.picking);$('dvCompareSplit').hidden=$('dvCompareLabels').hidden;
++  for(const [action,mode] of [['compareBefore','before'],['compareAfter','after'],['compareSplit','split']])$(id).querySelector('[data-dv='+action+']').setAttribute('aria-pressed',V.compare===mode);
++  $(id).querySelector('[data-dv=isolate]').setAttribute('aria-pressed',V.isolate);$('dvTimeline').inert=!!V.keyDraft||V.busy||V.exporting;$('dvTarget').disabled=!!V.keyDraft||V.busy||V.exporting;
++  if(!measure||!valid)return;const source=sourceMap().get(c.id),key=effectiveKey(c);let text='Elige un color para ver el resultado antes de confirmarlo.';
++  if(source&&key.enabled){const result=renderer.measureKeyer(source,key),pct=Math.round(result.removed*100);text=result.empty?'El original ya es transparente.':pct<1?'Ese color casi no aparece en este fotograma. Comprueba el elemento seleccionado o elige otro color.':`${V.keyDraft?'Vista previa':'Recorte aplicado'}: se elimina aproximadamente el ${pct}% del fotograma de comprobación.`;if(V.project.background.toLowerCase()==='#ffffff'&&!V.isolate)text+=' El fondo del proyecto es blanco; pulsa Transparencia para comprobar el recorte.';}
++  $('dvKeyStatus').textContent=text;
++ }
++ function draftKey(patch){
++  const c=selected();if(!c||!['image','video'].includes(c.kind))throw Error('Selecciona un vídeo o una imagen arriba.');if(c.locked)throw Error('Desbloquea primero la capa.');
++  if(!V.keyDraft)V.keyDraft={id:c.id,keyer:structuredClone(c.keyer)};Object.assign(V.keyDraft.keyer,patch);V.picking=false;V.cutoutActive=true;V.isolate=true;V.compare='split';V.original=false;updateInspector();draw();cutoutUI(true);message('Vista previa del recorte en «'+c.name+'». Compara y pulsa Confirmar recorte.');
++ }
++ function cancelKey(){V.keyDraft=null;V.isolate=false;V.compare='after';V.original=false;V.picking=false;setBusy();updateInspector();draw();cutoutUI(true);message('Vista previa cancelada. El recorte anterior se conserva.');}
++ function shiftStack(step){const key=stackSelected(),order=M.stackOrder(V.project),at=order.indexOf(key);if(at<0||stackLocked(key))throw Error('Selecciona una capa desbloqueada.');const next=Math.max(0,Math.min(order.length-1,at+step));if(next===at)return;order.splice(at,1);order.splice(next,0,key);commitChange(()=>V.project.visualOrder=order);message(step>0?'Capa movida hacia delante.':'Capa movida hacia detrás.');}
+@@ -210 +250 @@
+- async function historyMove(redo=false){if(V.busy||V.exporting)return;const from=redo?V.future:V.history,to=redo?V.history:V.future;if(!from.length)return;stop();to.push(structuredClone(V.project));const previous=from.pop();previous.id=V.project.id;V.project=previous;V.lastEdit=null;resetViewing();changed();refresh();await seek();message(redo?'Cambio rehecho.':'Cambio deshecho.');}
++ async function historyMove(redo=false){if(V.keyDraft){cancelKey();return;}if(V.busy||V.exporting)return;const from=redo?V.future:V.history,to=redo?V.history:V.future;if(!from.length)return;stop();to.push(structuredClone(V.project));const previous=from.pop();previous.id=V.project.id;V.project=previous;V.lastEdit=null;resetViewing();changed();refresh();await seek();message(redo?'Cambio rehecho.':'Cambio deshecho.');}
+@@ -213 +253,3 @@
+-  if(V.busy||V.exporting||!V.project)return;stop();const c=selected(),el=$('dv'+name),value=el.value;
++  if(V.busy||V.exporting||!V.project)return;
++  if(V.keyDraft&&!name.startsWith('Key')){message('Confirma o cancela el recorte antes de cambiar otros ajustes.',true);refresh();return;}stop();const c=selected(),el=$('dv'+name),value=el.value;
++  if(name.startsWith('Key')){const key={KeyEnabled:'enabled',KeyColor:'color',KeyTolerance:'tolerance',KeySoftness:'softness',KeySpill:'spill'}[name];const patch={[key]:name==='KeyEnabled'?el.checked:name==='KeyColor'?value:+value};if(name==='KeyColor')patch.enabled=true;try{draftKey(patch);ensureSelectedFrame().then(()=>{draw();cutoutUI(true);}).catch(e=>message(e.message,true));}catch(e){message(e.message,true);}return;}
+@@ -234 +276 @@
+- function draw(frameOverride=null){if(!V.project||!renderer)return;const frames=frameOverride instanceof Map?new Map([...sourceMap(),...frameOverride]):sourceMap();renderer.render(V.project,Math.min(V.time,Math.max(0,total()-.001)),V.assets,frames,V.exporting?{}:{selectedId:V.cleanPreview||V.playing||V.picking?null:V.selected,isolateId:V.isolate?V.selected:null,originalId:V.original?V.selected:null,picking:V.picking?V.selected:null,poseEnd:V.endPose?V.selected:null});$('dvPickBanner').hidden=!V.picking;$('dvCanvas').classList.toggle('dv-picking',V.picking);}
++ function draw(frameOverride=null){if(!V.project||!renderer)return;const frames=frameOverride instanceof Map?new Map([...sourceMap(),...frameOverride]):sourceMap();renderer.render(V.project,Math.min(V.time,Math.max(0,total()-.001)),V.assets,frames,V.exporting?{}:{selectedId:V.cleanPreview||V.playing||V.picking?null:V.selected,isolateId:V.isolate?V.selected:null,originalId:V.original||(V.cutoutActive&&V.compare==='before')?V.selected:null,compareId:V.cutoutActive&&V.compare==='split'&&!V.picking?V.selected:null,compareSplit:V.compareSplit,keyerId:V.keyDraft?.id,keyer:V.keyDraft?.keyer,picking:V.picking?V.selected:null,poseEnd:V.endPose?V.selected:null});$('dvPickBanner').hidden=!V.picking;$('dvCanvas').classList.toggle('dv-picking',V.picking);cutoutUI();}
+@@ -243 +285 @@
+-  const op=++V.operation,t=Math.min(V.time,Math.max(0,total()-.001));for(const row of M.active(V.project,t)){const a=V.assets.get(row.scene.assetId);if(!a)continue;const p=await player(a,row.scene.id);if(op!==V.operation)return;if(a.kind==='video')await seekMedia(p.el,row.scene.in+Math.max(0,t-row.start));}if(op===V.operation){draw();transport();}
++  const op=++V.operation,t=Math.min(V.time,Math.max(0,total()-.001));for(const row of M.active(V.project,t)){const a=V.assets.get(row.scene.assetId);if(!a)continue;const p=await player(a,row.scene.id);if(op!==V.operation)return;if(a.kind==='video')await seekMedia(p.el,row.scene.in+Math.max(0,t-row.start));}if(op===V.operation){draw();transport();updateTarget();cutoutUI(true);}
+@@ -245 +287 @@
+- async function ensureSelectedFrame(){const row=M.rows(V.project).find(r=>r.scene.id===V.selected);if(row&&(V.time<row.start||V.time>=row.end))await seekSelected();else draw();}
++ async function ensureSelectedFrame(){const row=M.rows(V.project).find(r=>r.scene.id===V.selected);if(row&&(V.time<row.start||V.time>=row.end))await seekSelected();else await seek();}
+@@ -257 +299 @@
+-  V.picking=false;V.original=false;V.isolate=false;if(!V.exporting)V.cancelled=false;V.starting=true;const token=++V.playback,epoch=V.epoch;
++  V.picking=false;V.original=false;if(!V.cutoutActive)V.isolate=false;if(!V.exporting)V.cancelled=false;V.starting=true;const token=++V.playback,epoch=V.epoch;
+@@ -311,3 +353,4 @@
+- function tool(name,open=true){$(id).dataset.compact=name==='clip'?'false':'true';$(id).querySelector('[data-dv=toggleTimeline]').setAttribute('aria-expanded',name==='clip');$(id).querySelector('.dv-inspector').dataset.tool=name;$(id).querySelectorAll('[data-dv=tool]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tool===name));if(open)panel(name==='audio'?'audio':'scene');}
+- function resetViewing(){V.picking=false;V.original=false;V.isolate=false;V.endPose=false;for(const a of ['original','isolate','poseEnd'])$(id).querySelector('[data-dv='+a+']').setAttribute('aria-pressed',false);$(id).querySelector('[data-dv=poseStart]').setAttribute('aria-pressed',true);}
+- function applyKey(color){const c=selected();if(!c||!['image','video'].includes(c.kind))throw Error('Selecciona una imagen o un clip.');if(c.locked)throw Error('Desbloquea primero la capa con el candado.');commitChange(()=>{c.keyer.color=color;c.keyer.enabled=true;});V.picking=false;draw();message('Fondo quitado. Ajusta la intensidad y los bordes; usa Ver antes para comparar.');}
++ function tool(name,open=true){V.cutoutActive=name==='cutout';if(name!=='cutout'){V.isolate=false;V.compare='after';}$(id).querySelector('.dv-inspector').scrollTop=0;$(id).dataset.compact=name==='clip'?'false':'true';$(id).querySelector('[data-dv=toggleTimeline]').setAttribute('aria-expanded',name==='clip');$(id).querySelector('.dv-inspector').dataset.tool=name;$(id).querySelectorAll('[data-dv=tool]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tool===name));if(open)panel(name==='audio'?'audio':'scene');cutoutUI(true);draw();}
++ function resetViewing(){V.compare='after';V.picking=false;V.original=false;V.isolate=false;V.endPose=false;for(const a of ['isolate','poseEnd'])$(id).querySelector('[data-dv='+a+']').setAttribute('aria-pressed',false);$(id).querySelector('[data-dv=poseStart]').setAttribute('aria-pressed',true);}
++ function applyKey(color){draftKey({color,enabled:true});}
++
+@@ -315,0 +359,4 @@
++  if(action==='confirmKey'){if(!V.keyDraft)return;const draft=V.keyDraft,c=selected();if(c?.id!==draft.id)throw Error('Selecciona otra vez el elemento del recorte.');V.keyDraft=null;if(!commitChange(()=>c.keyer=structuredClone(draft.keyer))){V.keyDraft=draft;cutoutUI();return;}V.isolate=false;V.compare='after';setBusy();draw();cutoutUI(true);await save();message('Recorte confirmado en «'+c.name+'». Puedes usar Antes, Después o Transparencia.');return;}
++  if(action==='cancelKey'){cancelKey();return;}
++  if(V.keyDraft&&!['keyColor','pickColor','autoColor','resetKey','compareBefore','compareAfter','compareSplit','original','isolate','cancelPick','play','rewind','panel','cancelKey','cutout','tool','undo','redo','backup'].includes(action)){message('Confirma o cancela el recorte para continuar.',true);return;}
++  if(V.keyDraft&&((action==='tool'&&b.dataset.tool!=='cutout')||(action==='panel'&&b.dataset.panel==='audio'))){message('Confirma o cancela el recorte para cambiar de herramienta.',true);return;}
+@@ -328,0 +376,5 @@
++  if(action==='endCutout'){resetViewing();tool('clip');return;}
++  if(action==='layers'){tool('layers');return;}
++  if(action==='forward'||action==='backward'){stop();shiftStack(action==='forward'?1:-1);return;}
++  if(action==='stackSelect'){const key=b.dataset.id;V.selected=key==='base'?(M.timeline(V.project).find(r=>V.time>=r.start&&V.time<r.end)?.scene.id||V.project.scenes[0]?.id):key;resetViewing();refresh();await ensureSelectedFrame();return;}
++  if(action==='reveal'){stop();await seekSelected();updateTarget();return;}
+@@ -330 +382 @@
+-  if(action==='cutout'){if(!['image','video'].includes(selected()?.kind))V.selected=M.active(V.project,V.time).find(r=>r.scene.kind!=='text')?.scene.id||V.project.scenes[0]?.id;refresh();tool('cutout');if(!selected())message('Añade y selecciona un clip o una imagen para quitar su fondo.');return;}
++  if(action==='cutout'){if(!['image','video'].includes(selected()?.kind))V.selected=M.active(V.project,V.time).slice().reverse().find(r=>r.scene.kind!=='text')?.scene.id||V.project.scenes[0]?.id;refresh();tool('cutout');if(!selected())message('Añade y selecciona un clip o una imagen para quitar su fondo.');else{await ensureSelectedFrame();cutoutUI(true);}return;}
+@@ -336,0 +389 @@
++  if(action==='compareBefore'||action==='compareAfter'||action==='compareSplit'){V.compare=action==='compareBefore'?'before':action==='compareAfter'?'after':'split';V.original=false;V.picking=false;await ensureSelectedFrame();draw();return;}
+@@ -340 +393 @@
+-  if(action==='keyColor')return applyKey(b.dataset.color);
++  if(action==='keyColor'){await ensureSelectedFrame();return applyKey(b.dataset.color);}
+@@ -342 +395 @@
+-  if(action==='resetKey'){commitChange(()=>c.keyer=M.keyer());return;}if(action==='resetColor'){commitChange(()=>c.adjust={brightness:0,contrast:0,saturation:0});return;}
++  if(action==='resetKey'){draftKey(M.keyer());return;}if(action==='resetColor'){commitChange(()=>c.adjust={brightness:0,contrast:0,saturation:0});return;}
+@@ -343,0 +397 @@
++  if(['left','right'].includes(action)&&V.project.layers.includes(c)){shiftStack(action==='right'?1:-1);return;}
+@@ -347 +401 @@
+-   else if(action==='duplicate'){const copy={...structuredClone(c),id:M.uid()};list.splice(i+1,0,copy);V.selected=copy.id;}
++   else if(action==='duplicate'){const copy={...structuredClone(c),id:M.uid()};if(V.project.layers.includes(c)){const order=M.stackOrder(V.project);order.splice(order.indexOf(c.id)+1,0,copy.id);V.project.visualOrder=order;}list.splice(i+1,0,copy);V.selected=copy.id;}
+@@ -354,0 +409,7 @@
++  let stackDrag=null;
++  function beginStack(e,key,element,container){if(stackLocked(key)||V.keyDraft)return false;const items=[...container.querySelectorAll('[data-stack]')].map(el=>({id:el.dataset.stack,el,rect:el.getBoundingClientRect()}));stackDrag={key,element,items,startY:e.clientY,before:null,moved:false};element.setPointerCapture(e.pointerId);return true;}
++  function moveStack(e){const g=stackDrag;if(!g||Math.abs(e.clientY-g.startY)<6&&!g.moved)return;g.moved=true;const rows=g.items.filter(r=>r.id!==g.key);g.before=rows.find(r=>e.clientY<r.rect.y+r.rect.height/2)?.id||null;for(const r of g.items){r.el.classList.remove('dv-drop-after');r.el.classList.toggle('dv-drop-before',r.id===g.before);r.el.classList.toggle('dv-dragging',r.id===g.key);}if(!g.before&&rows.length)rows.at(-1).el.classList.add('dv-drop-after');}
++  function endStack(cancel=false){const g=stackDrag;if(!g)return;stackDrag=null;for(const r of g.items)r.el.classList.remove('dv-drop-before','dv-drop-after','dv-dragging');if(!g.moved||cancel)return;const ui=M.stackOrder(V.project).reverse().filter(k=>k!==g.key),at=g.before?ui.indexOf(g.before):ui.length;ui.splice(at<0?ui.length:at,0,g.key);commitChange(()=>V.project.visualOrder=ui.reverse());V.suppressClick=true;setTimeout(()=>V.suppressClick=false,120);message('Orden actualizado: lo que está arriba se ve delante.');ensureSelectedFrame().catch(e=>message(e.message,true));}
++  $(id).addEventListener('pointerdown',e=>{const b=e.target.closest('[data-stack-drag]');if(!b||e.button!==0||V.busy||V.exporting||V.keyDraft)return;stop();const container=b.closest('#dvLayerStack')||$('dvLayers');if(beginStack(e,b.dataset.stackDrag,b,container)){e.preventDefault();e.stopPropagation();}});
++  $(id).addEventListener('pointermove',e=>{if(stackDrag){e.preventDefault();moveStack(e);}});
++  $(id).addEventListener('pointerup',()=>endStack());$(id).addEventListener('pointercancel',()=>endStack(true));
+@@ -357 +418 @@
+-  canvas.addEventListener('pointerdown',e=>{if(e.button!==0||V.busy||V.exporting||!renderer)return;stop();const p=point(e);if(V.picking){gesture={type:'pick',x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);return;}
++  canvas.addEventListener('pointerdown',e=>{if(e.button!==0||V.busy||V.exporting||!renderer)return;stop();if(V.keyDraft&&!V.picking)return;const p=point(e);if(V.picking){gesture={type:'pick',x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);return;}
+@@ -365,2 +426,2 @@
+-  timeline.addEventListener('pointerdown',e=>{if(e.button!==0||V.busy||V.exporting)return;const b=e.target.closest('.dv-layer-bar');if(!b)return;stop();V.selected=b.dataset.id;const c=selected();resetViewing();updateInspector();if(c.locked){message('Desbloquea esta capa antes de moverla.');return;}gesture={type:'timeline',before:structuredClone(V.project),x:e.clientX,y:e.clientY,scroll:timeline.scrollLeft,initial:structuredClone(c),edge:e.target.dataset.edge,element:b};b.setPointerCapture(e.pointerId);});
+-  timeline.addEventListener('pointermove',e=>{const g=gesture;if(!g||g.type!=='timeline')return;if(!g.moved&&Math.abs(e.clientX-g.x)<6)return;g.moved=true;const c=selected(),base=g.initial,d=M.duration(base);let delta=Math.round((e.clientX-g.x+timeline.scrollLeft-g.scroll)/V.zoom*10)/10;
++  timeline.addEventListener('pointerdown',e=>{if(e.button!==0||V.busy||V.exporting||V.keyDraft)return;const b=e.target.closest('.dv-layer-bar');if(!b)return;stop();V.selected=b.dataset.id;const c=selected();resetViewing();updateInspector();if(c.locked){message('Desbloquea esta capa antes de moverla.');return;}gesture={type:'timeline',before:structuredClone(V.project),x:e.clientX,y:e.clientY,scroll:timeline.scrollLeft,initial:structuredClone(c),edge:e.target.dataset.edge,element:b};b.setPointerCapture(e.pointerId);});
++  timeline.addEventListener('pointermove',e=>{const g=gesture;if(!g||g.type!=='timeline')return;if(!g.moved&&Math.hypot(e.clientX-g.x,e.clientY-g.y)<6)return;if(!g.moved&&!g.edge&&g.initial.kind!=='audio'&&Math.abs(e.clientY-g.y)>Math.abs(e.clientX-g.x)){gesture=null;beginStack({...e,clientY:g.y,pointerId:e.pointerId},g.initial.id,g.element,$('dvLayers'));moveStack(e);return;}g.moved=true;const c=selected(),base=g.initial,d=M.duration(base);let delta=Math.round((e.clientX-g.x+timeline.scrollLeft-g.scroll)/V.zoom*10)/10;
+diff --git a/docs/DIVAS-VIDEO.md b/docs/DIVAS-VIDEO.md
+index 2e43c14..a40f59e 100644
+--- a/docs/DIVAS-VIDEO.md
++++ b/docs/DIVAS-VIDEO.md
+@@ -1 +1 @@
+-# Divas Video · v41
++# Divas Video · v42
+@@ -7,6 +7,6 @@ Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada d
+-1. Añade un vídeo con **Fotos / clips**, o usa **Capa** para colocarlo sobre otro fondo o vídeo.
+-2. Selecciona ese clip y pulsa el botón rosa **Quitar fondo**, visible sobre el lienzo en PC y móvil.
+-3. **Elegir color** muestra el fotograma original. Toca el color del fondo con el dedo, lápiz o ratón. **Automático** busca un color uniforme predominante en los bordes. Si no encuentra uno suficientemente consistente, pide usar el cuentagotas.
+-4. Ajusta **Intensidad**, **Suavizar bordes** y **Limpiar reflejo del color**. Los botones verde, azul, blanco y negro son accesos directos. Se puede introducir otro color.
+-5. Compara con **Ver antes** o usa **Ver recorte** para ver la transparencia sobre una cuadrícula. **Restablecer fondo** recupera el original.
+-6. Coloca otra capa debajo o elige el color de fondo en Audio → Salida. La exportación conserva el recorte y las capas.
++1. Añade un vídeo con **Fotos / clips**, o usa **Capa** para añadir otro elemento.
++2. Comprueba el selector **Editando**, siempre visible encima del lienzo. Elige el vídeo o la imagen que tiene el fondo que quieres quitar. Si no aparece en ese momento, **Ver esta capa** lleva a un fotograma donde existe; **Quitar fondo** también hace ese ajuste.
++3. Pulsa **Quitar fondo**. **Elegir color** muestra el original: toca el fondo con el dedo, lápiz o ratón. También puedes pulsar **Blanco**, **Verde**, **Azul** o **Negro**. **Automático** busca un color uniforme en los bordes; si no lo encuentra, solicita el cuentagotas.
++4. Revisa **Antes / Después** o **Comparar**, con un deslizador para mover la división. **Transparencia** aísla el elemento sobre una cuadrícula. La cifra de comprobación estima cuánto alfa se elimina en un fotograma reducido; si es casi cero, avisa que debes revisar el color y el elemento seleccionado.
++5. Ajusta **Intensidad**, **Suavizar bordes** y **Limpiar reflejo del color** si hace falta. Hasta pulsar **Confirmar recorte**, el efecto es una vista previa sin guardar. **Cancelar** conserva el recorte anterior. La confirmación puede deshacerse en un paso. **Listo** vuelve a las herramientas habituales. **Restablecer fondo** también pide confirmar.
++6. Después de confirmar verás la composición completa. Si el fondo del proyecto también es blanco, usa **Transparencia** para comprobar que el recorte sí existe. Puedes poner otra imagen debajo desde **Capas**, o cambiar el color del proyecto en Audio → Salida.
+@@ -20 +20,3 @@ El recorte es por color, no segmentación de personas mediante IA. Un fondo comp
+-- Arrastra una capa en la línea de tiempo para moverla; arrastra sus extremos para recortarla. En **Tiempo** también hay campos numéricos, dividir, duplicar y eliminar. En las escenas, las flechas cambian el orden temporal; en las capas cambian el orden visual (izquierda detrás, derecha delante).
++- **Capas** muestra el orden visual: arriba se ve delante, abajo detrás. Arrastra por **⋮⋮** o selecciona una capa y usa **↑ Delante / ↓ Detrás**. También puedes arrastrar verticalmente la barra de una capa en la línea de tiempo, incluso cruzando el vídeo base. El tiempo de aparición se conserva.
++- Arrastra una barra horizontalmente para cambiar cuándo aparece; arrastra sus extremos para recortarla. En **Tiempo** hay campos numéricos, dividir, duplicar y eliminar. Las escenas del vídeo base son consecutivas y comparten un nivel visual; sus flechas cambian el orden temporal.
++- Un logo o una estrella dibujados dentro de un archivo de vídeo forman parte del mismo clip. Para poner otra imagen detrás, quita el fondo del clip y coloca la imagen debajo de **Vídeo base**. Este orden no separa automáticamente los objetos que están grabados en el vídeo.
+@@ -38 +40 @@ Los proyectos y sus archivos se guardan automáticamente en IndexedDB, **en este
+-**Respaldo** descarga un `.divasvideo` con clips, imágenes, audio, capas, efectos y animaciones. **Abrir respaldo** crea una copia nueva. Los respaldos v39 se migran al abrirlos con el fondo intacto y sin añadir opacidad. v39 no puede abrir un proyecto creado con el formato v40.
++**Respaldo** descarga un `.divasvideo` con clips, imágenes, audio, capas, efectos y animaciones. **Abrir respaldo** crea una copia nueva. Los respaldos v39 se migran al abrirlos con el fondo intacto y sin añadir opacidad. Los proyectos anteriores a v42 conservan su orden original (vídeo base detrás, capas delante). El nuevo orden visual queda dentro del proyecto y del respaldo; versiones anteriores a v42 no interpretan ese nuevo orden. v39 no puede abrir un proyecto creado con el formato v40.
+@@ -58,0 +61,4 @@ Consulta `tests/README-video.md` para reproducir las comprobaciones. Las pruebas
++
++## Referencias de interacción
++
++La organización de pistas y la distinción entre tiempo y orden visual siguen patrones habituales de editores como [Kdenlive](https://docs.kdenlive.org/en/user_interface/timeline.html). Se revisaron también [el flujo de chroma de CapCut](https://www.capcut.com/resource/chroma-key-software) y [OpenCut](https://github.com/OpenCut-app/OpenCut), un proyecto de código abierto con licencia MIT. Esta actualización implementa el flujo en el código de Divas; no incorpora el código ni los servicios premium de esos editores.
+diff --git a/index.html b/index.html
+index bc97440..28bbe39 100644
+--- a/index.html
++++ b/index.html
+@@ -1405 +1405 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-<link rel="stylesheet" href="assets/divas-video.css?v=41">
++<link rel="stylesheet" href="assets/divas-video.css?v=42">
+@@ -2075,2 +2075,2 @@ SOFTWARE.
+-<script src="assets/divas-video-model.js?v=41"></script>
+-<script src="assets/divas-video.js?v=41"></script>
++<script src="assets/divas-video-model.js?v=42"></script>
++<script src="assets/divas-video.js?v=42"></script>
+@@ -7218 +7218 @@ function renderProjects(){
+-  $('projectCount').textContent=loading?'Preparando tus proyectos…':list.length+' '+(list.length===1?'proyecto':'proyectos')+(filtered?' encontrados':' disponibles');
++  $('projectCount').textContent=loading?'Preparando tus proyectos…':list.length+' '+(list.length===1?'proyecto':'proyectos')+(filtered?(list.length===1?' encontrado':' encontrados'):(list.length===1?' disponible':' disponibles'));
+diff --git a/tests/README-video.md b/tests/README-video.md
+index fba24d0..ef68c57 100644
+--- a/tests/README-video.md
++++ b/tests/README-video.md
+@@ -41,0 +42,14 @@ La salida WebM de prueba se decodificó con FFmpeg: 720 × 1280, 30 fps, 3 segun
++
++## v42 · antes/después, confirmación y orden visual
++
++`CHROMIUM_EXECUTABLE=/ruta/chromium npm --prefix tests run test:video:v42` utiliza además `whiteclip.mp4`, un vídeo vertical de tres segundos con un sujeto rojo sobre blanco:
++
++```sh
++ffmpeg -f lavfi -i color=c=white:s=180x320:r=30:d=3 -f lavfi -i color=c=red:s=50x80:r=30:d=3 -filter_complex "[0:v][1:v]overlay=x=65:y=110:shortest=1" -c:v libx264 -pix_fmt yuv420p whiteclip.mp4
++```
++
++Comprueba píxeles reales del original, del recorte, la división y el sujeto; una vista previa no cambia el proyecto guardado. Cubre confirmar/cancelar, deshacer, cuentagotas y automático, color equivocado, selección fuera del intervalo, controles claros/oscuros, medidas 360/390/1440 px, botones de orden, arrastre del asa y de la barra a través de la pista principal, tiempos intactos, reapertura desde Mis proyectos, respaldo y exportación. Las reglas del modelo incluyen el orden al dividir y la compatibilidad con respaldos anteriores. El recorrido v40 usa ahora la confirmación explícita de v42.
++
++Los clips de prueba son sintéticos. Las capturas facilitadas por el usuario permiten revisar el flujo, pero no sustituyen una prueba con su archivo original.
++
++El WebM de v42 se decodificó con FFmpeg a 2 fotogramas por segundo: 6 muestras, 720 × 1280, 30 fps y 3 segundos. En todas se conserva el sujeto rojo y aparece azul la zona de fondo blanco eliminada, procedente de una capa situada detrás del vídeo base.
+diff --git a/tests/package.json b/tests/package.json
+index b1fb733..0fe928e 100644
+--- a/tests/package.json
++++ b/tests/package.json
+@@ -10 +10,2 @@
+-    "test:projects": "node projects-browser.cjs"
++    "test:projects": "node projects-browser.cjs",
++    "test:video:v42": "node video-model.cjs && node video-effects.mjs && node video-v42.cjs"
+diff --git a/tests/video-model.cjs b/tests/video-model.cjs
+index 7dc13d5..d91db30 100644
+--- a/tests/video-model.cjs
++++ b/tests/video-model.cjs
+@@ -40 +40 @@ test('Layer backups retain keying, independent text, poses and audio envelopes',
+- const p=M.blank(),c=M.layer(video,1);c.keyer={enabled:true,color:'#00ff00',tolerance:.2,softness:.05,spill:.7};c.animation.enabled=true;c.animation.end.x=.8;c.transform.opacity=.65;p.layers=[c,M.textLayer(2)];p.audio=[M.audioLayer(audio,3)];const r=M.normalize(p,[video,audio]);assert.deepEqual(r,p);assert.equal(M.animatedPose(c,0).x,.5);assert.equal(M.animatedPose(c,1).x,.8);assert.equal(M.envelope(p.audio[0],0),0);
++ const p=M.blank(),c=M.layer(video,1);c.keyer={enabled:true,color:'#00ff00',tolerance:.2,softness:.05,spill:.7};c.animation.enabled=true;c.animation.end.x=.8;c.transform.opacity=.65;p.layers=[c,M.textLayer(2)];p.audio=[M.audioLayer(audio,3)];p.visualOrder=M.stackOrder(p);const r=M.normalize(p,[video,audio]);assert.deepEqual(r,p);assert.equal(M.animatedPose(c,0).x,.5);assert.equal(M.animatedPose(c,1).x,.8);assert.equal(M.envelope(p.audio[0],0),0);
+@@ -47,0 +48,8 @@ test('Splitting animated overlays preserves times and creates independent settin
++test('Visual order places overlays behind base without changing their times',()=>{
++ const p=M.blank(),base=M.scene(video),a=M.layer(image,1),b=M.textLayer(2);p.scenes=[base];p.layers=[a,b];const legacy=M.normalize(p,[video,image]);assert.deepEqual(M.active(legacy,3).map(r=>r.scene.id),[base.id,a.id,b.id]);
++ p.visualOrder=[a.id,'base',b.id];const r=M.normalize(p,[video,image]);assert.deepEqual(M.active(r,3).map(x=>x.scene.id),[a.id,base.id,b.id]);assert.deepEqual(r.layers.map(c=>c.start),[1,2]);assert.deepEqual(M.normalize(JSON.parse(JSON.stringify(r)),[video,image]),r);
++ r.visualOrder=['invalid',a.id,a.id,'base'];assert.deepEqual(M.stackOrder(r),[a.id,'base',b.id]);
++});
++test('Splitting a layer behind base preserves its stacking position',()=>{
++ const p=M.blank(),a=M.layer(video,1);a.out=4;p.scenes=[M.scene(image)];p.layers=[a];p.visualOrder=[a.id,'base'];const right=M.split(p,a.id,3);assert.deepEqual(M.stackOrder(p),[a.id,right,'base']);
++});
+diff --git a/tests/video-v40.cjs b/tests/video-v40.cjs
+index 0336b36..ad7ec6f 100644
+--- a/tests/video-v40.cjs
++++ b/tests/video-v40.cjs
+@@ -20,3 +20,3 @@ const blue=p=>p[2]>150&&p[1]<80;
+-  assert.equal(await page.locator('#dvKeyEnabled').isChecked(),true);assert.ok(blue(await pixel(page)),'picked green is transparent, revealing blue base');
+-  await page.locator('[data-dv=original]').click();assert.ok((await pixel(page))[1]>180,'before shows intact source');await page.locator('[data-dv=original]').click();assert.ok(blue(await pixel(page)));
+-  await page.locator('[data-dv=resetKey]').click();assert.ok((await pixel(page))[1]>180);await page.locator('[data-dv=autoColor]').click();assert.ok(blue(await pixel(page)),'automatic uniform-color detection removes green');
++  await page.locator('[data-dv=confirmKey]').click();assert.equal(await page.locator('#dvKeyEnabled').isChecked(),true);assert.ok(blue(await pixel(page)),'picked green is transparent, revealing blue base');
++  await page.locator('[data-dv=compareBefore]').click();assert.ok((await pixel(page))[1]>180,'before shows intact source');await page.locator('[data-dv=compareAfter]').click();assert.ok(blue(await pixel(page)));
++  await page.locator('[data-dv=resetKey]').click();await page.locator('[data-dv=confirmKey]').click();assert.ok((await pixel(page))[1]>180);await page.locator('[data-dv=autoColor]').click();await page.locator('[data-dv=confirmKey]').click();assert.ok(blue(await pixel(page)),'automatic uniform-color detection removes green');
+@@ -39,2 +39,2 @@ const blue=p=>p[2]>150&&p[1]<80;
+-  await page.locator('.dv-layer-bar').first().click();await page.locator('[data-dv=cutout]').click();await page.locator('.dv-inspector').evaluate(el=>el.scrollTop=0);await page.mouse.move(10,10);await page.screenshot({path:path.join(out,'desktop-cutout.png')});
+-  for(const width of [360,390]){await page.setViewportSize({width,height:844});await page.locator('[data-dv=cutout]').click();assert.equal(await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);const c=await page.locator('#dvCanvas').boundingBox();assert.ok(c.height>180,'mobile canvas stays large with tools open');assert.ok(await page.locator('[data-dv=pickColor]').isVisible());await page.locator('.dv-inspector').evaluate(el=>el.scrollTop=0);await page.mouse.move(1,1);await page.screenshot({path:path.join(out,'mobile-'+width+'.png')});}
++  await page.locator('.dv-layer-bar[aria-label="keyclip.mp4 · capa"]').click();await page.locator('[data-dv=cutout]').click();await page.locator('.dv-inspector').evaluate(el=>el.scrollTop=0);await page.mouse.move(10,10);await page.screenshot({path:path.join(out,'desktop-cutout.png')});
++  for(const width of [360,390]){await page.setViewportSize({width,height:844});assert.equal(await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);const c=await page.locator('#dvCanvas').boundingBox();assert.ok(c.height>180,'mobile canvas stays large with tools open');assert.ok(await page.locator('[data-dv=pickColor]').isVisible());await page.locator('.dv-inspector').evaluate(el=>el.scrollTop=0);await page.mouse.move(1,1);await page.screenshot({path:path.join(out,'mobile-'+width+'.png')});}
+@@ -45 +45 @@ const blue=p=>p[2]>150&&p[1]<80;
+-  await page.locator('[data-dv=library]').click();await page.locator('.projects-shortcuts [data-dv-new]').click();await page.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===0&&!document.getElementById('dvBody').inert);await page.locator('#dvBackupFile').setInputFiles(path.join(out,'v40.divasvideo'));await ready(page);await page.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===3);await page.locator('.dv-layer-bar').first().click();await page.locator('[data-dv=cutout]').click();assert.equal(await page.locator('#dvKeyEnabled').isChecked(),true);assert.ok(blue(await pixel(page)),'portable restore retains rendered cutout');
++  await page.locator('[data-dv=library]').click();await page.locator('.projects-shortcuts [data-dv-new]').click();await page.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===0&&!document.getElementById('dvBody').inert);await page.locator('#dvBackupFile').setInputFiles(path.join(out,'v40.divasvideo'));await ready(page);await page.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===3);await page.locator('.dv-layer-bar[aria-label="keyclip.mp4 · capa"]').click();await page.locator('[data-dv=cutout]').click();assert.equal(await page.locator('#dvKeyEnabled').isChecked(),true);assert.ok(blue(await pixel(page)),'portable restore retains rendered cutout');
+diff --git a/tests/video-v42.cjs b/tests/video-v42.cjs
+new file mode 100644
+index 0000000..97e58f8
+--- /dev/null
++++ b/tests/video-v42.cjs
+@@ -0,0 +1,43 @@
++'use strict';
++const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs'),path=require('node:path');
++const root=path.resolve(__dirname,'..'),fixtures=process.env.DIVAS_VIDEO_FIXTURES||path.resolve(root,'../qa/fixtures'),out=path.join(root,'test-output/video-v42');fs.mkdirSync(out,{recursive:true});
++const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+(new URL(req.url,'http://localhost').pathname==='/'?'/index.html':new URL(req.url,'http://localhost').pathname));try{if(!file.startsWith(root+path.sep))throw Error();res.setHeader('Content-Type',/\.m?js$/.test(file)?'application/javascript':file.endsWith('.css')?'text/css':'text/html');res.end(fs.readFileSync(file));}catch{res.writeHead(404);res.end();}});
++const ready=p=>p.waitForFunction(()=>!document.getElementById('dvBody').inert);
++const change=async(p,n,v)=>{await p.locator('#dv'+n).fill(String(v));await p.locator('#dv'+n).dispatchEvent('change');};
++const tool=(p,n)=>p.locator('[data-dv=tool][data-tool='+n+']').click();
++const pixel=(p,x=.1,y=.15)=>p.locator('#dvCanvas').evaluate((c,xy)=>[...c.getContext('2d').getImageData(c.width*xy[0],c.height*xy[1],1,1).data],[x,y]);
++const white=c=>c.slice(0,3).every(v=>v>235),blue=c=>c[2]>150&&c[0]<90&&c[1]<90,red=c=>c[0]>180&&c[1]<60&&c[2]<60;
++const records=p=>p.evaluate(async()=>{const d=await new Promise(r=>{const q=indexedDB.open('divas-video-v1');q.onsuccess=()=>r(q.result);});return new Promise(r=>{const q=d.transaction('projects').objectStore('projects').getAll();q.onsuccess=()=>r(q.result.map(x=>x.project));});});
++const order=p=>p.locator('#dvLayers [data-stack]').evaluateAll(es=>es.map(e=>e.dataset.stack));
++(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port,browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader']}),ctx=await browser.newContext({viewport:{width:1440,height:1000},acceptDownloads:true}),p=await ctx.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));await ctx.route(/supabase\.(co|in)/,r=>r.abort());
++try{
++ await p.goto(base);await p.locator('.projects-shortcuts [data-dv-new]').click();await ready(p);await p.locator('#dvFiles').setInputFiles(path.join(fixtures,'whiteclip.mp4'));await p.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1&&!document.getElementById('dvBody').inert);
++ const baseId=await p.locator('.dv-scene').getAttribute('data-id');await p.locator('#dvTransition').selectOption('cut');await p.locator('#dvName').fill('Recorte blanco y capas v42');await p.locator('[data-dv=save]').click();await p.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');
++ await p.locator('[data-dv=cutout]').click();assert.ok(white(await pixel(p)));await p.getByRole('button',{name:'Quitar blanco',exact:true}).click();assert.equal(await p.locator('#dvKeyConfirm').isVisible(),true);assert.ok(white(await pixel(p,.1,.15)),'comparison left retains white');assert.ok(!white(await pixel(p,.9,.15)),'comparison right shows checkerboard');assert.equal((await records(p))[0].scenes[0].keyer.enabled,false,'draft does not mutate or autosave project');assert.match(await p.locator('#dvKeyStatus').textContent(),/Vista previa.*[5-9][0-9]%/);
++ await p.locator('[data-dv=compareBefore]').click();assert.ok(white(await pixel(p,.9,.15)));await p.locator('[data-dv=compareAfter]').click();assert.ok(!white(await pixel(p,.1,.15)));assert.ok(red(await pixel(p,.5,.5)),'subject is preserved');await p.locator('[data-dv=compareSplit]').click();await p.locator('#dvCompareSplit').fill('75');assert.ok(white(await pixel(p,.6,.15)));assert.ok(!white(await pixel(p,.9,.15)));
++ await p.locator('[data-dv=cancelKey]').click();assert.ok(white(await pixel(p)));assert.equal((await records(p))[0].scenes[0].keyer.enabled,false);
++ // Automatic and eyedropper must both target the selected clip and offer an explicit confirmation.
++ await p.locator('[data-dv=autoColor]').click();assert.match(await p.locator('#dvKeyColor').inputValue(),/^#f[ef]f[ef]f[ef]$/);await p.locator('[data-dv=cancelKey]').click();await p.locator('[data-dv=pickColor]').click();await p.locator('#dvPickBanner').waitFor({state:'visible'});let box=await p.locator('#dvCanvas').boundingBox();await p.mouse.click(box.x+box.width*.1,box.y+box.height*.15);await p.locator('#dvKeyConfirm').waitFor({state:'visible'});
++ // Light/dark swatches stay actual colors; mobile keeps the subject and confirmation visible.
++ await p.evaluate(()=>document.documentElement.dataset.theme='dark');assert.equal(await p.locator('[aria-label="Quitar blanco"] span').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 255, 255)');
++ for(const width of [1440,390,360]){await p.setViewportSize({width,height:width===1440?1000:844});await p.locator('.dv-inspector').evaluate(e=>e.scrollTop=0);await p.mouse.move(1,1);assert.equal(await p.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>180,'visible mobile canvas '+width+': '+box.height);assert.ok(await p.locator('[data-dv=confirmKey]').isVisible());await p.screenshot({path:path.join(out,'compare-'+width+'.png')});}
++ await p.locator('[data-dv=confirmKey]').click();await p.locator('[data-dv=endCutout]').click();assert.ok(await p.locator('[data-dv=cutout]').isVisible(),'mobile returns to editing tools');await p.locator('[data-dv=cutout]').click();await p.setViewportSize({width:1440,height:1000});await p.waitForFunction(()=>document.getElementById('dvKeyConfirm').hidden);assert.equal((await records(p))[0].scenes[0].keyer.enabled,true);assert.ok(!white(await pixel(p)));await p.locator('[data-dv=undo]').click();assert.ok(white(await pixel(p)),'one undo restores original');await p.locator('[data-dv=redo]').click();assert.ok(!white(await pixel(p)));
++ console.log('PASS white video GPU keying, before/after/split, pending confirmation, cancel, picker, automatic and undo');
++ // Add a blue image at the front, then put it behind the actual main video.
++ await tool(p,'clip');await p.locator('#dvSeek').fill('0');await p.locator('#dvOverlayFiles').setInputFiles(path.join(fixtures,'backdrop.png'));await p.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===1&&!document.getElementById('dvBody').inert);await tool(p,'transform');await p.locator('#dvScale').fill('100');await p.locator('#dvScale').dispatchEvent('input');await tool(p,'clip');await change(p,'Start',0);await change(p,'Duration',3);
++ const layerId=await p.locator('.dv-layer-bar').getAttribute('data-id');assert.ok(blue(await pixel(p,.5,.5)),'front layer hides subject');assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=layers]').click();await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);assert.ok(red(await pixel(p,.5,.5)),'main video subject is in front');assert.ok(blue(await pixel(p,.1,.15)),'background color removed to expose lower layer');await p.screenshot({path:path.join(out,'layers-1440.png')});await p.setViewportSize({width:390,height:844});await p.locator('[data-dv=forward]').click();assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);await p.screenshot({path:path.join(out,'layers-390.png')});await p.setViewportSize({width:1440,height:1000});
++ // Drag the handle back to the front, then drag the timeline bar vertically behind base.
++ let from=await p.locator('#dvLayerStack [data-stack-drag="'+layerId+'"]').boundingBox(),to=await p.locator('#dvLayerStack [data-stack="base"]').boundingBox();await p.mouse.move(from.x+10,from.y+from.height/2);await p.mouse.down();await p.mouse.move(to.x+10,to.y+2,{steps:7});await p.mouse.up();assert.deepEqual(await order(p),[layerId,'base']);assert.ok(blue(await pixel(p,.5,.5)));
++ await p.waitForTimeout(160);from=await p.locator('.dv-layer-bar').boundingBox();to=await p.locator('#dvLayers [data-stack=base]').boundingBox();await p.mouse.move(from.x+from.width/2,from.y+from.height/2);await p.mouse.down();await p.mouse.move(from.x+from.width/2,to.y+to.height-2,{steps:8});await p.mouse.up();assert.deepEqual(await order(p),['base',layerId]);assert.ok(red(await pixel(p,.5,.5)));await p.waitForTimeout(160);await tool(p,'clip');assert.equal(await p.locator('#dvStart').inputValue(),'0');assert.equal(await p.locator('#dvDuration').inputValue(),'3');
++ // At another time the selected target is explicit and cutout returns to an existing frame.
++ await change(p,'Start',1);await change(p,'Duration',1);await p.locator('#dvSeek').fill('2.8');await p.waitForFunction(()=>document.getElementById('dvReveal').hidden===false);assert.match(await p.locator('#dvTargetStatus').textContent(),/No aparece/);await p.locator('[data-dv=cutout]').click();await p.waitForFunction(()=>Number(document.getElementById('dvSeek').value)<2);assert.ok(Number(await p.locator('#dvSeek').inputValue())<2);assert.equal(await p.locator('#dvTarget').inputValue(),layerId);await p.getByRole('button',{name:'Quitar blanco',exact:true}).click();await p.waitForFunction(()=>document.getElementById('dvKeyStatus').textContent.includes('casi no aparece'));assert.match(await p.locator('#dvKeyStatus').textContent(),/casi no aparece/);await p.locator('[data-dv=cancelKey]').click();await tool(p,'clip');await change(p,'Start',0);await change(p,'Duration',3);
++ await p.locator('#dvTarget').selectOption(baseId);await p.locator('[data-dv=cutout]').click();await p.locator('[data-dv=compareBefore]').click();assert.ok(white(await pixel(p,.1,.15)));await p.locator('[data-dv=compareAfter]').click();assert.ok(blue(await pixel(p,.1,.15)));assert.ok(red(await pixel(p,.5,.5)));
++ console.log('PASS front/back buttons, drag across base in both directions, preserved timing and explicit off-time target');
++ await p.locator('[data-dv=save]').click();await p.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');const original=(await records(p))[0];assert.deepEqual(original.visualOrder,[layerId,'base']);
++ let downloadEvent=p.waitForEvent('download');await p.locator('[data-dv=backup]').click();await (await downloadEvent).saveAs(path.join(out,'v42.divasvideo'));
++ downloadEvent=p.waitForEvent('download',{timeout:120000});await p.locator('[data-dv=export]').click();const movie=await downloadEvent;await movie.saveAs(path.join(out,movie.suggestedFilename()));await ready(p);console.log('PASS exported',movie.suggestedFilename());
++ await p.locator('[data-dv=library]').click();await p.locator('#projectGrid .project-card[data-kind=video] .project-open').click();await ready(p);assert.equal(await p.locator('.dv-scene').count(),1);await p.locator('#dvTarget').selectOption(baseId);await p.locator('[data-dv=cutout]').click();assert.ok(blue(await pixel(p,.1,.15)));assert.ok(red(await pixel(p,.5,.5)));
++ await p.locator('[data-dv=library]').click();await p.locator('.projects-shortcuts [data-dv-new]').click();await p.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===0&&!document.getElementById('dvBody').inert);await p.locator('#dvBackupFile').setInputFiles(path.join(out,'v42.divasvideo'));await p.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===1&&!document.getElementById('dvBody').inert);assert.deepEqual(await order(p),['base',layerId]);await p.locator('.dv-scene').click();assert.ok(blue(await pixel(p,.1,.15)));assert.ok(red(await pixel(p,.5,.5)));
++ assert.deepEqual(errors,[]);console.log('PASS main grid reload, portable layer order, responsive comparison, dark swatches and zero runtime errors');
++}catch(e){console.error('Page errors:',errors);console.error('Message:',await p.locator('#dvMessage').textContent());await p.screenshot({path:path.join(out,'failure.png')});throw e;}finally{await browser.close();server.close();}
++})().catch(e=>{console.error(e);server.close();process.exitCode=1;});
