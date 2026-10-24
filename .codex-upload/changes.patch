@@ -1,0 +1,340 @@
+diff --git a/README.md b/README.md
+index af28de6..5204092 100644
+--- a/README.md
++++ b/README.md
+@@ -10,0 +11,6 @@ No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulo
++## v41 · Mis proyectos: diseños y vídeos juntos
++
++El inicio reúne diseños y vídeos con filtros visibles **Todos / Diseños / Vídeos**, búsqueda, orden, miniaturas y duración. Cada tarjeta abre su editor. **Mis proyectos** dentro de Video regresa a ese inicio; **Crear video** empieza uno nuevo sin reemplazar el anterior. Los vídeos ya guardados aparecen automáticamente en su cuenta y navegador, sin migración ni SQL. Su menú permite descargar el respaldo y eliminarlos. Los diseños de cuenta siguen en Supabase; los vídeos siguen en el dispositivo y se identifican como tales.
++
++La lista usa solo resúmenes, sin cargar los clips al inicio. Se actualiza al guardar, eliminar, volver a la página o recibir cambios de otra pestaña.
++
+diff --git a/assets/divas-video.js b/assets/divas-video.js
+index 22dc2c7..0490219 100644
+--- a/assets/divas-video.js
++++ b/assets/divas-video.js
+@@ -11 +11,10 @@
+- let dbPromise;
++ let dbPromise,projectChannel;
++ try{projectChannel=new BroadcastChannel('divas-video-projects');projectChannel.onmessage=e=>{if(e.data?.owner===owner())V.bridge?.projectsChanged?.();};}catch{}
++ function projectsChanged(){V.bridge?.projectsChanged?.();try{projectChannel?.postMessage({owner:owner()});}catch{}}
++ // Summaries never load media blobs or initialize the editor. Query only this account's keys.
++ async function summaries(){
++  const expected=owner(),d=await db(),prefix=expected+':';
++  const records=await new Promise((resolve,reject)=>{const r=d.transaction('summaries').objectStore('summaries').getAll(IDBKeyRange.bound(prefix,prefix+'\uffff'));r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
++  if(expected!==owner())throw Error('La cuenta cambió. Actualiza Mis proyectos.');
++  return records.filter(p=>p.owner===expected);
++ }
+@@ -76,2 +85,2 @@
+-  const record={key,owner:V.owner,project,assets,version:expected+1,modified:Date.now()};
+-  const summary={key,owner:V.owner,id:project.id,name:project.name,modified:record.modified,scenes:project.scenes.length,seconds:M.total(project),thumb:image};
++  const record={key,owner:V.owner,project,assets,version:expected+1,created:Date.now(),modified:Date.now()};
++  const summary={key,owner:V.owner,id:project.id,name:project.name,modified:record.modified,scenes:project.scenes.length,seconds:M.total(project),thumb:image,ratio:project.ratio,created:record.created};
+@@ -79 +88 @@
+-   r.onsuccess=()=>{if((r.result?.version||0)!==expected){problem=Error('Este video cambió en otra pestaña. Descarga un respaldo o usa Guardar copia para conservar tus cambios.');tx.abort();return;}s.put(record);tx.objectStore('summaries').put(summary);};
++   r.onsuccess=()=>{if((r.result?.version||0)!==expected){problem=Error('Este video cambió en otra pestaña. Descarga un respaldo o usa Guardar copia para conservar tus cambios.');tx.abort();return;}record.created=r.result?.created||r.result?.modified||record.created;summary.created=record.created;s.put(record);tx.objectStore('summaries').put(summary);};
+@@ -82 +91 @@
+-  guard(epoch);V.savedVersion=expected+1;if(V.revision===revision)V.dirty=false;savedLabel();})();
++  guard(epoch);V.savedVersion=expected+1;if(V.revision===revision)V.dirty=false;savedLabel();projectsChanged();})();
+@@ -86,2 +95 @@
+-  const epoch=V.epoch,d=await db();const all=await new Promise((resolve,reject)=>{const r=d.transaction('summaries').objectStore('summaries').getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});guard(epoch);
+-  const records=all.filter(p=>p.owner===V.owner).sort((a,b)=>b.modified-a.modified);
++  const records=(await summaries()).sort((a,b)=>b.modified-a.modified);
+@@ -92,0 +101 @@
++  if(V.busy||V.exporting)throw Error('Espera a que termine la operación del video.');
+@@ -98 +107 @@
+- async function close(){if(V.busy||V.exporting)return;stop();try{await save();$(id).close();}catch(e){message(e.message+' Pulsa Respaldo antes de salir.',true);}}
++ async function close(){if(V.busy||V.exporting)return false;stop();try{await save();$(id).close();return true;}catch(e){message(e.message+' Pulsa Respaldo antes de salir.',true);return false;}}
+@@ -99,0 +109,24 @@
++ async function openProject(projectId){
++  await open();V.busy=true;setBusy();try{await loadProject(projectId);}catch(e){message(e.message,true);throw e;}finally{V.busy=false;setBusy();}
++ }
++ async function storedProject(projectId){
++  const expected=owner(),epoch=V.epoch;
++  if(V.project?.id===projectId&&V.owner===expected)await save();
++  const record=await getRecord(expected+':'+projectId);
++  if(expected!==owner()||epoch!==V.epoch)throw Error('La cuenta cambió. Actualiza Mis proyectos.');
++  if(!record||record.owner!==expected)throw Error('Este video ya no está disponible en este dispositivo.');
++  return record;
++ }
++ async function downloadProject(projectId){const record=await storedProject(projectId);await download(backupBlob(record.project,record.assets),filename(record.project.name)+'.divasvideo');}
++ async function deleteProject(projectId){
++  if(V.busy||V.exporting)throw Error('Espera a que termine la operación del video.');
++  const record=await storedProject(projectId),expected=owner(),epoch=V.epoch;
++  if(!confirm('¿Eliminar «'+record.project.name+'» de este dispositivo? Descarga un respaldo antes si quieres conservarlo.'))return false;
++  const d=await db();if(expected!==owner()||epoch!==V.epoch)throw Error('La cuenta cambió. Actualiza Mis proyectos.');
++  await new Promise((resolve,reject)=>{let problem;const tx=d.transaction(['projects','summaries'],'readwrite'),r=tx.objectStore('projects').get(record.key);
++   r.onsuccess=()=>{if(r.result?.version!==record.version){problem=Error('Este video cambió en otra pestaña. Actualiza Mis proyectos antes de eliminarlo.');tx.abort();return;}tx.objectStore('projects').delete(record.key);tx.objectStore('summaries').delete(record.key);};
++   tx.oncomplete=resolve;tx.onabort=tx.onerror=()=>reject(problem||tx.error||Error('No se pudo eliminar el video.'));
++  });
++  if(expected!==owner()||epoch!==V.epoch)return true;
++  if(V.project?.id===projectId){discard();V.project=M.blank();refresh();}projectsChanged();return true;
++ }
+@@ -246 +279 @@
+- const filename=()=>M.clean(V.project.name,60).replace(/[^\p{L}\p{N} _-]/gu,'').trim()||'divas-video';
++ const filename=(name=V.project.name)=>M.clean(name,60).replace(/[^\p{L}\p{N} _-]/gu,'').trim()||'divas-video';
+@@ -259,0 +293,4 @@
++ function backupBlob(project,assets){
++  const manifest={project,assets:assets.map(({blob,thumb,...a})=>a)},json=new TextEncoder().encode(JSON.stringify(manifest)),length=new Uint8Array(4);new DataView(length.buffer).setUint32(0,json.length,true);
++  return new Blob([MAGIC,length,json,...assets.map(a=>a.blob)],{type:'application/octet-stream'});
++ }
+@@ -261,2 +298 @@
+-  const assets=assetList();const manifest={project:V.project,assets:assets.map(({blob,thumb,...a})=>a)},json=new TextEncoder().encode(JSON.stringify(manifest)),length=new Uint8Array(4);new DataView(length.buffer).setUint32(0,json.length,true);
+-  await download(new Blob([MAGIC,length,json,...assets.map(a=>a.blob)],{type:'application/octet-stream'}),filename()+'.divasvideo');message('Respaldo descargado con todos los clips, imágenes y música. Ábrelo con Abrir respaldo.');
++  await download(backupBlob(V.project,assetList()),filename()+'.divasvideo');message('Respaldo descargado con todos los clips, imágenes y música. Ábrelo con Abrir respaldo.');
+@@ -283,0 +320 @@
++  if(action==='library'&&V.bridge.projects){if(await close())await V.bridge.projects();return;}
+@@ -291 +328 @@
+-  if(action==='delete'){if(!confirm('¿Eliminar este video guardado en este dispositivo?'))return;const epoch=V.epoch,d=await db(),key=V.owner+':'+b.dataset.id;guard(epoch);await new Promise((resolve,reject)=>{const tx=d.transaction(['projects','summaries'],'readwrite');tx.objectStore('projects').delete(key);tx.objectStore('summaries').delete(key);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});if(V.project.id===b.dataset.id){discard();V.project=M.blank();refresh();}await listProjects();return;}
++  if(action==='delete'){await deleteProject(b.dataset.id);await listProjects();return;}
+@@ -337 +374 @@
+- window.DivasVideo={init(bridge){V.bridge=bridge;makeUI();document.addEventListener('click',e=>{const b=e.target.closest('[data-dv-open]');if(!b)return;e.preventDefault();e.stopPropagation();open().catch(err=>V.bridge.notify(err.message));});},open,reset};
++ window.DivasVideo={init(bridge){V.bridge=bridge;makeUI();$(id).querySelector('[data-dv=library]').textContent=bridge.projects?'Mis proyectos':'Mis videos';document.addEventListener('click',e=>{const b=e.target.closest('[data-dv-open]');if(!b)return;e.preventDefault();e.stopPropagation();open().then(()=>b.hasAttribute('data-dv-new')?job(newProject):null).catch(err=>V.bridge.notify(err.message));});},open,openProject,summaries,downloadProject,deleteProject,reset};
+diff --git a/docs/DIVAS-VIDEO.md b/docs/DIVAS-VIDEO.md
+index 76ac4e6..2e43c14 100644
+--- a/docs/DIVAS-VIDEO.md
++++ b/docs/DIVAS-VIDEO.md
+@@ -1 +1 @@
+-# Divas Video · v40
++# Divas Video · v41
+@@ -36 +36 @@ El recorte es por color, no segmentación de personas mediante IA. Un fondo comp
+-Los proyectos y sus archivos se guardan automáticamente en IndexedDB, **en este navegador y dispositivo**, separados por cuenta. **Guardar** confirma el estado. **Mis videos** permite retomarlos. No se suben vídeos a Supabase.
++Los proyectos y sus archivos se guardan automáticamente en IndexedDB, **en este navegador y dispositivo**, separados por cuenta. **Guardar** confirma el estado. **Mis proyectos**, en el inicio, reúne los vídeos y los diseños. Usa los filtros **Todos / Diseños / Vídeos**, busca por nombre o cambia el orden. Las tarjetas de vídeo muestran su duración, abren el vídeo correspondiente y permiten descargar su respaldo o eliminarlo desde el menú •••. El botón **Mis proyectos** de Video regresa a esa misma lista. **Crear video** empieza un proyecto nuevo; no reemplaza el anterior. Los vídeos guardados antes de v41 aparecen automáticamente en la misma cuenta y navegador. No se suben vídeos a Supabase.
+diff --git a/index.html b/index.html
+index f041e77..bc97440 100644
+--- a/index.html
++++ b/index.html
+@@ -1314,0 +1315,2 @@ dialog::backdrop{backdrop-filter:none}
++.project-kind-filters{display:flex;gap:7px;margin-top:16px;flex-wrap:wrap}.project-kind-filters button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 16px;border:1px solid var(--ux-line);border-radius:999px;background:var(--ux-surface);color:var(--ux-muted);font-size:13px;font-weight:600}.project-kind-filters button[aria-pressed=true]{background:var(--ux-accent);color:#fff;border-color:var(--ux-accent)}.project-kind-filters span{font-size:11px;opacity:.85}.project-thumb{position:relative}.project-thumb .project-kind-badge,.project-thumb .project-duration{position:absolute;bottom:9px;font:600 10px/1.4 Arial,sans-serif;background:var(--ux-surface);color:var(--ux-ink);border:1px solid var(--ux-line);border-radius:7px;padding:4px 7px}.project-kind-badge{left:9px}.project-thumb .project-duration{right:9px;background:#211526;color:#fff;border-color:transparent}.project-card[data-kind=video] .project-kind-badge{color:var(--ux-accent)}
++@media(max-width:600px){.project-kind-filters{gap:6px}.project-kind-filters button{flex:1;min-width:0;font-size:12px;padding:8px 10px}.project-thumb .project-kind-badge,.project-thumb .project-duration{font-size:10px;bottom:6px}.project-kind-badge{left:6px}.project-thumb .project-duration{right:6px}}
+@@ -1403 +1405 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-<link rel="stylesheet" href="assets/divas-video.css?v=39">
++<link rel="stylesheet" href="assets/divas-video.css?v=41">
+@@ -1486 +1488 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-    <div class="projects-shortcuts"><button data-dv-open>▷ Crear video</button><button data-action="templates">✧ Plantillas</button><button data-action="open">↥ Abrir archivo</button><button class="ux-bot-shortcut" data-action="helpGestures">Divas Bot ↗</button></div>
++    <div class="projects-shortcuts"><button data-dv-open data-dv-new>▷ Crear video</button><button data-action="templates">✧ Plantillas</button><button data-action="open">↥ Abrir archivo</button><button class="ux-bot-shortcut" data-action="helpGestures">Divas Bot ↗</button></div>
+@@ -1490 +1492,7 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-    <div class="ux-project-heading"><h2>Mis diseños</h2><p id="projectCount" role="status">Preparando…</p></div>
++    <div class="ux-project-heading"><h2>Mis proyectos</h2><p id="projectCount" role="status">Preparando…</p></div>
++    <div id="projectKindFilters" class="project-kind-filters" role="group" aria-label="Mostrar proyectos">
++      <button data-action="projectKind" data-value="todos" aria-pressed="true">Todos <span id="projectKindAllCount">0</span></button>
++      <button data-action="projectKind" data-value="design" aria-pressed="false">Diseños <span id="projectKindDesignCount">0</span></button>
++      <button data-action="projectKind" data-value="video" aria-pressed="false">Vídeos <span id="projectKindVideoCount">0</span></button>
++    </div>
++    <p id="videoProjectNotice" class="storage-notice" role="status" hidden></p>
+@@ -1492 +1500 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-      <input id="projectSearch" type="search" placeholder="Buscar un diseño…" aria-label="Buscar proyectos">
++      <input id="projectSearch" type="search" placeholder="Buscar un proyecto…" aria-label="Buscar proyectos">
+@@ -1494 +1502 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-        <label class="co-chat-sr" for="projectFilter">Tipo de proyecto</label><select id="projectFilter"><option value="todos">Todos los diseños</option><option value="evento">Eventos</option><option value="reclutamiento">Reclutamiento</option><option value="perfil">Perfiles</option><option value="libre">Diseños libres</option></select>
++        <label class="co-chat-sr" for="projectFilter">Tema del diseño</label><select id="projectFilter"><option value="todos">Todos los temas</option><option value="evento">Eventos</option><option value="reclutamiento">Reclutamiento</option><option value="perfil">Perfiles</option><option value="libre">Diseños libres</option></select>
+@@ -1498,2 +1506,2 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-    <div id="projectGrid" class="project-grid"></div><button id="moreProjects" data-action="moreProjects" hidden>Ver más diseños</button>
+-    <details class="project-storage-note"><summary>¿Dónde están mis diseños?</summary><p id="projectStorageDescription">Tus proyectos locales se guardan en este navegador.</p><button class="quiet" data-action="agency">Logo e identidad de la agencia</button></details>
++    <div id="projectGrid" class="project-grid"></div><button id="moreProjects" data-action="moreProjects" hidden>Ver más proyectos</button>
++    <details class="project-storage-note"><summary>¿Dónde están mis proyectos?</summary><p id="projectStorageDescription">Tus diseños y vídeos locales se guardan en este navegador.</p><button class="quiet" data-action="agency">Logo e identidad de la agencia</button></details>
+@@ -2067,2 +2075,2 @@ SOFTWARE.
+-<script src="assets/divas-video-model.js?v=39"></script>
+-<script src="assets/divas-video.js?v=39"></script>
++<script src="assets/divas-video-model.js?v=41"></script>
++<script src="assets/divas-video.js?v=41"></script>
+@@ -5553 +5561,6 @@ async function action(name,button){
+-    case "clearProjectFilters":$("projectSearch").value="";$("projectFilter").value="todos";renderProjects();break;
++    case "projectKind":PV.kind=['todos','design','video'].includes(v)?v:'todos';$("projectFilter").value="todos";renderProjects();break;
++    case "refreshVideoProjects":await refreshVideoProjects();break;
++    case "openVideoProject":await run(()=>window.DivasVideo.openProject(button.dataset.id));break;
++    case "backupVideoProject":await run(async()=>{await window.DivasVideo.downloadProject(button.dataset.id);notify('Respaldo de vídeo descargado con sus archivos editables.');});break;
++    case "deleteVideoProject":await run(()=>window.DivasVideo.deleteProject(button.dataset.id));break;
++    case "clearProjectFilters":$("projectSearch").value="";$("projectFilter").value="todos";PV.kind='todos';renderProjects();break;
+@@ -5886 +5899 @@ $("projectSearch").addEventListener("input",renderProjects);
+-$("projectFilter").addEventListener("change",renderProjects);
++$("projectFilter").addEventListener("change",()=>{if($("projectFilter").value!=="todos")PV.kind="design";renderProjects();});
+@@ -6229 +6242 @@ function updateAccountUI(){
+-  $('projectStorageDescription').textContent=signed?'Tus proyectos se guardan en tu cuenta y puedes retomarlos en otro dispositivo.':'Tus proyectos locales se guardan en este navegador. Entra para usar tu cuenta y los recursos privados.';
++  $('projectStorageDescription').textContent=signed?'Tus diseños se guardan en tu cuenta. Los vídeos se guardan solo en este navegador y dispositivo, separados por cuenta. Descarga su respaldo para llevarlos a otro equipo.':'Tus diseños y vídeos se guardan en este navegador. Entra para usar tu cuenta y los recursos privados. Los vídeos siguen siendo locales: descarga su respaldo para llevarlos a otro equipo.';
+@@ -6237,0 +6251 @@ function clearCloudMemory(){
++  resetVideoProjects();
+@@ -6259 +6273 @@ async function resetAccountWorkspace(next){
+-  $('projectSearch').value='';$('projectFilter').value='todos';$('projectSort').value='recientes';
++  $('projectSearch').value='';$('projectFilter').value='todos';$('projectSort').value='recientes';PV.kind='todos';
+@@ -6839,0 +6854,16 @@ const P={current:null,versions:new Map(),summaries:[],saveChain:Promise.resolve(
++const PV={items:[],owner:null,request:0,loading:false,loaded:false,error:'',kind:'todos'};
++const videoProjectOwner=()=>A.user?.id||'local';
++function resetVideoProjects(){PV.request++;PV.items=[];PV.owner=null;PV.loaded=false;PV.loading=false;PV.error='';UX.latestKey='';}
++function allProjectSummaries(){return [...projectSummaries().map(p=>({...p,kind:'design'})),...(PV.owner===videoProjectOwner()?PV.items:[])];}
++async function refreshVideoProjects(){
++ const request=++PV.request,epoch=A.epoch,expected=videoProjectOwner();
++ if(PV.owner!==expected){PV.items=[];PV.loaded=false;}PV.owner=expected;PV.loading=true;PV.error='';renderProjects();
++ try{
++  if(!window.DivasVideo?.summaries)throw Error('No se cargó el editor de vídeo. Recarga la página para volver a intentarlo.');
++  const items=await window.DivasVideo.summaries();
++  if(request!==PV.request||epoch!==A.epoch||expected!==videoProjectOwner())return;
++  PV.items=items.map(p=>({id:p.id,kind:'video',nombre:String(p.name||'Mi vídeo Divas'),modificado:p.modified||0,creado:p.created||p.modified||0,miniatura:p.thumb||'',formato:p.ratio||'',seconds:Number(p.seconds)||0,objetivo:'video'}));PV.loaded=true;
++ }catch(e){if(request===PV.request&&epoch===A.epoch)PV.error=e.message||'No se pudieron cargar los vídeos de este dispositivo.';}
++ finally{if(request===PV.request&&epoch===A.epoch){PV.loading=false;renderProjects();}}
++}
++function videoDuration(seconds){const n=Math.max(0,Math.ceil(seconds));return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');}
+@@ -7174 +7204 @@ async function initializeProjects(){
+-  finally{P.initialized=true;renderProjects();updateBrandLogo();}
++  finally{P.initialized=true;renderProjects();updateBrandLogo();refreshVideoProjects();}
+@@ -7178,12 +7208,19 @@ function renderProjects(){
+-  const gridKey=[search,filter,sort].join("|");if(gridKey!==UX.gridKey){UX.gridKey=gridKey;UX.gridLimit=24;}uxRenderLatest();
+-  const list=projectSummaries().filter(p=>(filter==="todos"||p.objetivo===filter)&&p.nombre.toLocaleLowerCase("es").includes(search));
+-  list.sort(sort==="nombre"?(a,b)=>a.nombre.localeCompare(b.nombre,"es"):(a,b)=>sort==="antiguos"?a.creado-b.creado:b.modificado-a.modificado);
+-  $("projectCount").textContent=!P.initialized?"Preparando tus proyectos…":list.length+" "+(list.length===1?"proyecto":"proyectos")+(search||filter!=="todos"?" encontrados":" disponibles");
+-  $("projectGrid").classList.toggle("project-grid",list.length>0);
+-  $("moreProjects").hidden=list.length<=UX.gridLimit;
+-  $("projectGrid").innerHTML=list.length?list.slice(0,UX.gridLimit).map(p=>{
+-    const date=new Date(p.modificado).toLocaleString("es-CL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+-    const progress=p.memory?"En esta pestaña · sin guardar":p.pending?(A.member?"Pendiente de subir · en dispositivo":"Recuperación en dispositivo"):A.member?"Guardado en tu cuenta":"Guardado en este navegador";
+-    return `<article class="project-card"><button class="project-open" data-action="openSavedProject" data-id="${esc(p.id)}" aria-label="Continuar ${esc(p.nombre)}">
+-      <div class="project-thumb">${validLogo(p.miniatura)?`<img src="${p.miniatura}" alt="Vista previa de ${esc(p.nombre)}" loading="lazy" decoding="async">`:`<span>${esc(PROJECT_LABELS[p.objetivo]||"Mi diseño")}</span>`}</div>
+-      <div class="project-info"><strong>${esc(p.nombre)}</strong><small>${esc(PROJECT_LABELS[p.objetivo]||"Diseño libre")} · ${esc(p.formato)}<br>${esc(date)}</small></div></button>
++  const gridKey=[search,filter,sort,PV.kind].join("|");if(gridKey!==UX.gridKey){UX.gridKey=gridKey;UX.gridLimit=24;}uxRenderLatest();
++  const all=allProjectSummaries(),videos=all.filter(p=>p.kind==='video').length;
++  $('projectKindAllCount').textContent=all.length;$('projectKindDesignCount').textContent=all.length-videos;$('projectKindVideoCount').textContent=PV.loading&&!PV.loaded?'…':videos;
++  $('projectKindFilters').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.value===PV.kind)));
++  $('projectFilter').disabled=PV.kind==='video';
++  $('videoProjectNotice').hidden=!PV.error;$('videoProjectNotice').replaceChildren();
++  if(PV.error){$('videoProjectNotice').append(PV.error+' ');const b=document.createElement('button');b.dataset.action='refreshVideoProjects';b.textContent='Volver a intentar';$('videoProjectNotice').append(b);}
++  const list=all.filter(p=>(PV.kind==='todos'||p.kind===PV.kind)&&(filter==='todos'||(p.kind==='design'&&p.objetivo===filter))&&p.nombre.toLocaleLowerCase('es').includes(search));
++  list.sort(sort==='nombre'?(a,b)=>a.nombre.localeCompare(b.nombre,'es'):(a,b)=>sort==='antiguos'?a.creado-b.creado:b.modificado-a.modificado);
++  const filtered=search||filter!=='todos'||PV.kind!=='todos',loading=!P.initialized||(PV.loading&&!PV.loaded&&PV.kind!=='design');
++  $('projectCount').textContent=loading?'Preparando tus proyectos…':list.length+' '+(list.length===1?'proyecto':'proyectos')+(filtered?' encontrados':' disponibles');
++  $('projectGrid').classList.toggle('project-grid',list.length>0);$('projectGrid').setAttribute('aria-busy',String(loading));$('moreProjects').hidden=list.length<=UX.gridLimit;
++  $('projectGrid').innerHTML=list.length?list.slice(0,UX.gridLimit).map(p=>{
++    const video=p.kind==='video',date=new Date(p.modificado).toLocaleString('es-CL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
++    const progress=video?'Vídeo · en este dispositivo':p.memory?'En esta pestaña · sin guardar':p.pending?(A.member?'Pendiente de subir · en dispositivo':'Recuperación en dispositivo'):A.member?'Guardado en tu cuenta':'Guardado en este navegador';
++    const detail=video?['Vídeo',videoDuration(p.seconds),p.formato].filter(Boolean).join(' · '):(PROJECT_LABELS[p.objetivo]||'Diseño libre')+' · '+p.formato;
++    return `<article class="project-card" data-kind="${p.kind}"><button class="project-open" data-action="${video?'openVideoProject':'openSavedProject'}" data-id="${esc(p.id)}" aria-label="Continuar ${video?'vídeo':'diseño'} ${esc(p.nombre)}">
++      <div class="project-thumb">${validLogo(p.miniatura)?`<img src="${esc(p.miniatura)}" alt="Vista previa de ${esc(p.nombre)}" loading="lazy" decoding="async">`:`<span>${video?'Mi vídeo':esc(PROJECT_LABELS[p.objetivo]||'Mi diseño')}</span>`}<span class="project-kind-badge">${video?'▷ Vídeo':'Diseño'}</span>${video?`<span class="project-duration">${videoDuration(p.seconds)}</span>`:''}</div>
++      <div class="project-info"><strong>${esc(p.nombre)}</strong><small>${esc(detail)}<br>${esc(date)}</small></div></button>
+@@ -7191,2 +7228 @@ function renderProjects(){
+-        <button data-action="renameProject" data-id="${esc(p.id)}">Cambiar nombre</button><button data-action="copySavedProject" data-id="${esc(p.id)}">Duplicar proyecto</button>
+-        <button data-action="exportSavedProject" data-id="${esc(p.id)}">Descargar editable</button><button class="danger" data-action="deleteSavedProject" data-id="${esc(p.id)}">Eliminar proyecto</button>
++        ${video?`<button data-action="openVideoProject" data-id="${esc(p.id)}">Editar vídeo</button><button data-action="backupVideoProject" data-id="${esc(p.id)}">Descargar respaldo</button><button class="danger" data-action="deleteVideoProject" data-id="${esc(p.id)}">Eliminar vídeo</button>`:`<button data-action="renameProject" data-id="${esc(p.id)}">Cambiar nombre</button><button data-action="copySavedProject" data-id="${esc(p.id)}">Duplicar proyecto</button><button data-action="exportSavedProject" data-id="${esc(p.id)}">Descargar editable</button><button class="danger" data-action="deleteSavedProject" data-id="${esc(p.id)}">Eliminar proyecto</button>`}
+@@ -7194 +7230 @@ function renderProjects(){
+-  }).join(""):`<div class="project-empty"><strong>${search||filter!=="todos"?"No hay diseños con esos filtros":"Tu próximo diseño empieza aquí"}</strong><p>${search||filter!=="todos"?"Prueba otro nombre o selecciona Todos los diseños.":"Crea un flyer o importa uno editable. Cada proyecto tendrá su propio espacio para retomarlo después."}</p><button class="primary" data-action="${search||filter!=="todos"?"clearProjectFilters":"newDesign"}">${search||filter!=="todos"?"Quitar filtros":"Crear mi primer diseño"}</button></div>`;
++  }).join(''):loading?'<div class="project-empty"><strong>Cargando tus proyectos…</strong></div>':`<div class="project-empty"><strong>${filtered?'No hay proyectos con esos filtros':'Tu próximo proyecto empieza aquí'}</strong><p>${filtered?'Prueba otro nombre o cambia de filtro.':'Crea un diseño o un vídeo. Ambos aparecerán aquí para retomarlos cuando quieras.'}</p>${filtered?'<button data-action="clearProjectFilters">Quitar filtros</button>':'<button class="primary" data-action="newDesign">Crear diseño</button>'} <button data-dv-open data-dv-new>▷ Empezar un vídeo</button></div>`;
+@@ -7195,0 +7232 @@ function renderProjects(){
++
+@@ -7200 +7237 @@ async function showProjects(){
+-  $("sidePanel").classList.remove("mobile-open");renderProjects();updateShell();
++  $("sidePanel").classList.remove("mobile-open");renderProjects();updateShell();refreshVideoProjects();
+@@ -9853 +9890 @@ function uxSaveUI(state=savingState()){
+-function uxProjectProgress(p){return p.memory?'Falta guardar':p.pending?'Falta subir':A.member?'En tu cuenta':'En este equipo';}
++function uxProjectProgress(p){if(p.kind==='video')return 'Vídeo · '+videoDuration(p.seconds)+' · en este dispositivo';return p.memory?'Falta guardar':p.pending?'Falta subir':A.member?'En tu cuenta':'En este equipo';}
+@@ -9855,2 +9892,2 @@ function uxRenderLatest(){
+-  const el=$('resumeProject'),p=projectSummaries().sort((a,b)=>b.modificado-a.modificado)[0];
+-  const key=JSON.stringify([p?.id,p?.modificado,p?.nombre,p?.pending,p?.memory,!!A.member,p?.miniatura]);
++  const el=$('resumeProject'),p=allProjectSummaries().sort((a,b)=>b.modificado-a.modificado)[0];
++  const key=JSON.stringify([p?.kind,p?.id,p?.modificado,p?.nombre,p?.pending,p?.memory,!!A.member,p?.miniatura]);
+@@ -9859 +9896 @@ function uxRenderLatest(){
+-  el.innerHTML=`<button data-action="openSavedProject" data-id="${esc(p.id)}" class="resume-design"><span class="resume-art">${validLogo(p.miniatura)?`<img src="${p.miniatura}" alt="" decoding="async">`:uiIcon('image')}</span><span class="resume-copy"><small>CONTINÚA DONDE LO DEJASTE</small><strong>${esc(p.nombre)}</strong><span>${uxProjectProgress(p)}</span></span><span class="resume-arrow" aria-hidden="true">↗</span></button>`;
++  el.innerHTML=`<button data-action="${p.kind==='video'?'openVideoProject':'openSavedProject'}" data-id="${esc(p.id)}" class="resume-design"><span class="resume-art">${validLogo(p.miniatura)?`<img src="${p.miniatura}" alt="" decoding="async">`:uiIcon('image')}</span><span class="resume-copy"><small>CONTINÚA DONDE LO DEJASTE</small><strong>${esc(p.nombre)}</strong><span>${uxProjectProgress(p)}</span></span><span class="resume-arrow" aria-hidden="true">↗</span></button>`;
+@@ -9980,0 +10018 @@ window.DivasVideo?.init({
++  projects:showProjects,projectsChanged:()=>{refreshVideoProjects();},
+@@ -9990,0 +10029 @@ window.DivasVideo?.init({
++window.addEventListener('focus',()=>{if(P.initialized&&S.view==='projects'&&!A.identityChanging&&!A.switching)refreshVideoProjects();});
+diff --git a/tests/README-video.md b/tests/README-video.md
+index 573487b..fba24d0 100644
+--- a/tests/README-video.md
++++ b/tests/README-video.md
+@@ -37,0 +38,4 @@ La salida WebM de prueba se decodificó con FFmpeg: 720 × 1280, 30 fps, 3 segun
++
++## v41 · inicio unificado
++
++`CHROMIUM_EXECUTABLE=/ruta/chromium npm --prefix tests run test:projects` recorre la página real con Supabase bloqueado. Crea un diseño y dos vídeos con archivos de prueba, verifica filtros, búsqueda, orden, duración, retomar el proyecto correcto, renombrar, respaldo directo, recarga, resúmenes anteriores a v41, separación por cuenta, aviso entre pestañas, eliminación y recuperación de errores de almacenamiento. Comprueba los filtros y el retorno a Mis proyectos en 360, 390 y 1440 px. Los ganchos de pruebas se inyectan solo por el servidor local; no se publican.
+diff --git a/tests/package.json b/tests/package.json
+index 6130ab9..b1fb733 100644
+--- a/tests/package.json
++++ b/tests/package.json
+@@ -9 +9,2 @@
+-    "test:video:v40": "node video-model.cjs && node video-effects.mjs && node video-v40.cjs"
++    "test:video:v40": "node video-model.cjs && node video-effects.mjs && node video-v40.cjs",
++    "test:projects": "node projects-browser.cjs"
+diff --git a/tests/projects-browser.cjs b/tests/projects-browser.cjs
+new file mode 100644
+index 0000000..2514b35
+--- /dev/null
++++ b/tests/projects-browser.cjs
+@@ -0,0 +1,55 @@
++'use strict';
++const {chromium}=require('playwright');
++const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
++const root=path.resolve(__dirname,'..'),fixtures=process.env.DIVAS_VIDEO_FIXTURES||path.resolve(root,'../qa/fixtures'),out=path.join(root,'test-output/projects-v41');fs.mkdirSync(out,{recursive:true});
++const source=fs.readFileSync(path.join(root,'index.html'),'utf8');
++// Test hooks are injected only by this local server; production source has none.
++const html=source.replace('boot().catch(error=>notify(error.message));','window.__projectsTest={A,P,PV,S,showProjects,refreshVideoProjects,resetVideoProjects,clearCloudMemory,renderProjects,updateAccountUI};boot().catch(error=>notify(error.message));');
++const server=http.createServer((req,res)=>{try{const name=new URL(req.url,'http://localhost').pathname,file=path.resolve(root,'.'+(name==='/'?'/index.html':name));if(!file.startsWith(root+path.sep))throw Error();res.setHeader('Content-Type',/\.m?js$/.test(file)?'application/javascript':file.endsWith('.css')?'text/css':'text/html');res.end(name==='/'?html:fs.readFileSync(file));}catch{res.writeHead(404);res.end();}});
++(async()=>{
++ await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;
++ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
++ const context=await browser.newContext({viewport:{width:1440,height:950},acceptDownloads:true});await context.route(/supabase\.(co|in)/,r=>r.abort());const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack));
++ const card=(kind)=>page.locator('#projectGrid .project-card[data-kind='+kind+']');
++ const ready=()=>page.waitForFunction(()=>window.__projectsTest?.P.initialized&&window.__projectsTest.PV.loaded&&!window.__projectsTest.PV.loading);
++ const saved=()=>page.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo'&&!document.getElementById('dvBody').inert);
++ const home=async()=>{await page.getByRole('button',{name:'Mis proyectos',exact:true}).click();await page.locator('#divasVideoDialog').waitFor({state:'hidden'});await ready();};
++ const kind=async name=>{await page.locator('#projectKindFilters [data-value='+name+']').click();};
++ async function createVideo(name,file){
++  await page.locator('.projects-shortcuts [data-dv-new]').click();await page.waitForFunction(()=>document.getElementById('divasVideoDialog').open&&!document.getElementById('dvBody').inert&&document.querySelectorAll('.dv-scene').length===0);
++  await page.locator('#dvFiles').setInputFiles(path.join(fixtures,file));await page.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1&&!document.getElementById('dvBody').inert);
++  await page.locator('#dvName').fill(name);await page.locator('[data-dv=save]').click();await saved();await home();
++ }
++ try{
++  await page.goto(base);await ready();assert.equal(await card('video').count(),0);assert.equal(await page.getByRole('heading',{name:'Mis proyectos',exact:true}).count(),1);
++  await page.locator('#startImageInput').setInputFiles(path.join(fixtures,'photo.png'));await page.waitForFunction(()=>!document.getElementById('workspace').hidden);await page.evaluate(()=>__projectsTest.showProjects());await ready();assert.equal(await card('design').count(),1);
++  await createVideo('Evento rosa','clip.mp4');await createVideo('Anuncio dorado','photo.png');assert.equal(await card('video').count(),2);assert.equal(await card('design').count(),1);assert.equal(await page.locator('#projectKindAllCount').textContent(),'3');assert.match(await page.locator('#resumeProject').textContent(),/Anuncio dorado/);
++  assert.equal(await card('video').filter({hasText:'Evento rosa'}).locator('.project-duration').textContent(),'0:04');
++  await kind('video');assert.equal(await card('video').count(),2);assert.equal(await card('design').count(),0);assert.equal(await page.locator('#projectFilter').isDisabled(),true);
++  await page.locator('#projectSearch').fill('rosa');assert.equal(await card('video').count(),1);await page.locator('#projectSearch').fill('');await kind('design');assert.equal(await card('design').count(),1);assert.equal(await card('video').count(),0);await kind('todos');
++  await page.locator('#projectFilters').evaluate(e=>e.open=true);await page.locator('#projectSort').selectOption('nombre');assert.deepEqual(await page.locator('#projectGrid .project-info strong').allTextContents(),['Anuncio dorado','Evento rosa','photo']);await page.locator('#projectSort').selectOption('recientes');await page.locator('#projectFilters').evaluate(e=>e.open=false);
++  console.log('PASS mixed projects, visible type filters, search, sorting, duration and latest project');
++  // Open exact saved video and edit it; the home card must update without a new project.
++  await card('video').filter({hasText:'Evento rosa'}).locator('.project-open').click();await page.waitForFunction(()=>!document.getElementById('dvBody').inert&&document.getElementById('dvName').value==='Evento rosa');assert.equal(await page.locator('.dv-scene').count(),1);await page.locator('#dvName').fill('Evento rosa editado');await home();assert.equal(await card('video').count(),2);assert.equal(await card('video').filter({hasText:'Evento rosa editado'}).count(),1);
++  // Back up directly from home, without opening the video dialog.
++  const event=card('video').filter({hasText:'Evento rosa editado'});await event.locator('summary').click();const dl=page.waitForEvent('download');await event.getByRole('button',{name:'Descargar respaldo',exact:true}).click();const download=await dl;await download.saveAs(path.join(out,'evento.divasvideo'));assert.ok(fs.statSync(path.join(out,'evento.divasvideo')).size>1000);assert.equal(await page.locator('#divasVideoDialog').isVisible(),false);
++  await page.reload();await ready();assert.equal(await card('video').count(),2);assert.equal(await card('design').count(),1);
++  console.log('PASS opening exact video, rename/save refresh, direct portable backup and reload');
++  // Legacy summaries lack ratio/created; never require media to list them.
++  await page.evaluate(async()=>{const db=await new Promise((r,j)=>{const q=indexedDB.open('divas-video-v1',1);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error);});await new Promise(r=>{const tx=db.transaction('summaries','readwrite');tx.objectStore('summaries').put({key:'local:legacy-video',owner:'local',id:'legacy-video',name:'Vídeo anterior v40',modified:1,scenes:1,seconds:12,thumb:''});tx.objectStore('summaries').put({key:'another-account:private',owner:'another-account',id:'private',name:'Privado otra cuenta',modified:2,seconds:8});tx.oncomplete=r;});db.close();await __projectsTest.refreshVideoProjects();});
++  assert.equal(await card('video').count(),3);assert.equal(await page.getByText('Privado otra cuenta',{exact:true}).count(),0);assert.match(await card('video').filter({hasText:'Vídeo anterior v40'}).textContent(),/0:12/);
++  await page.evaluate(async()=>{const h=__projectsTest;h.A.epoch++;DivasVideo.reset();h.resetVideoProjects();h.A.user={id:'another-account'};h.renderProjects();await h.refreshVideoProjects();});assert.equal(await card('video').count(),1);assert.equal(await card('video').filter({hasText:'Privado otra cuenta'}).count(),1);
++  await page.evaluate(async()=>{const h=__projectsTest;h.A.epoch++;DivasVideo.reset();h.resetVideoProjects();h.A.user=null;await h.refreshVideoProjects();});assert.equal(await card('video').count(),3);
++  console.log('PASS pre-existing v40 summaries, account isolation and account change');
++  // A second tab must refresh the home list through the change notification.
++  const second=await context.newPage();await second.goto(base);await second.waitForFunction(()=>window.__projectsTest.PV.loaded);await second.locator('#projectGrid .project-card[data-kind=video]').filter({hasText:'Anuncio dorado'}).locator('.project-open').click();await second.waitForFunction(()=>!document.getElementById('dvBody').inert);await second.locator('#dvName').fill('Anuncio actualizado');await second.locator('[data-dv=save]').click();await page.waitForFunction(()=>document.getElementById('projectGrid').textContent.includes('Anuncio actualizado'));await second.close();
++  // Deletion must refresh both stores, stay on home and never resurrect after reload.
++  const remove=card('video').filter({hasText:'Anuncio actualizado'});await remove.locator('summary').click();page.once('dialog',d=>d.accept());await remove.getByRole('button',{name:'Eliminar vídeo',exact:true}).click();await page.waitForFunction(()=>!document.getElementById('projectGrid').textContent.includes('Anuncio actualizado'));await page.reload();await ready();assert.equal(await card('video').count(),2);
++  console.log('PASS cross-tab refresh and delete without resurrection');
++  // Storage errors remain visible and retry recovers the list.
++  await page.evaluate(async()=>{window.__realSummaries=DivasVideo.summaries;DivasVideo.summaries=async()=>{throw Error('No se pudo abrir el guardado de este navegador.');};await __projectsTest.refreshVideoProjects();});assert.equal(await page.locator('#videoProjectNotice').isVisible(),true);await page.evaluate(()=>DivasVideo.summaries=window.__realSummaries);await page.getByRole('button',{name:'Volver a intentar',exact:true}).click();await ready();assert.equal(await page.locator('#videoProjectNotice').isVisible(),false);
++  for(const width of [1440,390,360]){await page.setViewportSize({width,height:width===1440?950:820});await kind('todos');await page.locator('#projectGrid').scrollIntoViewIfNeeded();assert.equal(await page.evaluate(()=>document.body.scrollWidth>innerWidth),false);for(const b of await page.locator('#projectKindFilters button').all())assert.ok((await b.boundingBox()).height>=44);await page.screenshot({path:path.join(out,'projects-'+width+'.png')});await kind('video');assert.equal(await card('design').count(),0);await card('video').filter({hasText:'Evento rosa editado'}).locator('.project-open').click();await page.waitForFunction(()=>!document.getElementById('dvBody').inert);assert.equal(await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);assert.ok(await page.getByRole('button',{name:'Mis proyectos',exact:true}).isVisible());await home();}
++  assert.deepEqual(errors,[]);console.log('PASS recoverable storage errors, mobile 360/390 + desktop 1440, no runtime errors');
++ }catch(e){await page.screenshot({path:path.join(out,'failure.png')});throw e;}
++ finally{await browser.close();server.close();}
++})().catch(e=>{console.error(e);server.close();process.exit(1);});
+diff --git a/tests/video-browser.cjs b/tests/video-browser.cjs
+index dfd6259..ef1686f 100644
+--- a/tests/video-browser.cjs
++++ b/tests/video-browser.cjs
+@@ -37 +37 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
+-  await page.locator('[data-dv=library]').click();await page.locator('[data-dv=new]').click();assert.equal(await page.locator('.dv-scene').count(),0);
++  await page.locator('[data-dv=library]').click();await page.locator('.projects-shortcuts [data-dv-new]').click();await until(page,()=>document.querySelectorAll('.dv-scene').length===0&&!document.getElementById('dvBody').inert);
+@@ -42 +42 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
+-  await page.locator('[data-dv=close]').click();await page.reload();await page.locator('[data-dv-open]').filter({hasText:'Crear video'}).click();await page.locator('[data-dv=library]').click();await until(page,()=>document.querySelectorAll('.dv-project').length===2);await page.locator('[data-dv=load]').first().click();await until(page,()=>document.querySelectorAll('.dv-scene').length===3&&!document.getElementById('dvBody').inert);
++  await page.locator('[data-dv=close]').click();await page.reload();await until(page,()=>document.querySelectorAll('#projectGrid .project-card[data-kind=video]').length===2);await page.locator('#projectGrid .project-card[data-kind=video] .project-open').first().click();await until(page,()=>document.querySelectorAll('.dv-scene').length===3&&!document.getElementById('dvBody').inert);
+diff --git a/tests/video-integration.cjs b/tests/video-integration.cjs
+index b159e3f..f663e5b 100644
+--- a/tests/video-integration.cjs
++++ b/tests/video-integration.cjs
+@@ -14 +14 @@ const server=http.createServer((req,res)=>{const pathname=new URL(req.url,'http:
+-  await page.locator('.save-toolbar [data-dv-open]').click();const second=await context.newPage();await second.goto(base);await second.locator('[data-dv-open]').filter({hasText:'Crear video'}).click();await second.locator('[data-dv=library]').click();await second.locator('[data-dv=load]').first().click();await second.waitForFunction(()=>!document.getElementById('dvBody').inert&&document.querySelectorAll('.dv-scene').length===1);
++  await page.locator('.save-toolbar [data-dv-open]').click();const second=await context.newPage();await second.goto(base);await second.locator('#projectGrid .project-card[data-kind=video] .project-open').first().click();await second.waitForFunction(()=>!document.getElementById('dvBody').inert&&document.querySelectorAll('.dv-scene').length===1);
+diff --git a/tests/video-v40.cjs b/tests/video-v40.cjs
+index 05b0ab7..0336b36 100644
+--- a/tests/video-v40.cjs
++++ b/tests/video-v40.cjs
+@@ -45 +45 @@ const blue=p=>p[2]>150&&p[1]<80;
+-  await page.locator('[data-dv=library]').click();await page.locator('[data-dv=new]').click();await ready(page);await page.locator('#dvBackupFile').setInputFiles(path.join(out,'v40.divasvideo'));await ready(page);await page.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===3);await page.locator('.dv-layer-bar').first().click();await page.locator('[data-dv=cutout]').click();assert.equal(await page.locator('#dvKeyEnabled').isChecked(),true);assert.ok(blue(await pixel(page)),'portable restore retains rendered cutout');
++  await page.locator('[data-dv=library]').click();await page.locator('.projects-shortcuts [data-dv-new]').click();await page.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===0&&!document.getElementById('dvBody').inert);await page.locator('#dvBackupFile').setInputFiles(path.join(out,'v40.divasvideo'));await ready(page);await page.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===3);await page.locator('.dv-layer-bar').first().click();await page.locator('[data-dv=cutout]').click();assert.equal(await page.locator('#dvKeyEnabled').isChecked(),true);assert.ok(blue(await pixel(page)),'portable restore retains rendered cutout');

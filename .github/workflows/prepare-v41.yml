@@ -1,0 +1,23 @@
+name: Prepare verified Divas projects v41
+on:
+  push:
+    branches: [codex/transport-divas-projects-v41]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read verified patch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          path: transfer
+          persist-credentials: false
+      - name: Check out production base
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 545fb0e7a539f4491e2706acb187ecd7efb8d9ef
+          path: release
+      - name: Reconstruct and verify release branch
+        run: python3 transfer/.codex-upload/apply-release.py release
