@@ -1,0 +1,33 @@
+diff --git a/assets/divas-video.js b/assets/divas-video.js
+index bd6db72..56dbf8b 100644
+--- a/assets/divas-video.js
++++ b/assets/divas-video.js
+@@ -287 +287 @@
+- async function ensureSelectedFrame(){const row=M.rows(V.project).find(r=>r.scene.id===V.selected);if(row&&(V.time<row.start||V.time>=row.end))await seekSelected();else await seek();}
++ async function ensureSelectedFrame(){const row=M.rows(V.project).find(r=>r.scene.id===V.selected),fade=row?.scene.transition==='fade'?Math.min(.35,M.duration(row.scene)/4):0;if(row&&(V.time<row.start+fade||V.time>=row.end-fade))await seekSelected();else await seek();}
+diff --git a/docs/DIVAS-VIDEO.md b/docs/DIVAS-VIDEO.md
+index a40f59e..db6f83d 100644
+--- a/docs/DIVAS-VIDEO.md
++++ b/docs/DIVAS-VIDEO.md
+@@ -8 +8 @@ Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada d
+-2. Comprueba el selector **Editando**, siempre visible encima del lienzo. Elige el vídeo o la imagen que tiene el fondo que quieres quitar. Si no aparece en ese momento, **Ver esta capa** lleva a un fotograma donde existe; **Quitar fondo** también hace ese ajuste.
++2. Comprueba el selector **Editando**, siempre visible encima del lienzo. Elige el vídeo o la imagen que tiene el fondo que quieres quitar. Si no aparece en ese momento, **Ver esta capa** lleva a un fotograma donde existe; **Quitar fondo** también hace ese ajuste y evita los extremos invisibles de un fundido.
+diff --git a/index.html b/index.html
+index 28bbe39..c9e5555 100644
+--- a/index.html
++++ b/index.html
+@@ -1405 +1405 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-<link rel="stylesheet" href="assets/divas-video.css?v=42">
++<link rel="stylesheet" href="assets/divas-video.css?v=42.1">
+@@ -2075,2 +2075,2 @@ SOFTWARE.
+-<script src="assets/divas-video-model.js?v=42"></script>
+-<script src="assets/divas-video.js?v=42"></script>
++<script src="assets/divas-video-model.js?v=42.1"></script>
++<script src="assets/divas-video.js?v=42.1"></script>
+diff --git a/tests/video-v42.cjs b/tests/video-v42.cjs
+index 97e58f8..f43b5ad 100644
+--- a/tests/video-v42.cjs
++++ b/tests/video-v42.cjs
+@@ -15 +15 @@ try{
+- const baseId=await p.locator('.dv-scene').getAttribute('data-id');await p.locator('#dvTransition').selectOption('cut');await p.locator('#dvName').fill('Recorte blanco y capas v42');await p.locator('[data-dv=save]').click();await p.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');
++ const baseId=await p.locator('.dv-scene').getAttribute('data-id');await p.locator('#dvSeek').fill('0');await p.locator('[data-dv=cutout]').click();await p.waitForFunction(()=>Number(document.getElementById('dvSeek').value)>=.35);assert.ok(white(await pixel(p)),'cutout jumps past an invisible opening fade');await p.locator('[data-dv=endCutout]').click();await p.locator('#dvTransition').selectOption('cut');await p.locator('#dvName').fill('Recorte blanco y capas v42');await p.locator('[data-dv=save]').click();await p.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');

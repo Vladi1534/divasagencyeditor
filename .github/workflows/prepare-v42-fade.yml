@@ -1,0 +1,23 @@
+name: Prepare visible fade preview correction
+on:
+  push:
+    branches: [codex/transport-divas-video-v42-fade]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read verified patch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          path: transfer
+          persist-credentials: false
+      - name: Check out production base
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: c3dd6dfa3c4bcaf094fc51014af39ac897763041
+          path: release
+      - name: Reconstruct and verify release branch
+        run: python3 transfer/.codex-upload/apply-release.py release
