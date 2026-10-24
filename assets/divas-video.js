@@ -284,7 +284,7 @@
  async function seek(){
   const op=++V.operation,t=Math.min(V.time,Math.max(0,total()-.001));for(const row of M.active(V.project,t)){const a=V.assets.get(row.scene.assetId);if(!a)continue;const p=await player(a,row.scene.id);if(op!==V.operation)return;if(a.kind==='video')await seekMedia(p.el,row.scene.in+Math.max(0,t-row.start));}if(op===V.operation){draw();transport();updateTarget();cutoutUI(true);}
  }
- async function ensureSelectedFrame(){const row=M.rows(V.project).find(r=>r.scene.id===V.selected);if(row&&(V.time<row.start||V.time>=row.end))await seekSelected();else await seek();}
+ async function ensureSelectedFrame(){const row=M.rows(V.project).find(r=>r.scene.id===V.selected),fade=row?.scene.transition==='fade'?Math.min(.35,M.duration(row.scene)/4):0;if(row&&(V.time<row.start+fade||V.time>=row.end-fade))await seekSelected();else await seek();}
  async function seekSelected(){const row=[...M.rows(V.project),...M.audioRows(V.project)].find(r=>r.scene.id===V.selected);if(row)V.time=row.start+Math.min(.4,M.duration(row.scene)/2);await seek();}
  const activeMedia=()=>[...M.active(V.project,V.time),...M.audioRows(V.project).filter(r=>V.time>=r.start&&V.time<r.end)].filter(r=>['video','audio'].includes(r.scene.kind));
  const activeSignature=()=>M.active(V.project,V.time).map(r=>r.scene.id).concat(activeMedia().map(r=>r.scene.id)).join('|');

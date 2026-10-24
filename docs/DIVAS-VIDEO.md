@@ -5,7 +5,7 @@ Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada d
 ## Quitar el fondo de un vídeo
 
 1. Añade un vídeo con **Fotos / clips**, o usa **Capa** para añadir otro elemento.
-2. Comprueba el selector **Editando**, siempre visible encima del lienzo. Elige el vídeo o la imagen que tiene el fondo que quieres quitar. Si no aparece en ese momento, **Ver esta capa** lleva a un fotograma donde existe; **Quitar fondo** también hace ese ajuste.
+2. Comprueba el selector **Editando**, siempre visible encima del lienzo. Elige el vídeo o la imagen que tiene el fondo que quieres quitar. Si no aparece en ese momento, **Ver esta capa** lleva a un fotograma donde existe; **Quitar fondo** también hace ese ajuste y evita los extremos invisibles de un fundido.
 3. Pulsa **Quitar fondo**. **Elegir color** muestra el original: toca el fondo con el dedo, lápiz o ratón. También puedes pulsar **Blanco**, **Verde**, **Azul** o **Negro**. **Automático** busca un color uniforme en los bordes; si no lo encuentra, solicita el cuentagotas.
 4. Revisa **Antes / Después** o **Comparar**, con un deslizador para mover la división. **Transparencia** aísla el elemento sobre una cuadrícula. La cifra de comprobación estima cuánto alfa se elimina en un fotograma reducido; si es casi cero, avisa que debes revisar el color y el elemento seleccionado.
 5. Ajusta **Intensidad**, **Suavizar bordes** y **Limpiar reflejo del color** si hace falta. Hasta pulsar **Confirmar recorte**, el efecto es una vista previa sin guardar. **Cancelar** conserva el recorte anterior. La confirmación puede deshacerse en un paso. **Listo** vuelve a las herramientas habituales. **Restablecer fondo** también pide confirmar.
