@@ -8,6 +8,12 @@ El comando de despliegue es `npx wrangler deploy`, ejecutado desde la raíz del 
 
 No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulos, estilos y bibliotecas locales. Un despliegue verde debe comprobarse abriendo ambos botones en la web publicada. `public/` se genera; no se edita ni se sube a Git.
 
+## v42 · Recorte comprobable y capas delante/detrás
+
+**Quitar fondo** identifica siempre el elemento seleccionado y ofrece **Antes / Después / Comparar / Transparencia**. Elegir un color prepara una vista previa; **Confirmar recorte** la aplica y **Cancelar** conserva el estado anterior. El indicador avisa cuando el color casi no aparece. Los botones de colores se ven también en tema oscuro.
+
+**Capas** permite arrastrar el orden o usar **Delante / Detrás**, incluso respecto al vídeo principal. El orden visual se guarda, se exporta y viaja en el respaldo sin modificar los tiempos. Si el elemento seleccionado no aparece en el momento actual, **Ver esta capa** lleva a su fotograma. No requiere SQL. Consulta [la guía de Divas Video](docs/DIVAS-VIDEO.md).
+
 ## v41 · Mis proyectos: diseños y vídeos juntos
 
 El inicio reúne diseños y vídeos con filtros visibles **Todos / Diseños / Vídeos**, búsqueda, orden, miniaturas y duración. Cada tarjeta abre su editor. **Mis proyectos** dentro de Video regresa a ese inicio; **Crear video** empieza uno nuevo sin reemplazar el anterior. Los vídeos ya guardados aparecen automáticamente en su cuenta y navegador, sin migración ni SQL. Su menú permite descargar el respaldo y eliminarlos. Los diseños de cuenta siguen en Supabase; los vídeos siguen en el dispositivo y se identifican como tales.

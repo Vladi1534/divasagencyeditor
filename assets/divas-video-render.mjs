@@ -73,18 +73,28 @@ export class Renderer {
  }
  render(p,time,assets,sources,options={}){
   const M=this.M,x=this.canvas.getContext('2d'),w=this.canvas.width,h=this.canvas.height;this.bounds.clear();x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;x.clearRect(0,0,w,h);
+  if(options.compareId){
+   const before=this.before||(this.before=document.createElement('canvas'));before.width=w;before.height=h;
+   this.render(p,time,assets,sources,{...options,compareId:null,originalId:options.compareId,selectedId:null});before.getContext('2d').drawImage(this.canvas,0,0);
+   this.render(p,time,assets,sources,{...options,compareId:null,originalId:null,selectedId:null});
+   const split=w*clamp(options.compareSplit??.5,.02,.98);x.save();x.beginPath();x.rect(0,0,split,h);x.clip();x.drawImage(before,0,0);x.restore();x.fillStyle='#ffffff';x.fillRect(split-1,0,2,h);return;
+  }
   if(options.isolateId){for(let y=0;y<h;y+=18)for(let a=0;a<w;a+=18){x.fillStyle=((a/18+y/18)%2)?'#ddd2dc':'#f4edf3';x.fillRect(a,y,18,18);}}else{x.fillStyle=p.background;x.fillRect(0,0,w,h);}
   if(options.picking){const c=M.rows(p).find(r=>r.scene.id===options.picking)?.scene,source=c&&sources.get(c.id),a=c&&assets.get(c.assetId);if(source&&a){const scale=Math.min(w/a.width,h/a.height),dw=a.width*scale,dh=a.height*scale;this.pickBounds={x:(w-dw)/2,y:(h-dh)/2,w:dw,h:dh,source};x.drawImage(source,this.pickBounds.x,this.pickBounds.y,dw,dh);}return;}
   for(const row of M.active(p,time)){
    const c=row.scene;if(options.isolateId&&c.id!==options.isolateId)continue;const local=time-row.start,d=M.duration(c),t=clamp(local/d),fade=Math.min(.35,d/4),alpha=c.transition==='fade'?clamp(Math.min(local/fade,(d-local)/fade)):1;
    const a=c.kind==='text'?{width:w,height:h}:assets.get(c.assetId),source=sources.get(c.id);if(!a)continue;
    const g=this.geometry(c,a,options.poseEnd===c.id?1:t);x.save();x.translate(g.x,g.y);x.rotate(g.angle);x.globalAlpha=(options.poseEnd===c.id?1:alpha)*g.opacity;
-   if(c.kind!=='text'&&source){x.save();if(c.mask==='circle'){x.beginPath();x.arc(0,0,Math.min(g.width,g.height)/2,0,Math.PI*2);x.clip();}else if(c.mask==='rounded'){x.beginPath();if(x.roundRect)x.roundRect(-g.width/2,-g.height/2,g.width,g.height,Math.min(g.width,g.height)*.12);else x.rect(-g.width/2,-g.height/2,g.width,g.height);x.clip();}const image=options.originalId===c.id?source:this.effects.apply(source,c,w,h);x.drawImage(image,-g.width/2,-g.height/2,g.width,g.height);x.restore();}
+   if(c.kind!=='text'&&source){x.save();if(c.mask==='circle'){x.beginPath();x.arc(0,0,Math.min(g.width,g.height)/2,0,Math.PI*2);x.clip();}else if(c.mask==='rounded'){x.beginPath();if(x.roundRect)x.roundRect(-g.width/2,-g.height/2,g.width,g.height,Math.min(g.width,g.height)*.12);else x.rect(-g.width/2,-g.height/2,g.width,g.height);x.clip();}const effective=options.keyerId===c.id?{...c,keyer:options.keyer}:c;const image=options.originalId===c.id?source:this.effects.apply(source,effective,w,h);x.drawImage(image,-g.width/2,-g.height/2,g.width,g.height);x.restore();}
    if(c.title){x.save();x.scale(g.scale,g.scale);const box=this.text(x,c,w,h,local,1);x.restore();if(c.kind==='text'){g.width=box.width*g.scale;g.height=box.height*g.scale;g.y+=box.cy*g.scale;}}
    x.restore();this.bounds.set(c.id,g);
   }
   const c=M.rows(p).find(r=>r.scene.id===options.selectedId)?.scene,g=this.bounds.get(options.selectedId);if(g&&c&&!c.locked){x.save();x.translate(g.x,g.y);x.rotate(g.angle);x.strokeStyle='#ff8ccc';x.lineWidth=Math.max(1.5,w/250);x.setLineDash([6,4]);x.strokeRect(-g.width/2,-g.height/2,g.width,g.height);x.setLineDash([]);for(const [px,py] of [[-1,-1],[1,-1],[-1,1],[1,1]]){x.fillStyle='#fff';x.strokeStyle='#ab2f78';const s=w/60;x.fillRect(px*g.width/2-s/2,py*g.height/2-s/2,s,s);x.strokeRect(px*g.width/2-s/2,py*g.height/2-s/2,s,s);}x.restore();}
  }
  pickColor(x,y){const b=this.pickBounds;if(!b||x<b.x||x>b.x+b.w||y<b.y||y>b.y+b.h)return null;const c=this.sourceCanvas(b.source,600),px=Math.min(c.width-1,Math.floor((x-b.x)/b.w*c.width)),py=Math.min(c.height-1,Math.floor((y-b.y)/b.h*c.height));const d=c.getContext('2d').getImageData(px,py,1,1).data;return '#'+[...d.slice(0,3)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+ measureKeyer(source,keyer){
+  const c=this.sourceCanvas(source,160),x=c.getContext('2d'),original=x.getImageData(0,0,c.width,c.height).data,after=new Uint8ClampedArray(original);processPixels(after,keyer);let input=0,removed=0;
+  for(let i=3;i<original.length;i+=4){input+=original[i];removed+=Math.max(0,original[i]-after[i]);}return {removed:input?removed/input:0,empty:input===0};
+ }
  autoColor(source){const c=this.sourceCanvas(source),d=c.getContext('2d').getImageData(0,0,c.width,c.height);return detectColor(d.data,c.width,c.height);}
 }

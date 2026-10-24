@@ -39,3 +39,17 @@ La salida WebM de prueba se decodificó con FFmpeg: 720 × 1280, 30 fps, 3 segun
 ## v41 · inicio unificado
 
 `CHROMIUM_EXECUTABLE=/ruta/chromium npm --prefix tests run test:projects` recorre la página real con Supabase bloqueado. Crea un diseño y dos vídeos con archivos de prueba, verifica filtros, búsqueda, orden, duración, retomar el proyecto correcto, renombrar, respaldo directo, recarga, resúmenes anteriores a v41, separación por cuenta, aviso entre pestañas, eliminación y recuperación de errores de almacenamiento. Comprueba los filtros y el retorno a Mis proyectos en 360, 390 y 1440 px. Los ganchos de pruebas se inyectan solo por el servidor local; no se publican.
+
+## v42 · antes/después, confirmación y orden visual
+
+`CHROMIUM_EXECUTABLE=/ruta/chromium npm --prefix tests run test:video:v42` utiliza además `whiteclip.mp4`, un vídeo vertical de tres segundos con un sujeto rojo sobre blanco:
+
+```sh
+ffmpeg -f lavfi -i color=c=white:s=180x320:r=30:d=3 -f lavfi -i color=c=red:s=50x80:r=30:d=3 -filter_complex "[0:v][1:v]overlay=x=65:y=110:shortest=1" -c:v libx264 -pix_fmt yuv420p whiteclip.mp4
+```
+
+Comprueba píxeles reales del original, del recorte, la división y el sujeto; una vista previa no cambia el proyecto guardado. Cubre confirmar/cancelar, deshacer, cuentagotas y automático, color equivocado, selección fuera del intervalo, controles claros/oscuros, medidas 360/390/1440 px, botones de orden, arrastre del asa y de la barra a través de la pista principal, tiempos intactos, reapertura desde Mis proyectos, respaldo y exportación. Las reglas del modelo incluyen el orden al dividir y la compatibilidad con respaldos anteriores. El recorrido v40 usa ahora la confirmación explícita de v42.
+
+Los clips de prueba son sintéticos. Las capturas facilitadas por el usuario permiten revisar el flujo, pero no sustituyen una prueba con su archivo original.
+
+El WebM de v42 se decodificó con FFmpeg a 2 fotogramas por segundo: 6 muestras, 720 × 1280, 30 fps y 3 segundos. En todas se conserva el sujeto rojo y aparece azul la zona de fondo blanco eliminada, procedente de una capa situada detrás del vídeo base.

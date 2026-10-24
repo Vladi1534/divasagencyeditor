@@ -11,13 +11,15 @@
  const kindOf=t=>imageTypes.includes(t)?'image':videoTypes.includes(t)?'video':audioTypes.includes(t)?'audio':null;
  const duration=c=>c.kind==='video'||c.kind==='audio'?c.out-c.in:c.duration;
  const timeline=p=>{let t=0;return p.scenes.map(c=>{const start=t;t+=duration(c);return {scene:c,start,end:t};});};
- const rows=p=>[...timeline(p),...(p.layers||[]).map(c=>({scene:c,start:c.start,end:c.start+duration(c)}))];
+ const stackOrder=p=>{const ids=['base',...(p.layers||[]).map(c=>c.id)],seen=new Set();return [...(Array.isArray(p.visualOrder)?p.visualOrder:[]),...ids].filter(id=>ids.includes(id)&&!seen.has(id)&&seen.add(id));};
+ const stackId=(p,id)=>p.scenes.some(c=>c.id===id)?'base':id;
+ const rows=p=>{const order=stackOrder(p);return [...timeline(p),...(p.layers||[]).map(c=>({scene:c,start:c.start,end:c.start+duration(c)}))].sort((a,b)=>order.indexOf(stackId(p,a.scene.id))-order.indexOf(stackId(p,b.scene.id)));};
  const audioRows=p=>(p.audio||[]).map(c=>({scene:c,start:c.start,end:c.start+duration(c)}));
  const total=p=>Math.max(0,...rows(p).map(r=>r.end),...audioRows(p).map(r=>r.end));
  const at=(p,t)=>timeline(p).find(r=>t>=r.start&&t<r.end)||null;
  const active=(p,t)=>rows(p).filter(r=>t>=r.start&&t<r.end&&!r.scene.hidden);
  const pose=(v={},fallback={})=>({x:number(v.x,fallback.x??.5,-1,2),y:number(v.y,fallback.y??.5,-1,2),scale:number(v.scale,fallback.scale??1,.05,4),rotation:number(v.rotation,fallback.rotation??0,-360,360),opacity:number(v.opacity,fallback.opacity??1,0,1)});
- const blank=()=>({format:'divas-video-2',id:uid(),name:'Mi video Divas',ratio:'9:16',background:'#201424',scenes:[],layers:[],audio:[],music:null,quality:720});
+ const blank=()=>({format:'divas-video-2',id:uid(),name:'Mi video Divas',ratio:'9:16',background:'#201424',scenes:[],layers:[],visualOrder:['base'],audio:[],music:null,quality:720});
  const keyer=()=>({enabled:false,color:'#00ff00',tolerance:.18,softness:.08,spill:.5});
  const scene=a=>({id:uid(),assetId:a.id,kind:a.kind,name:clean(a.name),duration:5,in:0,out:Math.min(a.duration||5,15),fit:'contain',mask:'none',motion:'none',transition:'fade',volume:1,fadeIn:0,fadeOut:0,title:'',titlePosition:'bottom',titleColor:'#ffffff',titleSize:6,titleStyle:'glow',titleFont:'Arial',titleMotion:'fade',transform:pose(),animation:{enabled:false,end:pose(),easing:'smooth'},keyer:keyer(),adjust:{brightness:0,contrast:0,saturation:0},hidden:false,locked:false});
  const layer=(a,start=0)=>{const c=scene(a);c.start=start;c.transition='cut';c.transform.scale=.55;c.animation.end=pose(c.transform);return c;};
@@ -39,7 +41,7 @@
   if(bytes>LIMITS.totalBytes)throw Error('Usa hasta 150 MB de recursos por video.');
   const p=blank();p.id=typeof raw.id==='string'&&/^[a-zA-Z0-9-]{1,80}$/.test(raw.id)?raw.id:p.id;
   p.name=clean(raw.name)||p.name;p.ratio=Object.hasOwn(formats,raw.ratio)?raw.ratio:'9:16';p.background=color(raw.background,'#201424');p.quality=raw.quality===1080?1080:720;
-  const ids=new Set();
+  const ids=new Set(['base']);
   function unique(id){const v=typeof id==='string'&&/^[a-zA-Z0-9-]{1,80}$/.test(id)&&!ids.has(id)?id:uid();ids.add(v);return v;}
   function visual(v,overlay=false){
    const a=map.get(v.assetId),text=overlay&&v.kind==='text';if(!text&&(!a||!['image','video'].includes(a.kind)))throw Error('Falta una foto o un clip del proyecto.');
@@ -53,7 +55,7 @@
    const k=v.keyer||{};c.keyer={enabled:k.enabled===true,color:color(k.color,'#00ff00'),tolerance:number(k.tolerance,.18,.005,.8),softness:number(k.softness,.08,.005,.4),spill:number(k.spill,.5,0,1)};
    const f=v.adjust||{};c.adjust={brightness:number(f.brightness,0,-.5,.5),contrast:number(f.contrast,0,-.8,1),saturation:number(f.saturation,0,-1,1)};c.hidden=v.hidden===true;c.locked=v.locked===true;return c;
   }
-  p.scenes=raw.scenes.map(v=>visual(v));p.layers=(raw.layers||[]).map(v=>visual(v,true));
+  p.scenes=raw.scenes.map(v=>visual(v));p.layers=(raw.layers||[]).map(v=>visual(v,true));p.visualOrder=stackOrder({...p,visualOrder:raw.visualOrder});
   p.audio=(raw.audio||[]).map(v=>{const a=map.get(v.assetId);if(!a||a.kind!=='audio')throw Error('Falta una pista de audio.');const c=audioLayer(a);c.id=unique(v.id);c.name=clean(v.name)||c.name;c.start=number(v.start,0,0,180);c.in=number(v.in,0,0,a.duration-.1);c.out=number(v.out,a.duration,c.in+.1,a.duration);c.volume=number(v.volume,.7,0,1);c.fadeIn=number(v.fadeIn,0,0,duration(c)/2);c.fadeOut=number(v.fadeOut,0,0,duration(c)/2);return c;});
   if(total(p)>LIMITS.seconds+.001)throw Error('El proyecto admite videos de hasta 3 minutos.');
   const videos=rows(p).filter(r=>r.scene.kind==='video'&&!r.scene.hidden);for(const row of videos)if(videos.filter(r=>r.start<=row.start&&r.end>row.start).length>4)throw Error('Usa hasta 4 clips de video simultáneos para mantener la reproducción fluida.');
@@ -69,10 +71,10 @@
   if(left.kind==='video'){left.out=left.in+local;right.in=left.out;}else{left.duration=local;left.out=local;right.duration=d-local;right.out=right.duration;}
   if(overlay)right.start=row.start+local;
   if(left.animation.enabled){const middle=animatedPose(row.scene,local/d);left.animation.end=middle;right.transform=middle;}
-  list.splice(list.findIndex(c=>c.id===id),1,left,right);return right.id;
+  if(overlay){const order=stackOrder(p);order.splice(order.indexOf(id)+1,0,right.id);p.visualOrder=order;}list.splice(list.findIndex(c=>c.id===id),1,left,right);return right.id;
  }
  function animatedPose(c,t){const a=c.transform||pose();if(!c.animation?.enabled)return {...a};let u=Math.min(1,Math.max(0,t));if(c.animation.easing!=='linear')u=u*u*(3-2*u);const b=c.animation.end;return Object.fromEntries(Object.keys(a).map(k=>[k,a[k]+(b[k]-a[k])*u]));}
  function envelope(c,local){const d=duration(c);return Math.min(1,c.fadeIn?Math.max(0,local/c.fadeIn):1,c.fadeOut?Math.max(0,(d-local)/c.fadeOut):1);}
- const api={LIMITS,uid,number,clean,color,formats,kindOf,duration,timeline,rows,audioRows,total,at,active,blank,scene,layer,textLayer,audioLayer,normalize,validateAsset,split,pose,animatedPose,envelope,usedIds,keyer};
+ const api={LIMITS,uid,number,clean,color,formats,kindOf,duration,timeline,stackOrder,stackId,rows,audioRows,total,at,active,blank,scene,layer,textLayer,audioLayer,normalize,validateAsset,split,pose,animatedPose,envelope,usedIds,keyer};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.DivasVideoModel=api;
 })(typeof window!=='undefined'?window:globalThis);
