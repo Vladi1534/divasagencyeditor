@@ -1,0 +1,469 @@
+diff --git a/README.md b/README.md
+index 0c73ef4..b4fcb53 100644
+--- a/README.md
++++ b/README.md
+@@ -10,0 +11,6 @@ No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulo
++## v43 · Arrastrar, superponer y adaptar fotos
++
++Una foto o vídeo de la **Secuencia** se puede arrastrar a una capa independiente, al panel **Capas** o de vuelta a la secuencia. Antes de soltar aparece la acción que se realizará. **Superponer**, **En secuencia** y **Usar como fondo** ofrecen el mismo flujo sin arrastrar. Las conversiones se deshacen en un paso; conservan el archivo original y los efectos.
++
++**Completa / Llenar / Adaptar** están junto al lienzo. Adaptar conserva toda la foto y rellena el espacio con una copia desenfocada, sin estirarla; funciona al cambiar entre 1:1, 16:9 y 9:16 y también en la exportación. Las nuevas fotos opacas de la secuencia usan ese encuadre automáticamente; los logos transparentes conservan su transparencia. No requiere SQL. Consulta [el flujo y sus límites](docs/DIVAS-VIDEO.md).
++
+diff --git a/assets/divas-video-model.js b/assets/divas-video-model.js
+index f7af5f5..3f275fb 100644
+--- a/assets/divas-video-model.js
++++ b/assets/divas-video-model.js
+@@ -51 +51 @@
+-   c.fit=v.fit==='cover'?'cover':'contain';c.mask=['none','circle','rounded'].includes(v.mask)?v.mask:'none';c.motion=['none','zoom','pan'].includes(v.motion)?v.motion:'none';c.transition=v.transition==='fade'?'fade':'cut';c.volume=number(v.volume,1,0,1);
++   c.fit=['cover','adaptive'].includes(v.fit)?v.fit:'contain';c.mask=['none','circle','rounded'].includes(v.mask)?v.mask:'none';c.motion=['none','zoom','pan'].includes(v.motion)?v.motion:'none';c.transition=v.transition==='fade'?'fade':'cut';c.volume=number(v.volume,1,0,1);
+@@ -78 +78,40 @@
+- const api={LIMITS,uid,number,clean,color,formats,kindOf,duration,timeline,stackOrder,stackId,rows,audioRows,total,at,active,blank,scene,layer,textLayer,audioLayer,normalize,validateAsset,split,pose,animatedPose,envelope,usedIds,keyer};
++ // Placement changes keep the same media and ID. The caller validates and records one undo step.
++ function placeStack(p,id,before=null){
++  const order=stackOrder(p).reverse().filter(k=>k!==id),i=before?order.indexOf(before):-1;
++  order.splice(i<0?order.length:i,0,id);p.visualOrder=order.reverse();
++ }
++ function toLayer(p,id,{start=0,before='base'}={}){
++  const i=p.scenes.findIndex(c=>c.id===id),c=i>=0?p.scenes[i]:p.layers.find(c=>c.id===id);
++  if(!c||c.locked)throw Error('Selecciona un elemento desbloqueado.');
++  if(i>=0&&p.layers.length>=LIMITS.layers)throw Error('Usa hasta 12 capas independientes.');
++  if(i>=0){p.scenes.splice(i,1);p.layers.push(c);}
++  c.start=number(start,0,0,LIMITS.seconds-duration(c));placeStack(p,id,before);return c;
++ }
++ function toSequence(p,id,index=p.scenes.length){
++  const c=[...p.scenes,...p.layers].find(c=>c.id===id);
++  if(!c||!['image','video'].includes(c.kind)||c.locked)throw Error('Elige una foto o vídeo desbloqueado.');
++  if(!p.scenes.includes(c)&&p.scenes.length>=LIMITS.scenes)throw Error('Usa hasta 30 clips en la secuencia.');
++  p.scenes=p.scenes.filter(x=>x.id!==id);p.layers=p.layers.filter(x=>x.id!==id);delete c.start;
++  p.scenes.splice(number(index,p.scenes.length,0,p.scenes.length),0,c);p.visualOrder=stackOrder(p).filter(k=>k!==id);return c;
++ }
++ function frame(c,fit){
++  if(!c||!['image','video'].includes(c.kind)||c.locked)throw Error('Elige una foto o vídeo desbloqueado.');
++  if(!['contain','cover','adaptive'].includes(fit))throw Error('El encuadre no es válido.');
++  c.fit=fit;c.transform=pose({opacity:c.transform.opacity});c.animation={enabled:false,end:pose(c.transform),easing:'smooth'};c.motion='none';
++ }
++ function asBackground(p,id){
++  const c=toLayer(p,id,{start:0,before:null}),remaining=Math.max(0,...rows(p).filter(r=>r.scene.id!==id).map(r=>r.end),...audioRows(p).map(r=>r.end));
++  if(c.kind==='image'&&remaining>0)c.duration=remaining;
++  c.transition='cut';frame(c,'adaptive');return c;
++ }
++ function changeRatio(p,ratio,assets=[]){
++  if(!Object.hasOwn(formats,ratio))throw Error('Formato no válido.');p.ratio=ratio;
++  for(const c of p.scenes){const t=c.transform,a=assets.find(a=>a.id===c.assetId);
++   if(c.kind==='image'&&a?.hasAlpha===false&&c.fit==='contain'&&c.mask==='none'&&c.motion==='none'&&!c.animation.enabled&&t.x===.5&&t.y===.5&&t.scale===1&&t.rotation===0)c.fit='adaptive';
++  }
++ }
++ function snapTime(p,id,value,threshold=.15){
++  const points=[0,...rows(p).filter(r=>r.scene.id!==id).flatMap(r=>[r.start,r.end])];let best=Math.max(0,value),distance=threshold;
++  for(const point of points){const d=Math.abs(point-value);if(d<distance){distance=d;best=point;}}return Math.round(best*100)/100;
++ }
++ const api={LIMITS,uid,number,clean,color,formats,kindOf,duration,timeline,stackOrder,stackId,rows,audioRows,total,at,active,blank,scene,layer,textLayer,audioLayer,normalize,validateAsset,split,pose,animatedPose,envelope,usedIds,keyer,placeStack,toLayer,toSequence,frame,asBackground,changeRatio,snapTime};
+diff --git a/assets/divas-video-render.mjs b/assets/divas-video-render.mjs
+index 4b55f54..2e74605 100644
+--- a/assets/divas-video-render.mjs
++++ b/assets/divas-video-render.mjs
+@@ -59 +59,14 @@ export class Renderer {
+- geometry(c,a,t){const {width:w,height:h}=this.canvas,pose=this.M.animatedPose(c,t);let scale=c.fit==='cover'?Math.max(w/a.width,h/a.height):Math.min(w/a.width,h/a.height);scale*=pose.scale;if(c.motion==='zoom')scale*=1+t*.08;if(c.motion==='pan')scale*=1.06;return {x:pose.x*w+(c.motion==='pan'?(t-.5)*w*.05:0),y:pose.y*h,width:a.width*scale,height:a.height*scale,angle:pose.rotation*Math.PI/180,opacity:pose.opacity,scale:pose.scale};}
++ geometry(c,a,t){const {width:w,height:h}=this.canvas,pose=this.M.animatedPose(c,t);let scale=c.fit==='cover'?Math.max(w/a.width,h/a.height):Math.min(w/a.width,h/a.height);scale*=pose.scale;if(c.motion==='zoom')scale*=1+t*.08;if(c.motion==='pan')scale*=1.06;return {x:pose.x*w+(c.motion==='pan'?(t-.5)*w*.05:0),y:pose.y*h,width:a.width*scale,height:a.height*scale,angle:pose.rotation*Math.PI/180,opacity:pose.opacity,scale:pose.scale,...(c.fit==='adaptive'?{width:w*pose.scale*(c.motion==='zoom'?1+t*.08:c.motion==='pan'?1.06:1),height:h*pose.scale*(c.motion==='zoom'?1+t*.08:c.motion==='pan'?1.06:1)}:{})};}
++ adaptive(x,image,c,g,original=false){
++  const iw=image.videoWidth||image.naturalWidth||image.width,ih=image.videoHeight||image.naturalHeight||image.height;
++  const sw=240,sh=Math.max(1,Math.round(sw*g.height/g.width));
++  const cache=this.softCache||(this.softCache=new Map()),key=c.id+':'+sw+':'+sh+':'+JSON.stringify([c.keyer,c.adjust,original]);
++  let soft=c.kind==='image'?cache.get(key):null;
++  if(!soft){soft=document.createElement('canvas');soft.width=sw;soft.height=sh;const bx=soft.getContext('2d'),scale=Math.max(sw/iw,sh/ih)*1.2;
++   bx.filter='blur(9px)';bx.drawImage(image,(sw-iw*scale)/2,(sh-ih*scale)/2,iw*scale,ih*scale);bx.filter='none';
++   if(c.kind==='image'){if(cache.size>=24)cache.delete(cache.keys().next().value);cache.set(key,soft);}
++  }
++  const frame=this.framed||(this.framed=document.createElement('canvas'));frame.width=this.canvas.width;frame.height=this.canvas.height;const fx=frame.getContext('2d');fx.drawImage(soft,0,0,frame.width,frame.height);
++  const scale=Math.min(frame.width/iw,frame.height/ih);fx.drawImage(image,(frame.width-iw*scale)/2,(frame.height-ih*scale)/2,iw*scale,ih*scale);
++  x.drawImage(frame,-g.width/2,-g.height/2,g.width,g.height);
++ }
+@@ -88 +101 @@ export class Renderer {
+-   if(c.kind!=='text'&&source){x.save();if(c.mask==='circle'){x.beginPath();x.arc(0,0,Math.min(g.width,g.height)/2,0,Math.PI*2);x.clip();}else if(c.mask==='rounded'){x.beginPath();if(x.roundRect)x.roundRect(-g.width/2,-g.height/2,g.width,g.height,Math.min(g.width,g.height)*.12);else x.rect(-g.width/2,-g.height/2,g.width,g.height);x.clip();}const effective=options.keyerId===c.id?{...c,keyer:options.keyer}:c;const image=options.originalId===c.id?source:this.effects.apply(source,effective,w,h);x.drawImage(image,-g.width/2,-g.height/2,g.width,g.height);x.restore();}
++   if(c.kind!=='text'&&source){x.save();if(c.mask==='circle'){x.beginPath();x.arc(0,0,Math.min(g.width,g.height)/2,0,Math.PI*2);x.clip();}else if(c.mask==='rounded'){x.beginPath();if(x.roundRect)x.roundRect(-g.width/2,-g.height/2,g.width,g.height,Math.min(g.width,g.height)*.12);else x.rect(-g.width/2,-g.height/2,g.width,g.height);x.clip();}const effective=options.keyerId===c.id?{...c,keyer:options.keyer}:c;const image=options.originalId===c.id?source:this.effects.apply(source,effective,w,h);if(c.fit==='adaptive')this.adaptive(x,image,effective,g,options.originalId===c.id);else x.drawImage(image,-g.width/2,-g.height/2,g.width,g.height);x.restore();}
+diff --git a/assets/divas-video.css b/assets/divas-video.css
+index 5c3e701..bbc823b 100644
+--- a/assets/divas-video.css
++++ b/assets/divas-video.css
+@@ -123,0 +124,14 @@ html[data-theme=dark] dialog.dv-shell{--dv-bg:#201923;--dv-surface:#2a222d;--dv-
++
++/* v43: direct placement and proportional framing, shared by mouse, pen and touch. */
++.dv-media-tools{display:flex;align-items:center;gap:5px;flex:none;min-width:0}.dv-media-tools>span{font-size:10px;color:var(--dv-muted);margin-right:3px}.dv-shell .dv-media-tools button{min-height:32px;padding:5px 10px;font-size:11px;white-space:nowrap}.dv-shell .dv-media-tools button[data-dv=asBackground]{margin-left:auto;border-color:var(--dv-accent);color:var(--dv-accent)}
++.dv-shell .dv-targetbar button{margin-left:0}.dv-targetbar #dvCutoutDone{margin-left:auto}.dv-shell .dv-targetbar #dvToLayer,.dv-shell .dv-targetbar #dvToSequence{white-space:nowrap;background:var(--dv-surface);max-width:none}
++.dv-shell .dv-scene{touch-action:none;user-select:none;cursor:grab}.dv-scene *{pointer-events:none;-webkit-user-drag:none}.dv-drop-slot{display:flex;align-items:center;min-height:29px;padding:4px 10px 4px 92px;width:calc(var(--dv-track-width) + 88px);border:1px dashed var(--dv-line);font-size:10px;color:var(--dv-muted);background:var(--dv-bg)}
++.dv-drop-target{outline:2px solid var(--dv-accent);outline-offset:-2px;background:var(--dv-soft)!important}.dv-shell .dv-drag-preview{position:fixed;z-index:20;pointer-events:none;max-width:225px;padding:9px 12px;border:1px solid #ef9cc8;border-radius:10px;background:#58213f;color:#fff;box-shadow:0 7px 25px #18081740;font-size:12px;line-height:1.4}
++.dv-file-drop{outline:3px dashed var(--dv-accent);outline-offset:-4px}.dv-shell .dv-layer-bar:active,.dv-shell .dv-scene:active{cursor:grabbing}
++@media(max-width:760px){
++ .dv-media-tools{overflow-x:auto;gap:4px;padding:2px 0;scrollbar-width:none}.dv-media-tools>span{display:none}.dv-shell .dv-media-tools button{min-height:38px;padding:6px 8px;font-size:10px;flex:none}.dv-shell .dv-media-tools button[data-dv=asBackground]{margin-left:0}.dv-shell .dv-targetbar #dvToLayer,.dv-shell .dv-targetbar #dvToSequence{font-size:10px;padding:4px 6px;min-height:32px}.dv-targetbar select{max-width:100%;min-width:0}.dv-drop-slot{min-height:30px;font-size:9px;padding-left:92px}.dv-shell .dv-drag-preview{font-size:11px;max-width:210px}
++}
++
++.dv-shell .dv-track-label .dv-stack-handle{flex:0 0 28px;min-width:28px;width:28px;padding:0}.dv-track-label>span{min-width:0}
++
++@media(min-height:651px) and (max-width:760px){.dv-timeline-scroll{max-height:158px}}
+diff --git a/assets/divas-video.js b/assets/divas-video.js
+index 56dbf8b..c596eb2 100644
+--- a/assets/divas-video.js
++++ b/assets/divas-video.js
+@@ -5,2 +5,2 @@
+- const exportURL=new URL('./divas-video-export.mjs?v=42',document.currentScript.src).href;
+- const renderURL=new URL('./divas-video-render.mjs?v=42',document.currentScript.src).href;
++ const exportURL=new URL('./divas-video-export.mjs?v=43',document.currentScript.src).href;
++ const renderURL=new URL('./divas-video-render.mjs?v=43',document.currentScript.src).href;
+@@ -36,2 +36,2 @@
+-   <div class="dv-targetbar"><label for="dvTarget">Editando</label><select id="dvTarget" aria-label="Elemento que estás editando"></select><span id="dvTargetStatus"></span><button data-dv="endCutout" id="dvCutoutDone" aria-label="Volver a las herramientas" hidden>Listo</button><button data-dv="reveal" id="dvReveal" hidden>Ver esta capa</button></div>
+-   <div class="dv-body" id="dvBody"><div class="dv-stage"><div class="dv-stage-head"><label>Formato <select id="dvRatio"><option value="9:16">9:16 · Reel</option><option value="1:1">1:1</option><option value="16:9">16:9</option></select></label><small id="dvDimensions"></small><button data-dv="cleanPreview" aria-pressed="false" title="Ocultar controles de selección">Vista limpia</button></div><div id="dvCompareBar" class="dv-compare-bar" hidden><div class="dv-compare-modes" role="group" aria-label="Comparación del recorte"><button data-dv="compareBefore" aria-pressed="false">Antes</button><button data-dv="compareAfter" aria-pressed="true">Después</button><button data-dv="compareSplit" aria-pressed="false">Comparar</button><button data-dv="isolate" aria-pressed="false">Transparencia</button></div><div class="dv-compare-confirm" id="dvKeyConfirm" hidden><span>Vista previa · sin aplicar</span><button data-dv="cancelKey">Cancelar</button><button class="dv-primary" data-dv="confirmKey">Confirmar recorte</button></div></div><div class="dv-preview-wrap"><div class="dv-compare-labels" id="dvCompareLabels" hidden><span>Antes</span><span>Después</span></div><canvas id="dvCanvas" width="360" height="640" aria-label="Vista previa del video"></canvas><input id="dvCompareSplit" class="dv-compare-slider" type="range" min="2" max="98" value="50" aria-label="División antes y después" hidden><div class="dv-pick-banner" id="dvPickBanner" hidden>Toca el color que quieres quitar <button data-dv="cancelPick">Cancelar</button></div><div class="dv-empty" id="dvEmpty"><strong>Dale movimiento a tu idea</strong><p>Añade un clip, un flyer o un texto. Después combina tus capas.</p></div><div class="dv-canvas-tools" id="dvCanvasTools" hidden><button data-dv="lock" aria-label="Bloquear o desbloquear capa">♧</button><button data-dv="remove" aria-label="Eliminar elemento seleccionado">×</button></div></div><div class="dv-transport"><button data-dv="rewind" aria-label="Ir al inicio">↤</button><button data-dv="play" id="dvPlay" aria-label="Reproducir">▶</button><input id="dvSeek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Posición en el video"><span class="dv-time" id="dvTime">0:00.0 / 0:00.0</span></div></div>
++   <div class="dv-targetbar"><label for="dvTarget">Editando</label><select id="dvTarget" aria-label="Elemento que estás editando"></select><span id="dvTargetStatus"></span><button data-dv="toLayer" id="dvToLayer" title="Mostrar este clip al mismo tiempo que los demás" hidden>Superponer</button><button data-dv="toSequence" id="dvToSequence" title="Reproducir este elemento como un clip de la secuencia" hidden>En secuencia</button><button data-dv="endCutout" id="dvCutoutDone" aria-label="Volver a las herramientas" hidden>Listo</button><button data-dv="reveal" id="dvReveal" hidden>Ver esta capa</button></div>
++   <div class="dv-body" id="dvBody"><div class="dv-stage"><div class="dv-stage-head"><label>Formato <select id="dvRatio"><option value="9:16">9:16 · Reel</option><option value="1:1">1:1</option><option value="16:9">16:9</option></select></label><small id="dvDimensions"></small><button data-dv="cleanPreview" aria-pressed="false" title="Ocultar controles de selección">Vista limpia</button></div><div id="dvMediaTools" class="dv-media-tools" role="group" aria-label="Encuadrar la selección" hidden><span>Encuadre</span><button data-dv="frame" data-fit="contain" title="Mostrar toda la imagen, sin cortar">Completa</button><button data-dv="frame" data-fit="cover" title="Cubrir el lienzo recortando los bordes, sin estirar">Llenar</button><button data-dv="frame" data-fit="adaptive" title="Imagen completa con una copia suave de fondo">Adaptar</button><button data-dv="asBackground" id="dvAsBackground" title="Poner esta foto detrás y durante todo el vídeo">Usar como fondo</button><button data-dv="openTransform" title="Mover, cambiar tamaño y girar">Mover</button></div><div id="dvCompareBar" class="dv-compare-bar" hidden><div class="dv-compare-modes" role="group" aria-label="Comparación del recorte"><button data-dv="compareBefore" aria-pressed="false">Antes</button><button data-dv="compareAfter" aria-pressed="true">Después</button><button data-dv="compareSplit" aria-pressed="false">Comparar</button><button data-dv="isolate" aria-pressed="false">Transparencia</button></div><div class="dv-compare-confirm" id="dvKeyConfirm" hidden><span>Vista previa · sin aplicar</span><button data-dv="cancelKey">Cancelar</button><button class="dv-primary" data-dv="confirmKey">Confirmar recorte</button></div></div><div class="dv-preview-wrap"><div class="dv-compare-labels" id="dvCompareLabels" hidden><span>Antes</span><span>Después</span></div><canvas id="dvCanvas" width="360" height="640" aria-label="Vista previa del video"></canvas><input id="dvCompareSplit" class="dv-compare-slider" type="range" min="2" max="98" value="50" aria-label="División antes y después" hidden><div class="dv-pick-banner" id="dvPickBanner" hidden>Toca el color que quieres quitar <button data-dv="cancelPick">Cancelar</button></div><div class="dv-empty" id="dvEmpty"><strong>Dale movimiento a tu idea</strong><p>Añade un clip, un flyer o un texto. Después combina tus capas.</p></div><div class="dv-canvas-tools" id="dvCanvasTools" hidden><button data-dv="lock" aria-label="Bloquear o desbloquear capa">♧</button><button data-dv="remove" aria-label="Eliminar elemento seleccionado">×</button></div></div><div class="dv-transport"><button data-dv="rewind" aria-label="Ir al inicio">↤</button><button data-dv="play" id="dvPlay" aria-label="Reproducir">▶</button><input id="dvSeek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Posición en el video"><span class="dv-time" id="dvTime">0:00.0 / 0:00.0</span></div></div>
+@@ -41 +41 @@
+-   <section class="dv-fields dv-tool-content" data-content="clip"><div class="dv-clip-tools"><button data-dv="left" aria-label="Mover escena antes" title="Antes / detrás">←</button><button data-dv="right" aria-label="Mover escena después" title="Después / delante">→</button><button data-dv="duplicate">Duplicar</button><button data-dv="remove" class="dv-danger">Eliminar</button></div><label id="dvStartLabel">Aparece en (segundos)<input id="dvStart" type="number" min="0" max="180" step="0.1"></label><label id="dvDurationLabel">Dura (segundos)<input id="dvDuration" type="number" min="0.25" max="180" step="0.1" value="5"></label><div class="dv-row" id="dvTrim" hidden><label>Recortar desde (s)<input id="dvIn" type="number" min="0" step="0.1"></label><label>Hasta (s)<input id="dvOut" type="number" min="0.1" step="0.1"></label></div><button data-dv="split">✂ Dividir aquí</button><label>Entrada y salida<select id="dvTransition"><option value="fade">Fundido suave</option><option value="cut">Directa</option></select></label><p class="dv-hint">Arrastra las capas en la línea de tiempo. Sus extremos ajustan cuándo aparecen y desaparecen.</p></section>
++   <section class="dv-fields dv-tool-content" data-content="clip"><div class="dv-clip-tools"><button data-dv="left" aria-label="Mover escena antes" title="Antes / detrás">←</button><button data-dv="right" aria-label="Mover escena después" title="Después / delante">→</button><button data-dv="duplicate">Duplicar</button><button data-dv="remove" class="dv-danger">Eliminar</button></div><label id="dvStartLabel">Aparece en (segundos)<input id="dvStart" type="number" min="0" max="180" step="0.1"></label><label id="dvDurationLabel">Dura (segundos)<input id="dvDuration" type="number" min="0.25" max="180" step="0.1" value="5"></label><div class="dv-row" id="dvTrim" hidden><label>Recortar desde (s)<input id="dvIn" type="number" min="0" step="0.1"></label><label>Hasta (s)<input id="dvOut" type="number" min="0.1" step="0.1"></label></div><button data-dv="split">✂ Dividir aquí</button><label>Entrada y salida<select id="dvTransition"><option value="fade">Fundido suave</option><option value="cut">Directa</option></select></label><p class="dv-hint">Arrastra cualquier clip a otra fila para superponerlo. Hacia los lados cambias el tiempo; sus extremos recortan la duración.</p></section>
+@@ -43 +43 @@
+-   <section class="dv-fields dv-tool-content" data-content="transform"><p class="dv-hint">Arrastra en el lienzo para mover. Las esquinas cambian el tamaño sin deformar.</p><label>Encuadre<select id="dvFit"><option value="contain">Imagen completa</option><option value="cover">Llenar el lienzo</option></select></label><label>Forma de la capa<select id="dvMask"><option value="none">Original</option><option value="circle">Círculo</option><option value="rounded">Esquinas redondeadas</option></select></label><div class="dv-row"><label>Horizontal (%)<input id="dvX" type="number" min="-100" max="200" step="1"></label><label>Vertical (%)<input id="dvY" type="number" min="-100" max="200" step="1"></label></div><label>Tamaño sin deformar (%)<input id="dvScale" type="range" min="5" max="400" step="1"><output id="dvScaleValue"></output></label><div class="dv-row"><label>Girar (°)<input id="dvRotation" type="number" min="-360" max="360" step="1"></label><label>Opacidad (%)<input id="dvOpacity" type="number" min="0" max="100" step="1"></label></div><button data-dv="resetTransform">Centrar y ajustar</button><label>Movimiento rápido<select id="dvMotion"><option value="none">Quieto</option><option value="zoom">Acercamiento</option><option value="pan">Desplazamiento</option></select></label><label class="dv-check"><input id="dvAnimation" type="checkbox">Animar de inicio a final</label><div class="dv-row"><button data-dv="poseStart" aria-pressed="true">Editar inicio</button><button data-dv="poseEnd" aria-pressed="false">Editar final</button></div><p class="dv-hint">Activa la animación y cambia la posición o tamaño del final. Divas crea el movimiento entre ambos puntos.</p></section>
++   <section class="dv-fields dv-tool-content" data-content="transform"><p class="dv-hint">Arrastra en el lienzo para mover. Las esquinas cambian el tamaño sin deformar.</p><label>Encuadre<select id="dvFit"><option value="contain">Imagen completa</option><option value="cover">Llenar · recorta bordes</option><option value="adaptive">Adaptar · fondo suave</option></select></label><label>Forma de la capa<select id="dvMask"><option value="none">Original</option><option value="circle">Círculo</option><option value="rounded">Esquinas redondeadas</option></select></label><div class="dv-row"><label>Horizontal (%)<input id="dvX" type="number" min="-100" max="200" step="1"></label><label>Vertical (%)<input id="dvY" type="number" min="-100" max="200" step="1"></label></div><label>Tamaño sin deformar (%)<input id="dvScale" type="range" min="5" max="400" step="1"><output id="dvScaleValue"></output></label><div class="dv-row"><label>Girar (°)<input id="dvRotation" type="number" min="-360" max="360" step="1"></label><label>Opacidad (%)<input id="dvOpacity" type="number" min="0" max="100" step="1"></label></div><button data-dv="resetTransform">Centrar y ajustar</button><label>Movimiento rápido<select id="dvMotion"><option value="none">Quieto</option><option value="zoom">Acercamiento</option><option value="pan">Desplazamiento</option></select></label><label class="dv-check"><input id="dvAnimation" type="checkbox">Animar de inicio a final</label><div class="dv-row"><button data-dv="poseStart" aria-pressed="true">Editar inicio</button><button data-dv="poseEnd" aria-pressed="false">Editar final</button></div><p class="dv-hint">Activa la animación y cambia la posición o tamaño del final. Divas crea el movimiento entre ambos puntos.</p></section>
+@@ -48 +48 @@
+-   <div class="dv-timeline" id="dvTimeline"><div class="dv-timeline-head"><h2>Capas y tiempo <span id="dvCount"></span></h2><button class="dv-toggle-timeline" data-dv="toggleTimeline" aria-expanded="true">Capas ▾</button><label class="dv-zoom">Zoom <input id="dvZoom" type="range" min="12" max="100" step="4" value="32" aria-label="Zoom de línea de tiempo"></label><button data-dv="capture">+ Flyer</button><button data-dv="media" class="dv-primary">+ Fotos / clips</button></div><p class="dv-timeline-guide">↑ Delante · ↓ Detrás <span>↔ Arrastra el clip para cambiar cuándo aparece</span></p><div class="dv-timeline-scroll" id="dvTimelineScroll"><div id="dvRuler" class="dv-ruler"></div><div id="dvLayers" aria-label="Capas ordenadas de delante hacia detrás"></div><div class="dv-playhead" id="dvPlayhead"></div></div></div>
++   <div class="dv-timeline" id="dvTimeline"><div class="dv-timeline-head"><h2>Capas y tiempo <span id="dvCount"></span></h2><button class="dv-toggle-timeline" data-dv="toggleTimeline" aria-expanded="true">Capas ▾</button><label class="dv-zoom">Zoom <input id="dvZoom" type="range" min="12" max="100" step="4" value="32" aria-label="Zoom de línea de tiempo"></label><button data-dv="capture">+ Flyer</button><button data-dv="media" class="dv-primary">+ Fotos / clips</button></div><p class="dv-timeline-guide">↕ Cambia de fila <span>↔ Cambia el tiempo · Suelta sobre la secuencia para unir clips</span></p><div class="dv-timeline-scroll" id="dvTimelineScroll"><div id="dvRuler" class="dv-ruler"></div><div id="dvLayers" aria-label="Capas ordenadas de delante hacia detrás"></div><div class="dv-playhead" id="dvPlayhead"></div></div></div>
+@@ -51 +51 @@
+-   <input type="file" id="dvFiles" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" multiple hidden><input type="file" id="dvOverlayFiles" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" multiple hidden><input type="file" id="dvAudioFile" accept="audio/*" hidden><input type="file" id="dvTrackFile" accept="audio/*" hidden><input type="file" id="dvBackupFile" accept=".divasvideo" hidden>
++   <div class="dv-drag-preview" id="dvDragPreview" role="status" hidden></div><input type="file" id="dvFiles" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" multiple hidden><input type="file" id="dvOverlayFiles" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" multiple hidden><input type="file" id="dvAudioFile" accept="audio/*" hidden><input type="file" id="dvTrackFile" accept="audio/*" hidden><input type="file" id="dvBackupFile" accept=".divasvideo" hidden>
+@@ -76 +76 @@
+- function setBusy(){if(!$(id))return;const on=V.busy||V.exporting;$('dvBody').inert=on;$('dvTimeline').inert=on||!!V.keyDraft;$('dvTarget').disabled=on||!!V.keyDraft;$(id).querySelectorAll('.dv-topbar button,.dv-topbar input,.dv-quickbar button,.dv-footer button,.dv-library button').forEach(b=>b.disabled=on);$('dvProgress').hidden=!V.exporting;exportInfo();historyButtons();}
++ function setBusy(){if(!$(id))return;const on=V.busy||V.exporting;$('dvBody').inert=on;$('dvTimeline').inert=on||!!V.keyDraft;$('dvTarget').disabled=on||!!V.keyDraft;$(id).querySelectorAll('.dv-topbar button,.dv-topbar input,.dv-quickbar button,.dv-footer button,.dv-library button').forEach(b=>b.disabled=on);$('dvProgress').hidden=!V.exporting;exportInfo();historyButtons();if(V.project)updatePlacement();}
+@@ -151,0 +152 @@
++ function hasTransparency(el){const sample=document.createElement('canvas');sample.width=sample.height=40;const x=sample.getContext('2d',{willReadFrequently:true});x.drawImage(el,0,0,40,40);const pixels=x.getImageData(0,0,40,40).data;for(let i=3;i<pixels.length;i+=4)if(pixels[i]<250)return true;return false;}
+@@ -157,0 +159 @@
++   if(kind==='image')a.hasAlpha=hasTransparency(el);
+@@ -171 +173 @@
+-  try{for(const f of files){message('Abriendo '+f.name+'…');const a=await inspect(f);candidates.push(a);guard(epoch);if((mode===true||mode==='track')&&a.kind!=='audio')throw Error('Elige un archivo de música o voz.');if(!mode&&a.kind==='audio')throw Error('Añade la música desde Audio.');if(mode===true)p.music={assetId:a.id,offset:0,volume:.3,loop:false};else if(mode==='track')p.audio.push(M.audioLayer(a,V.time));else if(mode==='layer')p.layers.push(M.layer(a,V.time));else p.scenes.push(M.scene(a));}
++  try{for(const f of files){message('Abriendo '+f.name+'…');const a=await inspect(f);candidates.push(a);guard(epoch);if((mode===true||mode==='track')&&a.kind!=='audio')throw Error('Elige un archivo de música o voz.');if(!mode&&a.kind==='audio')throw Error('Añade la música desde Audio.');if(mode===true)p.music={assetId:a.id,offset:0,volume:.3,loop:false};else if(mode==='track')p.audio.push(M.audioLayer(a,V.time));else if(mode==='layer')p.layers.push(M.layer(a,V.time));else{const c=M.scene(a);if(a.kind==='image'&&!a.hasAlpha)c.fit='adaptive';p.scenes.push(c);}}
+@@ -179 +181 @@
+- async function preparePlayers(){for(const a of assetList())await player(a);for(const r of [...M.rows(V.project),...M.audioRows(V.project)])if(r.scene.assetId)await player(V.assets.get(r.scene.assetId),r.scene.id);if(V.project.music)await player(V.assets.get(V.project.music.assetId),'music');}
++ async function preparePlayers(){for(const a of assetList()){const p=await player(a);if(a.kind==='image'&&typeof a.hasAlpha!=='boolean')a.hasAlpha=hasTransparency(p.el);}for(const r of [...M.rows(V.project),...M.audioRows(V.project)])if(r.scene.assetId)await player(V.assets.get(r.scene.assetId),r.scene.id);if(V.project.music)await player(V.assets.get(V.project.music.assetId),'music');}
+@@ -201 +203 @@
+- function stackName(key){if(key==='base')return V.project.scenes.length===1?V.project.scenes[0].name:'Vídeo base · '+V.project.scenes.length+' clips';const c=V.project.layers.find(c=>c.id===key);return c?.kind==='text'?c.title||'Texto':c?.name||'Capa';}
++ function stackName(key){if(key==='base')return V.project.scenes.length===1?V.project.scenes[0].name:'Secuencia · '+V.project.scenes.length+' clips';const c=V.project.layers.find(c=>c.id===key);return c?.kind==='text'?c.title||'Texto':c?.name||'Capa';}
+@@ -216,0 +219,12 @@
++ function updatePlacement(){
++  const c=selected(),media=c&&['image','video'].includes(c.kind),available=media&&!V.keyDraft&&!V.cutoutActive;
++  $('dvMediaTools').hidden=!available;$('dvToLayer').hidden=!available||!V.project.scenes.includes(c);$('dvToSequence').hidden=!available||!V.project.layers.includes(c);
++  $('dvAsBackground').hidden=c?.kind!=='image';
++  for(const b of $(id).querySelectorAll('#dvMediaTools button,#dvToLayer,#dvToSequence'))b.disabled=!!c?.locked||V.busy||V.exporting;
++  for(const b of $(id).querySelectorAll('[data-dv=frame]'))b.setAttribute('aria-pressed',c?.fit===b.dataset.fit);
++ }
++ async function placement(action,options={}){
++  const c=selected();if(!c)throw Error('Selecciona el clip que quieres colocar.');stop();resetViewing();
++  const ok=commitChange(()=>{if(action==='background')M.asBackground(V.project,c.id);else if(action==='layer')M.toLayer(V.project,c.id,options);else M.toSequence(V.project,c.id,options.index);});
++  if(!ok)return;tool('layers');await seekSelected();message(action==='background'?'Foto colocada detrás y durante todo el vídeo. Puedes deshacer.':action==='layer'?'Ahora es una capa independiente: aparece junto a las demás.':'Clip colocado en la secuencia. Se reproduce antes o después de los otros clips.');
++ }
+@@ -218 +232 @@
+-  const seconds=Math.max(8,total()),width=Math.max(300,seconds*V.zoom),rows=M.timeline(V.project);$('dvCount').textContent='· '+V.project.scenes.length+' clips';
++  const seconds=Math.max(8,total()),width=Math.max(300,seconds*V.zoom),rows=M.timeline(V.project);$('dvCount').textContent='· '+V.project.scenes.length+(V.project.scenes.length===1?' clip':' clips');
+@@ -221 +235 @@
+-  const base=`<div class="dv-main-track" data-stack="base"><div class="dv-track-label">${handle('base')}<span>Vídeo base</span></div><div class="dv-scenes" id="dvScenes" aria-label="Escenas del video">${rows.length?rows.map(({scene:c,start},i)=>`<button class="dv-scene" data-dv="select" data-id="${esc(c.id)}" aria-pressed="${c.id===V.selected}" aria-label="Escena ${i+1}: ${esc(c.name)}" style="left:${start*V.zoom}px;width:${Math.max(22,M.duration(c)*V.zoom)}px"><img src="${esc(V.assets.get(c.assetId)?.thumb||'')}" alt=""><strong>${esc(c.name)}</strong><small>${M.duration(c).toFixed(1)} s</small></button>`).join(''):'<p class="dv-scene-empty">Añade fotos o clips.</p>'}</div></div>`;
++  const base=`<div class="dv-main-track" data-stack="base"><div class="dv-track-label" title="Estos clips se reproducen uno después de otro">${handle('base')}<span>Secuencia</span></div><div class="dv-scenes" id="dvScenes" aria-label="Escenas del video">${rows.length?rows.map(({scene:c,start},i)=>`<button class="dv-scene" data-dv="select" data-id="${esc(c.id)}" aria-pressed="${c.id===V.selected}" aria-label="Escena ${i+1}: ${esc(c.name)}" style="left:${start*V.zoom}px;width:${Math.max(22,M.duration(c)*V.zoom)}px"><img draggable="false" src="${esc(V.assets.get(c.assetId)?.thumb||'')}" alt=""><strong>${esc(c.name)}</strong><small>${M.duration(c).toFixed(1)} s</small></button>`).join(''):'<p class="dv-scene-empty">Añade fotos o clips.</p>'}</div></div>`;
+@@ -223 +237,3 @@
+-  $('dvLayers').innerHTML=M.stackOrder(V.project).slice().reverse().map(k=>k==='base'?base:layer(V.project.layers.find(c=>c.id===k))).join('')+V.project.audio.map(layer).join('');renderStack();
++  $('dvLayers').innerHTML='<div class="dv-drop-slot" data-drop="front">+ Soltar aquí para superponer</div>'+M.stackOrder(V.project).slice().reverse().map(k=>k==='base'?base:layer(V.project.layers.find(c=>c.id===k))).join('')+'<div class="dv-drop-slot" data-drop="back">↓ Soltar aquí para poner detrás</div>'+V.project.audio.map(layer).join('');renderStack();
++  const scroller=$('dvTimelineScroll'),item=[...$('dvLayers').querySelectorAll('[data-id]')].find(el=>el.dataset.id===V.selected);
++  if(item&&scroller.clientHeight){const b=item.getBoundingClientRect(),r=scroller.getBoundingClientRect();if(b.bottom>r.bottom-5)scroller.scrollTop+=b.bottom-r.bottom+5;else if(b.top<r.top+5)scroller.scrollTop-=r.top-b.top+5;if(b.right>r.right-5)scroller.scrollLeft+=b.right-r.right+5;else if(b.left<r.left+90)scroller.scrollLeft=Math.max(0,scroller.scrollLeft-(r.left+90-b.left));}
+@@ -228 +244 @@
+-  $('dvKeyConfirm').hidden=!V.keyDraft;$('dvCutoutDone').hidden=!V.cutoutActive||!!V.keyDraft;$('dvCompareLabels').hidden=!(V.cutoutActive&&V.compare==='split'&&!V.picking);$('dvCompareSplit').hidden=$('dvCompareLabels').hidden;
++  updatePlacement();$('dvKeyConfirm').hidden=!V.keyDraft;$('dvCutoutDone').hidden=!V.cutoutActive||!!V.keyDraft;$('dvCompareLabels').hidden=!(V.cutoutActive&&V.compare==='split'&&!V.picking);$('dvCompareSplit').hidden=$('dvCompareLabels').hidden;
+@@ -257 +273 @@
+-   if(name==='Name')V.project.name=M.clean(value)||'Mi video Divas';else if(name==='Ratio')V.project.ratio=value;else if(name==='Quality')V.project.quality=+value;else if(name==='Background')V.project.background=value;
++   if(name==='Name')V.project.name=M.clean(value)||'Mi video Divas';else if(name==='Ratio')M.changeRatio(V.project,value,assetList());else if(name==='Quality')V.project.quality=+value;else if(name==='Background')V.project.background=value;
+@@ -262,0 +279 @@
++    else if(name==='Fit')M.frame(c,value);
+@@ -353 +370 @@
+- function tool(name,open=true){V.cutoutActive=name==='cutout';if(name!=='cutout'){V.isolate=false;V.compare='after';}$(id).querySelector('.dv-inspector').scrollTop=0;$(id).dataset.compact=name==='clip'?'false':'true';$(id).querySelector('[data-dv=toggleTimeline]').setAttribute('aria-expanded',name==='clip');$(id).querySelector('.dv-inspector').dataset.tool=name;$(id).querySelectorAll('[data-dv=tool]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tool===name));if(open)panel(name==='audio'?'audio':'scene');cutoutUI(true);draw();}
++ function tool(name,open=true,keepTimeline=false){V.cutoutActive=name==='cutout';if(name!=='cutout'){V.isolate=false;V.compare='after';}$(id).querySelector('.dv-inspector').scrollTop=0;if(!keepTimeline){const expanded=['clip','layers'].includes(name);$(id).dataset.compact=expanded?'false':'true';$(id).querySelector('[data-dv=toggleTimeline]').setAttribute('aria-expanded',expanded);}$(id).querySelector('.dv-inspector').dataset.tool=name;$(id).querySelectorAll('[data-dv=tool]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tool===name));if(open)panel(name==='audio'?'audio':'scene');cutoutUI(true);draw();}
+@@ -375,0 +393,5 @@
++  if(action==='openTransform'){tool('transform');return;}
++  if(action==='toLayer')return placement('layer',{start:Math.min(V.time,Math.max(0,M.timeline(V.project).reduce((n,r)=>n+M.duration(r.scene),0)-M.duration(selected())-.25))});
++  if(action==='toSequence')return placement('sequence');
++  if(action==='asBackground')return placement('background');
++  if(action==='frame'){const c=selected();stop();resetViewing();if(commitChange(()=>M.frame(c,b.dataset.fit))){await ensureSelectedFrame();message(b.dataset.fit==='adaptive'?'Foto completa con fondo suave. Se ajusta también al cambiar de formato.':b.dataset.fit==='cover'?'Lienzo cubierto sin deformar. Los bordes de la foto pueden quedar fuera.':'Imagen completa, sin recortar ni deformar.');}return;}
+@@ -381 +403 @@
+-  stop();if(action==='rewind'){V.time=0;await seek();return;}if(action==='select'){V.selected=b.dataset.id;resetViewing();refresh();if(selected()?.kind==='audio')tool('audio');await seekSelected();return;}
++  stop();if(action==='rewind'){V.time=0;await seek();return;}if(action==='select'){V.selected=b.dataset.id;resetViewing();refresh();const kind=selected()?.kind;tool(kind==='audio'?'audio':kind==='text'?'text':'transform',true,true);if(matchMedia('(max-width:760px)').matches&&kind!=='audio')panel('preview');await seekSelected();return;}
+@@ -426,3 +448,48 @@
+-  timeline.addEventListener('pointerdown',e=>{if(e.button!==0||V.busy||V.exporting||V.keyDraft)return;const b=e.target.closest('.dv-layer-bar');if(!b)return;stop();V.selected=b.dataset.id;const c=selected();resetViewing();updateInspector();if(c.locked){message('Desbloquea esta capa antes de moverla.');return;}gesture={type:'timeline',before:structuredClone(V.project),x:e.clientX,y:e.clientY,scroll:timeline.scrollLeft,initial:structuredClone(c),edge:e.target.dataset.edge,element:b};b.setPointerCapture(e.pointerId);});
+-  timeline.addEventListener('pointermove',e=>{const g=gesture;if(!g||g.type!=='timeline')return;if(!g.moved&&Math.hypot(e.clientX-g.x,e.clientY-g.y)<6)return;if(!g.moved&&!g.edge&&g.initial.kind!=='audio'&&Math.abs(e.clientY-g.y)>Math.abs(e.clientX-g.x)){gesture=null;beginStack({...e,clientY:g.y,pointerId:e.pointerId},g.initial.id,g.element,$('dvLayers'));moveStack(e);return;}g.moved=true;const c=selected(),base=g.initial,d=M.duration(base);let delta=Math.round((e.clientX-g.x+timeline.scrollLeft-g.scroll)/V.zoom*10)/10;
+-   if(g.edge==='start'){delta=Math.max(-base.start,Math.min(d-.25,delta));if(['video','audio'].includes(c.kind))delta=Math.max(-base.in,delta);c.start=base.start+delta;if(['video','audio'].includes(c.kind))c.in=base.in+delta;else c.duration=d-delta;}
++  const hint=$('dvDragPreview');
++  function clearDrop(){hint.hidden=true;$(id).querySelectorAll('.dv-drop-target,.dv-insert-before,.dv-dragging').forEach(el=>el.classList.remove('dv-drop-target','dv-insert-before','dv-dragging'));}
++  function showDrop(e,text,target){clearDrop();hint.textContent=text;hint.hidden=false;const bounds=$(id).getBoundingClientRect();hint.style.left=Math.max(bounds.left+8,Math.min(e.clientX+12,bounds.right-230))+'px';hint.style.top=Math.max(bounds.top+8,Math.min(e.clientY-48,bounds.bottom-50))+'px';target?.classList.add('dv-drop-target');gesture?.element.classList.add('dv-dragging');}
++  const contains=(r,e)=>e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
++  function dropPlan(e,g){
++   const base=$('dvScenes').closest('[data-stack]'),br=base.getBoundingClientRect(),tr=timeline.getBoundingClientRect(),list=$('dvLayerStack'),lr=list.getBoundingClientRect();
++   const inList=lr.width>0&&lr.height>0&&contains(lr,e),inTime=contains(tr,e),isBase=V.project.scenes.some(c=>c.id===g.initial.id);
++   if(!inList&&!inTime)return {mode:'none',text:'Suelta dentro de Capas o Secuencia'};
++   const items=[...$('dvScenes').querySelectorAll('.dv-scene')].filter(el=>el.dataset.id!==g.initial.id),before=items.find(el=>e.clientX<el.getBoundingClientRect().left+el.getBoundingClientRect().width/2),index=before?items.indexOf(before):items.length;
++   const centralBase=inTime&&e.clientX>br.left+88&&e.clientY>br.top+br.height*.25&&e.clientY<br.bottom-br.height*.25;
++   if((isBase&&inTime&&e.clientY>=br.top&&e.clientY<=br.bottom)||(!isBase&&g.initial.kind!=='text'&&centralBase&&Math.abs(e.clientY-g.y)>14))return {mode:'sequence',index,target:before||base,text:'En secuencia · '+(before?'antes de '+before.textContent.trim():'al final')};
++   const container=inList?list:$('dvLayers'),rows=[...container.querySelectorAll('[data-stack]')].filter(el=>el.dataset.stack!==g.initial.id),next=rows.find(el=>e.clientY<el.getBoundingClientRect().top+el.getBoundingClientRect().height/2),key=next?.dataset.stack||null;
++   const ui=M.stackOrder(V.project).reverse().filter(k=>k!==g.initial.id),place=key?ui.indexOf(key):ui.length,behind=place>ui.indexOf('base');
++   if(isBase){
++    const others=M.timeline(V.project).filter(r=>r.scene.id!==g.initial.id).reduce((n,r)=>n+M.duration(r.scene),0);
++    const start=Math.abs(e.clientX-g.x)<16?Math.min(g.playhead,Math.max(0,others-M.duration(g.initial))):g.rowStart+(e.clientX-g.x+timeline.scrollLeft-g.scroll)/V.zoom;
++    if(g.initial.kind==='image'&&behind)return {mode:'background',target:next||$(id).querySelector('[data-drop=back]'),text:'Usar como fondo · durante todo el vídeo'};
++    return {mode:'layer',before:key,start:M.snapTime(V.project,g.initial.id,start,8/V.zoom),target:next||$(id).querySelector('[data-drop=back]'),text:'Superponer · capa '+(behind?'detrás':'delante')};
++   }
++   return {mode:'order',before:key,target:next||$(id).querySelector('[data-drop=back]'),text:'Ordenar · '+(behind?'detrás de la secuencia':'delante de la secuencia')};
++  }
++  function finishClip(cancel=false){
++   const g=gesture;if(!g||g.type!=='timeline')return;clearDrop();
++   if(!g.moved){gesture=null;return;}
++   if(cancel||g.plan?.mode==='none'){gesture=null;V.project=g.before;refresh();return;}
++   if(!g.plan||g.plan.mode==='time'){finish(cancel);return;}
++   gesture=null;V.project=g.before;V.selected=g.initial.id;const plan=g.plan;
++   const ok=commitChange(()=>{if(plan.mode==='background')M.asBackground(V.project,V.selected);else if(plan.mode==='layer')M.toLayer(V.project,V.selected,{start:plan.start,before:plan.before});else if(plan.mode==='sequence')M.toSequence(V.project,V.selected,plan.index);else M.placeStack(V.project,V.selected,plan.before);});
++   V.suppressClick=true;setTimeout(()=>V.suppressClick=false,120);if(!ok)return;tool('layers');seekSelected().catch(e=>message(e.message,true));message(plan.mode==='background'?'Foto adaptada y colocada detrás durante todo el vídeo. Puedes deshacer.':plan.mode==='sequence'?'Clip colocado en la secuencia.':plan.mode==='layer'?'Clip convertido en capa independiente.':'Orden de capas actualizado; los tiempos se conservan.');
++  }
++  timeline.addEventListener('dragstart',e=>e.preventDefault());
++  timeline.addEventListener('pointerdown',e=>{
++   if(e.button!==0||V.busy||V.exporting||V.keyDraft)return;const b=e.target.closest('.dv-layer-bar,.dv-scene');if(!b)return;
++   stop();V.selected=b.dataset.id;const c=selected();resetViewing();updateInspector();if(c.locked){message('Desbloquea esta capa antes de moverla.');return;}
++   const row=M.rows(V.project).find(r=>r.scene.id===c.id);gesture={type:'timeline',before:structuredClone(V.project),x:e.clientX,y:e.clientY,playhead:V.time,rowStart:row?.start||c.start||0,scroll:timeline.scrollLeft,initial:structuredClone(c),edge:e.target.dataset.edge,element:b};b.setPointerCapture(e.pointerId);e.preventDefault();
++  });
++  timeline.addEventListener('pointermove',e=>{
++   const g=gesture;if(!g||g.type!=='timeline')return;if(!g.moved&&Math.hypot(e.clientX-g.x,e.clientY-g.y)<7)return;
++   if(!g.moved&&matchMedia('(min-width:761px)').matches)tool('layers');g.moved=true;e.preventDefault();
++   const tr=timeline.getBoundingClientRect();if(contains(tr,e)){if(e.clientY>tr.bottom-14)timeline.scrollTop+=8;else if(e.clientY<tr.top+14)timeline.scrollTop-=8;if(e.clientX>tr.right-18)timeline.scrollLeft+=8;else if(e.clientX<tr.left+100)timeline.scrollLeft=Math.max(0,timeline.scrollLeft-8);}
++   const c=selected(),base=g.initial,d=M.duration(base),isBase=V.project.scenes.includes(c),delta=Math.round((e.clientX-g.x+timeline.scrollLeft-g.scroll)/V.zoom*100)/100;
++   const sourceRow=g.element.closest('[data-stack]')?.getBoundingClientRect(),crossed=sourceRow&&(e.clientY<sourceRow.top-4||e.clientY>sourceRow.bottom+4);
++   if(!g.edge&&base.kind!=='audio'&&(isBase||crossed||contains($('dvLayerStack').getBoundingClientRect(),e))){
++    if(!isBase){c.start=base.start;c.in=base.in;c.out=base.out;c.duration=base.duration;g.element.style.left=base.start*V.zoom+'px';}
++    g.plan=dropPlan(e,g);showDrop(e,g.plan.text,g.plan.target);return;
++   }
++   g.plan={mode:'time'};
++   if(g.edge==='start'){let shift=Math.max(-base.start,Math.min(d-.25,delta));if(['video','audio'].includes(c.kind))shift=Math.max(-base.in,shift);c.start=base.start+shift;if(['video','audio'].includes(c.kind))c.in=base.in+shift;else c.duration=d-shift;}
+@@ -430,3 +497,12 @@
+-   else c.start=Math.max(0,Math.min(180-d,base.start+delta));
+-   g.element.style.left=c.start*V.zoom+'px';g.element.style.width=Math.max(24,M.duration(c)*V.zoom)+'px';V.time=c.start+Math.min(.4,M.duration(c)/2);transport();draw();
+-  });timeline.addEventListener('pointerup',()=>finish());timeline.addEventListener('pointercancel',()=>finish(true));
++   else c.start=Math.max(0,Math.min(180-d,M.snapTime(V.project,c.id,base.start+delta,8/V.zoom)));
++   g.element.style.left=c.start*V.zoom+'px';g.element.style.width=Math.max(24,M.duration(c)*V.zoom)+'px';V.time=c.start+Math.min(.4,M.duration(c)/2);transport();draw();showDrop(e,(g.edge?'Recortar · ':'Inicio · ')+stamp(c.start),g.element);
++  });
++  timeline.addEventListener('pointerup',()=>finishClip());timeline.addEventListener('pointercancel',()=>finishClip(true));
++  $(id).addEventListener('keydown',e=>{if(e.key==='Escape'&&gesture?.type==='timeline'){e.preventDefault();e.stopPropagation();finishClip(true);}});
++  // Files dropped on the canvas appear together; files dropped on the sequence play consecutively.
++  for(const area of [canvas.parentElement,$('dvTimeline')]){
++   area.addEventListener('dragover',e=>{if([...e.dataTransfer.types].includes('Files')){e.preventDefault();e.dataTransfer.dropEffect='copy';area.classList.add('dv-file-drop');}});
++   area.addEventListener('dragleave',e=>{if(!area.contains(e.relatedTarget))area.classList.remove('dv-file-drop');});
++   area.addEventListener('drop',e=>{e.preventDefault();area.classList.remove('dv-file-drop');if(V.keyDraft){message('Confirma o cancela el recorte antes de añadir archivos.',true);return;}const files=[...e.dataTransfer.files];if(!files.length)return;const mode=area===canvas.parentElement?(M.rows(V.project).length?'layer':false):e.target.closest('#dvScenes')?false:'layer';job(()=>addFiles(files,mode));});
++  }
++
+diff --git a/docs/DIVAS-VIDEO.md b/docs/DIVAS-VIDEO.md
+index db6f83d..4fb963d 100644
+--- a/docs/DIVAS-VIDEO.md
++++ b/docs/DIVAS-VIDEO.md
+@@ -1 +1 @@
+-# Divas Video · v42
++# Divas Video · v43
+@@ -4,0 +5,27 @@ Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada d
++## Convertir un clip en capa o fondo
++
++Si una foto aparece **después** del vídeo en vez de al mismo tiempo, está dentro de la **Secuencia**. Puedes cambiarlo de estas maneras:
++
++1. Selecciona la foto y pulsa **Superponer**. Se convierte en una capa independiente delante de la secuencia. **En secuencia** hace el recorrido inverso.
++2. Arrástrala hacia **Soltar aquí para superponer**, hacia otra fila de capas o hacia el panel **Capas**. El aviso flotante explica dónde quedará antes de soltar. Si arrastras una foto de la secuencia por debajo de ella, el aviso indica **Usar como fondo**: queda detrás, empieza en cero, ocupa toda la duración restante y se adapta al formato.
++3. **Usar como fondo**, junto al lienzo, hace esa misma operación sin arrastrar. Si la foto es el único elemento, conserva su duración. Si hay vídeo encima sin transparencia, seguirá tapando la foto: quita su fondo o cambia el orden.
++4. Para devolver una capa a la secuencia, usa **En secuencia** o suéltala en el centro de esa fila. En los bordes de la fila se cambia el orden visual; en su centro se insertan clips consecutivos. Arrastra una escena a izquierda o derecha dentro de la secuencia para reordenarla.
++
++Las capas bloqueadas no se convierten ni se mueven. **Escape** cancela un arrastre; soltar fuera de las zonas de colocación cancela la conversión. Cada conversión se recupera con un solo **Deshacer**. Al sacar una escena, los clips posteriores de la secuencia se adelantan para cerrar el espacio. Los tiempos de las otras capas independientes se conservan.
++
++También puedes arrastrar archivos desde el ordenador: sobre el lienzo se añaden como capas si ya hay contenido; sobre la secuencia se añaden clips consecutivos. En móvil funcionan los archivos del dispositivo, los botones y el arrastre táctil; seleccionar un clip no pliega por sí solo sus pistas.
++
++## Fotos cuadradas en un vídeo horizontal o vertical
++
++Selecciona la imagen y usa **Encuadre**, encima del lienzo:
++
++| Opción | Resultado |
++| --- | --- |
++| **Completa** | Toda la imagen, con espacio libre si las proporciones difieren. |
++| **Llenar** | Cubre el lienzo conservando la proporción; recorta los bordes sobrantes. |
++| **Adaptar** | Mantiene la imagen completa y nítida, con una copia desenfocada rellenando los laterales o la parte superior e inferior. |
++
++Estos botones centran la selección, restablecen su tamaño y giro, y desactivan su movimiento previo. Conservan opacidad, máscara, color, recorte de fondo y archivo original; el cambio es reversible. **Mover** permite ajustar después posición, tamaño y giro manualmente. Adaptar no inventa detalles nuevos ni estira la foto.
++
++Las nuevas fotos opacas de la secuencia usan **Adaptar** de entrada. Al cambiar de formato, las fotos antiguas intactas y centradas también se adaptan; los encuadres manuales y los logos transparentes se respetan. Para una foto ya colocada manualmente, pulsa **Adaptar** cuando quieras reemplazar ese encuadre. Las capas superpuestas mantienen su escala al cambiar el formato. La extensión suave se calcula a resolución reducida y se reutiliza para fotos estáticas; el primer plano conserva su resolución de renderizado.
++
+@@ -21 +48 @@ El recorte es por color, no segmentación de personas mediante IA. Un fondo comp
+-- Arrastra una barra horizontalmente para cambiar cuándo aparece; arrastra sus extremos para recortarla. En **Tiempo** hay campos numéricos, dividir, duplicar y eliminar. Las escenas del vídeo base son consecutivas y comparten un nivel visual; sus flechas cambian el orden temporal.
++- Arrastra una barra horizontalmente para cambiar cuándo aparece; arrastra sus extremos para recortarla. En **Tiempo** hay campos numéricos, dividir, duplicar y eliminar. Las escenas de la secuencia son consecutivas y comparten un nivel visual; se reordenan arrastrando dentro de su fila o con las flechas.
+@@ -40 +67 @@ Los proyectos y sus archivos se guardan automáticamente en IndexedDB, **en este
+-**Respaldo** descarga un `.divasvideo` con clips, imágenes, audio, capas, efectos y animaciones. **Abrir respaldo** crea una copia nueva. Los respaldos v39 se migran al abrirlos con el fondo intacto y sin añadir opacidad. Los proyectos anteriores a v42 conservan su orden original (vídeo base detrás, capas delante). El nuevo orden visual queda dentro del proyecto y del respaldo; versiones anteriores a v42 no interpretan ese nuevo orden. v39 no puede abrir un proyecto creado con el formato v40.
++**Respaldo** descarga un `.divasvideo` con clips, imágenes, audio, capas, efectos y animaciones. **Abrir respaldo** crea una copia nueva. Los respaldos v39 se migran al abrirlos con el fondo intacto y sin añadir opacidad. Los proyectos anteriores a v42 conservan su orden original (vídeo base detrás, capas delante). El nuevo orden visual queda dentro del proyecto y del respaldo; versiones anteriores a v42 no interpretan ese nuevo orden. El encuadre Adaptar requiere v43; versiones anteriores lo muestran como Imagen completa. v39 no puede abrir un proyecto creado con el formato v40.
+@@ -64,0 +92,5 @@ La organización de pistas y la distinción entre tiempo y orden visual siguen p
++
++
++### Referencia Concat para v43
++
++Se descargó y revisó el repositorio oficial [jub0t/Concat](https://github.com/jub0t/Concat), revisión `7db37f2ab88dfa7ecc112fd5bf0b6b825e91b6c6`. Su interfaz de pistas (`ui/timeline/lanes.slint`) y lógica de tiempo (`panes/timeline.rs`) sirven de referencia para el umbral de arrastre, la previsualización de la colocación y el ajuste a límites de clips. Concat es una aplicación nativa en Rust/Slint con licencia AGPL-3.0, no un módulo JavaScript intercambiable. Divas v43 implementa estos comportamientos en su propio modelo y renderizador web; no incluye código, binarios ni servicios de Concat. Integrar su motor completo exigiría otra arquitectura y revisar sus obligaciones de licencia.
+diff --git a/docs/PRUEBAS-VIDEO-v43.md b/docs/PRUEBAS-VIDEO-v43.md
+new file mode 100644
+index 0000000..34a090f
+--- /dev/null
++++ b/docs/PRUEBAS-VIDEO-v43.md
+@@ -0,0 +1,23 @@
++# Divas Video v43 · comprobación de entrega
++
++Fecha: 26 de octubre de 2026. Base: `f151b6b04f415531b504e9a98e1cac2ba6684f08` (v42).
++
++## Resultado
++
++- 18 comprobaciones del modelo: tiempos, efectos, conversión entre secuencia/capas, IDs, duración del fondo, bloqueo, límites, encuadre manual, transparencia y compatibilidad.
++- Recorrido v43 en Chromium: secuencia → capa delante/detrás → secuencia; reordenación; destino en el panel Capas; cancelar; deshacer/rehacer; arrastre táctil mediante CDP; archivos externos soltados en el lienzo y en la secuencia.
++- Encuadre comprobado por píxeles: Completa, Llenar y Adaptar; sujeto cuadrado sin deformación en 1:1, 9:16 y 16:9. Reapertura desde Mis proyectos y restauración de respaldo.
++- Vista móvil revisada a 320, 360 y 390 px; escritorio a 1440 px. Sin desbordamiento horizontal del diálogo. Lienzo horizontal visible de 160 a 174 px de altura en móvil con las pistas desplegadas.
++- Regresiones v40 y v42: quitar fondo por color, confirmación/cancelación, antes/después, movimiento, tamaño, máscara, recorte temporal, orden de capas, texto animado, audio, respaldo y exportación.
++- Entrega estática: 218 archivos de ejecución; Manuales y Video abren a 390 y 1440 px; las rutas y tipos de contenido son correctos; no se publican SQL, pruebas ni configuración interna.
++- Ningún error JavaScript durante los recorridos funcionales.
++
++## Vídeo real
++
++Se exportó y decodificó el archivo de prueba con FFmpeg/FFprobe: WebM/VP8, 1280 × 720, 30 fps, 4 segundos. Ocho fotogramas muestreados a 2 fps conservan el cuadrado rojo, sus proporciones y los laterales suaves. La vista previa y la exportación usan el mismo renderizador.
++
++## Alcance
++
++Los archivos son sintéticos; la captura del usuario sirvió para reproducir el flujo de una foto añadida después del vídeo. No se dispuso del vídeo original de Halloween. La prueba móvil emula dimensiones y entrada táctil; no se hizo en un teléfono físico. Se verificaron renderizado SwiftShader y composición por CPU. MP4 depende del codificador del navegador; el Chromium utilizado exporta WebM. No hubo cambios de datos, cuentas o SQL de Supabase.
++
++Las instrucciones para reproducir las pruebas están en `tests/README-video.md`.
+diff --git a/index.html b/index.html
+index c9e5555..f577267 100644
+--- a/index.html
++++ b/index.html
+@@ -1405 +1405 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-<link rel="stylesheet" href="assets/divas-video.css?v=42.1">
++<link rel="stylesheet" href="assets/divas-video.css?v=43">
+@@ -2075,2 +2075,2 @@ SOFTWARE.
+-<script src="assets/divas-video-model.js?v=42.1"></script>
+-<script src="assets/divas-video.js?v=42.1"></script>
++<script src="assets/divas-video-model.js?v=43"></script>
++<script src="assets/divas-video.js?v=43"></script>
+diff --git a/tests/README-video.md b/tests/README-video.md
+index ef68c57..0fb3790 100644
+--- a/tests/README-video.md
++++ b/tests/README-video.md
+@@ -55,0 +56,23 @@ El WebM de v42 se decodificó con FFmpeg a 2 fotogramas por segundo: 6 muestras,
++
++
++## v43 · Colocación directa y encuadre proporcional
++
++`CHROMIUM_EXECUTABLE=/ruta/chromium npm --prefix tests run test:video:v43` comprueba convertir escenas en capas delante/detrás, foto como fondo durante toda la composición, volver a secuencia, reordenar, deshacer/rehacer, bloqueo, cancelación y destino en el panel Capas. Incluye entrada táctil mediante CDP y medidas de interfaz de 320, 360, 390 y 1440 px; no equivale a probar un móvil físico.
++
++Además de `clip.mp4`, se utiliza `square.png` (240 × 240, fondo RGB 20/100/230, franja izquierda verde de 30 px, derecha amarilla de 30 px y cuadrado rojo central de 80 × 80). Puede generarse así:
++
++```python
++from PIL import Image, ImageDraw
++im = Image.new('RGB', (240, 240), (20, 100, 230))
++d = ImageDraw.Draw(im)
++d.rectangle((0, 0, 29, 239), fill=(30, 230, 100))
++d.rectangle((210, 0, 239, 239), fill=(250, 220, 20))
++d.rectangle((80, 80, 159, 159), fill=(245, 20, 30))
++im.save('square.png')
++```
++
++Los píxeles distinguen Completa, Llenar y Adaptar. Se comprueba que el cuadrado central conserve la misma anchura y altura en las tres proporciones. El recorrido descarga un respaldo y un vídeo, reabre desde Mis proyectos y restaura el respaldo. Las pruebas del modelo cubren también proyectos largos, fotos con transparencia, encuadres manuales, límites, IDs, efectos y ajuste temporal a clips vecinos.
++
++`PW_TEST_SCREENSHOT_NO_FONTS_READY=1` evita esperar fuentes remotas en equipos de prueba sin acceso a Google Fonts. `DIVAS_SKIP_SCREENSHOTS=1` permite separar las comprobaciones funcionales de las capturas visuales en un navegador de pruebas cuyo compositor no capture después de la emulación táctil. Las capturas se deben revisar por separado antes de publicar.
++
++La salida v43 se verificó con FFprobe y decodificación de FFmpeg: VP8/WebM, 1280 × 720, 30 fps, 4 segundos; 8 muestras a 2 fps conservan el sujeto rojo cuadrado y los laterales suaves. Se probaron el renderizado con SwiftShader y las capturas con composición por CPU. El Chromium de pruebas no ofrece codificación MP4; no se afirma una validación nueva de ese codificador.
+diff --git a/tests/package.json b/tests/package.json
+index 0fe928e..1945b74 100644
+--- a/tests/package.json
++++ b/tests/package.json
+@@ -10,0 +11 @@
++    "test:video:v43": "node video-model.cjs && node video-effects.mjs && node video-v43.cjs",
+diff --git a/tests/video-model.cjs b/tests/video-model.cjs
+index d91db30..b8efca3 100644
+--- a/tests/video-model.cjs
++++ b/tests/video-model.cjs
+@@ -55,0 +56,22 @@ test('Splitting a layer behind base preserves its stacking position',()=>{
++test('A sequential photo becomes a simultaneous layer without replacing its media or edits',()=>{
++ const p=M.blank(),v=M.scene(video),c=M.scene(image);c.keyer.enabled=true;c.transform.x=.7;c.title='Gala';p.scenes=[v,c];
++ M.toLayer(p,c.id,{start:1,before:'base'});assert.deepEqual(p.scenes,[v]);assert.equal(p.layers[0],c);assert.equal(c.assetId,image.id);assert.equal(c.start,1);assert.equal(c.transform.x,.7);assert.equal(c.keyer.enabled,true);assert.deepEqual(M.stackOrder(p),['base',c.id]);
++ M.toSequence(p,c.id,0);assert.deepEqual(p.scenes,[c,v]);assert.deepEqual(p.layers,[]);assert.ok(!Object.hasOwn(c,'start'));assert.deepEqual(M.stackOrder(p),['base']);
++});
++test('A photo used as background spans other tracks, including long projects',()=>{
++ const p=M.blank(),v=M.scene(video),c=M.scene(image);p.scenes=[v,c];const t=M.textLayer(80);t.duration=5;p.layers=[t];
++ M.asBackground(p,c.id);assert.equal(c.start,0);assert.equal(c.duration,85);assert.equal(c.fit,'adaptive');assert.equal(c.transition,'cut');assert.deepEqual(M.stackOrder(p),[c.id,'base',t.id]);assert.equal(M.normalize(p,[video,image]).layers.find(x=>x.id===c.id).duration,85);
++ const alone=M.blank(),one=M.scene(image);one.duration=12;alone.scenes=[one];M.asBackground(alone,one.id);assert.equal(M.total(alone),12);
++});
++test('Conversions reject locked clips and track limits before removing anything',()=>{
++ const p=M.blank(),c=M.scene(image);p.scenes=[c];c.locked=true;assert.throws(()=>M.toLayer(p,c.id));assert.equal(p.scenes.length,1);c.locked=false;p.layers=Array.from({length:12},()=>M.textLayer());assert.throws(()=>M.toLayer(p,c.id));assert.equal(p.scenes.length,1);
++ p.layers=[M.layer(image)];p.scenes=Array.from({length:30},()=>M.scene(image));assert.throws(()=>M.toSequence(p,p.layers[0].id));assert.equal(p.layers.length,1);assert.throws(()=>M.toSequence(p,M.textLayer().id));
++});
++test('Automatic ratio adaptation preserves manual placement and transparent logos',()=>{
++ const opaque={...image,hasAlpha:false},logo={...image,id:'logo',hasAlpha:true},p=M.blank();const untouched=M.scene(opaque),manual=M.scene(opaque),transparent=M.scene(logo);manual.transform.x=.7;p.scenes=[untouched,manual,transparent];
++ M.changeRatio(p,'16:9',[opaque,logo]);assert.equal(p.ratio,'16:9');assert.deepEqual(p.scenes.map(c=>c.fit),['adaptive','contain','contain']);assert.equal(manual.transform.x,.7);
++ manual.transform.opacity=.5;manual.animation.enabled=true;M.frame(manual,'adaptive');assert.equal(manual.transform.x,.5);assert.equal(manual.transform.opacity,.5);assert.equal(manual.animation.enabled,false);const round=M.normalize(p,[opaque,logo]);assert.equal(round.scenes[0].fit,'adaptive');
++});
++test('Timeline moves snap to neighboring starts and ends without snapping to themselves',()=>{
++ const p=M.blank(),base=M.scene(video),c=M.layer(image,2);p.scenes=[base];p.layers=[c];assert.equal(M.snapTime(p,c.id,9.92),10);assert.equal(M.snapTime(p,c.id,.1),0);assert.equal(M.snapTime(p,c.id,2.07),2.07);assert.equal(M.snapTime(p,c.id,-4),0);
++});
+diff --git a/tests/video-v43.cjs b/tests/video-v43.cjs
+new file mode 100644
+index 0000000..9db0ea2
+--- /dev/null
++++ b/tests/video-v43.cjs
+@@ -0,0 +1,58 @@
++'use strict';
++const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs'),path=require('node:path');
++const root=path.resolve(__dirname,'..'),fixtures=process.env.DIVAS_VIDEO_FIXTURES||path.resolve(root,'../qa/fixtures'),out=path.join(root,'test-output/video-v43');fs.mkdirSync(out,{recursive:true});
++const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+(new URL(req.url,'http://localhost').pathname==='/'?'/index.html':new URL(req.url,'http://localhost').pathname));try{if(!file.startsWith(root+path.sep))throw Error();res.setHeader('Content-Type',/\.m?js$/.test(file)?'application/javascript':file.endsWith('.css')?'text/css':'text/html');res.end(fs.readFileSync(file));}catch{res.writeHead(404);res.end();}});
++const ready=p=>p.waitForFunction(()=>!document.getElementById('dvBody').inert);
++const tool=(p,n)=>p.locator('[data-dv=tool][data-tool='+n+']').click();
++const frame=(p,n)=>p.locator('[data-dv=frame][data-fit='+n+']').click();
++const pixel=(p,x,y)=>p.locator('#dvCanvas').evaluate((c,a)=>[...c.getContext('2d').getImageData(c.width*a[0],c.height*a[1],1,1).data],[x,y]);
++const red=c=>c[0]>190&&c[1]<70&&c[2]<70,green=c=>c[1]>160&&c[0]<90,blue=c=>c[2]>150&&c[0]<90,yellow=c=>c[0]>170&&c[1]>140&&c[2]<90;
++const records=p=>p.evaluate(async()=>{const d=await new Promise(r=>{const q=indexedDB.open('divas-video-v1');q.onsuccess=()=>r(q.result);});return new Promise(r=>{const q=d.transaction('projects').objectStore('projects').getAll();q.onsuccess=()=>r(q.result.map(x=>x.project));});});
++const persisted=async p=>{await p.locator('[data-dv=save]').click();await p.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');return (await records(p)).find(c=>c.name==='Placement v43');};
++const undo=async p=>{await p.locator('[data-dv=undo]').click();await ready(p);};
++const drag=async(p,from,to,expected)=>{await p.mouse.move(from.x,from.y);await p.mouse.down();await p.mouse.move(to.x,to.y,{steps:10});if(expected)assert.match(await p.locator('#dvDragPreview').textContent(),expected);await p.mouse.up();await p.waitForTimeout(170);await ready(p);};
++const center=b=>({x:b.x+b.width/2,y:b.y+b.height/2});
++(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader']}),ctx=await browser.newContext({viewport:{width:1440,height:1000},hasTouch:true,acceptDownloads:true}),p=await ctx.newPage(),errors=[];p.setDefaultTimeout(20000);p.on('pageerror',e=>errors.push(e.message));await ctx.route(/supabase\.(co|in)|fonts\.googleapis\.com|fonts\.gstatic\.com/,r=>r.abort());
++try{
++ await p.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded'});await p.locator('.projects-shortcuts [data-dv-new]').click();await ready(p);await p.locator('#dvName').fill('Placement v43');
++ await p.locator('#dvFiles').setInputFiles([path.join(fixtures,'clip.mp4'),path.join(fixtures,'square.png')]);await p.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===2&&!document.getElementById('dvBody').inert);await p.locator('#dvRatio').selectOption('16:9');await ready(p);
++ const photo=await p.locator('.dv-scene').nth(1).getAttribute('data-id'),video=await p.locator('.dv-scene').first().getAttribute('data-id');
++ assert.ok(await p.locator('[data-dv=asBackground]').isEnabled(),'framing works immediately after import');
++ let from=center(await p.locator('.dv-scene').nth(1).boundingBox()),dest=await p.locator('[data-drop=back]').boundingBox();await drag(p,from,{x:from.x,y:dest.y+dest.height/2},/Usar como fondo/);
++ assert.equal(await p.locator('.dv-scene').count(),1);assert.equal(await p.locator('.dv-layer-bar').count(),1);let project=await persisted(p);assert.equal(project.layers[0].id,photo);assert.equal(project.layers[0].start,0);assert.equal(project.layers[0].duration,4);assert.equal(project.layers[0].fit,'adaptive');assert.deepEqual(project.visualOrder,[photo,'base']);
++ await undo(p);assert.equal(await p.locator('.dv-scene').count(),2);assert.equal(await p.locator('.dv-layer-bar').count(),0);await p.locator('[data-dv=redo]').click();await ready(p);assert.equal(await p.locator('.dv-scene').count(),1);await undo(p);
++ // Sequential scenes can be reordered as well as moved onto independent tracks.
++ from=center(await p.locator('.dv-scene').nth(1).boundingBox());dest=await p.locator('.dv-scene').first().boundingBox();await drag(p,from,{x:dest.x+8,y:from.y},/En secuencia/);assert.equal(await p.locator('.dv-scene').first().getAttribute('data-id'),photo);await undo(p);
++ from=center(await p.locator('.dv-scene').nth(1).boundingBox());dest=await p.locator('[data-drop=front]').boundingBox();await drag(p,from,{x:from.x,y:dest.y+dest.height/2},/Superponer/);assert.equal(await p.locator('.dv-layer-bar').getAttribute('data-id'),photo);project=await persisted(p);assert.deepEqual(project.visualOrder,['base',photo]);assert.equal(project.layers[0].start,0);
++ from=center(await p.locator('.dv-layer-bar').boundingBox());dest=await p.locator('#dvScenes').boundingBox();await drag(p,from,{x:dest.x+80,y:dest.y+dest.height/2},/En secuencia/);assert.equal(await p.locator('.dv-layer-bar').count(),0);assert.equal(await p.locator('.dv-scene').count(),2);
++ console.log('PASS sequence/photo drag to foreground, smart background, sequence reorder, layer-to-sequence and single-step undo/redo');
++ // Cancellation, lock and a drop into the visible Layers inspector are supported.
++ await p.locator('#dvTarget').selectOption(photo);await p.locator('[data-dv=lock]').click();assert.equal(await p.locator('[data-dv=toLayer]').isDisabled(),true);from=center(await p.locator('.dv-scene[data-id="'+photo+'"]').boundingBox());dest=await p.locator('[data-drop=front]').boundingBox();await drag(p,from,{x:from.x,y:dest.y+3});assert.equal(await p.locator('.dv-scene').count(),2);await p.locator('[data-dv=lock]').click();
++ from=center(await p.locator('.dv-scene[data-id="'+photo+'"]').boundingBox());await p.mouse.move(from.x,from.y);await p.mouse.down();await p.mouse.move(from.x,from.y-50,{steps:8});await p.keyboard.press('Escape');await p.mouse.up();assert.equal(await p.locator('.dv-scene').count(),2);
++ await p.locator('[data-dv=layers]').click();from=center(await p.locator('.dv-scene[data-id="'+photo+'"]').boundingBox());dest=await p.locator('#dvLayerStack [data-stack=base]').boundingBox();await drag(p,from,{x:dest.x+60,y:dest.y+4},/Superponer/);assert.equal(await p.locator('.dv-layer-bar').count(),1);
++ // Test both mouse and genuine touch pointer input on mobile, preserving a visible canvas.
++ await p.setViewportSize({width:390,height:844});await p.locator('#dvToSequence').click();await ready(p);await p.locator('[data-dv=panel][data-panel=preview]').click();await p.locator('#dvTimelineScroll').evaluate(e=>e.scrollTop=0);
++ const cdp=await ctx.newCDPSession(p);from=center(await p.locator('.dv-scene[data-id="'+photo+'"]').boundingBox());dest=await p.locator('[data-drop=front]').boundingBox();const target={x:Math.min(from.x,350),y:dest.y+dest.height/2};
++ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:from.x,y:from.y}]});for(let i=1;i<=10;i++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:from.x+(target.x-from.x)*i/10,y:from.y+(target.y-from.y)*i/10}]});assert.match(await p.locator('#dvDragPreview').textContent(),/Superponer/);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await p.waitForTimeout(200);await cdp.detach();assert.equal(await p.locator('.dv-layer-bar').count(),1);
++ await p.locator('[data-dv=panel][data-panel=preview]').click();await p.locator('[data-dv=asBackground]').click();await ready(p);await p.locator('[data-dv=panel][data-panel=preview]').click();
++ for(const width of [390,360,320]){await p.setViewportSize({width,height:844});assert.equal(await p.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);assert.ok(await p.locator('[data-dv=frame][data-fit=adaptive]').isVisible());const box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=140,'landscape canvas remains visible '+width+': '+box.height);console.log('Viewport',width,'canvas',box.width,box.height);if(!process.env.DIVAS_SKIP_SCREENSHOTS)await p.screenshot({path:path.join(out,'mobile-'+width+'.png'),animations:'disabled'});}
++ console.log('PASS locked/cancelled moves, Layers panel destination, mobile touch conversion and 320/360/390px layout');
++ // Remove the other clip to inspect an adapted square image independently.
++ await p.setViewportSize({width:1440,height:1000});await p.locator('#dvTarget').selectOption(video);await p.locator('.dv-canvas-tools [data-dv=remove]').click();await ready(p);await p.locator('#dvTarget').selectOption(photo);await p.locator('#dvSeek').fill('1');await ready(p);
++ await frame(p,'contain');assert.ok(red(await pixel(p,.5,.5)));assert.deepEqual((await pixel(p,.05,.5)).slice(0,3),[32,20,36]);assert.ok(green(await pixel(p,.24,.5)));assert.ok(yellow(await pixel(p,.76,.5)));
++ await frame(p,'cover');assert.ok(green(await pixel(p,.05,.5)));assert.ok(yellow(await pixel(p,.95,.5)));assert.ok(red(await pixel(p,.5,.25)),'cover crops vertically without squashing');
++ await frame(p,'adaptive');console.log('Adaptive edges',await pixel(p,.05,.5),await pixel(p,.95,.5));assert.ok(green(await pixel(p,.05,.5)),'blurred left extension fills canvas');{const c=await pixel(p,.95,.5);assert.ok(c[0]>120&&c[1]>120&&c[2]<180,'yellow edge is softly blended: '+c);}assert.ok(blue(await pixel(p,.5,.25)),'whole square remains visible');assert.ok(red(await pixel(p,.5,.5)));
++ // The red square remains square in both portrait and landscape.
++ for(const ratio of ['1:1','9:16','16:9']){await p.locator('#dvRatio').selectOption(ratio);await ready(p);const extent=await p.locator('#dvCanvas').evaluate(c=>{const x=c.getContext('2d'),red=d=>d[0]>190&&d[1]<70&&d[2]<70;let w=0,h=0;for(let i=0;i<c.width;i++)if(red(x.getImageData(i,c.height/2,1,1).data))w++;for(let i=0;i<c.height;i++)if(red(x.getImageData(c.width/2,i,1,1).data))h++;return [w,h];});assert.ok(Math.abs(extent[0]-extent[1])<=3,'no distortion '+ratio+': '+extent);}
++ await p.locator('[data-dv=cleanPreview]').click();if(!process.env.DIVAS_SKIP_SCREENSHOTS)await p.screenshot({path:path.join(out,'desktop-adaptive.png'),animations:'disabled'});project=await persisted(p);assert.equal(project.layers[0].fit,'adaptive');assert.equal(project.layers[0].id,photo);
++ let event=p.waitForEvent('download');await p.locator('[data-dv=backup]').click();await (await event).saveAs(path.join(out,'v43.divasvideo'));
++ event=p.waitForEvent('download',{timeout:120000});await p.locator('[data-dv=export]').click();const movie=await event;await movie.saveAs(path.join(out,movie.suggestedFilename()));await ready(p);console.log('PASS proportional contain/cover/adaptive pixels, three formats, preserved photo and exported',movie.suggestedFilename());
++ await p.locator('[data-dv=library]').click();await p.locator('#projectGrid .project-card[data-kind=video] .project-open').click();await ready(p);await p.locator('#dvTarget').selectOption(photo);assert.equal(await p.locator('[data-dv=frame][data-fit=adaptive]').getAttribute('aria-pressed'),'true');assert.ok(green(await pixel(p,.05,.5)));
++ await p.locator('[data-dv=library]').click();await p.locator('.projects-shortcuts [data-dv-new]').click();await ready(p);await p.locator('#dvBackupFile').setInputFiles(path.join(out,'v43.divasvideo'));await p.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===1&&!document.getElementById('dvBody').inert);await p.locator('.dv-layer-bar').click();assert.ok(green(await pixel(p,.05,.5)));assert.ok(red(await pixel(p,.5,.5)));assert.deepEqual(errors,[]);
++ console.log('PASS saved project reopening and portable restore');
++ const dropped=await p.evaluateHandle(bytes=>{const dt=new DataTransfer();dt.items.add(new File([new Uint8Array(bytes)],'Dropped photo.png',{type:'image/png'}));return dt;},[...fs.readFileSync(path.join(fixtures,'square.png'))]);
++ await p.locator('.dv-preview-wrap').dispatchEvent('drop',{dataTransfer:dropped});await p.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===2&&!document.getElementById('dvBody').inert);
++ await p.locator('#dvScenes').dispatchEvent('drop',{dataTransfer:dropped});await p.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1&&!document.getElementById('dvBody').inert);assert.equal(await p.locator('.dv-layer-bar').count(),2);await dropped.dispose();assert.deepEqual(errors,[]);
++ console.log('PASS external files dropped as layers or sequential clips, and zero runtime errors');
++}catch(e){console.error(e);console.error('Page errors:',errors);console.error('Message:',await p.locator('#dvMessage').textContent());await p.screenshot({path:path.join(out,'failure.png'),timeout:5000}).catch(()=>{});throw e;}finally{await browser.close();server.close();}
++})().catch(e=>{console.error(e);server.close();process.exitCode=1;});
