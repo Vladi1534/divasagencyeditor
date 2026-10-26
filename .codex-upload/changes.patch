@@ -1,0 +1,621 @@
+diff --git a/README.md b/README.md
+index f254a21..f96666a 100644
+--- a/README.md
++++ b/README.md
+@@ -2,0 +3,9 @@
++
++## v45 · El vídeo primero en móvil
++
++La interfaz móvil usa una sola cabecera, un lienzo grande y cinco acciones con icono y nombre. Seleccionar o arrastrar ya no abre paneles; **Editar**, **Quitar fondo**, **Añadir**, **Capas** y **Más** muestran solo el grupo elegido. **Listo** devuelve el espacio al vídeo. La línea de tiempo muestra una pista y **Ampliar** permite trabajar con todas.
++
++El menú **Divas Video ···** reúne nombre, formato, calidad, fondo, Mis proyectos, Guardar y respaldos. La comparación del recorte queda junto a sus ajustes y **Confirmar / Cancelar** permanecen accesibles. **Ampliar vista previa** oculta las herramientas. Los controles se redistribuyen para móvil vertical, horizontal y teclado abierto; los ajustes de PC siguen disponibles. Los proyectos reabiertos muestran un fotograma visible del primer elemento.
++
++Sin SQL ni cambios en cuentas o formatos de guardado. Se publica **el proyecto completo**, incluidos `assets/divas-video-mobile.js` y `assets/divas-video-mobile.css`; reemplazar solo el index no basta. [Guía v45](docs/VIDEO-MOVIL-v45.md) · [Pruebas](tests/README-video.md).
++
+diff --git a/assets/divas-video-mobile.css b/assets/divas-video-mobile.css
+new file mode 100644
+index 0000000..73d960f
+--- /dev/null
++++ b/assets/divas-video-mobile.css
+@@ -0,0 +1,190 @@
++/* v45: one mobile workspace, one intentional tool sheet. */
++.dv-project-menu,.dv-mobile-previewbar,.dv-mobile-dock,.dv-mobile-edit-tabs,.dv-mobile-done,.dv-mobile-tool-target{display:none}
++.dv-inspector-scroll{min-height:0;overflow:auto;overscroll-behavior:contain;flex:1}
++.dv-inspector{display:flex;flex-direction:column;overflow:hidden}
++.dv-advanced{border-top:1px solid var(--dv-line);padding-top:8px}
++.dv-advanced summary{cursor:pointer;min-height:40px;display:flex;align-items:center;font-size:12px;font-weight:700;color:var(--dv-text);gap:6px}
++.dv-advanced summary:before{content:'›';font-size:19px;transition:transform .12s}
++.dv-advanced[open] summary:before{transform:rotate(90deg)}
++.dv-advanced>.dv-fields{padding-top:6px}
++.dv-inspector-head{flex:none}
++.dv-empty{pointer-events:none}
++.dv-empty button{pointer-events:auto}
++.dv-empty .dv-empty-icon svg{height:30px;width:30px}
++.dv-empty .dv-empty-icon{display:grid;place-items:center;width:58px;height:58px;border-radius:19px;border:1px solid #e487b355;color:#f6acd2;background:#372035}
++.dv-empty .dv-empty-flyer{background:transparent;border:0;color:#d9b3cb;font-size:12px}
++.dv-footer [data-dv=dismissMessage]{display:none}
++.dv-inspector[data-tool=project] .dv-scene-fields,.dv-inspector[data-tool=selection] .dv-scene-fields{display:none}
++.dv-inspector[data-tool=project] [data-content=project]{display:flex}
++.dv-inspector[data-tool=selection] [data-content=selection]{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px}
++.dv-selection-content button{min-height:48px}
++.dv-project-content{padding:12px}
++.dv-project-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
++.dv-version{color:var(--dv-muted);font-size:10px}
++.dv-shell[data-inspector=closed] .dv-inspector{display:none!important}
++@media(min-width:761px){
++ .dv-advanced summary{display:none}
++ .dv-advanced{border:0;padding:0}
++ .dv-advanced>.dv-fields{padding:0}
++}
++@media(max-width:760px), (max-width:1000px) and (max-height:520px) and (pointer:coarse){
++ dialog.dv-shell{inset:0 0 auto;margin:0;width:100%;height:var(--dv-mobile-height,100dvh);max-height:100dvh;border:0;border-radius:0;--dv-mobile-panel:min(44dvh,340px);font-size:13px}
++ .dv-layout{position:relative;overflow:hidden;padding-top:env(safe-area-inset-top)}
++ .dv-shell button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
++ .dv-shell button:focus-visible{outline-offset:-3px}
++ .dv-topbar{height:56px;padding:5px 8px;gap:2px;flex-wrap:nowrap;display:grid;grid-template-columns:44px minmax(0,1fr) 44px 44px 76px;align-items:center;flex:none}
++ .dv-topbar>.dv-brand,.dv-topbar>.dv-name{display:none}
++ .dv-top-actions{display:contents}
++ .dv-top-actions .dv-save-status,.dv-top-actions [data-dv=library],.dv-top-actions [data-dv=save]{display:none!important}
++ .dv-topbar .dv-close{grid-column:1;grid-row:1;width:44px;height:44px;min-height:44px;border:0;background:transparent}
++ .dv-close svg{width:22px;height:22px;display:block;margin:auto}
++ .dv-shell .dv-project-menu{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;min-width:0;min-height:44px;padding:3px 4px;border:0;background:transparent;text-align:left;overflow:hidden}
++ .dv-project-menu strong{font-size:13px;white-space:nowrap}.dv-project-menu strong span{color:var(--dv-accent)}
++ .dv-project-menu small{font-size:10px;white-space:nowrap;color:var(--dv-muted)}
++ .dv-project-menu small:before{content:'';display:inline-block;width:5px;height:5px;background:#56a881;border-radius:50%;margin:0 4px 1px 0}
++ .dv-project-menu small.dv-saving:before{background:#d5a352}
++ .dv-topbar .dv-top-actions [data-dv=undo],.dv-topbar .dv-top-actions [data-dv=redo]{width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;font-size:20px}
++ .dv-top-actions [data-dv=undo]{grid-column:3;grid-row:1}.dv-top-actions [data-dv=redo]{grid-column:4;grid-row:1}
++ .dv-topbar .dv-top-actions .dv-primary{grid-column:5;grid-row:1;min-height:44px;margin:0;padding:6px;font-size:12px;border-radius:12px}
++ .dv-targetbar,.dv-tool-rail,.dv-stage-head{display:none!important}
++ .dv-body,.dv-shell[data-inspector=closed] .dv-body{display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden}
++ .dv-stage{flex:1 1 0;min-height:0;padding:0 8px;gap:0;overflow:hidden}
++ .dv-mobile-previewbar{display:flex;align-items:center;gap:4px;height:44px;flex:none;padding:3px 0}
++ .dv-mobile-selection{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;padding-left:3px}
++ .dv-mobile-selection small{font-size:8px;font-weight:700;letter-spacing:1px;color:var(--dv-muted)}
++ .dv-mobile-selection strong{font-size:11px;font-weight:500;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
++ .dv-shell .dv-mobile-previewbar button{height:44px;min-height:44px;min-width:44px;border:0;background:transparent;padding:4px 7px;border-radius:9px;font-size:12px;color:var(--dv-muted)}
++ .dv-shell .dv-mobile-previewbar [data-dv=cleanPreview] svg{width:20px;height:20px;display:block;margin:auto}
++ .dv-shell .dv-mobile-previewbar [data-dv=cleanPreview]{font-size:23px;color:var(--dv-text)}
++ .dv-shell[data-focus=true] .dv-mobile-previewbar [data-dv=cleanPreview]{font-size:12px;background:var(--dv-soft);color:var(--dv-accent)}
++ .dv-shell[data-mobile-selected=false] .dv-deselect,.dv-shell[data-inspector=open] .dv-deselect{display:none}
++ .dv-preview-wrap{min-height:0;flex:1 1 0;padding:4px;border-radius:12px;background:#100d14;overflow:hidden}
++ .dv-preview-wrap canvas{max-width:100%;max-height:100%;box-shadow:none}
++ .dv-empty{padding:15px;gap:12px}
++ .dv-empty strong{font-size:17px;line-height:1.25;max-width:220px}
++ .dv-empty p{font-size:12px;line-height:1.55;max-width:230px}
++ .dv-empty>.dv-primary{min-height:48px;border-radius:14px;padding-inline:18px;font-size:13px}
++ .dv-shell .dv-canvas-tools{bottom:8px;right:8px;border:0;background:#ffffffed;padding:1px;border-radius:11px;gap:0;box-shadow:0 2px 12px #0002}
++ .dv-shell .dv-canvas-tools button{min-height:40px;width:40px}
++ .dv-shell .dv-canvas-tools{background:var(--dv-surface);border:1px solid var(--dv-line)}
++ .dv-shell .dv-canvas-tools button{background:var(--dv-surface)!important;color:var(--dv-accent)!important}
++ .dv-canvas-tools [data-dv=duplicate]{display:none}
++ .dv-transport{height:48px;min-height:48px;gap:7px;flex:none}
++ .dv-transport [data-dv=rewind]{display:none}
++ .dv-transport button{border:0;border-radius:50%;min-width:44px;min-height:44px;padding:0;color:var(--dv-accent);font-size:19px;background:transparent}
++ .dv-transport input[type=range]{height:44px;min-height:44px;margin:0}
++ .dv-shell .dv-transport .dv-toggle-timeline{display:block;min-width:56px;min-height:44px;width:56px;border-radius:9px;font-size:10px;padding:2px}
++ .dv-shell[data-inspector=open] .dv-transport .dv-toggle-timeline,.dv-shell[data-focus=true] .dv-transport .dv-toggle-timeline,.dv-shell[data-mobile-empty=true] .dv-transport .dv-toggle-timeline{display:none}
++ .dv-time{font-size:10px;min-width:84px;text-align:right;padding-right:2px;color:var(--dv-muted)}
++ .dv-timeline{padding:0 8px 6px;flex:none;border-top:0;background:var(--dv-bg)}
++ .dv-timeline-head{display:none;height:38px;min-height:38px;margin:0;gap:5px;flex-wrap:nowrap}
++ .dv-timeline-head h2{display:block;font-size:11px;font-weight:600;margin-right:auto;color:var(--dv-muted)}
++ .dv-timeline-head h2 span{display:none}
++ .dv-timeline-head .dv-toggle-timeline{margin:0;font-size:11px;padding:0 9px;min-height:38px;border:0;background:transparent;color:var(--dv-accent)}
++ .dv-timeline-head [data-dv=capture],.dv-timeline-head [data-dv=media],.dv-timeline-head .dv-zoom,.dv-timeline-guide{display:none!important}
++ .dv-timeline-scroll,.dv-shell[data-compact=true] .dv-timeline-scroll{display:block;min-height:0;height:68px;max-height:68px;padding-bottom:0;border-radius:9px;scrollbar-width:thin}
++ .dv-ruler{height:20px}.dv-ruler span{font-size:9px}
++ .dv-scenes,.dv-layer-track,.dv-track-lane{min-height:48px;height:48px}
++ .dv-shell .dv-scene{height:44px;min-height:44px;border-radius:7px;padding:4px}
++ .dv-shell .dv-layer-bar{height:42px;min-height:42px;top:2px}
++ .dv-track-label{font-size:9px}
++ .dv-shell:not([data-timeline-expanded=true]) #dvLayers>*,.dv-shell:not([data-timeline-expanded=true]) .dv-drop-slot{display:none}
++ .dv-shell:not([data-timeline-expanded=true]) #dvLayers>.dv-mobile-current-track{display:flex}
++ .dv-shell:not([data-timeline-expanded=true]) .dv-track-label .dv-stack-handle{display:none}
++ .dv-shell:not([data-timeline-expanded=true]) .dv-track-label{padding:8px;justify-content:center}
++ .dv-shell[data-timeline-expanded=true] .dv-timeline-scroll{height:min(26dvh,190px);max-height:min(26dvh,190px)}
++ .dv-shell[data-timeline-expanded=true] .dv-timeline-head{display:flex}
++ .dv-shell[data-timeline-expanded=true] .dv-timeline-head .dv-zoom{display:flex!important}
++ .dv-shell[data-inspector=open] .dv-timeline,.dv-shell[data-inspector=open] .dv-mobile-dock,.dv-shell[data-focus=true] .dv-timeline,.dv-shell[data-focus=true] .dv-mobile-dock,.dv-shell[data-mobile-empty=true] .dv-timeline{display:none}
++ .dv-mobile-dock{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));flex:none;gap:3px;padding:8px 7px max(8px,env(safe-area-inset-bottom));background:var(--dv-surface);border-top:1px solid var(--dv-line)}
++ .dv-shell .dv-mobile-dock button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:57px;padding:6px 1px;border:0;background:transparent;border-radius:12px;font-size:10px;line-height:1.1;font-weight:600}
++ .dv-mobile-dock svg{width:22px;height:22px;flex:none}
++ .dv-shell .dv-mobile-dock .dv-dock-feature{background:var(--dv-soft);color:var(--dv-accent)}
++ .dv-shell[data-panel=scene] .dv-inspector,.dv-shell[data-panel=audio] .dv-inspector,.dv-shell[data-cutout=true] .dv-inspector{display:flex!important}
++ .dv-inspector,.dv-shell[data-cutout=true] .dv-inspector{flex:0 0 var(--dv-mobile-panel);height:var(--dv-mobile-panel);max-height:var(--dv-mobile-panel);min-height:0;overflow:hidden;padding:0;border:1px solid var(--dv-line);border-bottom:0;border-radius:20px 20px 0 0;background:var(--dv-surface);box-shadow:0 -7px 26px #29101c0a;padding-bottom:env(safe-area-inset-bottom)}
++ .dv-shell[data-inspector=closed] .dv-inspector{display:none!important}
++ .dv-inspector-head{position:static;display:flex;flex:none;min-height:48px;height:48px;padding:4px 12px;border:0;gap:4px}
++ .dv-inspector-head h2{font-size:14px;font-weight:700}
++ .dv-shell .dv-inspector-head button{width:auto;min-width:70px;min-height:40px!important;height:40px;padding:4px 12px;font-size:12px;font-weight:700;border:0;border-radius:12px;background:var(--dv-soft);color:var(--dv-accent)}
++ .dv-desktop-close{display:none}.dv-mobile-done{display:inline}
++ .dv-mobile-tool-target{display:none;flex:none;font-size:10px;color:var(--dv-muted);padding:0 13px 7px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
++ .dv-mobile-tool-target:empty{display:none}
++ .dv-inspector-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scroll-padding:8px}
++ .dv-inspector .dv-scene-fields{padding:8px 12px 18px;gap:0}
++ .dv-fields label{font-size:12px;color:var(--dv-text)}
++ .dv-shell .dv-fields input:not([type=range]):not([type=checkbox]),.dv-shell .dv-fields select,.dv-shell .dv-fields textarea{min-height:44px;font-size:16px}
++ .dv-shell .dv-fields input[type=range]{height:44px;min-height:44px;margin:0}
++ .dv-shell .dv-fields button{min-height:44px}
++ .dv-shell textarea{resize:none}
++ .dv-selected-heading,.dv-desktop-hint{display:none!important}
++ .dv-advanced summary{display:flex;min-height:44px;font-size:12px}
++ .dv-advanced .dv-key-scope{order:initial!important;padding:8px}
++ .dv-inspector[data-tool=text] .dv-context-create{display:none}
++ .dv-mobile-edit-tabs{display:none;flex:none;gap:5px;padding:0 12px 7px}
++ .dv-shell[data-mobile-tool=transform] .dv-mobile-edit-tabs,.dv-shell[data-mobile-tool=clip] .dv-mobile-edit-tabs,.dv-shell[data-mobile-tool=color] .dv-mobile-edit-tabs{display:flex}
++ .dv-mobile-edit-tabs button{flex:1;font-size:11px;min-height:40px;padding:5px;border:0;border-radius:9px;background:var(--dv-bg)}
++ .dv-mobile-edit-tabs button[aria-pressed=true]{color:var(--dv-accent);background:var(--dv-soft);font-weight:700}
++ .dv-media-content{display:grid!important;grid-template-columns:1fr 1fr;gap:8px;padding:7px 12px 18px}
++ .dv-media-content h3,.dv-media-content>p,.dv-media-content>hr{display:none}
++ .dv-media-content button{min-height:58px!important;font-size:12px;border-radius:13px}
++ .dv-media-content [data-dv=media]{grid-column:1/-1}
++ .dv-project-content{padding:6px 12px 18px}
++ .dv-project-content .dv-name{width:100%;max-width:none!important;min-width:0;flex:auto}
++ .dv-project-content .dv-name:before{content:'Nombre del proyecto';font-size:12px}
++ .dv-project-content .dv-name input{min-height:44px!important;font-size:16px!important}
++ .dv-project-content #dvMobileProjectFields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
++ .dv-project-content #dvMobileProjectFields>.dv-name{grid-column:1/-1}
++ .dv-project-content #dvMobileProjectFields>label{min-width:0}
++ .dv-project-actions button{min-height:48px;font-size:12px}
++ .dv-project-content .dv-hint{font-size:11px;line-height:1.5}
++ .dv-shell .dv-scene-fields #dvMediaTools{display:flex!important;flex-wrap:wrap;overflow:visible;padding:0 0 4px;gap:4px}
++ .dv-shell .dv-scene-fields #dvMediaTools[hidden]{display:none!important}
++ #dvMediaTools>span,#dvMediaTools [data-dv=openTransform]{display:none}
++ .dv-shell .dv-scene-fields #dvMediaTools button{flex:1;min-height:44px;font-size:11px;white-space:normal;padding:5px}
++ .dv-shell .dv-scene-fields #dvMediaTools [data-dv=asBackground]{flex-basis:100%;margin:0;min-height:38px;font-size:11px}
++ .dv-inspector [data-content=transform]>label:has(#dvFit){display:none}
++ .dv-inspector [data-content=transform]>label:has(#dvMask){margin-top:3px}
++ .dv-compare-bar{flex:none;display:block;margin:0 12px;padding-bottom:7px}
++ .dv-compare-modes{gap:4px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
++ .dv-compare-bar button{min-height:38px;font-size:10px;padding:3px 0;border:0}
++ .dv-compare-confirm{flex:none;border-top:1px solid var(--dv-line);padding:7px 12px;margin:0;gap:8px;background:var(--dv-surface)}
++ .dv-compare-confirm button{flex:1;min-height:44px;font-size:12px;border-radius:12px}
++ .dv-shell[data-key-pending=true] .dv-inspector-head button{display:none}
++ .dv-shell[data-cutout=true] [data-content=cutout]>.dv-cutout-actions{order:0}
++ .dv-shell[data-cutout=true] [data-content=cutout]>.dv-swatches{order:0}
++ .dv-shell[data-cutout=true] [data-content=cutout]>.dv-key-status{order:10;padding:8px;font-size:11px}
++ .dv-shell[data-cutout=true] [data-content=cutout]>.dv-advanced{order:5}
++ .dv-swatches button{min-height:48px!important}
++ .dv-audio-fields>h3:last-of-type,.dv-audio-fields>.dv-divider:last-of-type,.dv-audio-fields>#dvExportHint{display:none}
++ .dv-layer-fields{padding:8px 12px 18px}
++ .dv-layer-fields h2,.dv-layer-fields>.dv-hint:first-of-type{display:none}
++ .dv-stack-row{min-height:52px}
++ .dv-shell .dv-stack-handle{min-height:44px;min-width:40px}
++ .dv-shell .dv-stack-row strong{font-size:12px}
++ .dv-shell .dv-footer,.dv-shell[data-cutout=true] .dv-footer{display:none;position:absolute;left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:12;min-height:0;padding:10px 8px 10px 12px;background:var(--dv-surface);border:1px solid var(--dv-line);border-radius:13px;box-shadow:0 5px 20px #190e2b25;font-size:11px}
++ .dv-shell[data-toast=true] .dv-footer{display:flex}
++ .dv-shell[data-inspector=open] .dv-footer{bottom:calc(var(--dv-mobile-panel) + 10px)}
++ .dv-shell[data-focus=true] .dv-footer{bottom:60px}
++ .dv-footer p{max-height:none;font-size:11px;line-height:1.4;overflow:visible}
++ .dv-shell .dv-footer [data-dv=dismissMessage]{display:block;flex:none;min-height:40px;width:32px;padding:0;border:0;font-size:20px}
++ .dv-shell[data-toast-error=true] .dv-footer{border-color:#b44b69}
++ .dv-library{inset:56px 0 0;padding:12px}
++ .dv-progress{min-height:44px;flex:none;padding:6px 10px}
++ .dv-progress button{min-height:40px}
++ .dv-shell[data-mobile-empty=true] .dv-canvas-tools{display:none}
++ .dv-shell[data-short=true]{--dv-mobile-panel:calc(var(--dv-mobile-height) * .49)}
++ .dv-shell[data-short=true] .dv-mobile-previewbar{height:32px}
++ .dv-shell[data-short=true] .dv-transport{height:40px;min-height:40px}
++ .dv-shell[data-short=true] .dv-timeline{display:none}
++ .dv-shell[data-short=true][data-inspector=open] .dv-transport{display:none}
++ .dv-shell[data-short=true] .dv-empty{gap:5px;padding:8px}
++ .dv-shell[data-short=true] .dv-empty-icon,.dv-shell[data-short=true] .dv-empty p{display:none}
++ .dv-shell[data-short=true] .dv-mobile-tool-target{display:none}
++}
++@media(max-width:340px){.dv-project-menu strong{font-size:11px}.dv-topbar{padding-inline:4px;grid-template-columns:44px minmax(0,1fr) 44px 44px 70px}.dv-topbar .dv-close,.dv-topbar .dv-top-actions [data-dv=undo],.dv-topbar .dv-top-actions [data-dv=redo]{width:44px}.dv-shell .dv-mobile-dock button{font-size:9px}}
++@media(max-width:760px) and (prefers-reduced-motion:no-preference){
++ .dv-mobile-dock button{transition:background .12s,transform .12s}
++ .dv-mobile-dock button:active{transform:scale(.96)}
++ .dv-shell[data-inspector=open] .dv-inspector{animation:dv-sheet-in .16s ease-out}
++ @keyframes dv-sheet-in{from{opacity:.5;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
++}
+diff --git a/assets/divas-video-mobile.js b/assets/divas-video-mobile.js
+new file mode 100644
+index 0000000..dd15be7
+--- /dev/null
++++ b/assets/divas-video-mobile.js
+@@ -0,0 +1,93 @@
++/* Mobile presentation only. The video model, renderer, history and storage stay shared. */
++(function(){
++ 'use strict';
++ const query='(max-width:760px), (max-width:1000px) and (max-height:520px) and (pointer:coarse)';
++ const paths={add:'M12 4v16 M4 12h16',edit:'M4 20l4-1 12-12-3-3L5 16z M14 7l3 3',cutout:'M12 3l2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6z',layers:'M12 3L2 8l10 5 10-5z M2 12l10 5 10-5 M2 16l10 5 10-5',more:'M5 12h.01 M12 12h.01 M19 12h.01',text:'M4 6V4h16v2 M12 4v16 M8 20h8',audio:'M9 18V5l11-2v13 M9 8l11-2 M9 18c0 4-6 4-6 1s6-4 6-1 M20 16c0 4-6 4-6 1s6-4 6-1',format:'M5 3h14v18H5z M8 7h8 M8 17h8',size:'M8 3H3v5 M16 3h5v5 M21 16v5h-5 M8 21H3v-5',back:'M15 5l-7 7 7 7'};
++ const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name]||paths.more}"/></svg>`;
++ const button=(label,action,name,shape,extra='')=>`<button data-dv="${action}" ${name?`data-tool="${name}"`:''} ${extra}>${icon(shape)}<span>${label}</span></button>`;
++ function mount({dialog,state,selected,total,closeTools}){
++  const $=id=>dialog.querySelector('#'+id),q=s=>dialog.querySelector(s),mobile=matchMedia(query),homes=new Map();let toastTimer,dockKey='',syncKey='';
++  const inspector=q('.dv-inspector'),header=q('.dv-inspector-head'),scroll=document.createElement('div');scroll.className='dv-inspector-scroll';
++  for(const child of [...inspector.children])if(child!==header)scroll.append(child);inspector.append(scroll);
++  header.querySelector('button').innerHTML='<span class="dv-desktop-close">×</span><span class="dv-mobile-done">Listo ✓</span>';
++  header.insertAdjacentHTML('afterend','<p id="dvMobileToolTarget" class="dv-mobile-tool-target"></p>');
++  q('.dv-topbar').insertAdjacentHTML('afterbegin',`<button class="dv-project-menu" data-dv="mTool" data-tool="project" aria-label="Menú del proyecto"><strong>Divas <span>Video</span> ···</strong><small id="dvMobileSave">Guardado aquí</small></button>`);
++  const previewbar=document.createElement('div');previewbar.className='dv-mobile-previewbar';previewbar.innerHTML='<div class="dv-mobile-selection"><small id="dvMobileSelectionKind">VISTA PREVIA</small><strong id="dvMobileSelectionName">Tu vídeo</strong></div><button data-dv="deselect" class="dv-deselect" aria-label="Quitar selección">Listo</button><button data-dv="mTool" data-tool="project" id="dvMobileRatio" aria-label="Cambiar formato del vídeo">9:16</button>';
++  q('.dv-stage').prepend(previewbar);
++  const dock=document.createElement('nav');dock.className='dv-mobile-dock';dock.setAttribute('aria-label','Acciones del vídeo');q('.dv-layout').insertBefore(dock,q('.dv-footer'));
++  scroll.insertAdjacentHTML('beforeend',`<section class="dv-fields dv-tool-content dv-project-content" data-content="project"><div id="dvMobileProjectActions" class="dv-project-actions"></div><div id="dvMobileProjectFields" class="dv-fields"></div><p class="dv-hint">El avance se guarda automáticamente en este navegador. Descarga un respaldo editable para abrirlo en otro dispositivo.</p><div id="dvMobileProjectBackups" class="dv-project-actions"></div><small class="dv-version">Divas Video · v45</small></section><section class="dv-tool-content dv-selection-content" data-content="selection"><button data-dv="mTool" data-tool="clip">✂ Tiempo y recorte</button><button data-dv="mTool" data-tool="color">◐ Color y luz</button><button data-dv="mTool" data-tool="audio">♫ Audio y volumen</button><button data-dv="mTool" data-tool="transform">↗ Tamaño y posición</button><button data-dv="mAction" data-action="duplicate">Duplicar</button><button data-dv="mAction" data-action="lock" id="dvMobileLock">Bloquear</button><button data-dv="mAction" data-action="hideLayer" id="dvMobileHide">Ocultar</button><button data-dv="mAction" data-action="remove" class="dv-danger">Eliminar</button></section>`);
++  const editing=document.createElement('nav');editing.className='dv-mobile-edit-tabs';editing.setAttribute('aria-label','Ajustes de la selección');editing.innerHTML=[['transform','Tamaño'],['clip','Tiempo'],['color','Color'],['audio','Sonido']].map(([name,label])=>`<button data-dv="mTool" data-tool="${name}" aria-pressed="false">${label}</button>`).join('');header.after(editing);
++  // Keep a single copy of each input and its original event handler when changing layout.
++  function move(el,to){if(!el)return;if(!homes.has(el)){const marker=document.createComment('desktop position');el.before(marker);homes.set(el,marker);}to.append(el);}
++  function restore(el){const marker=homes.get(el);if(marker)marker.after(el);}
++  const toggle=q('[data-dv=toggleTimeline]'),clean=q('[data-dv=cleanPreview]'),compare=$('dvCompareBar'),confirm=$('dvKeyConfirm'),projectFields=$('dvMobileProjectFields'),projectActions=$('dvMobileProjectActions'),projectBackups=$('dvMobileProjectBackups');
++  const projectInputs=[$('dvName').closest('label'),$('dvRatio').closest('label'),$('dvQuality').closest('label'),$('dvBackground').closest('label')];
++  const projectButtons=['library','save','backup','restore'].map(a=>q('[data-dv='+a+']'));
++  const frame=$('dvMediaTools'),empty=$('dvEmpty');
++  empty.innerHTML='<span class="dv-empty-icon" aria-hidden="true">'+icon('add')+'</span><strong>Tu próximo vídeo empieza aquí</strong><p>Elige un vídeo o una foto.<br>El resto, paso a paso.</p><button class="dv-primary" data-dv="media">＋ Añadir vídeo o foto</button><button class="dv-empty-flyer" data-dv="animateFlyer">Usar mi flyer abierto</button>';
++  q('.dv-footer').insertAdjacentHTML('beforeend','<button data-dv="dismissMessage" aria-label="Cerrar aviso">×</button>');
++  q('[data-dv=toggleTimeline]').textContent='Ampliar ↗';
++  // Essentials first; advanced controls retain their IDs, behavior and desktop availability.
++  function details(content,label,elements){const section=q('[data-content='+content+']'),d=document.createElement('details');d.className='dv-advanced';d.innerHTML='<summary>'+label+'</summary><div class="dv-fields"></div>';section.append(d);for(const el of elements.filter(Boolean))d.lastElementChild.append(el);return d;}
++  const label=id=>$(id).closest('label'),row=id=>$(id).closest('.dv-row');
++  const advanced=[
++   details('transform','Posición, opacidad y animación',[row('dvX'),row('dvRotation'),label('dvMotion'),label('dvAnimation'),q('[data-dv=poseStart]').parentElement,q('[data-content=transform]>.dv-hint:last-child')]),
++   details('cutout','Bordes y protección del logo',[label('dvKeyScope'),label('dvKeyEnabled'),label('dvKeyColor'),label('dvKeySoftness'),label('dvKeySpill'),q('[data-dv=resetKey]'),q('[data-content=cutout]>.dv-hint:last-child')]),
++   details('text','Ubicación y animación',[label('dvTitlePosition'),label('dvTitleMotion'),q('[data-content=text]>.dv-hint')])
++  ];
++  // Remove redundant explanations and prioritize the actionable controls on a phone.
++  q('[data-content=clip]>.dv-hint').classList.add('dv-desktop-hint');
++  q('[data-content=transform]>.dv-hint').classList.add('dv-desktop-hint');
++  q('[data-content=cutout]>.dv-hint').classList.add('dv-desktop-hint');
++  $('dvKeyStatus').classList.add('dv-cutout-status');
++  q('[data-content=transform]').insertBefore(label('dvScale'),label('dvMask'));
++  function viewport(){if(mobile.matches){const h=Math.round(window.visualViewport?.height||innerHeight);dialog.style.setProperty('--dv-mobile-height',h+'px');dialog.dataset.short=String(h<520);}else dialog.style.removeProperty('--dv-mobile-height');}
++  function relocate(){
++   if(mobile.matches){
++    for(const el of projectInputs)move(el,projectFields);projectButtons.forEach((el,i)=>move(el,i<2?projectActions:projectBackups));
++    move(toggle,q('.dv-transport'));move(clean,previewbar);move(compare,inspector);inspector.insertBefore(compare,scroll);move(confirm,inspector);
++    move(frame,q('[data-content=transform]'));q('[data-content=transform]').prepend(frame);
++    q('.dv-close').innerHTML=icon('back');q('.dv-close').setAttribute('aria-label','Volver al editor de imágenes');
++    for(const d of advanced)d.open=false;
++    dialog.dataset.timelineExpanded='false';dialog.dataset.inspector=state.keyDraft?'open':'closed';dialog.dataset.panel=state.keyDraft?'scene':'preview';
++   }else{
++    for(const el of [...projectInputs,...projectButtons,toggle,clean,confirm,compare,frame])restore(el);
++    for(const d of advanced)d.open=true;
++    q('.dv-close').textContent='×';q('.dv-close').setAttribute('aria-label','Volver al editor');
++    if(['project','selection'].includes(inspector.dataset.tool)){inspector.dataset.tool='media';$('dvToolTitle').textContent='Tus medios';}
++    if(dialog.open){dialog.dataset.inspector='open';dialog.dataset.panel='scene';}
++   }
++   viewport();sync(true);
++  }
++  function sync(force=false){
++   if(!state.project)return;
++   const c=selected(),kind=c?.kind||'none',name=c?.kind==='text'?c.title||'Texto':c?.name||'Tu vídeo',tool=inspector.dataset.tool,open=dialog.dataset.inspector==='open',empty=!total();
++   const signature=[mobile.matches,state.project.id,state.project.ratio,state.selected,kind,name,state.revision,state.dirty,state.busy,state.exporting,state.playing,tool,open,empty,!!state.cleanPreview,!!state.keyDraft,!!c?.locked,!!c?.hidden,dialog.dataset.timelineExpanded].join('|');
++   if(!force&&signature===syncKey)return;syncKey=signature;
++   dialog.dataset.mobileTool=tool;dialog.dataset.mobileEmpty=String(empty);dialog.dataset.focus=String(!!state.cleanPreview);dialog.dataset.mobileSelected=String(!!c);dialog.dataset.keyPending=String(!!state.keyDraft);
++   $('dvMobileSelectionKind').textContent=c?c.locked?'BLOQUEADO':c.hidden?'OCULTO':({image:'IMAGEN',video:'VÍDEO',text:'TEXTO',audio:'AUDIO'}[kind]):'VISTA PREVIA';$('dvMobileSelectionName').textContent=name;
++   $('dvMobileRatio').textContent=state.project.ratio;$('dvMobileSave').textContent=state.dirty?'Sin guardar':'Guardado aquí';$('dvMobileSave').classList.toggle('dv-saving',state.dirty);
++   $('dvMobileToolTarget').textContent=['project','media'].includes(tool)?'':name;
++   const previewLabel=state.cleanPreview?'Volver a editar':'Ampliar vista previa';clean.setAttribute('aria-label',previewLabel);clean.title=previewLabel;clean.innerHTML=mobile.matches?(state.cleanPreview?'Editar ↙':icon('size')):'Vista limpia';
++   header.querySelector('button').disabled=!!state.keyDraft;header.querySelector('button').title=state.keyDraft?'Confirma o cancela el recorte para salir':'Volver al vídeo';
++   const buttons=c?(kind==='text'?[['Editar texto','mTool','text','text'],['Tamaño','mTool','transform','size']]:kind==='audio'?[['Volumen','mTool','audio','audio'],['Texto','addText','','text']]:[['Editar','mTool','transform','edit'],['Quitar fondo','mAction','','cutout','data-action="cutout" class="dv-dock-feature"']]):[['Añadir','mTool','media','add'],['Texto','addText','','text']];
++   buttons.push(c?['Añadir','mTool','media','add']:['Música','mTool','audio','audio'],['Capas','mTool','layers','layers'],c?['Más','mTool','selection','more']:['Formato','mTool','project','format']);
++   const key=kind+':'+!!c;
++   if(key!==dockKey){dock.innerHTML=buttons.map(args=>button(...args)).join('');dockKey=key;}
++   dock.inert=state.busy||state.exporting;projectActions.inert=state.busy||state.exporting;
++   for(const b of editing.querySelectorAll('button')){b.setAttribute('aria-pressed',b.dataset.tool===tool);b.hidden=kind==='text'&&b.dataset.tool==='color'||kind==='image'&&b.dataset.tool==='audio';}
++   const locked=!!c?.locked;$('dvMobileLock').textContent=locked?'Desbloquear':'Bloquear';$('dvMobileHide').textContent=c?.hidden?'Mostrar':'Ocultar';
++   for(const b of q('.dv-selection-content').querySelectorAll('button'))b.disabled=!c||(locked&&['duplicate','remove'].includes(b.dataset.action));
++   q('.dv-selection-content [data-tool=transform]').hidden=kind==='audio';q('.dv-selection-content [data-tool=color]').hidden=['audio','text'].includes(kind);q('.dv-selection-content [data-tool=clip]').hidden=kind==='audio';
++   const hasLayer=state.project.layers.some(l=>l.id===c?.id)||state.project.audio.some(l=>l.id===c?.id);
++   for(const row of q('#dvLayers').children){row.classList.toggle('dv-mobile-current-track',hasLayer?[...row.querySelectorAll('[data-id]')].some(el=>el.dataset.id===c.id):row.classList.contains('dv-main-track'));}
++   const expanded=dialog.dataset.timelineExpanded==='true',toggle=q('[data-dv=toggleTimeline]');toggle.textContent=expanded?'Reducir ↙':'Ampliar ↗';toggle.setAttribute('aria-expanded',expanded);toggle.setAttribute('aria-label',expanded?'Reducir línea de tiempo':'Ampliar línea de tiempo');
++   if(mobile.matches&&(!c&&['selection','transform','clip','cutout','color'].includes(tool)&&open))closeTools();
++  }
++  function notify(error=false){clearTimeout(toastTimer);dialog.dataset.toast='true';dialog.dataset.toastError=String(error);if(!error)toastTimer=setTimeout(()=>{dialog.dataset.toast='false';},4200);}
++  function home(){if(!mobile.matches)return;closeTools();dialog.dataset.timelineExpanded='false';dialog.dataset.toast='false';state.cleanPreview=false;sync();}
++  mobile.addEventListener('change',relocate);window.visualViewport?.addEventListener('resize',viewport);window.addEventListener('resize',viewport);relocate();
++  return {sync,home,notify,isMobile:()=>mobile.matches};
++ }
++ window.DivasVideoMobile={mount,query};
++})();
+diff --git a/assets/divas-video.js b/assets/divas-video.js
+index 8997312..c12ff0b 100644
+--- a/assets/divas-video.js
++++ b/assets/divas-video.js
+@@ -5,3 +5,4 @@
+- const exportURL=new URL('./divas-video-export.mjs?v=44',document.currentScript.src).href;
+- const renderURL=new URL('./divas-video-render.mjs?v=44',document.currentScript.src).href;
+- let exportModule,renderer;
++ const MOBILE_QUERY=window.DivasVideoMobile?.query||'(max-width:760px)';
++ const exportURL=new URL('./divas-video-export.mjs?v=45',document.currentScript.src).href;
++ const renderURL=new URL('./divas-video-render.mjs?v=45',document.currentScript.src).href;
++ let exportModule,renderer,mobileUX;
+@@ -27,2 +28,2 @@
+- function message(text,error=false){$('dvMessage').textContent=text;$('dvMessage').classList.toggle('dv-error',error);}
+- function size(exporting=false){const [w,h]=M.formats[V.project.ratio],edge=exporting?V.project.quality:V.playing?360:matchMedia('(max-width:760px)').matches?540:720;const f=edge/Math.min(w,h);return {w:Math.round(w*f/2)*2,h:Math.round(h*f/2)*2};}
++ function message(text,error=false){$('dvMessage').textContent=text;$('dvMessage').classList.toggle('dv-error',error);mobileUX?.notify(error);}
++ function size(exporting=false){const [w,h]=M.formats[V.project.ratio],edge=exporting?V.project.quality:V.playing?360:matchMedia(MOBILE_QUERY).matches?540:720;const f=edge/Math.min(w,h);return {w:Math.round(w*f/2)*2,h:Math.round(h*f/2)*2};}
+@@ -54,0 +56 @@
++  mobileUX=window.DivasVideoMobile?.mount({dialog,state:V,selected,total,closeTools});
+@@ -77 +79 @@
+- const TOOL_NAMES={media:'Tus medios',clip:'Tiempo y recorte',cutout:'Quitar fondo',transform:'Tamaño y posición',text:'Texto y estilo',color:'Color y luz',audio:'Audio y exportación',layers:'Orden de las capas',help:'Atajos de teclado'};
++ const TOOL_NAMES={media:'Tus medios',clip:'Tiempo y recorte',cutout:'Quitar fondo',transform:'Tamaño y posición',text:'Texto y estilo',color:'Color y luz',audio:'Audio y exportación',layers:'Orden de las capas',help:'Atajos de teclado',project:'Tu proyecto',selection:'Más opciones'};
+@@ -83 +85 @@
+-  const mobile=matchMedia('(max-width:760px)'),relocate=()=>{for(const name of ['dvToLayer','dvToSequence'])(mobile.matches?dialog.querySelector('.dv-clip-tools'):dialog.querySelector('.dv-targetbar')).append($(name));if(mobile.matches)dialog.querySelector('.dv-layout').insertBefore(rail,dialog.querySelector('.dv-footer'));else $('dvBody').prepend(rail);};relocate();mobile.addEventListener('change',relocate);dialog.querySelector('.dv-tool-tabs').remove();dialog.querySelector('.dv-mobile-tabs').remove();
++  const mobile=matchMedia(MOBILE_QUERY),relocate=()=>{for(const name of ['dvToLayer','dvToSequence'])(mobile.matches?dialog.querySelector('.dv-clip-tools'):dialog.querySelector('.dv-targetbar')).append($(name));if(mobile.matches)dialog.querySelector('.dv-layout').insertBefore(rail,dialog.querySelector('.dv-footer'));else $('dvBody').prepend(rail);};relocate();mobile.addEventListener('change',relocate);dialog.querySelector('.dv-tool-tabs').remove();dialog.querySelector('.dv-mobile-tabs').remove();
+@@ -88 +90 @@
+- function escapeSelection(){if(V.keyDraft){cancelKey();return;}if(V.picking){V.picking=false;draw();return;}V.selected=null;resetViewing();panel('preview');refresh();}
++ function escapeSelection(){if(V.keyDraft){cancelKey();return;}if(V.picking){V.picking=false;draw();return;}V.selected=null;resetViewing();closeTools();refresh();}
+@@ -100 +102 @@
+- function setBusy(){if(!$(id))return;const on=V.busy||V.exporting;$('dvBody').inert=on;$('dvTimeline').inert=on||!!V.keyDraft;$('dvTarget').disabled=on||!!V.keyDraft;$(id).querySelectorAll('.dv-topbar button,.dv-topbar input,.dv-quickbar button,.dv-footer button,.dv-library button').forEach(b=>b.disabled=on);$('dvProgress').hidden=!V.exporting;exportInfo();historyButtons();if(V.project)updatePlacement();}
++ function setBusy(){if(!$(id))return;const on=V.busy||V.exporting;$('dvBody').inert=on;$('dvTimeline').inert=on||!!V.keyDraft;$('dvTarget').disabled=on||!!V.keyDraft;$(id).querySelectorAll('.dv-topbar button,.dv-topbar input,.dv-quickbar button,.dv-footer button,.dv-library button').forEach(b=>b.disabled=on);$('dvProgress').hidden=!V.exporting;exportInfo();historyButtons();if(V.project){updatePlacement();mobileUX?.sync();}}
+@@ -105 +107 @@
+- function savedLabel(){if(!V.project)return;$('dvSaveStatus').textContent=V.dirty?'Cambios sin guardar':'En este dispositivo';$('dvSaveStatus').classList.toggle('dv-error',V.dirty);}
++ function savedLabel(){if(!V.project)return;$('dvSaveStatus').textContent=V.dirty?'Cambios sin guardar':'En este dispositivo';$('dvSaveStatus').classList.toggle('dv-error',V.dirty);mobileUX?.sync();}
+@@ -134 +136 @@
+-  $('dvLibrary').hidden=true;refresh();V.bridge.show(id);message('Guardado en este navegador. Usa Respaldo para llevar el video a otro dispositivo.');
++  $('dvLibrary').hidden=true;refresh();V.bridge.show(id);message('Guardado en este navegador. Usa Respaldo para llevar el video a otro dispositivo.');mobileUX?.home();
+@@ -137 +139 @@
+- async function newProject(){stop();await save();discard();V.project=M.blank();refresh();$('dvLibrary').hidden=true;message('Añade fotos, clips o el flyer abierto para comenzar.');}
++ async function newProject(){stop();await save();discard();V.project=M.blank();refresh();$('dvLibrary').hidden=true;message('Añade fotos, clips o el flyer abierto para comenzar.');mobileUX?.home();}
+@@ -165 +167 @@
+-  await preparePlayers();guard(epoch);$('dvLibrary').hidden=true;refresh();await seek();message('Video abierto desde este dispositivo.');
++  await preparePlayers();guard(epoch);$('dvLibrary').hidden=true;refresh();await seekSelected();message('Video abierto desde este dispositivo.');mobileUX?.home();
+@@ -198 +200 @@
+-   const assets=[...assetList(p),...candidates];const normalized=M.normalize(p,assets);checkpoint();for(const a of candidates)V.assets.set(a.id,a);V.project=normalized;V.selected=mode===true?V.selected:mode==='layer'?p.layers.at(-1).id:mode==='track'?p.audio.at(-1).id:p.scenes.at(-1).id;prune();changed();refresh();await seekSelected();if(mode==='track')tool('audio');message(mode===true?'Música añadida.':mode==='layer'?'Capa añadida. Arrástrala para mover y usa las esquinas para cambiar su tamaño.':'Añadido. Elige Quitar fondo, Texto o Mover para personalizarlo.');
++   const assets=[...assetList(p),...candidates];const normalized=M.normalize(p,assets);checkpoint();for(const a of candidates)V.assets.set(a.id,a);V.project=normalized;V.selected=mode===true?V.selected:mode==='layer'?p.layers.at(-1).id:mode==='track'?p.audio.at(-1).id:p.scenes.at(-1).id;prune();changed();refresh();await seekSelected();if(mobileUX?.isMobile()){closeTools();mobileUX.sync();}else if(mode==='track')tool('audio');message(mode===true?'Música añadida.':mode==='layer'?'Capa añadida. Arrástrala para mover y usa las esquinas para cambiar su tamaño.':'Añadido. Elige Quitar fondo, Texto o Mover para personalizarlo.');
+@@ -224,0 +227 @@
++  mobileUX?.sync();
+@@ -253 +256 @@
+-  if(!ok)return;tool('layers');await seekSelected();message(action==='background'?'Foto colocada detrás y durante todo el vídeo. Puedes deshacer.':action==='layer'?'Ahora es una capa independiente: aparece junto a las demás.':'Clip colocado en la secuencia. Se reproduce antes o después de los otros clips.');
++  if(!ok)return;if(mobileUX?.isMobile())closeTools();else tool('layers');await seekSelected();message(action==='background'?'Foto colocada detrás y durante todo el vídeo. Puedes deshacer.':action==='layer'?'Ahora es una capa independiente: aparece junto a las demás.':'Clip colocado en la secuencia. Se reproduce antes o después de los otros clips.');
+@@ -261 +264 @@
+-  $('dvLayers').innerHTML='<div class="dv-drop-slot" data-drop="front">+ Soltar aquí para superponer</div>'+M.stackOrder(V.project).slice().reverse().map(k=>k==='base'?base:layer(V.project.layers.find(c=>c.id===k))).join('')+'<div class="dv-drop-slot" data-drop="back">↓ Soltar aquí para poner detrás</div>'+V.project.audio.map(layer).join('');renderStack();
++  $('dvLayers').innerHTML='<div class="dv-drop-slot" data-drop="front">+ Soltar aquí para superponer</div>'+M.stackOrder(V.project).slice().reverse().map(k=>k==='base'?base:layer(V.project.layers.find(c=>c.id===k))).join('')+'<div class="dv-drop-slot" data-drop="back">↓ Soltar aquí para poner detrás</div>'+V.project.audio.map(layer).join('');renderStack();mobileUX?.sync(true);
+@@ -268 +271 @@
+-  updatePlacement();$('dvKeyConfirm').hidden=!V.keyDraft;$('dvCutoutDone').hidden=!V.cutoutActive||!!V.keyDraft;$('dvCompareLabels').hidden=!(V.cutoutActive&&V.compare==='split'&&!V.picking);$('dvCompareSplit').hidden=$('dvCompareLabels').hidden;
++  updatePlacement();mobileUX?.sync();$('dvKeyConfirm').hidden=!V.keyDraft;$('dvCutoutDone').hidden=!V.cutoutActive||!!V.keyDraft;$('dvCompareLabels').hidden=!(V.cutoutActive&&V.compare==='split'&&!V.picking);$('dvCompareSplit').hidden=$('dvCompareLabels').hidden;
+@@ -273 +276 @@
+-  $('dvKeyStatus').textContent=text;
++  $('dvKeyStatus').textContent=text;mobileUX?.sync();
+@@ -281 +284 @@
+- function fitPreview(){const c=$('dvCanvas'),wrap=c?.parentElement;if(!wrap||!V.project)return;const f=Math.min((wrap.clientWidth-20)/c.width,(wrap.clientHeight-20)/c.height);if(f>0){c.style.width=Math.floor(c.width*f)+'px';c.style.height=Math.floor(c.height*f)+'px';}}
++ function fitPreview(){const c=$('dvCanvas'),wrap=c?.parentElement;if(!wrap||!V.project)return;const padding=mobileUX?.isMobile()?8:20;const f=Math.min((wrap.clientWidth-padding)/c.width,(wrap.clientHeight-padding)/c.height);if(f>0){c.style.width=Math.floor(c.width*f)+'px';c.style.height=Math.floor(c.height*f)+'px';}}
+@@ -391 +394 @@
+-  const keep=new Set(assets.map(a=>a.id));for(const old of [...V.players.keys()])if(!keep.has(old))dropPlayer(old);stop();V.history=[];V.future=[];V.lastEdit=null;V.project=project;V.assets=new Map(assets.map(a=>[a.id,a]));V.selected=project.scenes[0]?.id||project.layers[0]?.id||null;V.savedVersion=0;V.revision=0;V.time=0;changed();await save();$('dvLibrary').hidden=true;refresh();await seek();message('Respaldo recuperado como un video nuevo.');
++  const keep=new Set(assets.map(a=>a.id));for(const old of [...V.players.keys()])if(!keep.has(old))dropPlayer(old);stop();V.history=[];V.future=[];V.lastEdit=null;V.project=project;V.assets=new Map(assets.map(a=>[a.id,a]));V.selected=project.scenes[0]?.id||project.layers[0]?.id||null;V.savedVersion=0;V.revision=0;V.time=0;changed();await save();$('dvLibrary').hidden=true;refresh();await seekSelected();message('Respaldo recuperado como un video nuevo.');mobileUX?.home();
+@@ -394 +397,2 @@
+- function tool(name,open=true,keepTimeline=false){$('dvToolTitle').textContent=TOOL_NAMES[name]||'Herramientas';$(id).querySelector('.dv-cutout-entry').setAttribute('aria-selected',name==='cutout');$(id).dataset.inspector='open';V.cutoutActive=name==='cutout';if(name!=='cutout'){V.isolate=false;V.compare='after';}$(id).querySelector('.dv-inspector').scrollTop=0;if(!keepTimeline){const expanded=['clip','layers'].includes(name);$(id).dataset.compact=expanded?'false':'true';$(id).querySelector('[data-dv=toggleTimeline]').setAttribute('aria-expanded',expanded);}$(id).querySelector('.dv-inspector').dataset.tool=name;$(id).querySelectorAll('[data-dv=tool]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tool===name));if(open)panel(name==='audio'?'audio':'scene');cutoutUI(true);draw();}
++ function tool(name,open=true,keepTimeline=false){$('dvToolTitle').textContent=name==='audio'&&mobileUX?.isMobile()?'Audio y música':TOOL_NAMES[name]||'Herramientas';$(id).querySelector('.dv-cutout-entry').setAttribute('aria-selected',name==='cutout');$(id).dataset.inspector='open';V.cutoutActive=name==='cutout';if(name!=='cutout'){V.isolate=false;V.compare='after';}$(id).querySelector('.dv-inspector-scroll').scrollTop=0;if(!keepTimeline){const expanded=['clip','layers'].includes(name);$(id).dataset.compact=expanded?'false':'true';$(id).querySelector('[data-dv=toggleTimeline]').setAttribute('aria-expanded',expanded);}$(id).querySelector('.dv-inspector').dataset.tool=name;$(id).querySelectorAll('[data-dv=tool]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tool===name));if(open)panel(name==='audio'?'audio':'scene');V.cleanPreview=false;mobileUX?.sync();cutoutUI(true);draw();}
++ function closeTools(){resetViewing();V.cutoutActive=false;panel('preview');$(id).dataset.inspector='closed';mobileUX?.sync();cutoutUI();draw();}
+@@ -400 +404,3 @@
+-  if(action==='closeInspector'){panel('preview');$(id).dataset.inspector='closed';return;}
++  if(action==='mTool')action='tool';if(action==='mAction')action=b.dataset.action;
++  if(action==='dismissMessage'){$(id).dataset.toast='false';return;}
++  if(action==='closeInspector'){if(V.keyDraft){message('Confirma o cancela el recorte antes de cerrar los ajustes.',true);return;}closeTools();return;}
+@@ -403 +409 @@
+-  if(action==='confirmKey'){if(!V.keyDraft)return;const draft=V.keyDraft,c=selected();if(c?.id!==draft.id)throw Error('Selecciona otra vez el elemento del recorte.');V.keyDraft=null;if(!commitChange(()=>c.keyer=structuredClone(draft.keyer))){V.keyDraft=draft;cutoutUI();return;}V.isolate=false;V.compare='after';setBusy();draw();cutoutUI(true);await save();message('Recorte confirmado en «'+c.name+'». Puedes usar Antes, Después o Transparencia.');return;}
++  if(action==='confirmKey'){if(!V.keyDraft)return;const draft=V.keyDraft,c=selected();if(c?.id!==draft.id)throw Error('Selecciona otra vez el elemento del recorte.');V.keyDraft=null;if(!commitChange(()=>c.keyer=structuredClone(draft.keyer))){V.keyDraft=draft;cutoutUI();return;}V.isolate=false;V.compare='after';setBusy();draw();cutoutUI(true);await save();if(mobileUX?.isMobile())closeTools();message('Recorte confirmado en «'+c.name+'». Puedes usar Antes, Después o Transparencia.');return;}
+@@ -425 +431 @@
+-  if(action==='endCutout'){resetViewing();tool('clip');return;}
++  if(action==='endCutout'){if(mobileUX?.isMobile())closeTools();else{resetViewing();tool('clip');}return;}
+@@ -430 +436 @@
+-  stop();if(action==='rewind'){V.time=0;await seek();return;}if(action==='select'){V.selected=b.dataset.id;resetViewing();refresh();const kind=selected()?.kind;tool(kind==='audio'?'audio':kind==='text'?'text':'transform',true,true);if(matchMedia('(max-width:760px)').matches&&kind!=='audio')panel('preview');await seekSelected();return;}
++  stop();if(action==='rewind'){V.time=0;await seek();return;}if(action==='select'){V.selected=b.dataset.id;resetViewing();refresh();const kind=selected()?.kind;if(mobileUX?.isMobile())closeTools();else tool(kind==='audio'?'audio':kind==='text'?'text':'transform',true,true);await seekSelected();return;}
+@@ -431,0 +438,2 @@
++  if(action==='deselect'){escapeSelection();return;}
++  if(action==='toggleTimeline'&&mobileUX?.isMobile()){$(id).dataset.timelineExpanded=$(id).dataset.timelineExpanded==='true'?'false':'true';mobileUX.sync();return;}
+@@ -469 +477 @@
+-   if(!found){V.selected=null;updateInspector();draw();return;}V.selected=found;updateInspector();draw();const c=selected();if(c.locked){message('Capa bloqueada. Pulsa el candado para moverla.');return;}const pose=V.endPose?c.animation.end:c.transform,b=renderer.bounds.get(found);gesture={type:'canvas',before:structuredClone(V.project),x:e.clientX,y:e.clientY,point:p,pose:{...pose},center:b,resize,element:canvas};canvas.setPointerCapture(e.pointerId);e.preventDefault();
++   if(!found){V.selected=null;if(mobileUX?.isMobile())closeTools();updateInspector();draw();return;}if(found!==V.selected&&mobileUX?.isMobile())closeTools();V.selected=found;updateInspector();draw();const c=selected();if(c.locked){message('Capa bloqueada. Pulsa el candado para moverla.');return;}const pose=V.endPose?c.animation.end:c.transform,b=renderer.bounds.get(found);gesture={type:'canvas',before:structuredClone(V.project),x:e.clientX,y:e.clientY,point:p,pose:{...pose},center:b,resize,element:canvas};canvas.setPointerCapture(e.pointerId);e.preventDefault();
+@@ -503 +511 @@
+-   V.suppressClick=true;setTimeout(()=>V.suppressClick=false,120);if(!ok)return;tool('layers');seekSelected().catch(e=>message(e.message,true));message(plan.mode==='background'?'Foto adaptada y colocada detrás durante todo el vídeo. Puedes deshacer.':plan.mode==='sequence'?'Clip colocado en la secuencia.':plan.mode==='layer'?'Clip convertido en capa independiente.':'Orden de capas actualizado; los tiempos se conservan.');
++   V.suppressClick=true;setTimeout(()=>V.suppressClick=false,120);if(!ok)return;if(!mobileUX?.isMobile())tool('layers');seekSelected().catch(e=>message(e.message,true));message(plan.mode==='background'?'Foto adaptada y colocada detrás durante todo el vídeo. Puedes deshacer.':plan.mode==='sequence'?'Clip colocado en la secuencia.':plan.mode==='layer'?'Clip convertido en capa independiente.':'Orden de capas actualizado; los tiempos se conservan.');
+@@ -513 +521 @@
+-   if(!g.moved&&matchMedia('(min-width:761px)').matches)tool('layers');g.moved=true;e.preventDefault();
++   if(!g.moved&&!matchMedia(MOBILE_QUERY).matches)tool('layers');g.moved=true;e.preventDefault();
+diff --git a/docs/DIVAS-VIDEO.md b/docs/DIVAS-VIDEO.md
+index 4fb963d..36326a2 100644
+--- a/docs/DIVAS-VIDEO.md
++++ b/docs/DIVAS-VIDEO.md
+@@ -1 +1 @@
+-# Divas Video · v43
++# Divas Video · v45
+@@ -4,0 +5,2 @@ Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada d
++En móvil, consulta primero la [guía de navegación v45](VIDEO-MOVIL-v45.md): los botones de esta referencia se agrupan ahora en el panel de la herramienta elegida. La distribución junto al lienzo descrita abajo corresponde a PC.
++
+diff --git a/docs/VIDEO-MOVIL-v45.md b/docs/VIDEO-MOVIL-v45.md
+new file mode 100644
+index 0000000..eb20deb
+--- /dev/null
++++ b/docs/VIDEO-MOVIL-v45.md
+@@ -0,0 +1,48 @@
++# Divas Video v45 · menos controles, más vídeo
++
++## Recorrido en el teléfono
++
++1. **Crear vídeo → Añadir vídeo o foto.** El archivo aparece grande en el lienzo. Debajo hay reproducción, el tiempo y una pista compacta.
++2. **Toca un elemento.** El nombre sobre el lienzo identifica la selección. Puedes arrastrarlo sin abrir menús. El candado y la cruz sirven para bloquear y eliminar; **Listo** junto al nombre quita la selección.
++3. **Elige una acción.** Con una imagen o vídeo seleccionado aparecen **Editar, Quitar fondo, Añadir, Capas y Más**. Con un texto, las primeras opciones son **Editar texto y Tamaño**. Sin selección aparecen **Añadir, Texto, Música, Capas y Formato**.
++4. **Ajusta viendo el resultado.** Solo se abre un panel inferior. **Listo** lo cierra. Los detalles menos frecuentes están en desplegables; no se pierden funciones.
++5. **Exportar.** La calidad se elige en el menú superior **Divas Video ···**. Guardar el avance y exportar el vídeo son acciones diferentes.
++
++## Dónde está cada cosa
++
++| Necesidad | Recorrido |
++| --- | --- |
++| Tamaño, encuadre y forma | Seleccionar → Editar |
++| Giro, coordenadas, opacidad y animación | Editar → Posición, opacidad y animación |
++| Duración, dividir, Superponer / En secuencia | Editar → Tiempo; también Más → Tiempo y recorte |
++| Luz y color | Editar → Color |
++| Texto independiente | Añadir → Añadir texto; sin selección, Texto |
++| Voz o música | Más → Audio y volumen; sin selección, Música |
++| Orden visual | Capas → arrastrar por el asa o usar Delante / Detrás |
++| Todas las pistas de tiempo | Ampliar junto a la reproducción |
++| Duplicar, ocultar o eliminar | Más; la cruz sobre el lienzo también elimina |
++| Nombre, formato, calidad, fondo y respaldo | Divas Video ··· |
++| Volver a los proyectos | Divas Video ··· → Mis proyectos |
++| Ver el resultado sin controles | Icono de ampliar junto al formato → Editar para volver |
++
++**Quitar fondo** conserva Antes / Después / Comparar / Transparencia. Elegir el color prepara una vista previa. Confirmar aplica el recorte y vuelve al lienzo; Cancelar conserva el anterior. El panel no se puede cerrar dejando una confirmación oculta. **Bordes y protección del logo** contiene el alcance exterior/global, suavizado y limpieza. Los presets blanco/negro siguen protegiendo el detalle interior mediante el modo exterior de v44.
++
++Los vídeos y sus archivos siguen guardándose en este navegador y separados por cuenta. El nuevo menú lo explica y ofrece respaldo editable. No se migra almacenamiento, no se modifica Supabase y no se borran proyectos.
++
++## Referencias de interacción
++
++Se revisaron las guías oficiales de [CapCut para principiantes](https://www.capcut.com/resource/capcut-tutorial-for-beginners) y [Adobe Express móvil](https://helpx.adobe.com/express/mobile/video-creation-and-editing/create-videos/create-videos.html). La comparación se centra en los recorridos documentados, no en una auditoría de todas sus versiones ni de sus funciones de pago.
++
++| Referencia | Aplicación en Divas |
++| --- | --- |
++| CapCut: empezar con archivos, seleccionar el clip y acceder a sus herramientas | Añadir como inicio claro y acciones dependientes de la selección |
++| Adobe Express: separar la edición de escenas/tiempo de los ajustes del elemento | Pista compacta para tiempo y panel para la herramienta solicitada |
++| Ambas: terminar con exportación | Exportar permanece en la cabecera; el respaldo se reúne con el proyecto |
++
++Divas conserva su motor propio, su paleta rosa y el editor de PC. El objetivo de esta versión es reducir las decisiones simultáneas; no se incorporan bibliotecas adicionales ni código de esos productos.
++
++## Comprobación y alcance
++
++Se verificaron vistas táctiles de 320 a 390 px, alturas de 568 a 844 px, orientación horizontal, temas claro/oscuro, movimiento reducido y PC. Se comprobaron recorte con píxeles, movimiento táctil, capas, guardado, respaldo y vídeo exportado. Ver [pruebas](../tests/README-video.md).
++
++La edición en pantallas muy cortas prioriza el campo activo y deja Listo accesible. El teclado se probó reduciendo el viewport; hace falta validación adicional en dispositivos reales. La exportación y el rendimiento dependen del navegador, códec y tamaño de los medios.
+diff --git a/index.html b/index.html
+index 8c7c824..1d83031 100644
+--- a/index.html
++++ b/index.html
+@@ -1406 +1406,2 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-<link rel="stylesheet" href="assets/divas-video.css?v=44">
++<link rel="stylesheet" href="assets/divas-video.css?v=45">
++<link rel="stylesheet" href="assets/divas-video-mobile.css?v=45">
+@@ -2079 +2080,2 @@ SOFTWARE.
+-<script src="assets/divas-video.js?v=44"></script>
++<script src="assets/divas-video-mobile.js?v=45"></script>
++<script src="assets/divas-video.js?v=45"></script>
+diff --git a/tests/README-video.md b/tests/README-video.md
+index 40d0388..cda8464 100644
+--- a/tests/README-video.md
++++ b/tests/README-video.md
+@@ -87,0 +88,15 @@ La salida v43 se verificó con FFprobe y decodificación de FFmpeg: VP8/WebM, 12
++
++
++## v45 · Interfaz móvil centrada en la vista previa
++
++Ejecutar `CHROMIUM_EXECUTABLE=/ruta/chromium node tests/video-mobile-v45.cjs`. Usa las imágenes de `tests/fixtures/video` y `qa/fixtures/logo.png`, `qa/fixtures/whiteclip.mp4` creadas por las pruebas anteriores.
++
++- Viewports táctiles 320×568, 360×640, 390×740 y 390×844: cinco acciones, sin desbordamiento, selección de lienzo y pista sin desplegar paneles.
++- Vista previa vertical de al menos 41 % de la altura al editar libremente y 28 % con ajustes abiertos, en esas medidas. 1:1 y 16:9 se muestran sin deformación.
++- Panel contextual, cerrar con Listo, línea de tiempo ampliable, selección y arrastre mediante eventos táctiles reales de Chromium, orden delante/detrás, texto, bloqueo y eliminación.
++- Blanco exterior preservando el centro del logo; comparación, cambio de alcance, confirmación siempre dentro del viewport y persistencia del efecto.
++- Nombre/formato, respaldo editable, reabrir, temas, movimiento reducido, altura de 390 px simulando teclado y rotación a 844×390; retorno a escritorio 1440×900 conservando campos avanzados.
++- Importación de vídeo real, tamaño de vista previa estable al reproducir y exportación real WebM. La salida de la prueba contiene vídeo VP8 720×1280, 30 fps, 3 segundos.
++- Pasaron también las regresiones v40/v42/v43/v44, el modelo, recorte, mezcla/exportación, captura del flyer, guardado concurrente, aislamiento por cuenta y entrega estática.
++
++No se ha probado en un Note 9 físico ni con el vídeo original de la captura. La prueba de teclado reduce el viewport; no sustituye una prueba del teclado del sistema en Android/iOS. Los escenarios anteriores se actualizaron únicamente para navegar por los nuevos botones móviles.
+diff --git a/tests/package.json b/tests/package.json
+index 4b3812e..cce79b2 100644
+--- a/tests/package.json
++++ b/tests/package.json
+@@ -14 +14,2 @@
+-    "test:flyer:v44": "node flyer-layouts.cjs && node flyer-v44.cjs"
++    "test:flyer:v44": "node flyer-layouts.cjs && node flyer-v44.cjs",
++    "test:video:v45": "node video-mobile-v45.cjs"
+diff --git a/tests/static-delivery.cjs b/tests/static-delivery.cjs
+index 5a7bbd9..fda5f22 100644
+--- a/tests/static-delivery.cjs
++++ b/tests/static-delivery.cjs
+@@ -26 +26 @@ const server = http.createServer(async (req, res) => {
+-    for (const name of ['assets/divas-flyer-layouts.js','assets/app-logos/salsa.png','assets/app-logos/cafe.png','assets/app-logos/buzzcast.png','assets/divas-documents.js', 'assets/divas-documents.css', 'assets/divas-video.js', 'assets/divas-video.css', 'assets/divas-video-export.mjs', 'assets/divas-video-render.mjs', 'assets/vendor/pdfjs/pdf.min.mjs', 'assets/vendor/pdfjs/pdf.worker.min.mjs', 'assets/vendor/mediabunny/mediabunny.min.mjs', 'assets/vendor/pdfjs/wasm/openjpeg.wasm']) {
++    for (const name of ['assets/divas-video-mobile.js','assets/divas-video-mobile.css','assets/divas-flyer-layouts.js','assets/app-logos/salsa.png','assets/app-logos/cafe.png','assets/app-logos/buzzcast.png','assets/divas-documents.js', 'assets/divas-documents.css', 'assets/divas-video.js', 'assets/divas-video.css', 'assets/divas-video-export.mjs', 'assets/divas-video-render.mjs', 'assets/vendor/pdfjs/pdf.min.mjs', 'assets/vendor/pdfjs/pdf.worker.min.mjs', 'assets/vendor/mediabunny/mediabunny.min.mjs', 'assets/vendor/pdfjs/wasm/openjpeg.wasm']) {
+diff --git a/tests/video-browser.cjs b/tests/video-browser.cjs
+index 7410704..22e8f55 100644
+--- a/tests/video-browser.cjs
++++ b/tests/video-browser.cjs
+@@ -49 +49 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
+-  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile.png')});await page.locator('[data-dv=tool][data-tool=transform]').click();await page.screenshot({path:path.join(out,'mobile-edit.png')});
++  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile.png')});await page.locator('.dv-mobile-dock [data-tool=transform]').click();await page.screenshot({path:path.join(out,'mobile-edit.png')});
+diff --git a/tests/video-mobile-v45.cjs b/tests/video-mobile-v45.cjs
+new file mode 100644
+index 0000000..03ee524
+--- /dev/null
++++ b/tests/video-mobile-v45.cjs
+@@ -0,0 +1,56 @@
++'use strict';
++const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs'),path=require('node:path');
++const root=path.resolve(__dirname,'..'),out=path.join(root,'test-output/video-v45'),fixture=path.join(__dirname,'fixtures/video/white-detail.png');fs.mkdirSync(out,{recursive:true});
++const server=http.createServer((req,res)=>{const file=path.join(root,new URL(req.url,'http://localhost').pathname.replace(/^\/$/,'/index.html'));try{res.setHeader('Content-Type',/\.m?js$/.test(file)?'application/javascript':file.endsWith('.css')?'text/css':file.endsWith('.png')?'image/png':'text/html');res.end(fs.readFileSync(file));}catch{res.writeHead(404);res.end();}});
++const ready=p=>p.waitForFunction(()=>document.getElementById('dvBody')&&!document.getElementById('dvBody').inert);
++const tool=(p,n)=>p.locator('.dv-mobile-dock [data-tool='+n+']').click();
++const done=p=>p.locator('[data-dv=closeInspector]').click();
++const dismiss=async p=>{if(await p.locator('[data-dv=dismissMessage]').isVisible())await p.locator('[data-dv=dismissMessage]').click();};
++const pixel=(p,x,y)=>p.locator('#dvCanvas').evaluate((c,[x,y])=>[...c.getContext('2d').getImageData(c.width*x,c.height*y,1,1).data],[x,y]);
++const stored=p=>p.evaluate(async()=>{const db=await new Promise((r,j)=>{const q=indexedDB.open('divas-video-v1');q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error);});return new Promise((r,j)=>{const q=db.transaction('projects').objectStore('projects').getAll();q.onsuccess=()=>r(q.result.sort((a,b)=>b.modified-a.modified)[0].project);q.onerror=()=>j(q.error);});});
++const save=async p=>{await p.keyboard.press('Control+s');await p.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');await dismiss(p);};
++(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage']}),context=await browser.newContext({viewport:{width:390,height:740},isMobile:true,hasTouch:true,deviceScaleFactor:1,acceptDownloads:true}),p=await context.newPage(),errors=[];p.on('pageerror',e=>{errors.push(e.message);console.log('PAGE ERROR',e.message);});p.setDefaultTimeout(15000);await p.route(/supabase\.(co|in)|fonts\.googleapis\.com|fonts\.gstatic\.com/,r=>r.abort());
++try{
++ await p.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded'});await p.locator('.projects-shortcuts [data-dv-new]').click();await ready(p);await p.screenshot({path:path.join(out,'empty.png')});assert.ok(await p.locator('#dvEmpty [data-dv=media]').isVisible());
++ await p.locator('#dvFiles').setInputFiles(fixture);await ready(p);await p.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1);await p.locator('[data-dv=dismissMessage]').click();
++ await p.screenshot({path:path.join(out,'overview.png')});
++ for(const [width,height] of [[390,740],[360,640],[320,568],[390,844]]){
++  await p.setViewportSize({width,height});await p.waitForTimeout(80);const canvas=await p.locator('#dvCanvas').boundingBox(),wrap=await p.locator('.dv-preview-wrap').boundingBox();assert.ok(canvas.height>=height*.41,`${width}x${height} canvas ${canvas.height}`);assert.ok(wrap.height>=height*.42);assert.equal(await p.locator('.dv-inspector').isVisible(),false);assert.equal(await p.locator('.dv-mobile-dock button').count(),5);
++  await p.locator('#dvCanvas').tap();assert.equal(await p.locator('.dv-inspector').isVisible(),false,'canvas selection must not open an inspector');await p.locator('.dv-scene').tap();assert.equal(await p.locator('.dv-inspector').isVisible(),false,'timeline selection must not open an inspector');await p.screenshot({path:path.join(out,`overview-${width}-${height}.png`)});
++  await tool(p,'transform');await p.waitForTimeout(180);assert.ok(await p.locator('#dvScale').isVisible());assert.equal(await p.locator('#dvTimeline').isVisible(),false);assert.equal(await p.locator('.dv-mobile-dock').isVisible(),false);const c=await p.locator('#dvCanvas').boundingBox();assert.ok(c.height>=height*.28,`tool canvas ${width}x${height}: ${c.height}`);await p.screenshot({path:path.join(out,`transform-${width}-${height}.png`)});await done(p);
++ }
++ console.log('PASS large preview, five actions, intentional panels at 320/360/390 and short viewports');
++ await p.setViewportSize({width:360,height:640});await p.locator('.dv-project-menu').click();const projectsBounds=await p.locator('[data-dv=library]').boundingBox();assert.ok(projectsBounds.y+projectsBounds.height<=640,'My projects is visible as soon as project menu opens');await p.locator('#dvName').fill('Mi vídeo v45');await p.locator('#dvRatio').selectOption('1:1');await done(p);await tool(p,'transform');await p.locator('[data-dv=frame][data-fit=contain]').click();await done(p);await dismiss(p);
++ await p.locator('.dv-mobile-dock [data-action=cutout]').click();await p.locator('[data-dv=keyColor][data-color="#ffffff"]').click();await dismiss(p);assert.equal(await p.locator('#dvKeyScope').inputValue(),'exterior');assert.equal(await p.locator('[data-dv=confirmKey]').isVisible(),true);assert.equal(await p.locator('[data-dv=closeInspector]').isVisible(),false);
++ let confirm=await p.locator('[data-dv=confirmKey]').boundingBox();assert.ok(confirm.y+confirm.height<=640);let bounds=await p.locator('#dvCanvas').boundingBox();assert.ok(bounds.height>=180,'cutout preview stays visible');await p.locator('[data-dv=compareAfter]').click();assert.deepEqual((await pixel(p,.5,.5)).slice(0,3),[255,255,255]);assert.notDeepEqual((await pixel(p,.05,.05)).slice(0,3),[255,255,255]);await p.screenshot({path:path.join(out,'cutout-360.png')});
++ await p.locator('[data-content=cutout] summary').click();await p.locator('#dvKeyScope').selectOption('all');await p.locator('[data-dv=compareAfter]').click();assert.notDeepEqual((await pixel(p,.5,.5)).slice(0,3),[255,255,255]);await p.locator('#dvKeyScope').selectOption('exterior');await p.locator('[data-dv=confirmKey]').click();await ready(p);assert.equal(await p.locator('.dv-inspector').isVisible(),false);await dismiss(p);assert.equal((await stored(p)).scenes[0].keyer.scope,'exterior');
++ console.log('PASS visible before/after, detail protection, confirmation and return to canvas');
++ // Real touch movement: no press-and-hold menus and no inspector opens during a drag.
++ const cd=await context.newCDPSession(p);bounds=await p.locator('#dvCanvas').boundingBox();const x=bounds.x+bounds.width/2,y=bounds.y+bounds.height/2;
++ await cd.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});await cd.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+18,y:y+12}]});await cd.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await save(p);assert.equal(await p.locator('.dv-inspector').isVisible(),false);assert.ok((await stored(p)).scenes[0].transform.x>.5);await p.locator('[data-dv=undo]').click();
++ // Import an overlay through the visible Add panel, then edit and remove a text layer.
++ await tool(p,'media');const chooser=p.waitForEvent('filechooser');await p.locator('[data-dv=overlay]').click();await (await chooser).setFiles(path.join(__dirname,'../../qa/fixtures/logo.png'));await ready(p);await p.waitForFunction(()=>document.querySelectorAll('.dv-layer-bar').length===1);assert.equal(await p.locator('.dv-inspector').isVisible(),false);await dismiss(p);
++ await tool(p,'layers');assert.equal(await p.locator('.dv-stack-row').count(),2);await p.locator('[data-dv=backward]').click();await save(p);let project=await stored(p);assert.equal(project.visualOrder[0],project.layers[0].id);await done(p);
++ await p.locator('[data-dv=toggleTimeline]').click();assert.ok(await p.locator('.dv-main-track').isVisible());assert.ok(await p.locator('.dv-layer-track').isVisible());await p.locator('.dv-layer-bar').tap();assert.equal(await p.locator('.dv-inspector').isVisible(),false);await p.locator('[data-dv=toggleTimeline]').click();
++ await tool(p,'media');await p.locator('.dv-media-content [data-dv=addText]').click();await p.locator('#dvTitle').fill('BRILLA CON DIVAS');await p.locator('#dvTitleStyle').selectOption('glow');await done(p);await save(p);assert.equal((await stored(p)).layers.filter(l=>l.kind==='text').length,1);
++ await tool(p,'selection');await p.locator('#dvMobileLock').click();assert.equal(await p.locator('.dv-selection-content [data-action=remove]').isDisabled(),true);await p.locator('#dvMobileLock').click();await p.locator('.dv-selection-content [data-action=remove]').click();await save(p);assert.equal((await stored(p)).layers.filter(l=>l.kind==='text').length,0);if(await p.locator('.dv-inspector').isVisible())await done(p);
++ console.log('PASS touch drag, visible import, layer ordering, text creation, locking and delete');
++ // Format and full preview are explicit, reversible operations.
++ await p.locator('.dv-project-menu').click();await p.locator('#dvRatio').selectOption('16:9');await done(p);await dismiss(p);bounds=await p.locator('#dvCanvas').boundingBox();assert.ok(Math.abs(bounds.width/bounds.height-16/9)<.03);await p.locator('[data-dv=cleanPreview]').click();assert.equal(await p.locator('#dvTimeline').isVisible(),false);assert.equal(await p.locator('.dv-mobile-dock').isVisible(),false);await p.locator('[data-dv=cleanPreview]').click();assert.equal(await p.locator('.dv-mobile-dock').isVisible(),true);
++ await p.locator('.dv-project-menu').click();await p.locator('#dvRatio').selectOption('9:16');await done(p);
++ // Backup and re-open use the same persisted model, not a separate mobile project.
++ await p.locator('.dv-project-menu').click();const downloaded=p.waitForEvent('download');await p.locator('[data-dv=backup]').click();const backup=await downloaded;const backupPath=path.join(out,'mobile-v45.divasvideo');await backup.saveAs(backupPath);await ready(p);assert.ok(fs.statSync(backupPath).size>1000);await done(p);await dismiss(p);
++ const name=(await stored(p)).name;const id=(await stored(p)).id;await p.locator('[data-dv=close]').click();await p.locator('#divasVideoDialog').waitFor({state:'hidden'});await p.evaluate(id=>window.DivasVideo.openProject(id),id);await ready(p);assert.equal((await stored(p)).name,name);assert.equal(await p.locator('.dv-inspector').isVisible(),false);
++ // Dark theme, reduced motion and a keyboard-sized viewport keep an escape route.
++ await p.evaluate(()=>document.documentElement.dataset.theme='dark');await p.emulateMedia({reducedMotion:'reduce'});await p.screenshot({path:path.join(out,'dark-360.png')});await tool(p,'media');await p.locator('.dv-media-content [data-dv=addText]').click();await p.setViewportSize({width:360,height:390});await p.locator('#dvTitle').fill('Sigue brillando');const doneBounds=await p.locator('[data-dv=closeInspector]').boundingBox();assert.ok(doneBounds.y+doneBounds.height<=390);assert.ok((await p.locator('#dvCanvas').boundingBox()).height>=100);await p.screenshot({path:path.join(out,'keyboard-height.png')});await done(p);await p.setViewportSize({width:390,height:740});
++ await p.setViewportSize({width:844,height:390});assert.ok(await p.locator('.dv-mobile-dock').isVisible());assert.equal(await p.locator('#divasVideoDialog').evaluate(el=>el.scrollWidth>el.clientWidth+1),false);await p.screenshot({path:path.join(out,'landscape-phone.png')});
++ // Crossing the desktop breakpoint keeps tools, cutout confirmation and project fields usable.
++ await p.setViewportSize({width:1440,height:900});await p.locator('[data-dv=tool][data-tool=transform]').click();assert.ok(await p.locator('#dvX').isVisible());assert.ok(await p.locator('#dvName').isVisible());assert.equal(await p.locator('.dv-mobile-dock').isVisible(),false);await p.locator('[data-dv=tool][data-tool=audio]').click();assert.ok(await p.locator('#dvQuality').isVisible());await p.screenshot({path:path.join(out,'desktop.png')});
++ console.log('PASS formats, clean preview, backup/reopen, dark/reduced motion, short keyboard viewport and desktop fields');
++ // A real portrait video uses the same mobile controls and exports processed pixels.
++ await p.setViewportSize({width:390,height:740});await p.locator('.dv-project-menu').click();await p.locator('[data-dv=library]').click();await p.locator('.projects-shortcuts [data-dv-new]').click();await ready(p);await p.locator('#dvFiles').setInputFiles(path.join(__dirname,'../../qa/fixtures/whiteclip.mp4'));await ready(p);await p.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1);await dismiss(p);
++ bounds=await p.locator('#dvCanvas').boundingBox();await p.locator('[data-dv=play]').click();await p.waitForFunction(()=>document.getElementById('dvPlay').getAttribute('aria-label')==='Pausar');const playingBounds=await p.locator('#dvCanvas').boundingBox();assert.ok(Math.abs(playingBounds.height-bounds.height)<=2,'playing must not shrink the preview');await p.locator('[data-dv=play]').click();
++ await p.locator('.dv-mobile-dock [data-action=cutout]').click();await p.locator('[data-dv=keyColor][data-color="#ffffff"]').click();await p.locator('[data-dv=confirmKey]').click();await ready(p);await dismiss(p);await p.screenshot({path:path.join(out,'real-video-390.png')});const movieEvent=p.waitForEvent('download',{timeout:180000});await p.locator('[data-dv=export]').click();const movie=await movieEvent;await movie.saveAs(path.join(out,'mobile-export.webm'));await ready(p);assert.ok(fs.statSync(path.join(out,'mobile-export.webm')).size>1000);console.log('PASS real portrait video, stable playback size and mobile video export');
++ assert.deepEqual(errors,[]);
++}catch(e){console.log('Message:',await p.locator('#dvMessage').textContent().catch(()=>''));await p.screenshot({path:path.join(out,'failure.png'),timeout:5000}).catch(()=>{});throw e;}finally{await browser.close();server.close();}
++})().catch(e=>{console.error(e);server.close();process.exitCode=1;});
+diff --git a/tests/video-v40.cjs b/tests/video-v40.cjs
+index 272d9f5..031f15d 100644
+--- a/tests/video-v40.cjs
++++ b/tests/video-v40.cjs
+@@ -40 +40 @@ const blue=p=>p[2]>150&&p[1]<80;
+-  for(const width of [360,390]){await page.setViewportSize({width,height:844});assert.equal(await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);const c=await page.locator('#dvCanvas').boundingBox();assert.ok(c.height>180,'mobile canvas stays large with tools open');assert.ok(await page.locator('[data-dv=pickColor]').isVisible());await page.locator('.dv-inspector').evaluate(el=>el.scrollTop=0);await page.mouse.move(1,1);await page.screenshot({path:path.join(out,'mobile-'+width+'.png')});}
++  for(const width of [360,390]){await page.setViewportSize({width,height:844});if(!await page.locator('[data-dv=pickColor]').isVisible())await page.locator('.dv-mobile-dock [data-action=cutout]').click();assert.equal(await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);const c=await page.locator('#dvCanvas').boundingBox();assert.ok(c.height>180,'mobile canvas stays large with tools open');assert.ok(await page.locator('[data-dv=pickColor]').isVisible());await page.locator('.dv-inspector').evaluate(el=>el.scrollTop=0);await page.mouse.move(1,1);await page.screenshot({path:path.join(out,'mobile-'+width+'.png')});}
+diff --git a/tests/video-v42.cjs b/tests/video-v42.cjs
+index 18446da..cb15a34 100644
+--- a/tests/video-v42.cjs
++++ b/tests/video-v42.cjs
+@@ -24 +24 @@ try{
+- await p.locator('[data-dv=confirmKey]').click();await p.locator('[data-dv=endCutout]').click();assert.ok(await p.locator('[data-dv=cutout]').isVisible(),'mobile returns to editing tools');await p.locator('[data-dv=cutout]').click();await p.setViewportSize({width:1440,height:1000});await p.waitForFunction(()=>document.getElementById('dvKeyConfirm').hidden);assert.equal((await records(p))[0].scenes[0].keyer.enabled,true);assert.ok(!white(await pixel(p)));await p.locator('[data-dv=undo]').click();assert.ok(white(await pixel(p)),'one undo restores original');await p.locator('[data-dv=redo]').click();assert.ok(!white(await pixel(p)));
++ await p.locator('[data-dv=confirmKey]').click();assert.ok(await p.locator('.dv-mobile-dock [data-action=cutout]').isVisible(),'mobile returns to editing tools');await p.locator('.dv-mobile-dock [data-action=cutout]').click();await p.setViewportSize({width:1440,height:1000});await p.waitForFunction(()=>document.getElementById('dvKeyConfirm').hidden);assert.equal((await records(p))[0].scenes[0].keyer.enabled,true);assert.ok(!white(await pixel(p)));await p.locator('[data-dv=undo]').click();assert.ok(white(await pixel(p)),'one undo restores original');await p.locator('[data-dv=redo]').click();assert.ok(!white(await pixel(p)));
+@@ -28 +28 @@ try{
+- const layerId=await p.locator('.dv-layer-bar').getAttribute('data-id');assert.ok(blue(await pixel(p,.5,.5)),'front layer hides subject');assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=tool][data-tool=layers]').click();await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);assert.ok(red(await pixel(p,.5,.5)),'main video subject is in front');assert.ok(blue(await pixel(p,.1,.15)),'background color removed to expose lower layer');await p.screenshot({path:path.join(out,'layers-1440.png')});await p.setViewportSize({width:390,height:844});await p.locator('[data-dv=forward]').click();assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);await p.screenshot({path:path.join(out,'layers-390.png')});await p.setViewportSize({width:1440,height:1000});
++ const layerId=await p.locator('.dv-layer-bar').getAttribute('data-id');assert.ok(blue(await pixel(p,.5,.5)),'front layer hides subject');assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=tool][data-tool=layers]').click();await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);assert.ok(red(await pixel(p,.5,.5)),'main video subject is in front');assert.ok(blue(await pixel(p,.1,.15)),'background color removed to expose lower layer');await p.screenshot({path:path.join(out,'layers-1440.png')});await p.setViewportSize({width:390,height:844});await p.locator('.dv-mobile-dock [data-tool=layers]').click();await p.locator('[data-dv=forward]').click();assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);await p.screenshot({path:path.join(out,'layers-390.png')});await p.setViewportSize({width:1440,height:1000});
+diff --git a/tests/video-v43.cjs b/tests/video-v43.cjs
+index 71b92bf..7ad98e8 100644
+--- a/tests/video-v43.cjs
++++ b/tests/video-v43.cjs
+@@ -34 +34 @@ try{
+- await p.setViewportSize({width:390,height:844});await tool(p,'clip');await p.locator('#dvToSequence').click();await ready(p);if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();await p.locator('#dvTimelineScroll').evaluate(e=>e.scrollTop=0);
++ await p.setViewportSize({width:390,height:844});await p.locator('.dv-mobile-dock [data-tool=selection]').click();await p.locator('.dv-selection-content [data-tool=clip]').click();await p.locator('#dvToSequence').click();await ready(p);if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();await p.locator('[data-dv=toggleTimeline]').click();await p.locator('#dvTimelineScroll').evaluate(e=>e.scrollTop=0);
+@@ -37,2 +37,2 @@ try{
+- if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();await p.locator('[data-dv=asBackground]').click();await ready(p);if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();
+- for(const width of [390,360,320]){await p.setViewportSize({width,height:844});assert.equal(await p.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);assert.ok(await p.locator('[data-dv=frame][data-fit=adaptive]').isVisible());const box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=140,'landscape canvas remains visible '+width+': '+box.height);console.log('Viewport',width,'canvas',box.width,box.height);if(!process.env.DIVAS_SKIP_SCREENSHOTS)await p.screenshot({path:path.join(out,'mobile-'+width+'.png'),animations:'disabled'});}
++ if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();await p.locator('.dv-mobile-dock [data-tool=transform]').click();await p.locator('[data-dv=asBackground]').click();await ready(p);if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();
++ for(const width of [390,360,320]){await p.setViewportSize({width,height:844});assert.equal(await p.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);await p.locator('.dv-mobile-dock [data-tool=transform]').click();assert.ok(await p.locator('[data-dv=frame][data-fit=adaptive]').isVisible());const box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=140,'landscape canvas remains visible '+width+': '+box.height);console.log('Viewport',width,'canvas',box.width,box.height);if(!process.env.DIVAS_SKIP_SCREENSHOTS)await p.screenshot({path:path.join(out,'mobile-'+width+'.png'),animations:'disabled'});await p.locator('[data-dv=closeInspector]').click();}
+diff --git a/tests/video-v44.cjs b/tests/video-v44.cjs
+index d569efc..ac85ab4 100644
+--- a/tests/video-v44.cjs
++++ b/tests/video-v44.cjs
+@@ -17 +17 @@ try{
+- for(const width of [390,360,320]){await p.setViewportSize({width,height:844});await p.locator('[data-dv=closeInspector]').click();await p.waitForFunction(()=>document.getElementById('dvCanvas').getBoundingClientRect().height>=230);let box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=230,`mobile ${width} canvas ${box.height}`);const more=p.locator('[data-dv=moreTools]'),mb=await more.boundingBox();assert.ok(mb.x+mb.width<=width+1,'More tools stays visible');await more.click();await p.waitForTimeout(300);await tool(p,'layers');assert.ok(await p.locator('#dvLayerStack').isVisible());await p.locator('[data-dv=closeInspector]').click();await more.click();await p.waitForTimeout(300);await p.screenshot({path:path.join(out,'mobile-'+width+'.png'),animations:'disabled'});await p.locator('[data-dv=cutout]').click();box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=190,`cutout ${width} canvas ${box.height}`);assert.ok(await p.locator('#dvKeyScope').isVisible());assert.equal(await p.locator('.dv-tool-rail').isVisible(),false);await p.screenshot({path:path.join(out,'cutout-'+width+'.png'),animations:'disabled'});await p.locator('[data-dv=endCutout]').click();}
++ for(const width of [390,360,320]){await p.setViewportSize({width,height:844});if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();await p.waitForFunction(()=>document.getElementById('dvCanvas').getBoundingClientRect().height>=230);let box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=230,`mobile ${width} canvas ${box.height}`);assert.equal(await p.locator('.dv-mobile-dock button').count(),5);await p.locator('.dv-mobile-dock [data-tool=layers]').click();assert.ok(await p.locator('#dvLayerStack').isVisible());await p.locator('[data-dv=closeInspector]').click();await p.screenshot({path:path.join(out,'mobile-'+width+'.png'),animations:'disabled'});await p.locator('.dv-mobile-dock [data-action=cutout]').click();box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=190,`cutout ${width} canvas ${box.height}`);await p.locator('[data-content=cutout] summary').click();assert.ok(await p.locator('#dvKeyScope').isVisible());assert.equal(await p.locator('.dv-tool-rail').isVisible(),false);await p.screenshot({path:path.join(out,'cutout-'+width+'.png'),animations:'disabled'});await p.locator('[data-dv=closeInspector]').click();await p.locator('[data-content=cutout] summary').evaluate(el=>el.parentElement.open=false);}

@@ -1,0 +1,20 @@
+name: Prepare verified Divas mobile v45
+on:
+  push:
+    branches: [codex/transport-divas-mobile-v45]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          path: transfer
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 256d50d9b6f99d0dbdbe111f9db88ef74e8b52f3
+          path: release
+      - run: python3 transfer/.codex-upload/apply-release.py release
