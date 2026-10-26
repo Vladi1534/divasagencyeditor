@@ -121,3 +121,17 @@ html[data-theme=dark] dialog.dv-shell{--dv-bg:#201923;--dv-surface:#2a222d;--dv-
 }
 
 .dv-shell[data-cutout=true] .dv-canvas-tools{display:none}
+
+/* v43: direct placement and proportional framing, shared by mouse, pen and touch. */
+.dv-media-tools{display:flex;align-items:center;gap:5px;flex:none;min-width:0}.dv-media-tools>span{font-size:10px;color:var(--dv-muted);margin-right:3px}.dv-shell .dv-media-tools button{min-height:32px;padding:5px 10px;font-size:11px;white-space:nowrap}.dv-shell .dv-media-tools button[data-dv=asBackground]{margin-left:auto;border-color:var(--dv-accent);color:var(--dv-accent)}
+.dv-shell .dv-targetbar button{margin-left:0}.dv-targetbar #dvCutoutDone{margin-left:auto}.dv-shell .dv-targetbar #dvToLayer,.dv-shell .dv-targetbar #dvToSequence{white-space:nowrap;background:var(--dv-surface);max-width:none}
+.dv-shell .dv-scene{touch-action:none;user-select:none;cursor:grab}.dv-scene *{pointer-events:none;-webkit-user-drag:none}.dv-drop-slot{display:flex;align-items:center;min-height:29px;padding:4px 10px 4px 92px;width:calc(var(--dv-track-width) + 88px);border:1px dashed var(--dv-line);font-size:10px;color:var(--dv-muted);background:var(--dv-bg)}
+.dv-drop-target{outline:2px solid var(--dv-accent);outline-offset:-2px;background:var(--dv-soft)!important}.dv-shell .dv-drag-preview{position:fixed;z-index:20;pointer-events:none;max-width:225px;padding:9px 12px;border:1px solid #ef9cc8;border-radius:10px;background:#58213f;color:#fff;box-shadow:0 7px 25px #18081740;font-size:12px;line-height:1.4}
+.dv-file-drop{outline:3px dashed var(--dv-accent);outline-offset:-4px}.dv-shell .dv-layer-bar:active,.dv-shell .dv-scene:active{cursor:grabbing}
+@media(max-width:760px){
+ .dv-media-tools{overflow-x:auto;gap:4px;padding:2px 0;scrollbar-width:none}.dv-media-tools>span{display:none}.dv-shell .dv-media-tools button{min-height:38px;padding:6px 8px;font-size:10px;flex:none}.dv-shell .dv-media-tools button[data-dv=asBackground]{margin-left:0}.dv-shell .dv-targetbar #dvToLayer,.dv-shell .dv-targetbar #dvToSequence{font-size:10px;padding:4px 6px;min-height:32px}.dv-targetbar select{max-width:100%;min-width:0}.dv-drop-slot{min-height:30px;font-size:9px;padding-left:92px}.dv-shell .dv-drag-preview{font-size:11px;max-width:210px}
+}
+
+.dv-shell .dv-track-label .dv-stack-handle{flex:0 0 28px;min-width:28px;width:28px;padding:0}.dv-track-label>span{min-width:0}
+
+@media(min-height:651px) and (max-width:760px){.dv-timeline-scroll{max-height:158px}}

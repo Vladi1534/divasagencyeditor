@@ -53,4 +53,26 @@ test('Visual order places overlays behind base without changing their times',()=
 test('Splitting a layer behind base preserves its stacking position',()=>{
  const p=M.blank(),a=M.layer(video,1);a.out=4;p.scenes=[M.scene(image)];p.layers=[a];p.visualOrder=[a.id,'base'];const right=M.split(p,a.id,3);assert.deepEqual(M.stackOrder(p),[a.id,right,'base']);
 });
+test('A sequential photo becomes a simultaneous layer without replacing its media or edits',()=>{
+ const p=M.blank(),v=M.scene(video),c=M.scene(image);c.keyer.enabled=true;c.transform.x=.7;c.title='Gala';p.scenes=[v,c];
+ M.toLayer(p,c.id,{start:1,before:'base'});assert.deepEqual(p.scenes,[v]);assert.equal(p.layers[0],c);assert.equal(c.assetId,image.id);assert.equal(c.start,1);assert.equal(c.transform.x,.7);assert.equal(c.keyer.enabled,true);assert.deepEqual(M.stackOrder(p),['base',c.id]);
+ M.toSequence(p,c.id,0);assert.deepEqual(p.scenes,[c,v]);assert.deepEqual(p.layers,[]);assert.ok(!Object.hasOwn(c,'start'));assert.deepEqual(M.stackOrder(p),['base']);
+});
+test('A photo used as background spans other tracks, including long projects',()=>{
+ const p=M.blank(),v=M.scene(video),c=M.scene(image);p.scenes=[v,c];const t=M.textLayer(80);t.duration=5;p.layers=[t];
+ M.asBackground(p,c.id);assert.equal(c.start,0);assert.equal(c.duration,85);assert.equal(c.fit,'adaptive');assert.equal(c.transition,'cut');assert.deepEqual(M.stackOrder(p),[c.id,'base',t.id]);assert.equal(M.normalize(p,[video,image]).layers.find(x=>x.id===c.id).duration,85);
+ const alone=M.blank(),one=M.scene(image);one.duration=12;alone.scenes=[one];M.asBackground(alone,one.id);assert.equal(M.total(alone),12);
+});
+test('Conversions reject locked clips and track limits before removing anything',()=>{
+ const p=M.blank(),c=M.scene(image);p.scenes=[c];c.locked=true;assert.throws(()=>M.toLayer(p,c.id));assert.equal(p.scenes.length,1);c.locked=false;p.layers=Array.from({length:12},()=>M.textLayer());assert.throws(()=>M.toLayer(p,c.id));assert.equal(p.scenes.length,1);
+ p.layers=[M.layer(image)];p.scenes=Array.from({length:30},()=>M.scene(image));assert.throws(()=>M.toSequence(p,p.layers[0].id));assert.equal(p.layers.length,1);assert.throws(()=>M.toSequence(p,M.textLayer().id));
+});
+test('Automatic ratio adaptation preserves manual placement and transparent logos',()=>{
+ const opaque={...image,hasAlpha:false},logo={...image,id:'logo',hasAlpha:true},p=M.blank();const untouched=M.scene(opaque),manual=M.scene(opaque),transparent=M.scene(logo);manual.transform.x=.7;p.scenes=[untouched,manual,transparent];
+ M.changeRatio(p,'16:9',[opaque,logo]);assert.equal(p.ratio,'16:9');assert.deepEqual(p.scenes.map(c=>c.fit),['adaptive','contain','contain']);assert.equal(manual.transform.x,.7);
+ manual.transform.opacity=.5;manual.animation.enabled=true;M.frame(manual,'adaptive');assert.equal(manual.transform.x,.5);assert.equal(manual.transform.opacity,.5);assert.equal(manual.animation.enabled,false);const round=M.normalize(p,[opaque,logo]);assert.equal(round.scenes[0].fit,'adaptive');
+});
+test('Timeline moves snap to neighboring starts and ends without snapping to themselves',()=>{
+ const p=M.blank(),base=M.scene(video),c=M.layer(image,2);p.scenes=[base];p.layers=[c];assert.equal(M.snapTime(p,c.id,9.92),10);assert.equal(M.snapTime(p,c.id,.1),0);assert.equal(M.snapTime(p,c.id,2.07),2.07);assert.equal(M.snapTime(p,c.id,-4),0);
+});
 console.log(`${checks} behavior checks passed.`);

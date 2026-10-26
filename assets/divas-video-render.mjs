@@ -56,7 +56,20 @@ export function lines(ctx,text,width){const out=[];for(const para of text.split(
 export class Renderer {
  constructor(model,canvas){this.M=model;this.canvas=canvas;this.effects=new Effects();this.bounds=new Map();this.raw=document.createElement('canvas');}
  sourceCanvas(source,max=320){const w=source.videoWidth||source.naturalWidth||source.width,h=source.videoHeight||source.naturalHeight||source.height,f=Math.min(1,max/Math.max(w,h));this.raw.width=Math.max(1,Math.round(w*f));this.raw.height=Math.max(1,Math.round(h*f));this.raw.getContext('2d',{willReadFrequently:true}).drawImage(source,0,0,this.raw.width,this.raw.height);return this.raw;}
- geometry(c,a,t){const {width:w,height:h}=this.canvas,pose=this.M.animatedPose(c,t);let scale=c.fit==='cover'?Math.max(w/a.width,h/a.height):Math.min(w/a.width,h/a.height);scale*=pose.scale;if(c.motion==='zoom')scale*=1+t*.08;if(c.motion==='pan')scale*=1.06;return {x:pose.x*w+(c.motion==='pan'?(t-.5)*w*.05:0),y:pose.y*h,width:a.width*scale,height:a.height*scale,angle:pose.rotation*Math.PI/180,opacity:pose.opacity,scale:pose.scale};}
+ geometry(c,a,t){const {width:w,height:h}=this.canvas,pose=this.M.animatedPose(c,t);let scale=c.fit==='cover'?Math.max(w/a.width,h/a.height):Math.min(w/a.width,h/a.height);scale*=pose.scale;if(c.motion==='zoom')scale*=1+t*.08;if(c.motion==='pan')scale*=1.06;return {x:pose.x*w+(c.motion==='pan'?(t-.5)*w*.05:0),y:pose.y*h,width:a.width*scale,height:a.height*scale,angle:pose.rotation*Math.PI/180,opacity:pose.opacity,scale:pose.scale,...(c.fit==='adaptive'?{width:w*pose.scale*(c.motion==='zoom'?1+t*.08:c.motion==='pan'?1.06:1),height:h*pose.scale*(c.motion==='zoom'?1+t*.08:c.motion==='pan'?1.06:1)}:{})};}
+ adaptive(x,image,c,g,original=false){
+  const iw=image.videoWidth||image.naturalWidth||image.width,ih=image.videoHeight||image.naturalHeight||image.height;
+  const sw=240,sh=Math.max(1,Math.round(sw*g.height/g.width));
+  const cache=this.softCache||(this.softCache=new Map()),key=c.id+':'+sw+':'+sh+':'+JSON.stringify([c.keyer,c.adjust,original]);
+  let soft=c.kind==='image'?cache.get(key):null;
+  if(!soft){soft=document.createElement('canvas');soft.width=sw;soft.height=sh;const bx=soft.getContext('2d'),scale=Math.max(sw/iw,sh/ih)*1.2;
+   bx.filter='blur(9px)';bx.drawImage(image,(sw-iw*scale)/2,(sh-ih*scale)/2,iw*scale,ih*scale);bx.filter='none';
+   if(c.kind==='image'){if(cache.size>=24)cache.delete(cache.keys().next().value);cache.set(key,soft);}
+  }
+  const frame=this.framed||(this.framed=document.createElement('canvas'));frame.width=this.canvas.width;frame.height=this.canvas.height;const fx=frame.getContext('2d');fx.drawImage(soft,0,0,frame.width,frame.height);
+  const scale=Math.min(frame.width/iw,frame.height/ih);fx.drawImage(image,(frame.width-iw*scale)/2,(frame.height-ih*scale)/2,iw*scale,ih*scale);
+  x.drawImage(frame,-g.width/2,-g.height/2,g.width,g.height);
+ }
  text(x,c,w,h,local,alpha){
   let font=w*c.titleSize/100;x.font='800 '+font+'px "'+c.titleFont+'",sans-serif';let textLines=lines(x,c.title,w*.86);
   while(textLines.length*font*1.2>h*.7&&font>w*.015){font*=.92;x.font='800 '+font+'px "'+c.titleFont+'",sans-serif';textLines=lines(x,c.title,w*.86);}
@@ -85,7 +98,7 @@ export class Renderer {
    const c=row.scene;if(options.isolateId&&c.id!==options.isolateId)continue;const local=time-row.start,d=M.duration(c),t=clamp(local/d),fade=Math.min(.35,d/4),alpha=c.transition==='fade'?clamp(Math.min(local/fade,(d-local)/fade)):1;
    const a=c.kind==='text'?{width:w,height:h}:assets.get(c.assetId),source=sources.get(c.id);if(!a)continue;
    const g=this.geometry(c,a,options.poseEnd===c.id?1:t);x.save();x.translate(g.x,g.y);x.rotate(g.angle);x.globalAlpha=(options.poseEnd===c.id?1:alpha)*g.opacity;
-   if(c.kind!=='text'&&source){x.save();if(c.mask==='circle'){x.beginPath();x.arc(0,0,Math.min(g.width,g.height)/2,0,Math.PI*2);x.clip();}else if(c.mask==='rounded'){x.beginPath();if(x.roundRect)x.roundRect(-g.width/2,-g.height/2,g.width,g.height,Math.min(g.width,g.height)*.12);else x.rect(-g.width/2,-g.height/2,g.width,g.height);x.clip();}const effective=options.keyerId===c.id?{...c,keyer:options.keyer}:c;const image=options.originalId===c.id?source:this.effects.apply(source,effective,w,h);x.drawImage(image,-g.width/2,-g.height/2,g.width,g.height);x.restore();}
+   if(c.kind!=='text'&&source){x.save();if(c.mask==='circle'){x.beginPath();x.arc(0,0,Math.min(g.width,g.height)/2,0,Math.PI*2);x.clip();}else if(c.mask==='rounded'){x.beginPath();if(x.roundRect)x.roundRect(-g.width/2,-g.height/2,g.width,g.height,Math.min(g.width,g.height)*.12);else x.rect(-g.width/2,-g.height/2,g.width,g.height);x.clip();}const effective=options.keyerId===c.id?{...c,keyer:options.keyer}:c;const image=options.originalId===c.id?source:this.effects.apply(source,effective,w,h);if(c.fit==='adaptive')this.adaptive(x,image,effective,g,options.originalId===c.id);else x.drawImage(image,-g.width/2,-g.height/2,g.width,g.height);x.restore();}
    if(c.title){x.save();x.scale(g.scale,g.scale);const box=this.text(x,c,w,h,local,1);x.restore();if(c.kind==='text'){g.width=box.width*g.scale;g.height=box.height*g.scale;g.y+=box.cy*g.scale;}}
    x.restore();this.bounds.set(c.id,g);
   }

@@ -1,6 +1,33 @@
-# Divas Video · v42
+# Divas Video · v43
 
 Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada de documentos conservan su funcionamiento. Esta actualización no requiere SQL ni cambios en Supabase.
+
+## Convertir un clip en capa o fondo
+
+Si una foto aparece **después** del vídeo en vez de al mismo tiempo, está dentro de la **Secuencia**. Puedes cambiarlo de estas maneras:
+
+1. Selecciona la foto y pulsa **Superponer**. Se convierte en una capa independiente delante de la secuencia. **En secuencia** hace el recorrido inverso.
+2. Arrástrala hacia **Soltar aquí para superponer**, hacia otra fila de capas o hacia el panel **Capas**. El aviso flotante explica dónde quedará antes de soltar. Si arrastras una foto de la secuencia por debajo de ella, el aviso indica **Usar como fondo**: queda detrás, empieza en cero, ocupa toda la duración restante y se adapta al formato.
+3. **Usar como fondo**, junto al lienzo, hace esa misma operación sin arrastrar. Si la foto es el único elemento, conserva su duración. Si hay vídeo encima sin transparencia, seguirá tapando la foto: quita su fondo o cambia el orden.
+4. Para devolver una capa a la secuencia, usa **En secuencia** o suéltala en el centro de esa fila. En los bordes de la fila se cambia el orden visual; en su centro se insertan clips consecutivos. Arrastra una escena a izquierda o derecha dentro de la secuencia para reordenarla.
+
+Las capas bloqueadas no se convierten ni se mueven. **Escape** cancela un arrastre; soltar fuera de las zonas de colocación cancela la conversión. Cada conversión se recupera con un solo **Deshacer**. Al sacar una escena, los clips posteriores de la secuencia se adelantan para cerrar el espacio. Los tiempos de las otras capas independientes se conservan.
+
+También puedes arrastrar archivos desde el ordenador: sobre el lienzo se añaden como capas si ya hay contenido; sobre la secuencia se añaden clips consecutivos. En móvil funcionan los archivos del dispositivo, los botones y el arrastre táctil; seleccionar un clip no pliega por sí solo sus pistas.
+
+## Fotos cuadradas en un vídeo horizontal o vertical
+
+Selecciona la imagen y usa **Encuadre**, encima del lienzo:
+
+| Opción | Resultado |
+| --- | --- |
+| **Completa** | Toda la imagen, con espacio libre si las proporciones difieren. |
+| **Llenar** | Cubre el lienzo conservando la proporción; recorta los bordes sobrantes. |
+| **Adaptar** | Mantiene la imagen completa y nítida, con una copia desenfocada rellenando los laterales o la parte superior e inferior. |
+
+Estos botones centran la selección, restablecen su tamaño y giro, y desactivan su movimiento previo. Conservan opacidad, máscara, color, recorte de fondo y archivo original; el cambio es reversible. **Mover** permite ajustar después posición, tamaño y giro manualmente. Adaptar no inventa detalles nuevos ni estira la foto.
+
+Las nuevas fotos opacas de la secuencia usan **Adaptar** de entrada. Al cambiar de formato, las fotos antiguas intactas y centradas también se adaptan; los encuadres manuales y los logos transparentes se respetan. Para una foto ya colocada manualmente, pulsa **Adaptar** cuando quieras reemplazar ese encuadre. Las capas superpuestas mantienen su escala al cambiar el formato. La extensión suave se calcula a resolución reducida y se reutiliza para fotos estáticas; el primer plano conserva su resolución de renderizado.
 
 ## Quitar el fondo de un vídeo
 
@@ -18,7 +45,7 @@ El recorte es por color, no segmentación de personas mediante IA. Un fondo comp
 - **Fotos / clips** añade escenas consecutivas a la pista base.
 - **Capa** añade imágenes o vídeos superpuestos con su propia hora de inicio y duración. **T Texto** añade un texto independiente.
 - **Capas** muestra el orden visual: arriba se ve delante, abajo detrás. Arrastra por **⋮⋮** o selecciona una capa y usa **↑ Delante / ↓ Detrás**. También puedes arrastrar verticalmente la barra de una capa en la línea de tiempo, incluso cruzando el vídeo base. El tiempo de aparición se conserva.
-- Arrastra una barra horizontalmente para cambiar cuándo aparece; arrastra sus extremos para recortarla. En **Tiempo** hay campos numéricos, dividir, duplicar y eliminar. Las escenas del vídeo base son consecutivas y comparten un nivel visual; sus flechas cambian el orden temporal.
+- Arrastra una barra horizontalmente para cambiar cuándo aparece; arrastra sus extremos para recortarla. En **Tiempo** hay campos numéricos, dividir, duplicar y eliminar. Las escenas de la secuencia son consecutivas y comparten un nivel visual; se reordenan arrastrando dentro de su fila o con las flechas.
 - Un logo o una estrella dibujados dentro de un archivo de vídeo forman parte del mismo clip. Para poner otra imagen detrás, quita el fondo del clip y coloca la imagen debajo de **Vídeo base**. Este orden no separa automáticamente los objetos que están grabados en el vídeo.
 - Arrastra sobre el lienzo para mover una capa. Sus esquinas cambian el tamaño manteniendo la proporción. **Mover** incluye encuadre, giro, opacidad, posición y máscaras circulares o con esquinas redondeadas.
 - El candado bloquea las modificaciones; el botón × elimina la selección. El ojo oculta la capa. **Vista limpia** permite revisar sin el marco de selección.
@@ -37,7 +64,7 @@ El recorte es por color, no segmentación de personas mediante IA. Un fondo comp
 
 Los proyectos y sus archivos se guardan automáticamente en IndexedDB, **en este navegador y dispositivo**, separados por cuenta. **Guardar** confirma el estado. **Mis proyectos**, en el inicio, reúne los vídeos y los diseños. Usa los filtros **Todos / Diseños / Vídeos**, busca por nombre o cambia el orden. Las tarjetas de vídeo muestran su duración, abren el vídeo correspondiente y permiten descargar su respaldo o eliminarlo desde el menú •••. El botón **Mis proyectos** de Video regresa a esa misma lista. **Crear video** empieza un proyecto nuevo; no reemplaza el anterior. Los vídeos guardados antes de v41 aparecen automáticamente en la misma cuenta y navegador. No se suben vídeos a Supabase.
 
-**Respaldo** descarga un `.divasvideo` con clips, imágenes, audio, capas, efectos y animaciones. **Abrir respaldo** crea una copia nueva. Los respaldos v39 se migran al abrirlos con el fondo intacto y sin añadir opacidad. Los proyectos anteriores a v42 conservan su orden original (vídeo base detrás, capas delante). El nuevo orden visual queda dentro del proyecto y del respaldo; versiones anteriores a v42 no interpretan ese nuevo orden. v39 no puede abrir un proyecto creado con el formato v40.
+**Respaldo** descarga un `.divasvideo` con clips, imágenes, audio, capas, efectos y animaciones. **Abrir respaldo** crea una copia nueva. Los respaldos v39 se migran al abrirlos con el fondo intacto y sin añadir opacidad. Los proyectos anteriores a v42 conservan su orden original (vídeo base detrás, capas delante). El nuevo orden visual queda dentro del proyecto y del respaldo; versiones anteriores a v42 no interpretan ese nuevo orden. El encuadre Adaptar requiere v43; versiones anteriores lo muestran como Imagen completa. v39 no puede abrir un proyecto creado con el formato v40.
 
 Los conflictos entre dos pestañas no sobrescriben el otro proyecto; aparece **Guardar copia**. El historial mantiene hasta 35 estados, con límite adicional de memoria para archivos anteriores. No se guarda como historial de versiones después de cerrar el navegador. El almacenamiento local puede borrarse o llenarse; conserva respaldos de lo importante.
 
@@ -62,3 +89,8 @@ Consulta `tests/README-video.md` para reproducir las comprobaciones. Las pruebas
 ## Referencias de interacción
 
 La organización de pistas y la distinción entre tiempo y orden visual siguen patrones habituales de editores como [Kdenlive](https://docs.kdenlive.org/en/user_interface/timeline.html). Se revisaron también [el flujo de chroma de CapCut](https://www.capcut.com/resource/chroma-key-software) y [OpenCut](https://github.com/OpenCut-app/OpenCut), un proyecto de código abierto con licencia MIT. Esta actualización implementa el flujo en el código de Divas; no incorpora el código ni los servicios premium de esos editores.
+
+
+### Referencia Concat para v43
+
+Se descargó y revisó el repositorio oficial [jub0t/Concat](https://github.com/jub0t/Concat), revisión `7db37f2ab88dfa7ecc112fd5bf0b6b825e91b6c6`. Su interfaz de pistas (`ui/timeline/lanes.slint`) y lógica de tiempo (`panes/timeline.rs`) sirven de referencia para el umbral de arrastre, la previsualización de la colocación y el ajuste a límites de clips. Concat es una aplicación nativa en Rust/Slint con licencia AGPL-3.0, no un módulo JavaScript intercambiable. Divas v43 implementa estos comportamientos en su propio modelo y renderizador web; no incluye código, binarios ni servicios de Concat. Integrar su motor completo exigiría otra arquitectura y revisar sus obligaciones de licencia.

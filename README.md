@@ -8,6 +8,12 @@ El comando de despliegue es `npx wrangler deploy`, ejecutado desde la raíz del 
 
 No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulos, estilos y bibliotecas locales. Un despliegue verde debe comprobarse abriendo ambos botones en la web publicada. `public/` se genera; no se edita ni se sube a Git.
 
+## v43 · Arrastrar, superponer y adaptar fotos
+
+Una foto o vídeo de la **Secuencia** se puede arrastrar a una capa independiente, al panel **Capas** o de vuelta a la secuencia. Antes de soltar aparece la acción que se realizará. **Superponer**, **En secuencia** y **Usar como fondo** ofrecen el mismo flujo sin arrastrar. Las conversiones se deshacen en un paso; conservan el archivo original y los efectos.
+
+**Completa / Llenar / Adaptar** están junto al lienzo. Adaptar conserva toda la foto y rellena el espacio con una copia desenfocada, sin estirarla; funciona al cambiar entre 1:1, 16:9 y 9:16 y también en la exportación. Las nuevas fotos opacas de la secuencia usan ese encuadre automáticamente; los logos transparentes conservan su transparencia. No requiere SQL. Consulta [el flujo y sus límites](docs/DIVAS-VIDEO.md).
+
 ## v42 · Recorte comprobable y capas delante/detrás
 
 **Quitar fondo** identifica siempre el elemento seleccionado y ofrece **Antes / Después / Comparar / Transparencia**. Elegir un color prepara una vista previa; **Confirmar recorte** la aplica y **Cancelar** conserva el estado anterior. El indicador avisa cuando el color casi no aparece. Los botones de colores se ven también en tema oscuro.

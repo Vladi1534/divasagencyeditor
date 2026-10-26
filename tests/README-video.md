@@ -53,3 +53,26 @@ Comprueba píxeles reales del original, del recorte, la división y el sujeto; u
 Los clips de prueba son sintéticos. Las capturas facilitadas por el usuario permiten revisar el flujo, pero no sustituyen una prueba con su archivo original.
 
 El WebM de v42 se decodificó con FFmpeg a 2 fotogramas por segundo: 6 muestras, 720 × 1280, 30 fps y 3 segundos. En todas se conserva el sujeto rojo y aparece azul la zona de fondo blanco eliminada, procedente de una capa situada detrás del vídeo base.
+
+
+## v43 · Colocación directa y encuadre proporcional
+
+`CHROMIUM_EXECUTABLE=/ruta/chromium npm --prefix tests run test:video:v43` comprueba convertir escenas en capas delante/detrás, foto como fondo durante toda la composición, volver a secuencia, reordenar, deshacer/rehacer, bloqueo, cancelación y destino en el panel Capas. Incluye entrada táctil mediante CDP y medidas de interfaz de 320, 360, 390 y 1440 px; no equivale a probar un móvil físico.
+
+Además de `clip.mp4`, se utiliza `square.png` (240 × 240, fondo RGB 20/100/230, franja izquierda verde de 30 px, derecha amarilla de 30 px y cuadrado rojo central de 80 × 80). Puede generarse así:
+
+```python
+from PIL import Image, ImageDraw
+im = Image.new('RGB', (240, 240), (20, 100, 230))
+d = ImageDraw.Draw(im)
+d.rectangle((0, 0, 29, 239), fill=(30, 230, 100))
+d.rectangle((210, 0, 239, 239), fill=(250, 220, 20))
+d.rectangle((80, 80, 159, 159), fill=(245, 20, 30))
+im.save('square.png')
+```
+
+Los píxeles distinguen Completa, Llenar y Adaptar. Se comprueba que el cuadrado central conserve la misma anchura y altura en las tres proporciones. El recorrido descarga un respaldo y un vídeo, reabre desde Mis proyectos y restaura el respaldo. Las pruebas del modelo cubren también proyectos largos, fotos con transparencia, encuadres manuales, límites, IDs, efectos y ajuste temporal a clips vecinos.
+
+`PW_TEST_SCREENSHOT_NO_FONTS_READY=1` evita esperar fuentes remotas en equipos de prueba sin acceso a Google Fonts. `DIVAS_SKIP_SCREENSHOTS=1` permite separar las comprobaciones funcionales de las capturas visuales en un navegador de pruebas cuyo compositor no capture después de la emulación táctil. Las capturas se deben revisar por separado antes de publicar.
+
+La salida v43 se verificó con FFprobe y decodificación de FFmpeg: VP8/WebM, 1280 × 720, 30 fps, 4 segundos; 8 muestras a 2 fps conservan el sujeto rojo cuadrado y los laterales suaves. Se probaron el renderizado con SwiftShader y las capturas con composición por CPU. El Chromium de pruebas no ofrece codificación MP4; no se afirma una validación nueva de ese codificador.
