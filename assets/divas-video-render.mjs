@@ -7,14 +7,34 @@ export function keyDistance(r,g,b,key){
  if(Math.max(...key)-Math.min(...key)<.12)return Math.hypot(r-key[0],g-key[1],b-key[2])/Math.sqrt(3);
  return Math.sqrt(((b-y-key[2]+ky)**2+(r-y-key[0]+ky)**2)*2+(y-ky)**2*.08);
 }
-export function processPixels(data,keyer,adjust={}){
- const key=rgb(keyer.color),dominant=key.indexOf(Math.max(...key)),colored=Math.max(...key)-Math.min(...key)>.12;
- for(let i=0;i<data.length;i+=4){let c=[data[i]/255,data[i+1]/255,data[i+2]/255];
-  if(keyer.enabled){const distance=keyDistance(...c,key),alpha=smooth(keyer.tolerance,keyer.tolerance+keyer.softness,distance);data[i+3]*=alpha;
-   if(colored){const other=(c[(dominant+1)%3]+c[(dominant+2)%3])/2,weight=(1-smooth(keyer.tolerance,keyer.tolerance+keyer.softness*3,distance))*keyer.spill;c[dominant]-=Math.max(0,c[dominant]-other)*weight;}}
-  const gray=c[0]*.2126+c[1]*.7152+c[2]*.0722;
-  c=c.map(v=>((gray+(v-gray)*(1+(adjust.saturation||0))-.5)*(1+(adjust.contrast||0))+.5)+(adjust.brightness||0));
-  for(let j=0;j<3;j++)data[i+j]=Math.round(clamp(c[j])*255);
+// Only pixels connected to the outside can disappear in exterior mode. A white
+// highlight enclosed by the subject never becomes part of the background mask.
+export function exteriorMask(alpha,data,w,h){
+ const n=w*h,mask=new Uint8Array(n),queue=new Uint32Array(n);let head=0,tail=0;
+ const push=i=>{if(!mask[i]&&(alpha[i]<1||data[i*4+3]===0)){mask[i]=1;queue[tail++]=i;}};
+ for(let x=0;x<w;x++){push(x);push((h-1)*w+x);}for(let y=1;y<h-1;y++){push(y*w);push(y*w+w-1);}
+ while(head<tail){const i=queue[head++],x=i%w;if(x)push(i-1);if(x<w-1)push(i+1);if(i>=w)push(i-w);if(i<n-w)push(i+w);}
+ return mask;
+}
+export function processPixels(data,keyer,adjust={},dimensions={}){
+ const key=rgb(keyer.color),[kr,kg,kb]=key,dominant=key.indexOf(Math.max(...key)),colored=Math.max(...key)-Math.min(...key)>.12,ky=kr*.299+kg*.587+kb*.114;
+ const n=data.length/4,alpha=new Float32Array(n),dist=new Float32Array(n),exterior=keyer.scope==='exterior'&&dimensions.width*dimensions.height===n;
+ if(keyer.enabled)for(let p=0,i=0;p<n;p++,i+=4){const r=data[i]/255,g=data[i+1]/255,b=data[i+2]/255,y=r*.299+g*.587+b*.114;
+  const d=colored?Math.sqrt(((b-y-kb+ky)**2+(r-y-kr+ky)**2)*2+(y-ky)**2*.08):Math.hypot(r-kr,g-kg,b-kb)/Math.sqrt(3);
+  dist[p]=d;alpha[p]=smooth(keyer.tolerance,keyer.tolerance+keyer.softness,d);
+ }
+ const mask=exterior&&keyer.enabled?exteriorMask(alpha,data,dimensions.width,dimensions.height):null;
+ const sat=1+(adjust.saturation||0),contrast=1+(adjust.contrast||0),brightness=adjust.brightness||0;
+ for(let p=0,i=0;p<n;p++,i+=4){let r=data[i]/255,g=data[i+1]/255,b=data[i+2]/255;
+  if(keyer.enabled&&(!mask||mask[p])){const a=alpha[p];data[i+3]*=a;
+   if(colored){const weight=(1-smooth(keyer.tolerance,keyer.tolerance+keyer.softness*3,dist[p]))*keyer.spill;
+    if(dominant===0)r-=Math.max(0,r-(g+b)/2)*weight;else if(dominant===1)g-=Math.max(0,g-(r+b)/2)*weight;else b-=Math.max(0,b-(r+g)/2)*weight;
+   }else if(a>.01&&a<1){const strength=keyer.spill??.5;const clean=v=>v+(clamp((v-(1-a)*kr)/a)-v)*strength;r=clean(r);g=clean(g);b=clean(b);}
+  }
+  const gray=r*.2126+g*.7152+b*.0722;
+  data[i]=Math.round(clamp((gray+(r-gray)*sat-.5)*contrast+.5+brightness)*255);
+  data[i+1]=Math.round(clamp((gray+(g-gray)*sat-.5)*contrast+.5+brightness)*255);
+  data[i+2]=Math.round(clamp((gray+(b-gray)*sat-.5)*contrast+.5+brightness)*255);
  }
  return data;
 }
@@ -34,8 +54,8 @@ class Effects {
   const fs=shader(gl.FRAGMENT_SHADER,`precision mediump float; varying vec2 uv; uniform sampler2D tex; uniform vec3 key; uniform vec4 cut; uniform vec3 adj;
    void main(){vec4 c=texture2D(tex,uv); if(cut.x>0.0){float y=dot(c.rgb,vec3(.299,.587,.114));float ky=dot(key,vec3(.299,.587,.114));float sat=max(max(key.r,key.g),key.b)-min(min(key.r,key.g),key.b);float d;
     if(sat<.12){d=length(c.rgb-key)/1.7320508;}else{vec2 delta=vec2(c.b-y-key.b+ky,c.r-y-key.r+ky);d=sqrt(dot(delta,delta)*2.0+(y-ky)*(y-ky)*.08);}
-    c.a*=smoothstep(cut.y,cut.y+cut.z,d);float spill=(1.0-smoothstep(cut.y,cut.y+cut.z*3.0,d))*cut.w;
-    if(sat>=.12){if(key.g>=key.r&&key.g>=key.b)c.g-=max(0.0,c.g-(c.r+c.b)*.5)*spill;else if(key.r>=key.b)c.r-=max(0.0,c.r-(c.g+c.b)*.5)*spill;else c.b-=max(0.0,c.b-(c.r+c.g)*.5)*spill;}}
+    float matte=smoothstep(cut.y,cut.y+cut.z,d);c.a*=matte;float spill=(1.0-smoothstep(cut.y,cut.y+cut.z*3.0,d))*cut.w;
+    if(sat>=.12){if(key.g>=key.r&&key.g>=key.b)c.g-=max(0.0,c.g-(c.r+c.b)*.5)*spill;else if(key.r>=key.b)c.r-=max(0.0,c.r-(c.g+c.b)*.5)*spill;else c.b-=max(0.0,c.b-(c.r+c.g)*.5)*spill;}else if(matte>.01&&matte<1.0){c.rgb=mix(c.rgb,clamp((c.rgb-(1.0-matte)*key)/matte,0.0,1.0),cut.w);}}
     float gray=dot(c.rgb,vec3(.2126,.7152,.0722));c.rgb=mix(vec3(gray),c.rgb,1.0+adj.z);c.rgb=(c.rgb-.5)*(1.0+adj.y)+.5+adj.x;gl_FragColor=vec4(clamp(c.rgb,0.0,1.0),c.a);}`);
   const program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('No WebGL effects');gl.deleteShader(vs);gl.deleteShader(fs);gl.useProgram(program);
   const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);const p=gl.getAttribLocation(program,'p');gl.enableVertexAttribArray(p);gl.vertexAttribPointer(p,2,gl.FLOAT,false,0,0);
@@ -46,10 +66,10 @@ class Effects {
   const k=c.keyer,f=c.adjust;if(!k.enabled&&!f.brightness&&!f.contrast&&!f.saturation)return source;
   const sw=source.videoWidth||source.naturalWidth||source.width,sh=source.videoHeight||source.naturalHeight||source.height;
   const factor=Math.min(1,Math.max(w/sw,h/sh));w=Math.max(1,Math.round(sw*factor));h=Math.max(1,Math.round(sh*factor));
-  if(this.gl&&!this.gl.isContextLost()){
+  if(k.scope!=='exterior'&&this.gl&&!this.gl.isContextLost()){
    const gl=this.gl;if(this.canvas.width!==w||this.canvas.height!==h){this.canvas.width=w;this.canvas.height=h;}gl.viewport(0,0,w,h);gl.uniform3fv(this.locations.key,rgb(k.color));gl.uniform4f(this.locations.cut,k.enabled?1:0,k.tolerance,k.softness,k.spill);gl.uniform3f(this.locations.adj,f.brightness,f.contrast,f.saturation);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,source);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);return this.canvas;
   }
-  const canvas=this.fallback;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}const x=canvas.getContext('2d',{willReadFrequently:true});x.clearRect(0,0,w,h);x.drawImage(source,0,0,w,h);const image=x.getImageData(0,0,w,h);processPixels(image.data,k,f);x.putImageData(image,0,0);return canvas;
+  const cacheKey=JSON.stringify([c.id,w,h,k,f,source.currentTime??0]);if(this.lastSource===source&&this.lastKey===cacheKey)return this.fallback;const canvas=this.fallback;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}const x=canvas.getContext('2d',{willReadFrequently:true});x.clearRect(0,0,w,h);x.drawImage(source,0,0,w,h);const image=x.getImageData(0,0,w,h);processPixels(image.data,k,f,{width:w,height:h});x.putImageData(image,0,0);this.lastSource=source;this.lastKey=cacheKey;return canvas;
  }
 }
 export function lines(ctx,text,width){const out=[];for(const para of text.split('\n')){let line='';for(const word of para.split(/\s+/)){const next=line?line+' '+word:word;if(ctx.measureText(next).width<=width){line=next;continue;}if(line)out.push(line);line='';for(const ch of word){if(ctx.measureText(line+ch).width>width&&line){out.push(line);line='';}line+=ch;}}out.push(line);}return out;}
@@ -106,7 +126,7 @@ export class Renderer {
  }
  pickColor(x,y){const b=this.pickBounds;if(!b||x<b.x||x>b.x+b.w||y<b.y||y>b.y+b.h)return null;const c=this.sourceCanvas(b.source,600),px=Math.min(c.width-1,Math.floor((x-b.x)/b.w*c.width)),py=Math.min(c.height-1,Math.floor((y-b.y)/b.h*c.height));const d=c.getContext('2d').getImageData(px,py,1,1).data;return '#'+[...d.slice(0,3)].map(v=>v.toString(16).padStart(2,'0')).join('');}
  measureKeyer(source,keyer){
-  const c=this.sourceCanvas(source,160),x=c.getContext('2d'),original=x.getImageData(0,0,c.width,c.height).data,after=new Uint8ClampedArray(original);processPixels(after,keyer);let input=0,removed=0;
+  const c=this.sourceCanvas(source,480),x=c.getContext('2d'),original=x.getImageData(0,0,c.width,c.height).data,after=new Uint8ClampedArray(original);processPixels(after,keyer,{},{width:c.width,height:c.height});let input=0,removed=0;
   for(let i=3;i<original.length;i+=4){input+=original[i];removed+=Math.max(0,original[i]-after[i]);}return {removed:input?removed/input:0,empty:input===0};
  }
  autoColor(source){const c=this.sourceCanvas(source),d=c.getContext('2d').getImageData(0,0,c.width,c.height);return detectColor(d.data,c.width,c.height);}

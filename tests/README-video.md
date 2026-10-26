@@ -76,3 +76,12 @@ Los píxeles distinguen Completa, Llenar y Adaptar. Se comprueba que el cuadrado
 `PW_TEST_SCREENSHOT_NO_FONTS_READY=1` evita esperar fuentes remotas en equipos de prueba sin acceso a Google Fonts. `DIVAS_SKIP_SCREENSHOTS=1` permite separar las comprobaciones funcionales de las capturas visuales en un navegador de pruebas cuyo compositor no capture después de la emulación táctil. Las capturas se deben revisar por separado antes de publicar.
 
 La salida v43 se verificó con FFprobe y decodificación de FFmpeg: VP8/WebM, 1280 × 720, 30 fps, 4 segundos; 8 muestras a 2 fps conservan el sujeto rojo cuadrado y los laterales suaves. Se probaron el renderizado con SwiftShader y las capturas con composición por CPU. El Chromium de pruebas no ofrece codificación MP4; no se afirma una validación nueva de ese codificador.
+
+
+## v44 · Protección del logo, teclado y composición
+
+- `npm --prefix tests run test:video:v44`: conectividad del fondo, blanco encerrado conservado, chroma global, compatibilidad del modelo, píxeles del lienzo, confirmar/deshacer, foco al seleccionar, Supr/Retroceso, duplicar, bloqueo, flechas, guardar, respaldo y exportación real. Fixture incluido en `tests/fixtures/video/white-detail.png`.
+- `npm --prefix tests run test:flyer:v44`: 24 planes (seis familias × cuatro formatos), márgenes y áreas de lectura sin solapamiento, generación real de seis propuestas distintas, tres logos únicos con opacidad completa, pares tipográficos, render y reajuste a formato vertical. El acceso de inspección del generador se inyecta únicamente en el servidor de pruebas.
+- El recorrido móvil se verifica a 320, 360 y 390 px, además de escritorio 1440 px. Se mantienen las regresiones v40/v42/v43. Los selectores se actualizaron para la nueva ubicación de las herramientas; sus verificaciones de contenido siguen activas.
+- WebM v44 decodificado con FFmpeg: 720 × 720, 30 fps, cinco segundos; exterior oscuro, blanco interior conservado y dorado visible. El original de vídeo del usuario no se adjuntó: los fixtures reproducen el problema de dos zonas del mismo blanco, pero no equivalen a evaluar su clip concreto.
+- El fondo exterior usa una máscara de conectividad de cuatro vecinos por fotograma y limpieza de bordes neutros; se reutiliza el resultado de imágenes estáticas y fotogramas pausados. No hay modelo de segmentación automática de personas. Chroma global conserva WebGL cuando está disponible y respaldo CPU.

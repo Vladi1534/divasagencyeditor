@@ -20,7 +20,7 @@
  const active=(p,t)=>rows(p).filter(r=>t>=r.start&&t<r.end&&!r.scene.hidden);
  const pose=(v={},fallback={})=>({x:number(v.x,fallback.x??.5,-1,2),y:number(v.y,fallback.y??.5,-1,2),scale:number(v.scale,fallback.scale??1,.05,4),rotation:number(v.rotation,fallback.rotation??0,-360,360),opacity:number(v.opacity,fallback.opacity??1,0,1)});
  const blank=()=>({format:'divas-video-2',id:uid(),name:'Mi video Divas',ratio:'9:16',background:'#201424',scenes:[],layers:[],visualOrder:['base'],audio:[],music:null,quality:720});
- const keyer=()=>({enabled:false,color:'#00ff00',tolerance:.18,softness:.08,spill:.5});
+ const keyer=()=>({enabled:false,color:'#00ff00',tolerance:.18,softness:.08,spill:.5,scope:'all'});
  const scene=a=>({id:uid(),assetId:a.id,kind:a.kind,name:clean(a.name),duration:5,in:0,out:Math.min(a.duration||5,15),fit:'contain',mask:'none',motion:'none',transition:'fade',volume:1,fadeIn:0,fadeOut:0,title:'',titlePosition:'bottom',titleColor:'#ffffff',titleSize:6,titleStyle:'glow',titleFont:'Arial',titleMotion:'fade',transform:pose(),animation:{enabled:false,end:pose(),easing:'smooth'},keyer:keyer(),adjust:{brightness:0,contrast:0,saturation:0},hidden:false,locked:false});
  const layer=(a,start=0)=>{const c=scene(a);c.start=start;c.transition='cut';c.transform.scale=.55;c.animation.end=pose(c.transform);return c;};
  const textLayer=(start=0)=>{const c=layer({name:'Texto',kind:'text'},start);c.assetId=null;c.title='Tu mensaje';c.titlePosition='center';c.titleSize=9;c.titleStyle='gold';c.transform.scale=1;c.animation.end=pose(c.transform);return c;};
@@ -52,7 +52,7 @@
    c.fadeIn=number(v.fadeIn,0,0,duration(c)/2);c.fadeOut=number(v.fadeOut,0,0,duration(c)/2);
    c.title=clean(v.title,500);c.titlePosition=['top','center','bottom'].includes(v.titlePosition)?v.titlePosition:'bottom';c.titleColor=color(v.titleColor);c.titleSize=number(v.titleSize,6,2,30);c.titleStyle=['glow','gold','neon','plate','plain'].includes(v.titleStyle)?v.titleStyle:'glow';c.titleFont=['Arial','Georgia','Impact','Trebuchet MS'].includes(v.titleFont)?v.titleFont:'Arial';c.titleMotion=['none','fade','rise','pop'].includes(v.titleMotion)?v.titleMotion:'fade';
    c.transform=pose(v.transform);c.animation={enabled:v.animation?.enabled===true,end:pose(v.animation?.end,c.transform),easing:v.animation?.easing==='linear'?'linear':'smooth'};
-   const k=v.keyer||{};c.keyer={enabled:k.enabled===true,color:color(k.color,'#00ff00'),tolerance:number(k.tolerance,.18,.005,.8),softness:number(k.softness,.08,.005,.4),spill:number(k.spill,.5,0,1)};
+   const k=v.keyer||{};c.keyer={enabled:k.enabled===true,color:color(k.color,'#00ff00'),tolerance:number(k.tolerance,.18,.005,.8),softness:number(k.softness,.08,.005,.4),spill:number(k.spill,.5,0,1),scope:k.scope==='exterior'?'exterior':'all'};
    const f=v.adjust||{};c.adjust={brightness:number(f.brightness,0,-.5,.5),contrast:number(f.contrast,0,-.8,1),saturation:number(f.saturation,0,-1,1)};c.hidden=v.hidden===true;c.locked=v.locked===true;return c;
   }
   p.scenes=raw.scenes.map(v=>visual(v));p.layers=(raw.layers||[]).map(v=>visual(v,true));p.visualOrder=stackOrder({...p,visualOrder:raw.visualOrder});

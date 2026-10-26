@@ -8,7 +8,7 @@ const server=http.createServer((req,res)=>{const pathname=new URL(req.url,'http:
  try{
   await page.goto(base);await page.locator('#startImageInput').setInputFiles(path.join(fixtures,'photo.png'));await page.waitForFunction(()=>!document.getElementById('workspace').hidden&&!document.getElementById('workspace').inert);
   const original=await page.locator('#canvas').evaluate(c=>c.toDataURL());
-  await page.locator('.save-toolbar [data-dv-open]').click();await page.locator('[data-dv=capture]').click();await page.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1&&!document.getElementById('dvBody').inert);
+  await page.locator('.save-toolbar [data-dv-open]').click();await page.locator('.dv-timeline [data-dv=capture]').click();await page.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1&&!document.getElementById('dvBody').inert);
   assert.match(await page.locator('#dvMessage').textContent(),/Flyer añadido/);await page.locator('#dvName').fill('Captura de flyer');await page.locator('[data-dv=save]').click();await page.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');
   await page.locator('[data-dv=close]').click();assert.equal(await page.locator('#canvas').evaluate(c=>c.toDataURL()),original);console.log('PASS actual flyer capture preserves original render and editor');
   await page.locator('.save-toolbar [data-dv-open]').click();const second=await context.newPage();await second.goto(base);await second.locator('#projectGrid .project-card[data-kind=video] .project-open').first().click();await second.waitForFunction(()=>!document.getElementById('dvBody').inert&&document.querySelectorAll('.dv-scene').length===1);

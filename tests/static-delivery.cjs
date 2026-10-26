@@ -6,7 +6,7 @@ const path = require('node:path');
 const { chromium } = require('playwright');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'public');
-const types = { '.html':'text/html', '.js':'application/javascript', '.mjs':'application/javascript', '.css':'text/css', '.json':'application/json', '.wasm':'application/wasm' };
+const types = { '.html':'text/html', '.js':'application/javascript', '.mjs':'application/javascript', '.css':'text/css', '.json':'application/json', '.wasm':'application/wasm', '.png':'image/png' };
 const server = http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
@@ -23,7 +23,7 @@ const server = http.createServer(async (req, res) => {
   const base = 'http://127.0.0.1:' + server.address().port;
   let browser;
   try {
-    for (const name of ['assets/divas-documents.js', 'assets/divas-documents.css', 'assets/divas-video.js', 'assets/divas-video.css', 'assets/divas-video-export.mjs', 'assets/divas-video-render.mjs', 'assets/vendor/pdfjs/pdf.min.mjs', 'assets/vendor/pdfjs/pdf.worker.min.mjs', 'assets/vendor/mediabunny/mediabunny.min.mjs', 'assets/vendor/pdfjs/wasm/openjpeg.wasm']) {
+    for (const name of ['assets/divas-flyer-layouts.js','assets/app-logos/salsa.png','assets/app-logos/cafe.png','assets/app-logos/buzzcast.png','assets/divas-documents.js', 'assets/divas-documents.css', 'assets/divas-video.js', 'assets/divas-video.css', 'assets/divas-video-export.mjs', 'assets/divas-video-render.mjs', 'assets/vendor/pdfjs/pdf.min.mjs', 'assets/vendor/pdfjs/pdf.worker.min.mjs', 'assets/vendor/mediabunny/mediabunny.min.mjs', 'assets/vendor/pdfjs/wasm/openjpeg.wasm']) {
       const response = await fetch(base + '/' + name + '?deployment-check=1');
       assert.equal(response.status, 200, name);
       assert.ok(response.headers.get('Content-Type').startsWith(types[path.extname(name)]), name);

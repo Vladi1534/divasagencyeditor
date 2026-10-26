@@ -135,3 +135,43 @@ html[data-theme=dark] dialog.dv-shell{--dv-bg:#201923;--dv-surface:#2a222d;--dv-
 .dv-shell .dv-track-label .dv-stack-handle{flex:0 0 28px;min-width:28px;width:28px;padding:0}.dv-track-label>span{min-width:0}
 
 @media(min-height:651px) and (max-width:760px){.dv-timeline-scroll{max-height:158px}}
+
+/* v44: one tool rail, one focused inspector; touch tools sit below the timeline. */
+dialog.dv-shell{width:min(1640px,98vw);height:97dvh;border-radius:14px}
+.dv-body{grid-template-columns:80px minmax(0,1fr) 292px}
+.dv-tool-rail{display:flex;flex-direction:column;gap:3px;padding:8px 5px;background:var(--dv-surface);border-right:1px solid var(--dv-line);min-height:0;overflow:auto;scrollbar-width:thin}
+.dv-shell .dv-tool-rail button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:none;min-height:55px;width:100%;padding:6px 3px;font-size:10px;border:1px solid transparent;border-radius:10px;background:transparent;line-height:1.15}
+.dv-tool-rail svg{width:22px;height:22px;flex:none}.dv-shell .dv-tool-rail button[aria-selected=true]{background:var(--dv-soft);border-color:var(--dv-line);color:var(--dv-accent)}
+.dv-shell .dv-tool-rail .dv-cutout-entry{min-width:0;color:var(--dv-accent);background:var(--dv-soft);box-shadow:none;font-weight:700}.dv-shell .dv-tool-rail .dv-cutout-entry[aria-selected=true]{background:#a92f72;color:white}
+.dv-inspector-head{position:sticky;top:0;z-index:3;display:flex;gap:8px;align-items:center;justify-content:space-between;background:var(--dv-surface);padding:12px;border-bottom:1px solid var(--dv-line)}
+.dv-inspector-head h2{font-size:13px}.dv-shell .dv-inspector-head button{min-height:32px;width:32px;padding:3px;font-size:20px}
+.dv-inspector[data-tool=media] [data-content=media],.dv-inspector[data-tool=help] [data-content=help]{display:flex}
+.dv-inspector[data-tool=media] .dv-scene-fields,.dv-inspector[data-tool=help] .dv-scene-fields{display:none}
+.dv-media-content,.dv-shortcuts{padding:16px}.dv-shortcuts dl{display:grid;grid-template-columns:1fr 1fr;gap:12px 8px;margin:0;font-size:11px}.dv-shortcuts dt{font-weight:700}.dv-shortcuts dd{margin:0;color:var(--dv-muted)}
+.dv-shell[data-inspector=closed] .dv-inspector{display:none!important}.dv-shell[data-inspector=closed] .dv-body{grid-template-columns:80px minmax(0,1fr)}
+.dv-key-scope{background:var(--dv-soft);border:1px solid var(--dv-line);border-radius:9px;padding:10px;color:var(--dv-text)!important}.dv-key-scope select{font-size:11px!important}
+.dv-targetbar{background:var(--dv-bg)}.dv-stage{gap:8px}.dv-preview-wrap{border-radius:7px}.dv-footer{min-height:27px}.dv-selected-heading{margin-bottom:2px}
+.dv-shell .dv-canvas-tools{border:1px solid #bfa5b5;background:#fff;padding:4px;border-radius:12px;gap:2px;box-shadow:0 3px 18px #0003}.dv-shell .dv-canvas-tools button{border:0;box-shadow:none;min-height:36px;width:36px;background:#fff!important}
+@media(min-width:761px){.dv-shell[data-cutout=true] .dv-media-tools{display:none}.dv-topbar{padding:9px 13px}.dv-inspector-head button{display:block}}
+@media(max-width:760px){
+ dialog.dv-shell{width:100vw;height:100dvh;border-radius:0}.dv-body,.dv-shell[data-inspector=closed] .dv-body{display:flex;flex-direction:column}
+ .dv-tool-rail{flex-direction:row;flex:none;padding:5px 7px;gap:3px;border-right:0;border-top:1px solid var(--dv-line);overflow-x:auto;scrollbar-width:none;min-height:66px;padding-bottom:max(5px,env(safe-area-inset-bottom))}
+ .dv-shell .dv-tool-rail button{width:66px;min-width:66px;min-height:54px;gap:4px;font-size:10px;border-radius:9px}.dv-tool-rail svg{width:21px;height:21px}.dv-tool-rail [data-tool=help]{display:none!important}
+ .dv-stage{flex:1;min-height:140px}.dv-stage-head{gap:4px}.dv-stage-head small{display:none}.dv-media-tools{margin:0}.dv-media-tools [data-dv=openTransform]{display:none}
+ .dv-inspector{flex:none;max-height:min(31dvh,260px);border-top:1px solid var(--dv-line);min-height:90px;border-radius:14px 14px 0 0}
+ .dv-shell[data-cutout=true] .dv-inspector{max-height:min(32dvh,260px)}.dv-inspector-head{padding:6px 10px;min-height:40px}.dv-inspector-head h2{font-size:12px}.dv-inspector-head button{min-height:32px!important}
+ .dv-shell[data-cutout=true] [data-content=cutout]>.dv-key-scope{order:-4;padding:6px}.dv-shell[data-cutout=true] [data-content=cutout]>.dv-key-status{order:0}.dv-shell[data-cutout=true] .dv-media-tools{display:none}
+ .dv-shell[data-cutout=true] .dv-tool-rail{display:none}.dv-shell[data-cutout=true] .dv-footer{display:none}.dv-media-content,.dv-shortcuts{padding:10px}.dv-media-content{display:grid!important;grid-template-columns:1fr 1fr;gap:8px}.dv-inspector:not([data-tool=media]) .dv-media-content{display:none!important}.dv-media-content h3,.dv-media-content p,.dv-media-content hr{grid-column:1/-1}
+ .dv-shell .dv-targetbar #dvToLayer,.dv-shell .dv-targetbar #dvToSequence{display:none}.dv-shell .dv-targetbar #dvCutoutDone{min-height:34px}
+ .dv-timeline{padding-block:4px}.dv-timeline-guide{display:none}.dv-timeline-scroll{max-height:120px}.dv-footer{font-size:9px;min-height:21px;padding:2px 8px}.dv-footer p{max-height:27px;overflow:auto}
+ .dv-shell[data-panel=scene] .dv-timeline-scroll,.dv-shell[data-panel=audio] .dv-timeline-scroll{max-height:76px}.dv-shell[data-cutout=true] .dv-timeline{display:none}
+ .dv-top-actions .dv-save-status{display:none}.dv-top-actions{justify-content:space-between}.dv-top-actions button{font-size:11px}.dv-name{min-width:70px}.dv-brand small{display:none}
+}
+@media(max-height:650px) and (max-width:760px){.dv-inspector,.dv-shell[data-cutout=true] .dv-inspector{max-height:140px}.dv-tool-rail{min-height:55px}.dv-shell .dv-tool-rail button{min-height:44px}.dv-stage{min-height:120px}.dv-timeline-scroll{max-height:65px}}
+@media(prefers-reduced-motion:no-preference){.dv-tool-rail button{transition:background .14s,border-color .14s}.dv-inspector{scroll-behavior:smooth}}
+.dv-shell .dv-more-tools{display:none!important}
+@media(max-width:760px){
+ .dv-shell .dv-tool-rail .dv-more-tools{position:sticky;right:-7px;display:flex!important;background:var(--dv-surface);min-width:48px;width:48px;margin-left:0;box-shadow:-12px 0 10px var(--dv-surface);border-radius:0}.dv-more-tools>span{font-size:26px;line-height:22px}.dv-more-tools small{font-size:10px}
+ .dv-shell[data-panel=scene] .dv-media-tools,.dv-shell[data-panel=audio] .dv-media-tools,.dv-shell[data-panel=scene] .dv-stage-head,.dv-shell[data-panel=audio] .dv-stage-head{display:none}
+}
+.dv-context-create{display:none;padding:12px 13px 0}.dv-context-create button{width:100%}.dv-inspector[data-tool=text] .dv-context-create{display:block}

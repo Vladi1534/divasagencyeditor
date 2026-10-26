@@ -8,6 +8,18 @@ El comando de despliegue es `npx wrangler deploy`, ejecutado desde la raíz del 
 
 No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulos, estilos y bibliotecas locales. Un despliegue verde debe comprobarse abriendo ambos botones en la web publicada. `public/` se genera; no se edita ni se sube a Git.
 
+## v44 · Detalles del logo, herramientas claras y seis familias de flyers
+
+**Quitar fondo → Blanco** prepara ahora **Solo el fondo exterior**, que conserva las zonas blancas encerradas dentro del logo. **Ese color en toda la imagen** sigue disponible para chroma. Los respaldos anteriores mantienen su modo original; vuelve a elegir Blanco para probar los ajustes nuevos. Antes/después, confirmación, deshacer y exportación utilizan el mismo recorte. La vista pausada tiene más resolución que la reproducción para facilitar la revisión de bordes.
+
+Las herramientas de vídeo tienen iconos y nombres en una columna en PC y una barra inferior desplazable con **Más / Volver** en móvil. El panel muestra una herramienta a la vez y se cierra con × para recuperar el lienzo. **Texto → Crear un texto independiente** funciona incluso en un proyecto vacío. **Medios** reúne importación, animar el flyer y respaldos. **Tiempo** ofrece los botones Superponer / En secuencia también en móvil.
+
+Supr y Retroceso eliminan la selección; Ctrl/⌘ D duplica; Ctrl/⌘ Z deshace; Ctrl/⌘ Shift Z o Ctrl Y rehace; Ctrl/⌘ S guarda; las flechas mueven 1 píxel, o 10 con Shift; Espacio reproduce; S divide; Esc cancela el recorte o deselecciona. Mientras escribes, las teclas editan ese campo. Las capas bloqueadas se respetan.
+
+**Crear flyer → Sorpréndeme** recorre seis familias de composición sin repetir las últimas cinco: portada, revista, escenario, invitación, noche y editorial. Reserva áreas de lectura, combina tipografías, añade detalles temáticos y conserva los logos **Salsa, Café y BuzzCast** como tres capas independientes. Prefiere los logos conservados del proyecto o los autorizados del catálogo; los iconos de aplicación que ya incluía la plantilla sirven de respaldo local. Adapta las posiciones a 1:1, 9:16, 16:9 y 1428 × 400. «Conservar mi distribución» sigue respetando el diseño existente.
+
+No requiere SQL ni cambios de cuentas. No es segmentación con IA: un blanco que toca el fondo puede seguir siendo ambiguo, y aumentar la resolución de vista previa no inventa detalle del original. Es una implementación propia de edición web; no incorpora código de CapCut ni funciones de pago ajenas. Ver [pruebas v44](tests/README-video.md).
+
 ## v43 · Arrastrar, superponer y adaptar fotos
 
 Una foto o vídeo de la **Secuencia** se puede arrastrar a una capa independiente, al panel **Capas** o de vuelta a la secuencia. Antes de soltar aparece la acción que se realizará. **Superponer**, **En secuencia** y **Usar como fondo** ofrecen el mismo flujo sin arrastrar. Las conversiones se deshacen en un paso; conservan el archivo original y los efectos.

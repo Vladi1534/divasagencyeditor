@@ -26,13 +26,13 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
   await page.locator('.dv-scene').first().click();await page.locator('[data-dv=tool][data-tool=clip]').click();await change(page,'#dvDuration',2);
   await page.locator('#dvSeek').fill('1');await page.locator('#dvSeek').dispatchEvent('input');await page.locator('[data-dv=split]').click();
   await until(page,()=>document.querySelectorAll('.dv-scene').length===3);assert.match(await page.locator('#dvTime').textContent(),/0:05.0$/);
-  await page.locator('[data-dv=right]').click();await page.locator('[data-dv=left]').click();await page.locator('[data-dv=duplicate]').click();
+  await page.locator('[data-dv=right]').click();await page.locator('[data-dv=left]').click();await page.locator('.dv-clip-tools [data-dv=duplicate]').click();
   await until(page,()=>document.querySelectorAll('.dv-scene').length===4);await page.locator('.dv-clip-tools [data-dv=remove]').click();await until(page,()=>document.querySelectorAll('.dv-scene').length===3);
   await page.locator('[data-dv=save]').click();await until(page,()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');
   const saved=await stored(page);assert.equal(saved.length,1);assert.equal(saved[0].project.scenes.length,3);assert.equal(saved[0].assets.length,3);assert.ok(saved[0].assets.every(a=>a.blobSize===a.size));assert.equal(saved[0].project.music.loop,true);assert.deepEqual(saved[0].project.scenes.slice(0,2).map(c=>c.duration),[1,1]);
   console.log('PASS mixed media, trim, split, reorder, duplicate, remove, music and IndexedDB blobs');
   const flyerBefore=await page.locator('#canvas').evaluate(c=>c.toDataURL());
-  const backupEvent=page.waitForEvent('download');await page.locator('[data-dv=backup]').click();const backup=await backupEvent;const backupPath=path.join(out,'roundtrip.divasvideo');await backup.saveAs(backupPath);
+  await page.locator('[data-dv=tool][data-tool=media]').click();const backupEvent=page.waitForEvent('download');await page.locator('[data-dv=backup]').click();const backup=await backupEvent;const backupPath=path.join(out,'roundtrip.divasvideo');await backup.saveAs(backupPath);
   assert.ok(fs.statSync(backupPath).size>10000);
   await page.locator('[data-dv=library]').click();await page.locator('.projects-shortcuts [data-dv-new]').click();await until(page,()=>document.querySelectorAll('.dv-scene').length===0&&!document.getElementById('dvBody').inert);
   await until(page,()=>!document.getElementById('dvBody').inert);await page.locator('#dvBackupFile').setInputFiles(backupPath);await until(page,()=>document.querySelectorAll('.dv-scene').length===3&&!document.getElementById('dvBody').inert);
@@ -46,7 +46,7 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
   await page.locator('[data-dv=export]').click();await until(page,()=>!document.getElementById('dvProgress').hidden);await page.locator('[data-dv=cancel]').click();await until(page,()=>document.getElementById('dvProgress').hidden);assert.equal(await page.locator('#dvExport').isEnabled(),true);
   console.log('PASS export cancellation releases controls');
   await page.locator('.dv-scene').last().click();await page.locator('#dvSeek').fill('3.5');await page.locator('#dvSeek').dispatchEvent('input');await page.waitForTimeout(300);await page.screenshot({path:path.join(out,'desktop.png')});
-  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile.png')});await page.locator('[data-dv=panel][data-panel=scene]').click();await page.screenshot({path:path.join(out,'mobile-edit.png')});
+  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile.png')});await page.locator('[data-dv=tool][data-tool=transform]').click();await page.screenshot({path:path.join(out,'mobile-edit.png')});
   const overflow=await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1);assert.equal(overflow,false);
   for(const width of [360,390]){await page.setViewportSize({width,height:780});assert.equal(await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);assert.ok(await page.locator('#dvCanvas').boundingBox());}
   console.log('PASS mobile layout 360/390, desktop, no horizontal overflow');
