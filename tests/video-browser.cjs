@@ -46,7 +46,7 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
   await page.locator('[data-dv=export]').click();await until(page,()=>!document.getElementById('dvProgress').hidden);await page.locator('[data-dv=cancel]').click();await until(page,()=>document.getElementById('dvProgress').hidden);assert.equal(await page.locator('#dvExport').isEnabled(),true);
   console.log('PASS export cancellation releases controls');
   await page.locator('.dv-scene').last().click();await page.locator('#dvSeek').fill('3.5');await page.locator('#dvSeek').dispatchEvent('input');await page.waitForTimeout(300);await page.screenshot({path:path.join(out,'desktop.png')});
-  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile.png')});await page.locator('[data-dv=tool][data-tool=transform]').click();await page.screenshot({path:path.join(out,'mobile-edit.png')});
+  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile.png')});await page.locator('.dv-mobile-dock [data-tool=transform]').click();await page.screenshot({path:path.join(out,'mobile-edit.png')});
   const overflow=await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1);assert.equal(overflow,false);
   for(const width of [360,390]){await page.setViewportSize({width,height:780});assert.equal(await page.locator('#divasVideoDialog').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);assert.ok(await page.locator('#dvCanvas').boundingBox());}
   console.log('PASS mobile layout 360/390, desktop, no horizontal overflow');

@@ -11,7 +11,8 @@
     "test:video:v43": "node video-model.cjs && node video-effects.mjs && node video-v43.cjs",
     "test:video:v42": "node video-model.cjs && node video-effects.mjs && node video-v42.cjs",
     "test:video:v44": "node video-model.cjs && node video-effects.mjs && node video-v44-effects.mjs && node video-v44.cjs",
-    "test:flyer:v44": "node flyer-layouts.cjs && node flyer-v44.cjs"
+    "test:flyer:v44": "node flyer-layouts.cjs && node flyer-v44.cjs",
+    "test:video:v45": "node video-mobile-v45.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.8",

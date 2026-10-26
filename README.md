@@ -1,5 +1,14 @@
 # Divas Agency Editor
 
+
+## v45 · El vídeo primero en móvil
+
+La interfaz móvil usa una sola cabecera, un lienzo grande y cinco acciones con icono y nombre. Seleccionar o arrastrar ya no abre paneles; **Editar**, **Quitar fondo**, **Añadir**, **Capas** y **Más** muestran solo el grupo elegido. **Listo** devuelve el espacio al vídeo. La línea de tiempo muestra una pista y **Ampliar** permite trabajar con todas.
+
+El menú **Divas Video ···** reúne nombre, formato, calidad, fondo, Mis proyectos, Guardar y respaldos. La comparación del recorte queda junto a sus ajustes y **Confirmar / Cancelar** permanecen accesibles. **Ampliar vista previa** oculta las herramientas. Los controles se redistribuyen para móvil vertical, horizontal y teclado abierto; los ajustes de PC siguen disponibles. Los proyectos reabiertos muestran un fotograma visible del primer elemento.
+
+Sin SQL ni cambios en cuentas o formatos de guardado. Se publica **el proyecto completo**, incluidos `assets/divas-video-mobile.js` y `assets/divas-video-mobile.css`; reemplazar solo el index no basta. [Guía v45](docs/VIDEO-MOVIL-v45.md) · [Pruebas](tests/README-video.md).
+
 Editor estático para proyectos, recursos privados de agencia y flyers editables. El acceso y los archivos compartidos utilizan la instalación Supabase existente. Cloudflare Workers publica el paquete estático completo mediante la configuración del repositorio.
 
 ## Publicación en Cloudflare

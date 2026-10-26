@@ -1,6 +1,8 @@
-# Divas Video · v43
+# Divas Video · v45
 
 Editor de vídeo integrado en Divas Agency. Los flyers y la biblioteca privada de documentos conservan su funcionamiento. Esta actualización no requiere SQL ni cambios en Supabase.
+
+En móvil, consulta primero la [guía de navegación v45](VIDEO-MOVIL-v45.md): los botones de esta referencia se agrupan ahora en el panel de la herramienta elegida. La distribución junto al lienzo descrita abajo corresponde a PC.
 
 ## Convertir un clip en capa o fondo
 

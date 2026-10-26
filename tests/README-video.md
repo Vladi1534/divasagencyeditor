@@ -85,3 +85,18 @@ La salida v43 se verificó con FFprobe y decodificación de FFmpeg: VP8/WebM, 12
 - El recorrido móvil se verifica a 320, 360 y 390 px, además de escritorio 1440 px. Se mantienen las regresiones v40/v42/v43. Los selectores se actualizaron para la nueva ubicación de las herramientas; sus verificaciones de contenido siguen activas.
 - WebM v44 decodificado con FFmpeg: 720 × 720, 30 fps, cinco segundos; exterior oscuro, blanco interior conservado y dorado visible. El original de vídeo del usuario no se adjuntó: los fixtures reproducen el problema de dos zonas del mismo blanco, pero no equivalen a evaluar su clip concreto.
 - El fondo exterior usa una máscara de conectividad de cuatro vecinos por fotograma y limpieza de bordes neutros; se reutiliza el resultado de imágenes estáticas y fotogramas pausados. No hay modelo de segmentación automática de personas. Chroma global conserva WebGL cuando está disponible y respaldo CPU.
+
+
+## v45 · Interfaz móvil centrada en la vista previa
+
+Ejecutar `CHROMIUM_EXECUTABLE=/ruta/chromium node tests/video-mobile-v45.cjs`. Usa las imágenes de `tests/fixtures/video` y `qa/fixtures/logo.png`, `qa/fixtures/whiteclip.mp4` creadas por las pruebas anteriores.
+
+- Viewports táctiles 320×568, 360×640, 390×740 y 390×844: cinco acciones, sin desbordamiento, selección de lienzo y pista sin desplegar paneles.
+- Vista previa vertical de al menos 41 % de la altura al editar libremente y 28 % con ajustes abiertos, en esas medidas. 1:1 y 16:9 se muestran sin deformación.
+- Panel contextual, cerrar con Listo, línea de tiempo ampliable, selección y arrastre mediante eventos táctiles reales de Chromium, orden delante/detrás, texto, bloqueo y eliminación.
+- Blanco exterior preservando el centro del logo; comparación, cambio de alcance, confirmación siempre dentro del viewport y persistencia del efecto.
+- Nombre/formato, respaldo editable, reabrir, temas, movimiento reducido, altura de 390 px simulando teclado y rotación a 844×390; retorno a escritorio 1440×900 conservando campos avanzados.
+- Importación de vídeo real, tamaño de vista previa estable al reproducir y exportación real WebM. La salida de la prueba contiene vídeo VP8 720×1280, 30 fps, 3 segundos.
+- Pasaron también las regresiones v40/v42/v43/v44, el modelo, recorte, mezcla/exportación, captura del flyer, guardado concurrente, aislamiento por cuenta y entrega estática.
+
+No se ha probado en un Note 9 físico ni con el vídeo original de la captura. La prueba de teclado reduce el viewport; no sustituye una prueba del teclado del sistema en Android/iOS. Los escenarios anteriores se actualizaron únicamente para navegar por los nuevos botones móviles.
