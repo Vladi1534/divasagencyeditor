@@ -1,0 +1,24 @@
+{
+  "parent": "2c8710089ad8ee4e9fbe2db45f1d1413c3626e75",
+  "tree": "5c842666789d5f0e54ea93eff7c32616fdc9154e",
+  "sha256": "2f8706a3d71cf70ef596e15094e011913f87e2e000c73481b717da259bd31074",
+  "ready_branch": "codex/ready-divas-video-v44",
+  "transport_branch": "codex/transport-divas-video-v44",
+  "materialized": [
+    {
+      "id": "app1",
+      "path": "assets/app-logos/buzzcast.png",
+      "sha256": "1434c42baa0063dc118ee66248dda6fa5ffd28cf93b2ee07170ed7de1fc283c8"
+    },
+    {
+      "id": "app2",
+      "path": "assets/app-logos/cafe.png",
+      "sha256": "7362dd4fea8f511357383d0cd43f2a14054ccbaf98a5a1a1b3737b584b16869c"
+    },
+    {
+      "id": "app3",
+      "path": "assets/app-logos/salsa.png",
+      "sha256": "82b9d26963f61e3503c7ae3dda2d6f913786e251d801d091c757f0d79a09714d"
+    }
+  ]
+}

@@ -1,0 +1,626 @@
+diff --git a/README.md b/README.md
+index b4fcb53..f254a21 100644
+--- a/README.md
++++ b/README.md
+@@ -10,0 +11,12 @@ No publiques solo el HTML: los botones de Manuales y Video necesitan sus módulo
++## v44 · Detalles del logo, herramientas claras y seis familias de flyers
++
++**Quitar fondo → Blanco** prepara ahora **Solo el fondo exterior**, que conserva las zonas blancas encerradas dentro del logo. **Ese color en toda la imagen** sigue disponible para chroma. Los respaldos anteriores mantienen su modo original; vuelve a elegir Blanco para probar los ajustes nuevos. Antes/después, confirmación, deshacer y exportación utilizan el mismo recorte. La vista pausada tiene más resolución que la reproducción para facilitar la revisión de bordes.
++
++Las herramientas de vídeo tienen iconos y nombres en una columna en PC y una barra inferior desplazable con **Más / Volver** en móvil. El panel muestra una herramienta a la vez y se cierra con × para recuperar el lienzo. **Texto → Crear un texto independiente** funciona incluso en un proyecto vacío. **Medios** reúne importación, animar el flyer y respaldos. **Tiempo** ofrece los botones Superponer / En secuencia también en móvil.
++
++Supr y Retroceso eliminan la selección; Ctrl/⌘ D duplica; Ctrl/⌘ Z deshace; Ctrl/⌘ Shift Z o Ctrl Y rehace; Ctrl/⌘ S guarda; las flechas mueven 1 píxel, o 10 con Shift; Espacio reproduce; S divide; Esc cancela el recorte o deselecciona. Mientras escribes, las teclas editan ese campo. Las capas bloqueadas se respetan.
++
++**Crear flyer → Sorpréndeme** recorre seis familias de composición sin repetir las últimas cinco: portada, revista, escenario, invitación, noche y editorial. Reserva áreas de lectura, combina tipografías, añade detalles temáticos y conserva los logos **Salsa, Café y BuzzCast** como tres capas independientes. Prefiere los logos conservados del proyecto o los autorizados del catálogo; los iconos de aplicación que ya incluía la plantilla sirven de respaldo local. Adapta las posiciones a 1:1, 9:16, 16:9 y 1428 × 400. «Conservar mi distribución» sigue respetando el diseño existente.
++
++No requiere SQL ni cambios de cuentas. No es segmentación con IA: un blanco que toca el fondo puede seguir siendo ambiguo, y aumentar la resolución de vista previa no inventa detalle del original. Es una implementación propia de edición web; no incorpora código de CapCut ni funciones de pago ajenas. Ver [pruebas v44](tests/README-video.md).
++
+diff --git a/assets/divas-flyer-layouts.js b/assets/divas-flyer-layouts.js
+new file mode 100644
+index 0000000..227150c
+--- /dev/null
++++ b/assets/divas-flyer-layouts.js
+@@ -0,0 +1,26 @@
++/* Responsive art direction. Geometry is pure; every generated element remains editable. */
++(function(root){
++ 'use strict';
++ const families={atelier_cover:'Portada · impacto',atelier_magazine:'Revista · retrato',atelier_poster:'Escenario · protagonista',atelier_invitation:'Invitación · joya',atelier_stage:'Noche · luces',atelier_minimal:'Editorial · aire'};
++ const apps=[{key:'salsa',role:'app3',name:'Salsa'},{key:'cafe',role:'app2',name:'Café'},{key:'buzzcast',role:'app1',name:'BuzzCast'}];
++ function plan(size,layout,count=0){
++  const W=size.ancho,H=size.alto,ratio=W/H,banner=ratio>3,wide=ratio>1.18,tall=ratio<.78,R=(x,y,w,h)=>({x:x*W,y:y*H,w:w*W,h:h*H});let s;
++  const variant=Object.keys(families).indexOf(layout),mirror=layout==='atelier_magazine';
++  if(banner){s={logo:R(.10,.24,.15,.31),idea_kicker:R(.415,.11,.42,.07),titulo:R(.415,.40,.43,.43),idea_fecha:R(.415,.69,.43,.075),descripcion:R(.415,.85,.43,.19),idea_hero:R(.78,.32,.25,.51),accion:R(.81,.75,.27,.09),base_accion:R(.81,.75,.30,.15),contacto:R(.81,.92,.31,.07),imageArea:R(.10,.88,.14,.13),align:'left',brandAlign:'center',appArea:R(.10,.63,.16,.20)};}
++  else if(wide){s={logo:R(.29,.10,.27,.12),idea_kicker:R(.29,.225,.45,.055),titulo:R(.29,.42,.46,.27),idea_fecha:R(.29,.59,.44,.05),descripcion:R(.29,.70,.44,.13),idea_hero:R(.77,.43,.38,.68),accion:R(.29,.84,.40,.05),base_accion:R(.29,.84,.44,.085),contacto:R(.29,.95,.44,.045),imageArea:R(.77,.79,.31,.055),align:'left',brandAlign:'left',appArea:R(.77,.91,.29,.10)};}
++  else if(layout==='atelier_cover'||mirror){s={logo:R(.29,.105,.39,.14),idea_kicker:R(.29,.225,.44,.055),titulo:R(.29,.385,.44,.24),idea_fecha:R(.29,.54,.44,.05),descripcion:R(.29,.65,.44,.15),idea_hero:R(.77,.38,.38,.55),accion:R(.5,.79,.78,.048),base_accion:R(.5,.79,.84,.078),contacto:R(.5,.96,.80,.042),imageArea:R(.77,.715,.32,.055),align:'left',brandAlign:'left',appArea:R(.5,.88,.51,.075)};}
++  else if(layout==='atelier_poster'){s={logo:R(.5,.08,.36,.11),idea_kicker:R(.5,.18,.80,.045),titulo:R(.5,.55,.84,.18),idea_fecha:R(.5,.665,.80,.04),descripcion:R(.5,.737,.80,.085),idea_hero:R(.5,.325,.52,tall?.245:.25),accion:R(.5,.908,.78,.042),base_accion:R(.5,.908,.84,.066),contacto:R(.5,.971,.80,.03),imageArea:R(.5,.465,.66,.025),align:'center',brandAlign:'center',appArea:R(.5,.83,.51,.065)};}
++  else if(layout==='atelier_invitation'){s={logo:R(.5,.12,.36,.13),idea_kicker:R(.5,.245,.75,.045),titulo:R(.5,.38,.74,.19),idea_fecha:R(.5,.51,.72,.045),descripcion:R(.5,.605,.72,.12),idea_hero:R(.86,.13,.16,.17),accion:R(.5,.835,.70,.047),base_accion:R(.5,.835,.76,.08),contacto:R(.5,.935,.74,.045),imageArea:R(.5,.765,.58,.025),align:'center',brandAlign:'center',appArea:R(.5,.715,.48,.07)};}
++  else if(layout==='atelier_stage'){s={logo:R(.26,.105,.38,.14),idea_kicker:R(.26,.27,.40,.085),titulo:R(.5,.475,.84,.19),idea_fecha:R(.5,.605,.80,.045),descripcion:R(.5,.69,.80,.105),idea_hero:R(.755,.22,.42,.32),accion:R(.5,.885,.78,.045),base_accion:R(.5,.885,.84,.075),contacto:R(.5,.963,.80,.035),imageArea:R(.5,.768,.65,.025),align:'center',brandAlign:'left',appArea:R(.5,.817,.51,.065)};}
++  else{s={logo:R(.28,.10,.38,.13),idea_kicker:R(.28,.225,.43,.045),titulo:R(.28,.40,.43,.27),idea_fecha:R(.28,.575,.43,.05),descripcion:R(.5,.69,.84,.12),idea_hero:R(.765,.34,.38,.49),accion:R(.5,.886,.78,.047),base_accion:R(.5,.886,.84,.078),contacto:R(.5,.96,.80,.04),imageArea:R(.77,.615,.32,.05),align:'left',brandAlign:'left',appArea:R(.5,.808,.51,.065)};}
++  // Mirroring changes the reading direction and focal point, not just a colour.
++  if(mirror&&!banner){for(const [key,box] of Object.entries(s))if(box&&typeof box==='object')box.x=W-box.x;s.align='right';s.brandAlign='right';}
++  if(wide&&!banner&&[2,3,4].includes(variant)){s.titulo.y=H*.405;s.titulo.h=H*.30;s.idea_hero.w*=variant===3?.76:1;s.idea_hero.h*=variant===3?.78:1;}
++  s.idea_marca={...s.logo};s.idea_brush={...s.titulo,w:s.titulo.w*1.07,h:s.titulo.h*1.1};s.motif={...s.idea_hero};s.full=false;s.variant=variant;
++  const a=s.appArea,cell=Math.min(a.w/3*.78,a.h);apps.forEach((app,i)=>s[app.role]=R((a.x+(i-1)*a.w/3)/W,a.y/H,cell/W,cell/H));
++  const area=s.imageArea,cols=Math.max(1,Math.min(count,4)),rows=Math.max(1,Math.ceil(count/cols));
++  s.images=Array.from({length:count},(_,i)=>({x:area.x+(i%cols-(Math.min(cols,count-Math.floor(i/cols)*cols)-1)/2)*area.w/cols,y:area.y+(Math.floor(i/cols)-(rows-1)/2)*area.h/rows,w:area.w/cols*.85,h:area.h/rows*.9}));
++  return s;
++ }
++ const api={families,apps,plan};if(typeof module==='object'&&module.exports)module.exports=api;else root.DivasFlyerLayouts=api;
++})(typeof window==='undefined'?globalThis:window);
+diff --git a/assets/divas-video-model.js b/assets/divas-video-model.js
+index 3f275fb..1d58aa6 100644
+--- a/assets/divas-video-model.js
++++ b/assets/divas-video-model.js
+@@ -23 +23 @@
+- const keyer=()=>({enabled:false,color:'#00ff00',tolerance:.18,softness:.08,spill:.5});
++ const keyer=()=>({enabled:false,color:'#00ff00',tolerance:.18,softness:.08,spill:.5,scope:'all'});
+@@ -55 +55 @@
+-   const k=v.keyer||{};c.keyer={enabled:k.enabled===true,color:color(k.color,'#00ff00'),tolerance:number(k.tolerance,.18,.005,.8),softness:number(k.softness,.08,.005,.4),spill:number(k.spill,.5,0,1)};
++   const k=v.keyer||{};c.keyer={enabled:k.enabled===true,color:color(k.color,'#00ff00'),tolerance:number(k.tolerance,.18,.005,.8),softness:number(k.softness,.08,.005,.4),spill:number(k.spill,.5,0,1),scope:k.scope==='exterior'?'exterior':'all'};
+diff --git a/assets/divas-video-render.mjs b/assets/divas-video-render.mjs
+index 2e74605..9c03839 100644
+--- a/assets/divas-video-render.mjs
++++ b/assets/divas-video-render.mjs
+@@ -10,8 +10,28 @@ export function keyDistance(r,g,b,key){
+-export function processPixels(data,keyer,adjust={}){
+- const key=rgb(keyer.color),dominant=key.indexOf(Math.max(...key)),colored=Math.max(...key)-Math.min(...key)>.12;
+- for(let i=0;i<data.length;i+=4){let c=[data[i]/255,data[i+1]/255,data[i+2]/255];
+-  if(keyer.enabled){const distance=keyDistance(...c,key),alpha=smooth(keyer.tolerance,keyer.tolerance+keyer.softness,distance);data[i+3]*=alpha;
+-   if(colored){const other=(c[(dominant+1)%3]+c[(dominant+2)%3])/2,weight=(1-smooth(keyer.tolerance,keyer.tolerance+keyer.softness*3,distance))*keyer.spill;c[dominant]-=Math.max(0,c[dominant]-other)*weight;}}
+-  const gray=c[0]*.2126+c[1]*.7152+c[2]*.0722;
+-  c=c.map(v=>((gray+(v-gray)*(1+(adjust.saturation||0))-.5)*(1+(adjust.contrast||0))+.5)+(adjust.brightness||0));
+-  for(let j=0;j<3;j++)data[i+j]=Math.round(clamp(c[j])*255);
++// Only pixels connected to the outside can disappear in exterior mode. A white
++// highlight enclosed by the subject never becomes part of the background mask.
++export function exteriorMask(alpha,data,w,h){
++ const n=w*h,mask=new Uint8Array(n),queue=new Uint32Array(n);let head=0,tail=0;
++ const push=i=>{if(!mask[i]&&(alpha[i]<1||data[i*4+3]===0)){mask[i]=1;queue[tail++]=i;}};
++ for(let x=0;x<w;x++){push(x);push((h-1)*w+x);}for(let y=1;y<h-1;y++){push(y*w);push(y*w+w-1);}
++ while(head<tail){const i=queue[head++],x=i%w;if(x)push(i-1);if(x<w-1)push(i+1);if(i>=w)push(i-w);if(i<n-w)push(i+w);}
++ return mask;
++}
++export function processPixels(data,keyer,adjust={},dimensions={}){
++ const key=rgb(keyer.color),[kr,kg,kb]=key,dominant=key.indexOf(Math.max(...key)),colored=Math.max(...key)-Math.min(...key)>.12,ky=kr*.299+kg*.587+kb*.114;
++ const n=data.length/4,alpha=new Float32Array(n),dist=new Float32Array(n),exterior=keyer.scope==='exterior'&&dimensions.width*dimensions.height===n;
++ if(keyer.enabled)for(let p=0,i=0;p<n;p++,i+=4){const r=data[i]/255,g=data[i+1]/255,b=data[i+2]/255,y=r*.299+g*.587+b*.114;
++  const d=colored?Math.sqrt(((b-y-kb+ky)**2+(r-y-kr+ky)**2)*2+(y-ky)**2*.08):Math.hypot(r-kr,g-kg,b-kb)/Math.sqrt(3);
++  dist[p]=d;alpha[p]=smooth(keyer.tolerance,keyer.tolerance+keyer.softness,d);
++ }
++ const mask=exterior&&keyer.enabled?exteriorMask(alpha,data,dimensions.width,dimensions.height):null;
++ const sat=1+(adjust.saturation||0),contrast=1+(adjust.contrast||0),brightness=adjust.brightness||0;
++ for(let p=0,i=0;p<n;p++,i+=4){let r=data[i]/255,g=data[i+1]/255,b=data[i+2]/255;
++  if(keyer.enabled&&(!mask||mask[p])){const a=alpha[p];data[i+3]*=a;
++   if(colored){const weight=(1-smooth(keyer.tolerance,keyer.tolerance+keyer.softness*3,dist[p]))*keyer.spill;
++    if(dominant===0)r-=Math.max(0,r-(g+b)/2)*weight;else if(dominant===1)g-=Math.max(0,g-(r+b)/2)*weight;else b-=Math.max(0,b-(r+g)/2)*weight;
++   }else if(a>.01&&a<1){const strength=keyer.spill??.5;const clean=v=>v+(clamp((v-(1-a)*kr)/a)-v)*strength;r=clean(r);g=clean(g);b=clean(b);}
++  }
++  const gray=r*.2126+g*.7152+b*.0722;
++  data[i]=Math.round(clamp((gray+(r-gray)*sat-.5)*contrast+.5+brightness)*255);
++  data[i+1]=Math.round(clamp((gray+(g-gray)*sat-.5)*contrast+.5+brightness)*255);
++  data[i+2]=Math.round(clamp((gray+(b-gray)*sat-.5)*contrast+.5+brightness)*255);
+@@ -37,2 +57,2 @@ class Effects {
+-    c.a*=smoothstep(cut.y,cut.y+cut.z,d);float spill=(1.0-smoothstep(cut.y,cut.y+cut.z*3.0,d))*cut.w;
+-    if(sat>=.12){if(key.g>=key.r&&key.g>=key.b)c.g-=max(0.0,c.g-(c.r+c.b)*.5)*spill;else if(key.r>=key.b)c.r-=max(0.0,c.r-(c.g+c.b)*.5)*spill;else c.b-=max(0.0,c.b-(c.r+c.g)*.5)*spill;}}
++    float matte=smoothstep(cut.y,cut.y+cut.z,d);c.a*=matte;float spill=(1.0-smoothstep(cut.y,cut.y+cut.z*3.0,d))*cut.w;
++    if(sat>=.12){if(key.g>=key.r&&key.g>=key.b)c.g-=max(0.0,c.g-(c.r+c.b)*.5)*spill;else if(key.r>=key.b)c.r-=max(0.0,c.r-(c.g+c.b)*.5)*spill;else c.b-=max(0.0,c.b-(c.r+c.g)*.5)*spill;}else if(matte>.01&&matte<1.0){c.rgb=mix(c.rgb,clamp((c.rgb-(1.0-matte)*key)/matte,0.0,1.0),cut.w);}}
+@@ -49 +69 @@ class Effects {
+-  if(this.gl&&!this.gl.isContextLost()){
++  if(k.scope!=='exterior'&&this.gl&&!this.gl.isContextLost()){
+@@ -52 +72 @@ class Effects {
+-  const canvas=this.fallback;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}const x=canvas.getContext('2d',{willReadFrequently:true});x.clearRect(0,0,w,h);x.drawImage(source,0,0,w,h);const image=x.getImageData(0,0,w,h);processPixels(image.data,k,f);x.putImageData(image,0,0);return canvas;
++  const cacheKey=JSON.stringify([c.id,w,h,k,f,source.currentTime??0]);if(this.lastSource===source&&this.lastKey===cacheKey)return this.fallback;const canvas=this.fallback;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}const x=canvas.getContext('2d',{willReadFrequently:true});x.clearRect(0,0,w,h);x.drawImage(source,0,0,w,h);const image=x.getImageData(0,0,w,h);processPixels(image.data,k,f,{width:w,height:h});x.putImageData(image,0,0);this.lastSource=source;this.lastKey=cacheKey;return canvas;
+@@ -109 +129 @@ export class Renderer {
+-  const c=this.sourceCanvas(source,160),x=c.getContext('2d'),original=x.getImageData(0,0,c.width,c.height).data,after=new Uint8ClampedArray(original);processPixels(after,keyer);let input=0,removed=0;
++  const c=this.sourceCanvas(source,480),x=c.getContext('2d'),original=x.getImageData(0,0,c.width,c.height).data,after=new Uint8ClampedArray(original);processPixels(after,keyer,{},{width:c.width,height:c.height});let input=0,removed=0;
+diff --git a/assets/divas-video.css b/assets/divas-video.css
+index bbc823b..7d1dcbd 100644
+--- a/assets/divas-video.css
++++ b/assets/divas-video.css
+@@ -137,0 +138,40 @@ html[data-theme=dark] dialog.dv-shell{--dv-bg:#201923;--dv-surface:#2a222d;--dv-
++
++/* v44: one tool rail, one focused inspector; touch tools sit below the timeline. */
++dialog.dv-shell{width:min(1640px,98vw);height:97dvh;border-radius:14px}
++.dv-body{grid-template-columns:80px minmax(0,1fr) 292px}
++.dv-tool-rail{display:flex;flex-direction:column;gap:3px;padding:8px 5px;background:var(--dv-surface);border-right:1px solid var(--dv-line);min-height:0;overflow:auto;scrollbar-width:thin}
++.dv-shell .dv-tool-rail button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:none;min-height:55px;width:100%;padding:6px 3px;font-size:10px;border:1px solid transparent;border-radius:10px;background:transparent;line-height:1.15}
++.dv-tool-rail svg{width:22px;height:22px;flex:none}.dv-shell .dv-tool-rail button[aria-selected=true]{background:var(--dv-soft);border-color:var(--dv-line);color:var(--dv-accent)}
++.dv-shell .dv-tool-rail .dv-cutout-entry{min-width:0;color:var(--dv-accent);background:var(--dv-soft);box-shadow:none;font-weight:700}.dv-shell .dv-tool-rail .dv-cutout-entry[aria-selected=true]{background:#a92f72;color:white}
++.dv-inspector-head{position:sticky;top:0;z-index:3;display:flex;gap:8px;align-items:center;justify-content:space-between;background:var(--dv-surface);padding:12px;border-bottom:1px solid var(--dv-line)}
++.dv-inspector-head h2{font-size:13px}.dv-shell .dv-inspector-head button{min-height:32px;width:32px;padding:3px;font-size:20px}
++.dv-inspector[data-tool=media] [data-content=media],.dv-inspector[data-tool=help] [data-content=help]{display:flex}
++.dv-inspector[data-tool=media] .dv-scene-fields,.dv-inspector[data-tool=help] .dv-scene-fields{display:none}
++.dv-media-content,.dv-shortcuts{padding:16px}.dv-shortcuts dl{display:grid;grid-template-columns:1fr 1fr;gap:12px 8px;margin:0;font-size:11px}.dv-shortcuts dt{font-weight:700}.dv-shortcuts dd{margin:0;color:var(--dv-muted)}
++.dv-shell[data-inspector=closed] .dv-inspector{display:none!important}.dv-shell[data-inspector=closed] .dv-body{grid-template-columns:80px minmax(0,1fr)}
++.dv-key-scope{background:var(--dv-soft);border:1px solid var(--dv-line);border-radius:9px;padding:10px;color:var(--dv-text)!important}.dv-key-scope select{font-size:11px!important}
++.dv-targetbar{background:var(--dv-bg)}.dv-stage{gap:8px}.dv-preview-wrap{border-radius:7px}.dv-footer{min-height:27px}.dv-selected-heading{margin-bottom:2px}
++.dv-shell .dv-canvas-tools{border:1px solid #bfa5b5;background:#fff;padding:4px;border-radius:12px;gap:2px;box-shadow:0 3px 18px #0003}.dv-shell .dv-canvas-tools button{border:0;box-shadow:none;min-height:36px;width:36px;background:#fff!important}
++@media(min-width:761px){.dv-shell[data-cutout=true] .dv-media-tools{display:none}.dv-topbar{padding:9px 13px}.dv-inspector-head button{display:block}}
++@media(max-width:760px){
++ dialog.dv-shell{width:100vw;height:100dvh;border-radius:0}.dv-body,.dv-shell[data-inspector=closed] .dv-body{display:flex;flex-direction:column}
++ .dv-tool-rail{flex-direction:row;flex:none;padding:5px 7px;gap:3px;border-right:0;border-top:1px solid var(--dv-line);overflow-x:auto;scrollbar-width:none;min-height:66px;padding-bottom:max(5px,env(safe-area-inset-bottom))}
++ .dv-shell .dv-tool-rail button{width:66px;min-width:66px;min-height:54px;gap:4px;font-size:10px;border-radius:9px}.dv-tool-rail svg{width:21px;height:21px}.dv-tool-rail [data-tool=help]{display:none!important}
++ .dv-stage{flex:1;min-height:140px}.dv-stage-head{gap:4px}.dv-stage-head small{display:none}.dv-media-tools{margin:0}.dv-media-tools [data-dv=openTransform]{display:none}
++ .dv-inspector{flex:none;max-height:min(31dvh,260px);border-top:1px solid var(--dv-line);min-height:90px;border-radius:14px 14px 0 0}
++ .dv-shell[data-cutout=true] .dv-inspector{max-height:min(32dvh,260px)}.dv-inspector-head{padding:6px 10px;min-height:40px}.dv-inspector-head h2{font-size:12px}.dv-inspector-head button{min-height:32px!important}
++ .dv-shell[data-cutout=true] [data-content=cutout]>.dv-key-scope{order:-4;padding:6px}.dv-shell[data-cutout=true] [data-content=cutout]>.dv-key-status{order:0}.dv-shell[data-cutout=true] .dv-media-tools{display:none}
++ .dv-shell[data-cutout=true] .dv-tool-rail{display:none}.dv-shell[data-cutout=true] .dv-footer{display:none}.dv-media-content,.dv-shortcuts{padding:10px}.dv-media-content{display:grid!important;grid-template-columns:1fr 1fr;gap:8px}.dv-inspector:not([data-tool=media]) .dv-media-content{display:none!important}.dv-media-content h3,.dv-media-content p,.dv-media-content hr{grid-column:1/-1}
++ .dv-shell .dv-targetbar #dvToLayer,.dv-shell .dv-targetbar #dvToSequence{display:none}.dv-shell .dv-targetbar #dvCutoutDone{min-height:34px}
++ .dv-timeline{padding-block:4px}.dv-timeline-guide{display:none}.dv-timeline-scroll{max-height:120px}.dv-footer{font-size:9px;min-height:21px;padding:2px 8px}.dv-footer p{max-height:27px;overflow:auto}
++ .dv-shell[data-panel=scene] .dv-timeline-scroll,.dv-shell[data-panel=audio] .dv-timeline-scroll{max-height:76px}.dv-shell[data-cutout=true] .dv-timeline{display:none}
++ .dv-top-actions .dv-save-status{display:none}.dv-top-actions{justify-content:space-between}.dv-top-actions button{font-size:11px}.dv-name{min-width:70px}.dv-brand small{display:none}
++}
++@media(max-height:650px) and (max-width:760px){.dv-inspector,.dv-shell[data-cutout=true] .dv-inspector{max-height:140px}.dv-tool-rail{min-height:55px}.dv-shell .dv-tool-rail button{min-height:44px}.dv-stage{min-height:120px}.dv-timeline-scroll{max-height:65px}}
++@media(prefers-reduced-motion:no-preference){.dv-tool-rail button{transition:background .14s,border-color .14s}.dv-inspector{scroll-behavior:smooth}}
++.dv-shell .dv-more-tools{display:none!important}
++@media(max-width:760px){
++ .dv-shell .dv-tool-rail .dv-more-tools{position:sticky;right:-7px;display:flex!important;background:var(--dv-surface);min-width:48px;width:48px;margin-left:0;box-shadow:-12px 0 10px var(--dv-surface);border-radius:0}.dv-more-tools>span{font-size:26px;line-height:22px}.dv-more-tools small{font-size:10px}
++ .dv-shell[data-panel=scene] .dv-media-tools,.dv-shell[data-panel=audio] .dv-media-tools,.dv-shell[data-panel=scene] .dv-stage-head,.dv-shell[data-panel=audio] .dv-stage-head{display:none}
++}
++.dv-context-create{display:none;padding:12px 13px 0}.dv-context-create button{width:100%}.dv-inspector[data-tool=text] .dv-context-create{display:block}
+diff --git a/assets/divas-video.js b/assets/divas-video.js
+index c596eb2..8997312 100644
+--- a/assets/divas-video.js
++++ b/assets/divas-video.js
+@@ -5,2 +5,2 @@
+- const exportURL=new URL('./divas-video-export.mjs?v=43',document.currentScript.src).href;
+- const renderURL=new URL('./divas-video-render.mjs?v=43',document.currentScript.src).href;
++ const exportURL=new URL('./divas-video-export.mjs?v=44',document.currentScript.src).href;
++ const renderURL=new URL('./divas-video-render.mjs?v=44',document.currentScript.src).href;
+@@ -28 +28 @@
+- function size(exporting=false){const [w,h]=M.formats[V.project.ratio],edge=exporting?V.project.quality:360;const f=edge/Math.min(w,h);return {w:Math.round(w*f/2)*2,h:Math.round(h*f/2)*2};}
++ function size(exporting=false){const [w,h]=M.formats[V.project.ratio],edge=exporting?V.project.quality:V.playing?360:matchMedia('(max-width:760px)').matches?540:720;const f=edge/Math.min(w,h);return {w:Math.round(w*f/2)*2,h:Math.round(h*f/2)*2};}
+@@ -37 +37 @@
+-   <div class="dv-body" id="dvBody"><div class="dv-stage"><div class="dv-stage-head"><label>Formato <select id="dvRatio"><option value="9:16">9:16 · Reel</option><option value="1:1">1:1</option><option value="16:9">16:9</option></select></label><small id="dvDimensions"></small><button data-dv="cleanPreview" aria-pressed="false" title="Ocultar controles de selección">Vista limpia</button></div><div id="dvMediaTools" class="dv-media-tools" role="group" aria-label="Encuadrar la selección" hidden><span>Encuadre</span><button data-dv="frame" data-fit="contain" title="Mostrar toda la imagen, sin cortar">Completa</button><button data-dv="frame" data-fit="cover" title="Cubrir el lienzo recortando los bordes, sin estirar">Llenar</button><button data-dv="frame" data-fit="adaptive" title="Imagen completa con una copia suave de fondo">Adaptar</button><button data-dv="asBackground" id="dvAsBackground" title="Poner esta foto detrás y durante todo el vídeo">Usar como fondo</button><button data-dv="openTransform" title="Mover, cambiar tamaño y girar">Mover</button></div><div id="dvCompareBar" class="dv-compare-bar" hidden><div class="dv-compare-modes" role="group" aria-label="Comparación del recorte"><button data-dv="compareBefore" aria-pressed="false">Antes</button><button data-dv="compareAfter" aria-pressed="true">Después</button><button data-dv="compareSplit" aria-pressed="false">Comparar</button><button data-dv="isolate" aria-pressed="false">Transparencia</button></div><div class="dv-compare-confirm" id="dvKeyConfirm" hidden><span>Vista previa · sin aplicar</span><button data-dv="cancelKey">Cancelar</button><button class="dv-primary" data-dv="confirmKey">Confirmar recorte</button></div></div><div class="dv-preview-wrap"><div class="dv-compare-labels" id="dvCompareLabels" hidden><span>Antes</span><span>Después</span></div><canvas id="dvCanvas" width="360" height="640" aria-label="Vista previa del video"></canvas><input id="dvCompareSplit" class="dv-compare-slider" type="range" min="2" max="98" value="50" aria-label="División antes y después" hidden><div class="dv-pick-banner" id="dvPickBanner" hidden>Toca el color que quieres quitar <button data-dv="cancelPick">Cancelar</button></div><div class="dv-empty" id="dvEmpty"><strong>Dale movimiento a tu idea</strong><p>Añade un clip, un flyer o un texto. Después combina tus capas.</p></div><div class="dv-canvas-tools" id="dvCanvasTools" hidden><button data-dv="lock" aria-label="Bloquear o desbloquear capa">♧</button><button data-dv="remove" aria-label="Eliminar elemento seleccionado">×</button></div></div><div class="dv-transport"><button data-dv="rewind" aria-label="Ir al inicio">↤</button><button data-dv="play" id="dvPlay" aria-label="Reproducir">▶</button><input id="dvSeek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Posición en el video"><span class="dv-time" id="dvTime">0:00.0 / 0:00.0</span></div></div>
++   <div class="dv-body" id="dvBody"><div class="dv-stage"><div class="dv-stage-head"><label>Formato <select id="dvRatio"><option value="9:16">9:16 · Reel</option><option value="1:1">1:1</option><option value="16:9">16:9</option></select></label><small id="dvDimensions"></small><button data-dv="cleanPreview" aria-pressed="false" title="Ocultar controles de selección">Vista limpia</button></div><div id="dvMediaTools" class="dv-media-tools" role="group" aria-label="Encuadrar la selección" hidden><span>Encuadre</span><button data-dv="frame" data-fit="contain" title="Mostrar toda la imagen, sin cortar">Completa</button><button data-dv="frame" data-fit="cover" title="Cubrir el lienzo recortando los bordes, sin estirar">Llenar</button><button data-dv="frame" data-fit="adaptive" title="Imagen completa con una copia suave de fondo">Adaptar</button><button data-dv="asBackground" id="dvAsBackground" title="Poner esta foto detrás y durante todo el vídeo">Usar como fondo</button><button data-dv="openTransform" title="Mover, cambiar tamaño y girar">Mover</button></div><div id="dvCompareBar" class="dv-compare-bar" hidden><div class="dv-compare-modes" role="group" aria-label="Comparación del recorte"><button data-dv="compareBefore" aria-pressed="false">Antes</button><button data-dv="compareAfter" aria-pressed="true">Después</button><button data-dv="compareSplit" aria-pressed="false">Comparar</button><button data-dv="isolate" aria-pressed="false">Transparencia</button></div><div class="dv-compare-confirm" id="dvKeyConfirm" hidden><span>Vista previa · sin aplicar</span><button data-dv="cancelKey">Cancelar</button><button class="dv-primary" data-dv="confirmKey">Confirmar recorte</button></div></div><div class="dv-preview-wrap"><div class="dv-compare-labels" id="dvCompareLabels" hidden><span>Antes</span><span>Después</span></div><canvas id="dvCanvas" tabindex="0" width="360" height="640" aria-label="Vista previa del video"></canvas><input id="dvCompareSplit" class="dv-compare-slider" type="range" min="2" max="98" value="50" aria-label="División antes y después" hidden><div class="dv-pick-banner" id="dvPickBanner" hidden>Toca el color que quieres quitar <button data-dv="cancelPick">Cancelar</button></div><div class="dv-empty" id="dvEmpty"><strong>Dale movimiento a tu idea</strong><p>Añade un clip, un flyer o un texto. Después combina tus capas.</p></div><div class="dv-canvas-tools" id="dvCanvasTools" hidden><button data-dv="lock" aria-label="Bloquear o desbloquear capa">♧</button><button data-dv="duplicate" aria-label="Duplicar elemento seleccionado" title="Duplicar · Ctrl D"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button><button data-dv="remove" aria-label="Eliminar elemento seleccionado" title="Eliminar · Supr / Retroceso">×</button></div></div><div class="dv-transport"><button data-dv="rewind" aria-label="Ir al inicio">↤</button><button data-dv="play" id="dvPlay" aria-label="Reproducir">▶</button><input id="dvSeek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Posición en el video"><span class="dv-time" id="dvTime">0:00.0 / 0:00.0</span></div></div>
+@@ -42 +42 @@
+-   <section class="dv-fields dv-tool-content" data-content="cutout"><div class="dv-feature-heading"><span>✦</span><h3>Quitar fondo por color</h3></div><p class="dv-hint">1. Elige el color. 2. Compara sobre la cuadrícula. 3. Confirma el recorte.</p><p id="dvKeyStatus" class="dv-key-status" role="status">El recorte solo afecta al elemento indicado arriba.</p><div class="dv-cutout-actions"><button class="dv-primary" data-dv="pickColor" title="Toca el color que quieres quitar en el video">◎ Elegir color</button><button data-dv="autoColor" title="Detectar el color de un fondo uniforme">✧ Automático</button></div><div class="dv-swatches"><button data-dv="keyColor" data-color="#00ff00" style="--swatch:#00ff00" aria-label="Quitar verde"><span></span>Verde</button><button data-dv="keyColor" data-color="#0000ff" style="--swatch:#0000ff" aria-label="Quitar azul"><span></span>Azul</button><button data-dv="keyColor" data-color="#ffffff" style="--swatch:#ffffff" aria-label="Quitar blanco"><span></span>Blanco</button><button data-dv="keyColor" data-color="#000000" style="--swatch:#000000" aria-label="Quitar negro"><span></span>Negro</button></div><label class="dv-check"><input id="dvKeyEnabled" type="checkbox">Quitar este color</label><label>Color elegido<input id="dvKeyColor" type="color" value="#00ff00"></label><label>Intensidad <output id="dvKeyToleranceValue"></output><input id="dvKeyTolerance" type="range" min="0.005" max="0.8" step="0.005"></label><label>Suavizar bordes <output id="dvKeySoftnessValue"></output><input id="dvKeySoftness" type="range" min="0.005" max="0.4" step="0.005"></label><label>Limpiar reflejo del color <input id="dvKeySpill" type="range" min="0" max="1" step="0.01"></label><button data-dv="resetKey">Restablecer fondo</button><p class="dv-hint">La cuadrícula indica transparencia. Si también desaparecen detalles blancos del sujeto, baja la intensidad. El vídeo final usa el fondo y las capas de debajo.</p></section>
++   <section class="dv-fields dv-tool-content" data-content="cutout"><div class="dv-feature-heading"><span>✦</span><h3>Quitar fondo</h3></div><p class="dv-hint">1. Elige el color. 2. Compara sobre la cuadrícula. 3. Confirma el recorte.</p><p id="dvKeyStatus" class="dv-key-status" role="status">El recorte solo afecta al elemento indicado arriba.</p><div class="dv-cutout-actions"><button class="dv-primary" data-dv="pickColor" title="Toca el color que quieres quitar en el video">◎ Elegir color</button><button data-dv="autoColor" title="Detectar el color de un fondo uniforme">✧ Automático</button></div><div class="dv-swatches"><button data-dv="keyColor" data-color="#00ff00" style="--swatch:#00ff00" aria-label="Quitar verde"><span></span>Verde</button><button data-dv="keyColor" data-color="#0000ff" style="--swatch:#0000ff" aria-label="Quitar azul"><span></span>Azul</button><button data-dv="keyColor" data-color="#ffffff" style="--swatch:#ffffff" aria-label="Quitar blanco"><span></span>Blanco</button><button data-dv="keyColor" data-color="#000000" style="--swatch:#000000" aria-label="Quitar negro"><span></span>Negro</button></div><label class="dv-key-scope">Qué quieres quitar<select id="dvKeyScope"><option value="exterior">Solo el fondo exterior · protege detalles</option><option value="all">Ese color en toda la imagen · chroma</option></select></label><label class="dv-check"><input id="dvKeyEnabled" type="checkbox">Quitar este color</label><label>Color elegido<input id="dvKeyColor" type="color" value="#00ff00"></label><label>Tolerancia del color <output id="dvKeyToleranceValue"></output><input id="dvKeyTolerance" type="range" min="0.005" max="0.8" step="0.005"></label><label>Suavizar bordes <output id="dvKeySoftnessValue"></output><input id="dvKeySoftness" type="range" min="0.005" max="0.4" step="0.005"></label><label>Limpiar el borde <input id="dvKeySpill" type="range" min="0" max="1" step="0.01"></label><button data-dv="resetKey">Restablecer fondo</button><p class="dv-hint">Solo el fondo exterior conserva los blancos encerrados dentro del logo. Si el blanco del dibujo toca el fondo, puede necesitar retoque manual. La cuadrícula indica transparencia; el original se conserva.</p></section>
+@@ -53,0 +54 @@
++  organizeTools(dialog);
+@@ -57,2 +58,3 @@
+-  dialog.addEventListener('keydown',e=>{e.stopPropagation();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!/INPUT|TEXTAREA/.test(e.target.tagName)){e.preventDefault();historyMove(e.shiftKey);return;}if(e.code==='Space'&&!/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)){e.preventDefault();perform('play').catch(err=>message(err.message,true));}});
+-  dialog.addEventListener('cancel',e=>{e.preventDefault();if(V.exporting){V.cancelled=true;stop();}else close().catch(err=>message(err.message,true));});
++  dialog.addEventListener('keydown',keyboard);
++  document.addEventListener('keydown',e=>{if(dialog.open&&!dialog.contains(e.target))keyboard(e);},true);
++  dialog.addEventListener('cancel',e=>{e.preventDefault();if(V.selected||V.keyDraft){escapeSelection();return;}if(V.exporting){V.cancelled=true;stop();}else close().catch(err=>message(err.message,true));});
+@@ -62 +64 @@
+-  for(const name of ['Name','Ratio','Quality','Background','Duration','In','Out','Fit','Motion','Transition','Volume','Title','TitlePosition','TitleStyle','TitleColor','TitleSize','TitleAnimate','AudioOffset','AudioVolume','AudioLoop','Start','KeyEnabled','KeyColor','KeyTolerance','KeySoftness','KeySpill','X','Y','Scale','Rotation','Opacity','Animation','TitleFont','TitleMotion','Mask','Brightness','Contrast','Saturation','TrackStart','TrackIn','TrackOut','FadeIn','FadeOut']){
++  for(const name of ['Name','Ratio','Quality','Background','Duration','In','Out','Fit','Motion','Transition','Volume','Title','TitlePosition','TitleStyle','TitleColor','TitleSize','TitleAnimate','AudioOffset','AudioVolume','AudioLoop','Start','KeyEnabled','KeyScope','KeyColor','KeyTolerance','KeySoftness','KeySpill','X','Y','Scale','Rotation','Opacity','Animation','TitleFont','TitleMotion','Mask','Brightness','Contrast','Saturation','TrackStart','TrackIn','TrackOut','FadeIn','FadeOut']){
+@@ -74,0 +77,22 @@
++ const TOOL_NAMES={media:'Tus medios',clip:'Tiempo y recorte',cutout:'Quitar fondo',transform:'Tamaño y posición',text:'Texto y estilo',color:'Color y luz',audio:'Audio y exportación',layers:'Orden de las capas',help:'Atajos de teclado'};
++ function organizeTools(dialog){
++  const rail=dialog.querySelector('.dv-quickbar');rail.className='dv-tool-rail';rail.setAttribute('aria-label','Herramientas del estudio');rail.setAttribute('role','tablist');
++  const paths={media:'M3 4h18v16H3z M3 15l5-5 4 4 3-3 6 6 M15 8h.01',clip:'M4 4h16v16H4z M8 4v16 M16 4v16 M4 8h4 M4 16h4 M16 8h4 M16 16h4',cutout:'M12 3l2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6z',transform:'M8 3H3v5 M16 3h5v5 M21 16v5h-5 M8 21H3v-5 M3 3l6 6 M21 3l-6 6 M3 21l6-6 M21 21l-6-6',text:'M4 5V3h16v2 M12 3v18 M8 21h8',color:'M12 3a9 9 0 1 0 0 18c3 0 2-4 5-4h2c5-5 1-14-7-14z M7 9h.01 M12 6h.01 M17 9h.01',audio:'M9 18V5l11-2v13 M9 8l11-2 M9 18c0 4-6 4-6 1s6-4 6-1 M20 16c0 4-6 4-6 1s6-4 6-1',layers:'M12 3L2 8l10 5 10-5z M2 12l10 5 10-5 M2 16l10 5 10-5',help:'M9 8a3 3 0 1 1 4 3c-1 1-1 2-1 3 M12 18h.01'};
++  rail.innerHTML=Object.entries({media:'Medios',text:'Texto',cutout:'Quitar fondo',transform:'Transformar',clip:'Tiempo',color:'Color',audio:'Audio',layers:'Capas',help:'Atajos'}).map(([key,label])=>`<button role="tab" data-dv="${key==='cutout'?'cutout':'tool'}" ${key==='cutout'?'':'data-tool="'+key+'"'} title="${TOOL_NAMES[key]}" aria-label="${label}" aria-selected="${key==='clip'}" class="${key==='cutout'?'dv-cutout-entry':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[key]}"/></svg><span>${label}</span></button>`).join('');
++  rail.insertAdjacentHTML('beforeend','<button data-dv="moreTools" class="dv-more-tools" aria-label="Ver más herramientas"><span aria-hidden="true">›</span><small>Más</small></button>');rail.addEventListener('scroll',()=>{const end=rail.scrollLeft+rail.clientWidth>=rail.scrollWidth-10,b=rail.querySelector('.dv-more-tools');b.querySelector('span').textContent=end?'‹':'›';b.querySelector('small').textContent=end?'Volver':'Más';b.setAttribute('aria-label',end?'Volver a las primeras herramientas':'Ver más herramientas');});
++  const mobile=matchMedia('(max-width:760px)'),relocate=()=>{for(const name of ['dvToLayer','dvToSequence'])(mobile.matches?dialog.querySelector('.dv-clip-tools'):dialog.querySelector('.dv-targetbar')).append($(name));if(mobile.matches)dialog.querySelector('.dv-layout').insertBefore(rail,dialog.querySelector('.dv-footer'));else $('dvBody').prepend(rail);};relocate();mobile.addEventListener('change',relocate);dialog.querySelector('.dv-tool-tabs').remove();dialog.querySelector('.dv-mobile-tabs').remove();
++  const inspector=dialog.querySelector('.dv-inspector');inspector.insertAdjacentHTML('afterbegin',`<header class="dv-inspector-head"><h2 id="dvToolTitle">Tiempo y recorte</h2><button data-dv="closeInspector" aria-label="Cerrar ajustes y ver el lienzo">×</button></header><div class="dv-context-create"><button data-dv="addText" class="dv-primary">＋ Crear un texto independiente</button></div><section class="dv-fields dv-tool-content dv-media-content" data-content="media"><h3>Empieza con tus archivos</h3><button class="dv-primary" data-dv="media">＋ Fotos o vídeos</button><button data-dv="overlay">＋ Imagen o vídeo como capa</button><button data-dv="addText">T Añadir texto</button><button data-dv="capture">Añadir el flyer abierto</button><button data-dv="animateFlyer">Animar mi flyer</button><p class="dv-hint">Arrastra archivos desde tu equipo al lienzo para superponerlos o a la secuencia para unirlos.</p><hr class="dv-divider"><button data-dv="backup">Descargar respaldo editable</button><button data-dv="restore">Abrir respaldo</button></section><section class="dv-fields dv-tool-content dv-shortcuts" data-content="help"><p>Selecciona una capa en el lienzo o en la línea de tiempo.</p><dl><dt>Supr / Retroceso</dt><dd>Eliminar selección</dd><dt>Ctrl / ⌘ D</dt><dd>Duplicar</dd><dt>Ctrl / ⌘ Z</dt><dd>Deshacer</dd><dt>Ctrl / ⌘ Shift Z</dt><dd>Rehacer</dd><dt>Ctrl / ⌘ S</dt><dd>Guardar avance</dd><dt>Flechas / Shift + flechas</dt><dd>Mover 1 / 10 píxeles</dd><dt>Espacio</dt><dd>Reproducir / pausar</dd><dt>S</dt><dd>Dividir en el cursor</dd><dt>Esc</dt><dd>Cancelar recorte o deseleccionar</dd></dl><p class="dv-hint">Mientras escribes, las teclas editan el texto. Las capas bloqueadas no se borran ni se mueven.</p></section>`);
++  // Avoid multiple prominent import/backup buttons around the canvas.
++  dialog.querySelector('.dv-footer [data-dv=backup]').remove();dialog.querySelector('.dv-footer [data-dv=restore]').remove();
++ }
++ function escapeSelection(){if(V.keyDraft){cancelKey();return;}if(V.picking){V.picking=false;draw();return;}V.selected=null;resetViewing();panel('preview');refresh();}
++ function keyboard(e){
++  e.stopPropagation();if(e.isComposing||!V.project||V.busy||V.exporting||!$('dvLibrary').hidden)return;
++  const writing=e.target.closest('input,textarea,select,[contenteditable="true"],[role="textbox"]'),mod=e.ctrlKey||e.metaKey,key=e.key.toLowerCase();
++  let action=null;if(mod&&key==='s')action='save';else if(writing)return;else if(e.altKey)return;
++  else if(mod&&key==='z')action=e.shiftKey?'redo':'undo';else if(mod&&key==='y')action='redo';else if(mod&&key==='d')action='duplicate';
++  else if(!mod&&['delete','backspace'].includes(key))action='remove';else if(!mod&&e.code==='Space')action='play';else if(!mod&&key==='s')action='split';
++  else if(key==='escape'){e.preventDefault();escapeSelection();return;}
++  else if(!mod&&key.startsWith('arrow')){const c=selected();if(!c||c.kind==='audio')return;e.preventDefault();if(c.locked||V.keyDraft){message(c.locked?'Desbloquea la capa para moverla.':'Confirma o cancela el recorte primero.',true);return;}stop();const [w,h]=M.formats[V.project.ratio],pixels=e.shiftKey?10:1,axis=['arrowleft','arrowright'].includes(key)?'x':'y',direction=['arrowleft','arrowup'].includes(key)?-1:1;commitChange(()=>{const pose=V.endPose?c.animation.end:c.transform;pose[axis]+=direction*pixels/(axis==='x'?w:h);},'nudge:'+c.id);return;}
++  if(action){e.preventDefault();if(['remove','duplicate','split'].includes(action)&&!selected())return;perform(action).catch(err=>message(err.message,true));}
++ }
+@@ -188 +212 @@
+-  updateTarget();renderStack();
++  updateTarget();renderStack();$(id).querySelectorAll('.dv-canvas-tools [data-dv=remove],.dv-canvas-tools [data-dv=duplicate]').forEach(b=>b.disabled=!!c?.locked);
+@@ -191 +215 @@
+-   const keyer=effectiveKey(c);$('dvKeyEnabled').checked=keyer.enabled;for(const [n,k] of [['Color','color'],['Tolerance','tolerance'],['Softness','softness'],['Spill','spill']])$('dvKey'+n).value=keyer[k];
++   const keyer=effectiveKey(c);$('dvKeyEnabled').checked=keyer.enabled;for(const [n,k] of [['Scope','scope'],['Color','color'],['Tolerance','tolerance'],['Softness','softness'],['Spill','spill']])$('dvKey'+n).value=keyer[k];
+@@ -253 +277 @@
+-  if(!V.keyDraft)V.keyDraft={id:c.id,keyer:structuredClone(c.keyer)};Object.assign(V.keyDraft.keyer,patch);V.picking=false;V.cutoutActive=true;V.isolate=true;V.compare='split';V.original=false;updateInspector();draw();cutoutUI(true);message('Vista previa del recorte en «'+c.name+'». Compara y pulsa Confirmar recorte.');
++  const first=!V.keyDraft;if(first)V.keyDraft={id:c.id,keyer:structuredClone(c.keyer)};Object.assign(V.keyDraft.keyer,patch);V.picking=false;V.cutoutActive=true;if(first){V.isolate=true;V.compare='split';}V.original=false;updateInspector();draw();cutoutUI(true);message('Vista previa del recorte en «'+c.name+'». Compara y pulsa Confirmar recorte.');
+@@ -271 +295 @@
+-  if(name.startsWith('Key')){const key={KeyEnabled:'enabled',KeyColor:'color',KeyTolerance:'tolerance',KeySoftness:'softness',KeySpill:'spill'}[name];const patch={[key]:name==='KeyEnabled'?el.checked:name==='KeyColor'?value:+value};if(name==='KeyColor')patch.enabled=true;try{draftKey(patch);ensureSelectedFrame().then(()=>{draw();cutoutUI(true);}).catch(e=>message(e.message,true));}catch(e){message(e.message,true);}return;}
++  if(name.startsWith('Key')){const key={KeyScope:'scope',KeyEnabled:'enabled',KeyColor:'color',KeyTolerance:'tolerance',KeySoftness:'softness',KeySpill:'spill'}[name];const patch={[key]:name==='KeyEnabled'?el.checked:['KeyColor','KeyScope'].includes(name)?value:+value};if(name==='KeyColor')patch.enabled=true;try{draftKey(patch);ensureSelectedFrame().then(()=>{draw();cutoutUI(true);}).catch(e=>message(e.message,true));}catch(e){message(e.message,true);}return;}
+@@ -281 +305 @@
+-    else if(name.startsWith('Key')){const key={KeyEnabled:'enabled',KeyColor:'color',KeyTolerance:'tolerance',KeySoftness:'softness',KeySpill:'spill'}[name];c.keyer[key]=name==='KeyEnabled'?el.checked:name==='KeyColor'?value:+value;if(name==='KeyColor')c.keyer.enabled=true;}
++    else if(name.startsWith('Key')){const key={KeyScope:'scope',KeyEnabled:'enabled',KeyColor:'color',KeyTolerance:'tolerance',KeySoftness:'softness',KeySpill:'spill'}[name];c.keyer[key]=name==='KeyEnabled'?el.checked:['KeyColor','KeyScope'].includes(name)?value:+value;if(name==='KeyColor')c.keyer.enabled=true;}
+@@ -293 +317 @@
+- function draw(frameOverride=null){if(!V.project||!renderer)return;const frames=frameOverride instanceof Map?new Map([...sourceMap(),...frameOverride]):sourceMap();renderer.render(V.project,Math.min(V.time,Math.max(0,total()-.001)),V.assets,frames,V.exporting?{}:{selectedId:V.cleanPreview||V.playing||V.picking?null:V.selected,isolateId:V.isolate?V.selected:null,originalId:V.original||(V.cutoutActive&&V.compare==='before')?V.selected:null,compareId:V.cutoutActive&&V.compare==='split'&&!V.picking?V.selected:null,compareSplit:V.compareSplit,keyerId:V.keyDraft?.id,keyer:V.keyDraft?.keyer,picking:V.picking?V.selected:null,poseEnd:V.endPose?V.selected:null});$('dvPickBanner').hidden=!V.picking;$('dvCanvas').classList.toggle('dv-picking',V.picking);cutoutUI();}
++ function draw(frameOverride=null){if(!V.project||!renderer)return;if(!V.exporting){const dim=size(),c=$('dvCanvas');if(c.width!==dim.w||c.height!==dim.h){c.width=dim.w;c.height=dim.h;fitPreview();}}const frames=frameOverride instanceof Map?new Map([...sourceMap(),...frameOverride]):sourceMap();renderer.render(V.project,Math.min(V.time,Math.max(0,total()-.001)),V.assets,frames,V.exporting?{}:{selectedId:V.cleanPreview||V.playing||V.picking?null:V.selected,isolateId:V.isolate?V.selected:null,originalId:V.original||(V.cutoutActive&&V.compare==='before')?V.selected:null,compareId:V.cutoutActive&&V.compare==='split'&&!V.picking?V.selected:null,compareSplit:V.compareSplit,keyerId:V.keyDraft?.id,keyer:V.keyDraft?.keyer,picking:V.picking?V.selected:null,poseEnd:V.endPose?V.selected:null});$('dvPickBanner').hidden=!V.picking;$('dvCanvas').classList.toggle('dv-picking',V.picking);cutoutUI();}
+@@ -370 +394 @@
+- function tool(name,open=true,keepTimeline=false){V.cutoutActive=name==='cutout';if(name!=='cutout'){V.isolate=false;V.compare='after';}$(id).querySelector('.dv-inspector').scrollTop=0;if(!keepTimeline){const expanded=['clip','layers'].includes(name);$(id).dataset.compact=expanded?'false':'true';$(id).querySelector('[data-dv=toggleTimeline]').setAttribute('aria-expanded',expanded);}$(id).querySelector('.dv-inspector').dataset.tool=name;$(id).querySelectorAll('[data-dv=tool]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tool===name));if(open)panel(name==='audio'?'audio':'scene');cutoutUI(true);draw();}
++ function tool(name,open=true,keepTimeline=false){$('dvToolTitle').textContent=TOOL_NAMES[name]||'Herramientas';$(id).querySelector('.dv-cutout-entry').setAttribute('aria-selected',name==='cutout');$(id).dataset.inspector='open';V.cutoutActive=name==='cutout';if(name!=='cutout'){V.isolate=false;V.compare='after';}$(id).querySelector('.dv-inspector').scrollTop=0;if(!keepTimeline){const expanded=['clip','layers'].includes(name);$(id).dataset.compact=expanded?'false':'true';$(id).querySelector('[data-dv=toggleTimeline]').setAttribute('aria-expanded',expanded);}$(id).querySelector('.dv-inspector').dataset.tool=name;$(id).querySelectorAll('[data-dv=tool]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tool===name));if(open)panel(name==='audio'?'audio':'scene');cutoutUI(true);draw();}
+@@ -372 +396,2 @@
+- function applyKey(color){draftKey({color,enabled:true});}
++ function applyKey(color){const neutral=/^#(?:ffffff|000000)$/i.test(color)||(()=>{const rgb=renderRGB(color);return Math.max(...rgb)-Math.min(...rgb)<.12;})();draftKey({color,enabled:true,scope:neutral?'exterior':'all',tolerance:neutral?.08:.18,softness:neutral?.035:.08,spill:.65});}
++ const renderRGB=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
+@@ -374,0 +400,2 @@
++  if(action==='closeInspector'){panel('preview');$(id).dataset.inspector='closed';return;}
++  if(action==='moreTools'){const rail=$(id).querySelector('.dv-tool-rail');rail.scrollTo({left:rail.scrollLeft+rail.clientWidth>=rail.scrollWidth-10?0:rail.scrollLeft+rail.clientWidth-50,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});return;}
+@@ -440 +467 @@
+-  canvas.addEventListener('pointerdown',e=>{if(e.button!==0||V.busy||V.exporting||!renderer)return;stop();if(V.keyDraft&&!V.picking)return;const p=point(e);if(V.picking){gesture={type:'pick',x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);return;}
++  canvas.addEventListener('pointerdown',e=>{canvas.focus({preventScroll:true});if(e.button!==0||V.busy||V.exporting||!renderer)return;stop();if(V.keyDraft&&!V.picking)return;const p=point(e);if(V.picking){gesture={type:'pick',x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);return;}
+@@ -481 +508 @@
+-   stop();V.selected=b.dataset.id;const c=selected();resetViewing();updateInspector();if(c.locked){message('Desbloquea esta capa antes de moverla.');return;}
++   canvas.focus({preventScroll:true});stop();V.selected=b.dataset.id;const c=selected();resetViewing();updateInspector();if(c.locked){message('Desbloquea esta capa antes de moverla.');return;}
+diff --git a/index.html b/index.html
+index f577267..8c7c824 100644
+--- a/index.html
++++ b/index.html
+@@ -1402,0 +1403 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
++.idea-app-kit{padding:11px 12px;border:1px solid var(--line);border-radius:12px;margin:10px 0 16px;background:var(--panel)}.idea-app-kit>span{display:block;font-size:11px;font-weight:700;margin-bottom:8px}.idea-app-kit>div{display:flex;align-items:center;gap:7px}.idea-app-kit img{width:29px;height:29px;object-fit:contain;border-radius:7px}.idea-app-kit small{font-size:10px;line-height:1.5;opacity:.75;margin-left:3px}
+@@ -1405 +1406 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-<link rel="stylesheet" href="assets/divas-video.css?v=43">
++<link rel="stylesheet" href="assets/divas-video.css?v=44">
+@@ -1830 +1831 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
+-      <label class="idea-label" for="ideaModel">¿Qué acabado buscas?</label><select id="ideaModel"><option value="impacto">✦ Impacto streamer · protagonista y brillo</option><option value="editorial">Editorial elegante · suave y sofisticado</option></select>
++      <label class="idea-label" for="ideaModel">¿Qué acabado buscas?</label><select id="ideaModel"><option value="auto">✦ Sorpréndeme · seis composiciones</option><option value="impacto">✦ Impacto streamer · protagonista y brillo</option><option value="editorial">Editorial elegante · suave y sofisticado</option></select>
+@@ -1833,0 +1835 @@ html[data-theme=dark] #teamMenuEntry{background:var(--ux-soft);border-color:var(
++      <div class="idea-app-kit" aria-label="Logos incluidos"><span>Tus tres aplicaciones, siempre presentes</span><div><img src="assets/app-logos/salsa.png" alt="Salsa" loading="lazy"><img src="assets/app-logos/cafe.png" alt="Café" loading="lazy"><img src="assets/app-logos/buzzcast.png" alt="BuzzCast" loading="lazy"><small>Salsa · Café · BuzzCast<br>Logos editables en cada nueva composición</small></div></div>
+@@ -2075,2 +2077,3 @@ SOFTWARE.
+-<script src="assets/divas-video-model.js?v=43"></script>
+-<script src="assets/divas-video.js?v=43"></script>
++<script src="assets/divas-flyer-layouts.js?v=44"></script>
++<script src="assets/divas-video-model.js?v=44"></script>
++<script src="assets/divas-video.js?v=44"></script>
+@@ -3516 +3519 @@ function drawShape(c,p){
+-    const horizontal=p.rol==='idea_veil_left',g=horizontal?c.createLinearGradient(-p.w/2,0,p.w/2,0):c.createLinearGradient(0,-p.h/2,0,p.h/2);
++    const horizontal=['idea_veil_left','idea_veil_right'].includes(p.rol),reverse=p.rol==='idea_veil_right',g=horizontal?c.createLinearGradient(reverse?p.w/2:-p.w/2,0,reverse?-p.w/2:p.w/2,0):c.createLinearGradient(0,-p.h/2,0,p.h/2);
+@@ -8961 +8964,3 @@ const IDEA_STUDIO_ASSETS={"luxury":{"w":1024,"h":1536,"src":"data:image/webp;bas
+-const STUDIO_LAYOUTS=['impacto','impacto_lateral','editorial_luz','editorial_portada'];
++const ATELIER=window.DivasFlyerLayouts;
++const STUDIO_LAYOUTS=['impacto','impacto_lateral','editorial_luz','editorial_portada',...Object.keys(ATELIER.families)];
++Object.assign(IDEA_LAYOUTS,ATELIER.families);
+@@ -8963 +8968 @@ Object.assign(IDEA_LAYOUTS,{impacto:'Impacto streamer',impacto_lateral:'Impacto
+-const STUDIO_MODELS={impacto:'Impacto streamer',editorial:'Editorial elegante'};
++const STUDIO_MODELS={auto:'Composición de autor',impacto:'Impacto streamer',editorial:'Editorial elegante'};
+@@ -9026,2 +9031,3 @@ function ideaRecipe(r,settings){
+-  const models=settings.model==='editorial'?['editorial_luz','editorial_portada']:['impacto','impacto_lateral'];
+-  const layout=r.locks.layout&&last&&models.includes(last.recipe.layout)?last.recipe.layout:last?choose(models,last.recipe.layout):models[0];
++  const models=settings.model==='editorial'?['atelier_magazine','atelier_invitation','atelier_minimal']:settings.model==='impacto'?['atelier_cover','atelier_poster','atelier_stage']:Object.keys(ATELIER.families);
++  const recent=new Set(r.history.slice(-Math.min(5,models.length-1)).map(item=>item.recipe.layout)),fresh=models.filter(x=>!recent.has(x));
++  const layout=r.locks.layout&&last&&models.includes(last.recipe.layout)?last.recipe.layout:last?choose(fresh.length?fresh:models,last.recipe.layout):models[0];
+@@ -9043 +9049 @@ function ideaHeroSource(images,settings){
+-  const list=images.filter(p=>!/^app[123]$/.test(semanticRole(p))&&!/logo|icono|icon|billete|dinero|money|buzzcast|tiktok|whatsapp/.test(ideaClean(p.nombre)));
++  const list=images.filter(p=>!/^app[123]$/.test(semanticRole(p))&&!/logo|icono|icon|billete|dinero|money|buzzcast|salsa|cafe|tiktok|whatsapp/.test(ideaClean(p.nombre)));
+@@ -9046,0 +9053,33 @@ function ideaHeroSource(images,settings){
++function ideaAppKey(p){
++  const name=ideaClean(p.nombre||p.name||'');if(/salsa/.test(name))return 'salsa';if(/caf[eé]/.test(name))return 'cafe';if(/buzzcast|buzz cast/.test(name))return 'buzzcast';
++  return ATELIER.apps.find(a=>a.role===semanticRole(p))?.key||null;
++}
++async function ideaApplicationLogos(r,settings,request,task){
++  return Promise.all(ATELIER.apps.map(async app=>{
++    let p=settings.keepImages?r.source.images.find(p=>ideaAppKey(p)===app.key):null;
++    if(!p&&settings.agency&&A.member?.active){const candidates=ideaCandidateAssets(settings,'logos').filter(a=>a.kind==='image'&&ideaAppKey(a)===app.key);if(candidates.length)p=await task('El logo '+app.name,()=>ideaImageAsset(r,candidates[0],request));}
++    if(!p){I.appIcons=I.appIcons||new Map();let src=I.appIcons.get(app.key);if(!src){const response=await ideaWithDeadline(fetch('assets/app-logos/'+app.key+'.png'));if(!response.ok)throw Error('No se pudo cargar el logo '+app.name+'. Reintenta la propuesta.');src=await readData(await response.blob());I.appIcons.set(app.key,src);}const im=await loadImage(src),size=imageSize(im);p=layer('imagen',{src,original:src,w:size.w,h:size.h,nombre:'Logo '+app.name});}
++    surpriseGuard(r,request);return {...copy(p),rol:app.role,nombre:'Logo '+app.name,opacidad:1,oculto:false,bloqueado:false};
++  }));
++}
++function ideaAtelierDecorate(d,recipe,slots,add){
++  const W=d.lienzo.ancho,H=d.lienzo.alto,u=Math.min(W,H)/1080,pal=IDEA_PALETTES[recipe.palette],dark=ideaLuminance(pal.a)<.18,theme=recipe.settings.theme,style=recipe.layout;
++  const line=(x,y,w,h,extra={})=>add('rectangulo',{x:W*x,y:H*y,w:W*w,h:H*h,color:pal.accent,opacidad:.55,radio:0,...extra});
++  if(style==='atelier_invitation'){
++    add('rectangulo',{x:W*.5,y:H*.5,w:W*.88,h:H*.92,color:pal.a,opacidad:.86,radio:12,nombre:'Papel de invitación'});
++    for(const pad of [.055,.072])add('marco',{x:W/2,y:H/2,w:W*(1-pad*2),h:H*(1-pad*2),color:pal.accent,grosor:1.4*u,radio:12,opacidad:.7,nombre:'Doble marco de joya'});
++  }else if(style==='atelier_magazine'||style==='atelier_minimal'){
++    line(style==='atelier_magazine'?.95:.05,.47,.002,.77,{nombre:'Línea editorial'});
++    line(.5,.978,.9,.0015,{nombre:'Firma editorial'});
++  }else if(style==='atelier_stage'||style==='atelier_poster'){
++    for(let i=0;i<3;i++)add('aro',{x:slots.idea_hero.x,y:slots.idea_hero.y,w:slots.idea_hero.w*(1.08+i*.12),h:slots.idea_hero.h*(1.08+i*.12),color:pal.accent,grosor:(i?1:2)*u,opacidad:dark?.4:.24,nombre:'Halo de escenario'});
++    if(style==='atelier_stage')for(const side of [-1,1])add('luz',{x:W*(.5+side*.4),y:H*.2,w:W*.2,h:H*.8,color:pal.light,rot:side*20,opacidad:.22,nombre:'Luz de escenario'});
++  }else{line(.5,.022,.9,.002,{nombre:'Borde luminoso'});line(.5,.978,.9,.002,{nombre:'Borde luminoso'});}
++  const deco={x:W*.94,y:H*.06,w:Math.min(W,H)*.12,h:Math.min(W,H)*.12,color:pal.accent,color2:pal.light,opacidad:dark?.64:.4,nombre:'Detalle de '+IDEA_THEMES[theme].name};
++  if(theme==='halloween'){add('luna',{...deco,metalico:true,rot:-18});add('telarana',{...deco,x:W*.03,y:H*.03,w:deco.w*1.8,h:deco.h*1.8,opacidad:.23});}
++  else if(theme==='navidad'){add('estrella5',{...deco,metalico:true,rot:12});add('ramas',{...deco,x:W*.035,y:H*.88,rot:25});}
++  else if(theme==='amor')add('corazon',{...deco,metalico:true,rot:12});
++  else if(theme==='tropical')for(const side of [-1,1])add('ramas',{...deco,x:W*(.5+side*.47),y:H*.8,rot:side*25});
++  else if(theme==='cumple')add('estrella5',{...deco,metalico:true,glow:12,glowColor:pal.light});
++  if(dark)add('particulas',{x:W/2,y:H/2,w:W,h:H,color:pal.accent,cantidad:30,semilla:recipe.seed,opacidad:.23,nombre:'Atmósfera de luz'});
++}
+@@ -9047,0 +9087 @@ function ideaStudioSlots(size,layout,count=0){
++  if(ATELIER.families[layout])return ATELIER.plan(size,layout,count);
+@@ -9059,2 +9099,2 @@ function resizeStudioLayout(d,next,old){
+-  const recipe=d.asistente.sorpresa,pal=IDEA_PALETTES[recipe.paleta],count=d.capas.filter(p=>p.rol.startsWith('idea_imagen_')).length,slots=ideaSlots(next,recipe.composicion,count),banner=next.ancho/next.alto>3,wide=next.ancho/next.alto>1.18,full=!wide&&!recipe.composicion.endsWith('lateral')&&recipe.composicion!=='editorial_luz',u=Math.min(next.ancho,next.alto)/(banner?400:1080),hero=d.capas.find(p=>p.rol==='idea_hero');
+-  if(!hero&&!banner){for(const role of ['logo','idea_marca','idea_kicker','titulo','idea_fecha','descripcion','accion','base_accion','contacto'])slots[role].x=next.ancho*.5;slots.align=slots.brandAlign='center';slots.titulo.w=next.ancho*.84;slots.descripcion.w=slots.idea_kicker.w=next.ancho*.78;if(!wide){slots.titulo.y=next.alto*.43;slots.titulo.h=next.alto*.27;slots.descripcion.y=next.alto*.69;}slots.idea_brush={...slots.titulo,w:slots.titulo.w*1.05,h:slots.titulo.h*1.12};}
++  const recipe=d.asistente.sorpresa,pal=IDEA_PALETTES[recipe.paleta],count=d.capas.filter(p=>p.rol.startsWith('idea_imagen_')).length,slots=ideaSlots(next,recipe.composicion,count),banner=next.ancho/next.alto>3,wide=next.ancho/next.alto>1.18,full=!ATELIER.families[recipe.composicion]&&!wide&&!recipe.composicion.endsWith('lateral')&&recipe.composicion!=='editorial_luz',u=Math.min(next.ancho,next.alto)/(banner?400:1080),hero=d.capas.find(p=>p.rol==='idea_hero');
++  if(!hero&&!banner&&!ATELIER.families[recipe.layout||recipe.composicion]){for(const role of ['logo','idea_marca','idea_kicker','titulo','idea_fecha','descripcion','accion','base_accion','contacto'])slots[role].x=next.ancho*.5;slots.align=slots.brandAlign='center';slots.titulo.w=next.ancho*.84;slots.descripcion.w=slots.idea_kicker.w=next.ancho*.78;if(!wide){slots.titulo.y=next.alto*.43;slots.titulo.h=next.alto*.27;slots.descripcion.y=next.alto*.69;}slots.idea_brush={...slots.titulo,w:slots.titulo.w*1.05,h:slots.titulo.h*1.12};}
+@@ -9063 +9103 @@ function resizeStudioLayout(d,next,old){
+-    if(p.rol==='fondo'){fitBackgroundToFormat(p,next,old);continue;}if(p.bloqueado)continue;if(p.rol.startsWith('idea_veil_')){Object.assign(p,{x:next.ancho/2,y:next.alto/2,w:next.ancho,h:next.alto});continue;}
++    if(p.rol==='fondo'){fitBackgroundToFormat(p,next,old);continue;}if(p.bloqueado)continue;
+@@ -9085 +9125 @@ function buildSurpriseDocument(r,recipe,assets={}){
+-  const d=emptyDocument();d.lienzo=copy(size);d.asistente={objetivo:purpose,estilo:'rosa',sorpresa:{version:1,motor:3,divas:settings.divas!==false,tema:settings.theme,paleta:recipe.palette,composicion:recipe.layout,semilla:recipe.seed,modo:'new'}};
++  const d=emptyDocument();d.lienzo=copy(size);d.asistente={objetivo:purpose,estilo:'rosa',sorpresa:{version:1,motor:4,divas:settings.divas!==false,tema:settings.theme,paleta:recipe.palette,composicion:recipe.layout,semilla:recipe.seed,modo:'new'}};
+@@ -9092 +9132,2 @@ function buildSurpriseDocument(r,recipe,assets={}){
+-  const images=ideaUniqueImages(settings.keepImages?r.source.images:[]).filter(p=>!brand||ideaImageKey(p)!==ideaImageKey(brand));
++  const appLogos=assets.apps||[];
++  const images=ideaUniqueImages(settings.keepImages?r.source.images:[]).filter(p=>!ideaAppKey(p)&&(!brand||ideaImageKey(p)!==ideaImageKey(brand))&&!appLogos.some(a=>a.src===p.src));
+@@ -9094 +9135 @@ function buildSurpriseDocument(r,recipe,assets={}){
+-  if(!hero&&!banner){
++  if(!hero&&!banner&&!ATELIER.families[recipe.layout||recipe.composicion]){
+@@ -9100,0 +9142 @@ function buildSurpriseDocument(r,recipe,assets={}){
++  if(ATELIER.families[recipe.layout])ideaAtelierDecorate(d,recipe,slots,add);
+@@ -9102 +9144 @@ function buildSurpriseDocument(r,recipe,assets={}){
+-  add('rectangulo',{nombre:'Luz de lectura · lateral',rol:'idea_veil_left',x:W/2,y:H/2,w:W,h:H,color:pal.a,opacidad:settings.keepBackground||assets.agencyBackground?.92:dark?.46:.20});
++  add('rectangulo',{nombre:'Luz de lectura · lateral',rol:recipe.layout==='atelier_magazine'?'idea_veil_right':'idea_veil_left',x:W/2,y:H/2,w:W,h:H,color:pal.a,opacidad:settings.keepBackground||assets.agencyBackground?.92:dark?.62:.55});
+@@ -9107 +9149 @@ function buildSurpriseDocument(r,recipe,assets={}){
+-  const full=!(wide||recipe.layout.endsWith('lateral')||recipe.layout==='editorial_luz');
++  const full=!ATELIER.families[recipe.layout]&&!(wide||recipe.layout.endsWith('lateral')||recipe.layout==='editorial_luz');
+@@ -9115 +9157,2 @@ function buildSurpriseDocument(r,recipe,assets={}){
+-  // Logos and additional source images form one ordered supporting row.
++  appLogos.forEach(p=>{const app=ATELIER.apps.find(a=>a.key===ideaAppKey(p));if(app&&slots[app.role]){const logo=ideaImage(p,app.role,slots[app.role]);logo.nombre='Logo '+app.name;logo.opacidad=1;d.capas.push(logo);}});
++  // Additional source images keep a separate supporting row.
+@@ -9137 +9180 @@ async function nextIdea(){
+-    const settings=ideaReadSettings(r),recipe=ideaRecipe(r,settings),assets={},notes=[],random=seeded(recipe.seed+24),previous=currentIdea(),fallback=ideaFontFallback(settings.theme,recipe.ordinal,settings.divas,settings.model,recipe.studio);
++    const settings=ideaReadSettings(r),recipe=ideaRecipe(r,settings),assets={},notes=[],random=seeded(recipe.seed+24),previous=currentIdea(),fallback=ideaFontFallback(settings.theme,recipe.ordinal,settings.divas,(/atelier_(magazine|invitation|minimal)/.test(recipe.layout)?'editorial':settings.model),recipe.studio);
+@@ -9147,0 +9191 @@ async function nextIdea(){
++      assets.apps=await ideaApplicationLogos(r,settings,request,task);surpriseGuard(r,request);
+@@ -9186 +9230 @@ function ideaApplyForm(recipe){
+-  $('ideaModel').value=s.model||'impacto';$('ideaHero').value=s.hero||'auto';$('ideaTheme').value=s.theme;$('ideaDivas').checked=s.divas!==false;$('ideaFormat').value=s.format;$('ideaMode').value=s.mode;$('ideaKeepImages').checked=s.keepImages;$('ideaKeepBackground').checked=s.keepBackground;$('ideaAgency').checked=s.agency;
++  $('ideaModel').value=s.model||'auto';$('ideaHero').value=s.hero||'auto';$('ideaTheme').value=s.theme;$('ideaDivas').checked=s.divas!==false;$('ideaFormat').value=s.format;$('ideaMode').value=s.mode;$('ideaKeepImages').checked=s.keepImages;$('ideaKeepBackground').checked=s.keepBackground;$('ideaAgency').checked=s.agency;
+@@ -9246 +9290 @@ async function openSurprise(){
+-    ideaApplyForm({settings:{theme:ideaDefaultTheme(source,base),color:'auto',format:size,mode:'new',model:base.asistente.sorpresa?.composicion?.startsWith('editorial')?'editorial':'impacto',hero:'auto',divas:base.asistente.sorpresa?.divas!==false,keepImages:true,keepBackground:false,agency:!!A.member?.active,input:source.input}});
++    ideaApplyForm({settings:{theme:ideaDefaultTheme(source,base),color:'auto',format:size,mode:'new',model:'auto',hero:'auto',divas:base.asistente.sorpresa?.divas!==false,keepImages:true,keepBackground:false,agency:!!A.member?.active,input:source.input}});
+diff --git a/tests/README-video.md b/tests/README-video.md
+index 0fb3790..40d0388 100644
+--- a/tests/README-video.md
++++ b/tests/README-video.md
+@@ -78,0 +79,9 @@ La salida v43 se verificó con FFprobe y decodificación de FFmpeg: VP8/WebM, 12
++
++
++## v44 · Protección del logo, teclado y composición
++
++- `npm --prefix tests run test:video:v44`: conectividad del fondo, blanco encerrado conservado, chroma global, compatibilidad del modelo, píxeles del lienzo, confirmar/deshacer, foco al seleccionar, Supr/Retroceso, duplicar, bloqueo, flechas, guardar, respaldo y exportación real. Fixture incluido en `tests/fixtures/video/white-detail.png`.
++- `npm --prefix tests run test:flyer:v44`: 24 planes (seis familias × cuatro formatos), márgenes y áreas de lectura sin solapamiento, generación real de seis propuestas distintas, tres logos únicos con opacidad completa, pares tipográficos, render y reajuste a formato vertical. El acceso de inspección del generador se inyecta únicamente en el servidor de pruebas.
++- El recorrido móvil se verifica a 320, 360 y 390 px, además de escritorio 1440 px. Se mantienen las regresiones v40/v42/v43. Los selectores se actualizaron para la nueva ubicación de las herramientas; sus verificaciones de contenido siguen activas.
++- WebM v44 decodificado con FFmpeg: 720 × 720, 30 fps, cinco segundos; exterior oscuro, blanco interior conservado y dorado visible. El original de vídeo del usuario no se adjuntó: los fixtures reproducen el problema de dos zonas del mismo blanco, pero no equivalen a evaluar su clip concreto.
++- El fondo exterior usa una máscara de conectividad de cuatro vecinos por fotograma y limpieza de bordes neutros; se reutiliza el resultado de imágenes estáticas y fotogramas pausados. No hay modelo de segmentación automática de personas. Chroma global conserva WebGL cuando está disponible y respaldo CPU.
+diff --git a/tests/fixtures/video/square.png b/tests/fixtures/video/square.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..b1dd9630e49f133fc824701173131e2abad92357
+GIT binary patch
+literal 773
+zcmeAS@N?(olHy`uVBq!ia0vp^A3&Ic2}o`<uRF@Xz;wpb#WAE}&f6=7yi9>2u8s;X
+z5@Z9ElU)^>x|m!~9AM)WS`qm1d;4TbM*Zy;mA@}P-zELHx}Im(nf<@-oNLyTXS>^~
+z$>Q6!z*Epfvq{bM!V->IB94=lGJ=Mv;FQO27^AE0^*5{MWJSgU$y4paz*k67VtGz(
+p!`9T=v-1u(*bR>;gL&>0f37w+Yt${@xxnPj;OXk;vd$@?2>^_^2VVdH
+
+literal 0
+HcmV?d00001
+
+diff --git a/tests/fixtures/video/white-detail.png b/tests/fixtures/video/white-detail.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..9ae8cd986dbba9dec24b9269ff471a8f58858c13
+GIT binary patch
+literal 4859
+zcmeHLe>7C<8vgb+BSXW)F$x)V{EA6biVP!(L@6>eDE6etp&BGkN;6X`6gpHm<Hx<_
+zIJX8P3FWYn+?b-eO(|v4DJz^%ewWkT?7CW=b^p8T+}6GQvDf;(Z_R$c_j|wRdERGF
+z!iM!OWMyq-007x_jguz;3i^|e5{#{EQa{NAK)ue@Y2~IE(Ql8N!@p^!I&2(p3_=on
+zE6(<i0vX)Ha~BhtgNpMH7ul~nxHsB6sK{!@`O^6weNB#kS>)m25e>ke-^+)H07#t?
+z2wWpjfrI<k!Pg>uMZzCg&>PpIf&`^>)a*Jy0!JD9-<Ay-S`<vO$S*)4E!7Jp7-*3M
+z4Xd3rEi6kK+6dIHR&UfZom!yI5jn7-BrjiGS7adiin5%X-@t{FR-MyCp~XopN_2ap
+zLXd1w8smWsoW2BGACh)j2^wg3l;w_#lY-;CRcroc#&6EdXG99)!$E6gdYQE`=Ykg-
+z+()jM-y+GbgvIf7c<E(E#+)QiHYn#lDRM;$|GsNRg`rpUO8;3!4MsB_q~4G3;R(wq
+zQAEkY$e6issODZPR4?Ot5{2U?$%TgN-Teh<R&Mr8$#SDNg9O>Hy<Gl*#kpNZlAxdw
+zxHofwou$BP;ae*5UfS(L65F(ufU_1Q1qKqMZN>2MhW4Bk6b8pg;<lKX@a&T>?dAxq
+zG~a3<n}bH(2{J~nJO6g(uXiaN0I)D5H9HV#(bA<a2||{`(rcS?`S{CEzi)*yQrhfS
+z2&|UbQV^EWyH;G0$kKW;+AbXnC(!{v1Jyp&sLj{R7(S$q2Q*My3VJNwxEM$P*b0X-
+z^tJ<5;A=IP={qD}Uto!5N#B<!O$C@r^`tdTk(0SwAoygBYduF1jjlEMObAcZx<!MW
+zG3VLBsYE}<c)a@nv|-=qNN(XG$hzZMO0Hi3yi_!`s|>tDl|b>B{{yCg2q+p;iGDeQ
+zs~zKT-r(r7F4-9X)?;P+4pssBMpO0sUmuM41pw4fts^db+(obE;4jxt0TBij9ougU
+zlE>T(v?TKc#4!DY^UvOsN{H<lD7>pnaZA)_hqo`fQ;9C`zTAC&B%R9BfmJF_PwcrD
+zyH=&bR6raY7O{3S0?tceUs%P2oX#q~LC-Uk@UQ2E3}s1SQ|#COAWRL-yV%cxR;IYf
+zUpijNf5a0KMIqya@N}Z+CW*>Re%aIAup;*xC7W7!eJR4TZi3f8C#YE03ZsU$K5tPK
+ztwo?l&)F<s{R8_j+CfUv^4EeJu^{i_uk35d0!K-7ImK{bj+uh4zJ%`)a;#pg);~u;
+z-0yCuTW<={)H&#kJ@o@(&Hfw|e&RW^;Nn&kJIbh9Ay2PIvC2roXKt!96zlanB2dlC
+zL(M*`<e50=<*#ntc57S<M`K61OR(x8DbYFE+7*fyl#@Qd+byy+!cInI8A*^W%JPR|
+z3%VOlL3-2Erk$K%P8urI9Fx@;ULdRB)Fn2D=S9TIbXnix(35qVY&T=+ot}?RshyPV
+zelnVD9zJC~9o?qZPUIY(W}(n9W=R?C6;bRkP4?P%RcQ}(q6t44PvaShc;ft9+FLmC
+zb0#i%Lpv}meJn`8rDakXKGGW>2t&r^l}$vZAguo!MSdC@o#>IBK?5pWEX@9$K3FVa
+zp1U0UO4a>yN9KO(;9#5a2=T=yd`050^PRAT?|yPV38C-YaQ!cQ&1r$7bK;kK#mddm
+z`MAQ>I_l<zHILV?_%QX={cBi5Q@!VhX@qWmdydu7dw2k$rp<;*{O%+s9pmNPZ0<U|
+zCdd|5cF|4c`ilfAeI2wpr7Zr`hvMC{*-?ojgs*+f#{;{i=;*AxKtq8ocI;FQ4!S$p
+z-#nNs2*x0|inh6~8(Ku5_R~zCGGyeKbqKUOB;L!%QclJI>|m+e;tTa*_zt}CbT*4L
+znu@~q`Fg6Q_GmDH$~$&s^!O=AmBK*-OcF-KB;JDwnHHESuQb-Ho_IL!c-gp+A81_*
+zC+9B|1D=6^C_<jsamGp&3SK8ttZxd7Rq{1?rp6r9Mi!DBWxs$DF-6R?^bnkwCw<Je
+z$y$i*M>Obi&$PMQUCrbXu*weiRG&M_KP%DmmhK30HJfDo6NgO0LVhTgNLkgTW>q&g
+zHpIr3FFf)Hd1)$NhNWujcj|NzybHTmotP~QcH+W~#IQBkBsRb?*x-x^-n$xsuAV*3
+zzdhz{Gubh}oWAi1y8gVx@MhKD$Hdwzuey=OEUzZ)z;5ynRQ)qow9)$V04yP3+ZoG!
+z|CwL-*QeBpTD9Y#U%I@G@~XTVnArV3S~+A0_!^kRWZ|BN8}m|?-zVHS%~A15%!GVy
+zOll|1O4=BcIt>OZy@G4tg5}szTsuS8V75obeUXA83Hy?h{mf_uV)PO%9p6Xry%@^)
+z(S~V`2MBz_Q?M}8h}!{&#_ZKc_e+Ow<BZJ`%$Up1%;?sjaMC0?&<iA|WhEYv!59R`
+zZyDqsL9-IGNfzcy_8Y;W%Z827WA1%7@bt4%8}<1m8IRt~;zV9#L(bf-9<Io`=49dn
+zX6Zf_92zvd5Y5TFqoKh`D~*MQZ|u+c5i^~3A5Euv?>7E~MH*XQ!s0R&dIcd>N`f-V
+zRc*xYMgNLwhMnEc1LXFH&qj)|x}(15?tLf1e6Bt2bK%g9du`F38Rem`6M0csPu!ev
+z$v0C&e6Q{O2ct}_v1x+WtTB5fLI&!bK!wPsX^AnX>bZ%EeCD0R`vfX2%?G&rz^XEq
+zSUUwly84Bq$I;HdZB$g}PGUWQYP`W0?cAg3g8BJXA&}c`Z>$xE&&nsdyR*ZW306CY
+zK^hcq0|J$8P|43u^V*y+S@^FEo(Amyxs3f+wDZf~^ewZ%IjWj1E)K)~)B>)n*E<zC
+HBEo+HTvK0Q
+
+literal 0
+HcmV?d00001
+
+diff --git a/tests/flyer-layouts.cjs b/tests/flyer-layouts.cjs
+new file mode 100644
+index 0000000..e477ece
+--- /dev/null
++++ b/tests/flyer-layouts.cjs
+@@ -0,0 +1,11 @@
++const assert=require('node:assert/strict'),L=require('../assets/divas-flyer-layouts.js');
++const formats=[{ancho:1080,alto:1080},{ancho:1080,alto:1920},{ancho:1920,alto:1080},{ancho:1428,alto:400}];let checks=0;
++function overlap(a,b){return Math.min(a.x+a.w/2,b.x+b.w/2)-Math.max(a.x-a.w/2,b.x-b.w/2)>.01&&Math.min(a.y+a.h/2,b.y+b.h/2)-Math.max(a.y-a.h/2,b.y-b.h/2)>.01;}
++for(const size of formats)for(const key of Object.keys(L.families)){
++ const p=L.plan(size,key,3),main=['logo','titulo','idea_fecha','descripcion','accion','contacto',...L.apps.map(a=>a.role)];
++ for(const role of main){const b=p[role];assert.ok(b.w>0&&b.h>0,role);assert.ok(b.x-b.w/2>=0&&b.x+b.w/2<=size.ancho+.01&&b.y-b.h/2>=0&&b.y+b.h/2<=size.alto+.01,`${key}/${role} inside`);}
++ for(let i=0;i<main.length;i++)for(let j=i+1;j<main.length;j++)assert.ok(!overlap(p[main[i]],p[main[j]]),`${key} ${size.ancho}/${size.alto}: ${main[i]} overlaps ${main[j]}`);
++ assert.equal(p.images.length,3);checks++;
++}
++assert.equal(new Set(Object.keys(L.families).map(k=>JSON.stringify(L.plan(formats[0],k)))).size,6);
++console.log('PASS',checks,'responsive plans, three separate app logos, safe bounds, non-overlapping reading areas and six distinct layouts');
+diff --git a/tests/flyer-v44.cjs b/tests/flyer-v44.cjs
+new file mode 100644
+index 0000000..4df9c14
+--- /dev/null
++++ b/tests/flyer-v44.cjs
+@@ -0,0 +1,17 @@
++'use strict';
++const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs'),path=require('node:path');
++const root=path.resolve(__dirname,'..'),out=path.join(root,'test-output/flyer-v44');fs.mkdirSync(out,{recursive:true});
++// Test-only access to the real generator, never part of the shipped page.
++const hook=`window.__flyerQA={open:openSurprise,state:()=>I.session,current:currentIdea,async sample(layout,format,theme,palette){const r=I.session,item=currentIdea(),recipe=copy(item.recipe);Object.assign(recipe,{layout,palette});Object.assign(recipe.settings,{format,theme,keepImages:false,input:{title:'BRILLA CON DIVAS',when:'Viernes · 21:00 h',body:'Tu talento merece un escenario. Conecta con nuestra comunidad.',contact:'@divasagency',action:'TE ESPERAMOS EN VIVO'}});recipe.studio=ideaStudio(recipe);const fonts=ideaFontFallback(theme,1,true,/magazine|invitation|minimal/.test(layout)?'editorial':'impacto',recipe.studio);recipe.font=fonts;recipe.bodyFont=fonts.body;await loadFont(fonts);const assets={...item.assets,background:await ideaBuiltinAsset(recipe.studio),hero:await ideaBuiltinAsset('hero')},doc=normalizeProject(buildSurpriseDocument(r,recipe,assets));const c=document.createElement('canvas');ideaPreview(c,doc,800);return {image:c.toDataURL(),layers:doc.capas.map(p=>({id:p.id,rol:p.rol,tipo:p.tipo,x:p.x,y:p.y,w:p.w,h:p.h,opacidad:p.opacidad,src:p.src?.slice(0,60),texto:p.texto,tamano:p.tamano})),doc};},resize(doc,format){const old=copy(doc.lienzo),size=FORMATS[format];doc.lienzo=copy(size);resizeStudioLayout(doc,size,old);return doc.capas.filter(p=>/^app[123]$/.test(p.rol)).map(p=>({rol:p.rol,x:p.x,y:p.y,w:p.w,h:p.h}));}};`;
++const server=http.createServer((req,res)=>{const file=path.join(root,new URL(req.url,'http://localhost').pathname.replace(/^\/$/,'/index.html'));try{res.setHeader('Content-Type',/\.m?js$/.test(file)?'application/javascript':file.endsWith('.css')?'text/css':file.endsWith('.png')?'image/png':'text/html');let content=fs.readFileSync(file);if(file.endsWith('/index.html'))content=content.toString().replace('boot().catch(error=>notify(error.message));',hook+'\nboot().catch(error=>notify(error.message));');res.end(content);}catch{res.writeHead(404);res.end();}});
++(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const b=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage']}),p=await b.newPage({viewport:{width:1440,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.route(/supabase\.(co|in)|fonts\.googleapis\.com|fonts\.gstatic\.com/,r=>r.abort());
++try{
++ await p.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded'});await p.locator('#startImageInput').setInputFiles(path.join(__dirname,'fixtures/video/square.png'));await p.waitForFunction(()=>!document.getElementById('workspace').hidden&&!document.getElementById('workspace').inert);await p.evaluate(()=>window.__flyerQA.open());await p.waitForFunction(()=>window.__flyerQA.current()&&!window.__flyerQA.state().loading);assert.equal(await p.locator('#ideaModel').inputValue(),'auto');
++ const seen=[];for(let i=0;i<6;i++){const item=await p.evaluate(()=>{const c=window.__flyerQA.current();return {layout:c.recipe.layout,apps:c.doc.capas.filter(p=>/^app[123]$/.test(p.rol)).map(p=>({role:p.rol,opacity:p.opacidad}))};});assert.equal(item.apps.length,3);assert.equal(new Set(item.apps.map(x=>x.role)).size,3);assert.ok(item.apps.every(x=>x.opacity===1));if(seen.length)assert.notEqual(item.layout,seen.at(-1));seen.push(item.layout);await p.locator('#ideaAgain').click();await p.waitForFunction(()=>!window.__flyerQA.state().loading);}
++ assert.equal(new Set(seen).size,6,'automatic cycle explores all six families before repeating');console.log('PASS real UI generates editable Salsa/Café/BuzzCast logos every time, opaque and deduplicated; no consecutive repeated layout',seen);
++ const layouts=await p.evaluate(()=>Object.keys(window.DivasFlyerLayouts.families));let n=0;
++ for(const format of ['1:1','9:16','16:9','banner'])for(const layout of layouts){const theme=n%3===0?'halloween':n%3===1?'divas':'gala',palette=n%3===0?'eclipse':n%3===1?'petalo':'oro',r=await p.evaluate(async a=>window.__flyerQA.sample(...a),[layout,format,theme,palette]);assert.equal(r.layers.filter(x=>/^app[123]$/.test(x.rol)).length,3);assert.equal(r.layers.filter(x=>x.rol==='titulo').length,1);assert.ok(r.layers.filter(x=>x.tipo==='texto').every(x=>Number.isFinite(x.tamano)&&x.tamano>0));
++ fs.writeFileSync(path.join(out,format.replace(':','x')+'-'+layout+'.png'),Buffer.from(r.image.split(',')[1],'base64'));if(format==='1:1'){const logos=await p.evaluate(a=>window.__flyerQA.resize(a,'9:16'),r.doc);assert.equal(logos.length,3);assert.ok(logos.every(x=>x.x-x.w/2>=0&&x.x+x.w/2<=1080&&x.y+x.h/2<=1920));}n++;}
++ await p.setViewportSize({width:390,height:844});await p.screenshot({path:path.join(out,'mobile-generator.png'),animations:'disabled'});assert.deepEqual(errors,[]);console.log('PASS',n,'real compositions rendered, paired fonts, all formats and semantic logo reflow');
++}catch(e){console.error('Errors',errors);console.error('Status',await p.locator('#ideaStatus').textContent());await p.screenshot({path:path.join(out,'failure.png'),timeout:5000}).catch(()=>{});throw e;}finally{await b.close();server.close();}
++})().catch(e=>{console.error(e);server.close();process.exitCode=1;});
+diff --git a/tests/package.json b/tests/package.json
+index 1945b74..4b3812e 100644
+--- a/tests/package.json
++++ b/tests/package.json
+@@ -12 +12,3 @@
+-    "test:video:v42": "node video-model.cjs && node video-effects.mjs && node video-v42.cjs"
++    "test:video:v42": "node video-model.cjs && node video-effects.mjs && node video-v42.cjs",
++    "test:video:v44": "node video-model.cjs && node video-effects.mjs && node video-v44-effects.mjs && node video-v44.cjs",
++    "test:flyer:v44": "node flyer-layouts.cjs && node flyer-v44.cjs"
+diff --git a/tests/static-delivery.cjs b/tests/static-delivery.cjs
+index 025cf20..5a7bbd9 100644
+--- a/tests/static-delivery.cjs
++++ b/tests/static-delivery.cjs
+@@ -9 +9 @@ const output = path.join(root, 'public');
+-const types = { '.html':'text/html', '.js':'application/javascript', '.mjs':'application/javascript', '.css':'text/css', '.json':'application/json', '.wasm':'application/wasm' };
++const types = { '.html':'text/html', '.js':'application/javascript', '.mjs':'application/javascript', '.css':'text/css', '.json':'application/json', '.wasm':'application/wasm', '.png':'image/png' };
+@@ -26 +26 @@ const server = http.createServer(async (req, res) => {
+-    for (const name of ['assets/divas-documents.js', 'assets/divas-documents.css', 'assets/divas-video.js', 'assets/divas-video.css', 'assets/divas-video-export.mjs', 'assets/divas-video-render.mjs', 'assets/vendor/pdfjs/pdf.min.mjs', 'assets/vendor/pdfjs/pdf.worker.min.mjs', 'assets/vendor/mediabunny/mediabunny.min.mjs', 'assets/vendor/pdfjs/wasm/openjpeg.wasm']) {
++    for (const name of ['assets/divas-flyer-layouts.js','assets/app-logos/salsa.png','assets/app-logos/cafe.png','assets/app-logos/buzzcast.png','assets/divas-documents.js', 'assets/divas-documents.css', 'assets/divas-video.js', 'assets/divas-video.css', 'assets/divas-video-export.mjs', 'assets/divas-video-render.mjs', 'assets/vendor/pdfjs/pdf.min.mjs', 'assets/vendor/pdfjs/pdf.worker.min.mjs', 'assets/vendor/mediabunny/mediabunny.min.mjs', 'assets/vendor/pdfjs/wasm/openjpeg.wasm']) {
+diff --git a/tests/video-browser.cjs b/tests/video-browser.cjs
+index ef1686f..7410704 100644
+--- a/tests/video-browser.cjs
++++ b/tests/video-browser.cjs
+@@ -29 +29 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
+-  await page.locator('[data-dv=right]').click();await page.locator('[data-dv=left]').click();await page.locator('[data-dv=duplicate]').click();
++  await page.locator('[data-dv=right]').click();await page.locator('[data-dv=left]').click();await page.locator('.dv-clip-tools [data-dv=duplicate]').click();
+@@ -35 +35 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
+-  const backupEvent=page.waitForEvent('download');await page.locator('[data-dv=backup]').click();const backup=await backupEvent;const backupPath=path.join(out,'roundtrip.divasvideo');await backup.saveAs(backupPath);
++  await page.locator('[data-dv=tool][data-tool=media]').click();const backupEvent=page.waitForEvent('download');await page.locator('[data-dv=backup]').click();const backup=await backupEvent;const backupPath=path.join(out,'roundtrip.divasvideo');await backup.saveAs(backupPath);
+@@ -49 +49 @@ async function stored(page){return page.evaluate(async()=>{const d=await new Pro
+-  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile.png')});await page.locator('[data-dv=panel][data-panel=scene]').click();await page.screenshot({path:path.join(out,'mobile-edit.png')});
++  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile.png')});await page.locator('[data-dv=tool][data-tool=transform]').click();await page.screenshot({path:path.join(out,'mobile-edit.png')});
+diff --git a/tests/video-integration.cjs b/tests/video-integration.cjs
+index f663e5b..0496b8e 100644
+--- a/tests/video-integration.cjs
++++ b/tests/video-integration.cjs
+@@ -11 +11 @@ const server=http.createServer((req,res)=>{const pathname=new URL(req.url,'http:
+-  await page.locator('.save-toolbar [data-dv-open]').click();await page.locator('[data-dv=capture]').click();await page.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1&&!document.getElementById('dvBody').inert);
++  await page.locator('.save-toolbar [data-dv-open]').click();await page.locator('.dv-timeline [data-dv=capture]').click();await page.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1&&!document.getElementById('dvBody').inert);
+diff --git a/tests/video-model.cjs b/tests/video-model.cjs
+index b8efca3..4bd4008 100644
+--- a/tests/video-model.cjs
++++ b/tests/video-model.cjs
+@@ -40 +40 @@ test('Layer backups retain keying, independent text, poses and audio envelopes',
+- const p=M.blank(),c=M.layer(video,1);c.keyer={enabled:true,color:'#00ff00',tolerance:.2,softness:.05,spill:.7};c.animation.enabled=true;c.animation.end.x=.8;c.transform.opacity=.65;p.layers=[c,M.textLayer(2)];p.audio=[M.audioLayer(audio,3)];p.visualOrder=M.stackOrder(p);const r=M.normalize(p,[video,audio]);assert.deepEqual(r,p);assert.equal(M.animatedPose(c,0).x,.5);assert.equal(M.animatedPose(c,1).x,.8);assert.equal(M.envelope(p.audio[0],0),0);
++ const p=M.blank(),c=M.layer(video,1);c.keyer={enabled:true,color:'#00ff00',tolerance:.2,softness:.05,spill:.7,scope:'exterior'};c.animation.enabled=true;c.animation.end.x=.8;c.transform.opacity=.65;p.layers=[c,M.textLayer(2)];p.audio=[M.audioLayer(audio,3)];p.visualOrder=M.stackOrder(p);const r=M.normalize(p,[video,audio]);assert.deepEqual(r,p);assert.equal(M.animatedPose(c,0).x,.5);assert.equal(M.animatedPose(c,1).x,.8);assert.equal(M.envelope(p.audio[0],0),0);
+diff --git a/tests/video-render-v44.cjs b/tests/video-render-v44.cjs
+new file mode 100644
+index 0000000..0af4b0a
+--- /dev/null
++++ b/tests/video-render-v44.cjs
+@@ -0,0 +1,3 @@
++const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs'),path=require('node:path');
++const root=path.resolve(__dirname,'..'),server=http.createServer((req,res)=>{const f=path.join(root,req.url.split('?')[0]);if(req.url==='/'){res.setHeader('Content-Type','text/html');return res.end('<canvas id="test"></canvas>');}try{res.setHeader('Content-Type','application/javascript');res.end(fs.readFileSync(f));}catch{res.writeHead(404);res.end();}});
++(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const b=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage']}),page=await b.newPage();try{await page.goto('http://127.0.0.1:'+server.address().port);await page.addScriptTag({path:path.join(root,'assets/divas-video-model.js')});const result=await page.evaluate(async()=>{const {Renderer,processPixels}=await import('/assets/divas-video-render.mjs'),M=window.DivasVideoModel,c=document.getElementById('test');c.width=c.height=120;const r=new Renderer(M,c),source=document.createElement('canvas');source.width=source.height=120;const x=source.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,120,120);x.fillStyle='#c3841b';x.fillRect(20,20,80,80);x.fillStyle='#fff';x.fillRect(45,45,30,30);const a={id:'logo',kind:'image',width:120,height:120,type:'image/png',size:400,name:'logo'},p=M.blank(),s=M.scene(a);s.transition='cut';s.keyer={enabled:true,color:'#ffffff',tolerance:.08,softness:.035,spill:.65,scope:'exterior'};p.ratio='1:1';p.background='#112233';p.scenes=[s];const assets=new Map([[a.id,a]]),sources=new Map([[s.id,source]]);r.render(p,1,assets,sources);const pixel=(a,b)=>[...c.getContext('2d').getImageData(a,b,1,1).data],exterior=[pixel(5,5),pixel(60,60),pixel(30,30)];s.keyer.scope='all';r.render(p,1,assets,sources);const all=[pixel(5,5),pixel(60,60)];const gl=!!r.effects.gl;const sample=document.createElement('canvas');sample.width=sample.height=8;const z=sample.getContext('2d');z.fillStyle='#e8eee8';z.fillRect(0,0,8,8);const clip={...s,keyer:{...s.keyer,tolerance:.04,softness:.08}},gpu=r.effects.apply(sample,clip,8,8),read=document.createElement('canvas');read.width=read.height=8;read.getContext('2d').drawImage(gpu,0,0);const actual=[...read.getContext('2d').getImageData(2,2,1,1).data],cpu=new Uint8ClampedArray([232,238,232,255]);processPixels(cpu,clip.keyer,clip.adjust);return {gl,exterior,all,gpu:actual,cpu:[...cpu]};});assert.equal(result.gl,true,'actual WebGL context');assert.deepEqual(result.exterior[0],[17,34,51,255]);assert.deepEqual(result.exterior[1],[255,255,255,255]);assert.deepEqual(result.exterior[2],[195,132,27,255]);assert.ok(result.all.every(p=>p[0]===17&&p[1]===34&&p[2]===51));assert.ok(result.gpu.every((v,i)=>Math.abs(v-result.cpu[i])<=5),JSON.stringify(result));console.log('PASS actual WebGL chroma, CPU exterior connected mask and matching neutral-edge decontamination',result.gpu,result.cpu);}finally{await b.close();server.close();}})().catch(e=>{console.error(e);server.close();process.exitCode=1;});
+diff --git a/tests/video-v40.cjs b/tests/video-v40.cjs
+index ad7ec6f..272d9f5 100644
+--- a/tests/video-v40.cjs
++++ b/tests/video-v40.cjs
+@@ -33 +33 @@ const blue=p=>p[2]>150&&p[1]<80;
+-  await page.locator('[data-dv=addText]').click();await page.locator('#dvTitle').fill('BRILLA CON DIVAS');await page.locator('#dvTitleStyle').selectOption('gold');await tool(page,'clip');await change(page,'Start',.75);await change(page,'Duration',1.5);await tool(page,'transform');await page.locator('#dvAnimation').check();await page.locator('[data-dv=poseEnd]').click();await change(page,'X',65);await page.locator('[data-dv=poseStart]').click();
++  await tool(page,'text');await page.locator('.dv-context-create [data-dv=addText]').click();await page.locator('#dvTitle').fill('BRILLA CON DIVAS');await page.locator('#dvTitleStyle').selectOption('gold');await tool(page,'clip');await change(page,'Start',.75);await change(page,'Duration',1.5);await tool(page,'transform');await page.locator('#dvAnimation').check();await page.locator('[data-dv=poseEnd]').click();await change(page,'X',65);await page.locator('[data-dv=poseStart]').click();
+@@ -42 +42 @@ const blue=p=>p[2]>150&&p[1]<80;
+-  const backEvent=page.waitForEvent('download');await page.locator('[data-dv=backup]').click();await (await backEvent).saveAs(path.join(out,'v40.divasvideo'));
++  await tool(page,'media');const backEvent=page.waitForEvent('download');await page.locator('[data-dv=backup]').click();await (await backEvent).saveAs(path.join(out,'v40.divasvideo'));
+diff --git a/tests/video-v42.cjs b/tests/video-v42.cjs
+index f43b5ad..18446da 100644
+--- a/tests/video-v42.cjs
++++ b/tests/video-v42.cjs
+@@ -9 +9 @@ const pixel=(p,x=.1,y=.15)=>p.locator('#dvCanvas').evaluate((c,xy)=>[...c.getCon
+-const white=c=>c.slice(0,3).every(v=>v>235),blue=c=>c[2]>150&&c[0]<90&&c[1]<90,red=c=>c[0]>180&&c[1]<60&&c[2]<60;
++const white=c=>c.slice(0,3).every(v=>v>248),blue=c=>c[2]>150&&c[0]<90&&c[1]<90,red=c=>c[0]>180&&c[1]<60&&c[2]<60;
+@@ -28 +28 @@ try{
+- const layerId=await p.locator('.dv-layer-bar').getAttribute('data-id');assert.ok(blue(await pixel(p,.5,.5)),'front layer hides subject');assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=layers]').click();await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);assert.ok(red(await pixel(p,.5,.5)),'main video subject is in front');assert.ok(blue(await pixel(p,.1,.15)),'background color removed to expose lower layer');await p.screenshot({path:path.join(out,'layers-1440.png')});await p.setViewportSize({width:390,height:844});await p.locator('[data-dv=forward]').click();assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);await p.screenshot({path:path.join(out,'layers-390.png')});await p.setViewportSize({width:1440,height:1000});
++ const layerId=await p.locator('.dv-layer-bar').getAttribute('data-id');assert.ok(blue(await pixel(p,.5,.5)),'front layer hides subject');assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=tool][data-tool=layers]').click();await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);assert.ok(red(await pixel(p,.5,.5)),'main video subject is in front');assert.ok(blue(await pixel(p,.1,.15)),'background color removed to expose lower layer');await p.screenshot({path:path.join(out,'layers-1440.png')});await p.setViewportSize({width:390,height:844});await p.locator('[data-dv=forward]').click();assert.deepEqual(await order(p),[layerId,'base']);await p.locator('[data-dv=backward]').click();assert.deepEqual(await order(p),['base',layerId]);await p.screenshot({path:path.join(out,'layers-390.png')});await p.setViewportSize({width:1440,height:1000});
+@@ -37 +37 @@ try{
+- let downloadEvent=p.waitForEvent('download');await p.locator('[data-dv=backup]').click();await (await downloadEvent).saveAs(path.join(out,'v42.divasvideo'));
++ await tool(p,'media');let downloadEvent=p.waitForEvent('download');await p.locator('[data-dv=backup]').click();await (await downloadEvent).saveAs(path.join(out,'v42.divasvideo'));
+diff --git a/tests/video-v43.cjs b/tests/video-v43.cjs
+index 9db0ea2..71b92bf 100644
+--- a/tests/video-v43.cjs
++++ b/tests/video-v43.cjs
+@@ -32 +32 @@ try{
+- await p.locator('[data-dv=layers]').click();from=center(await p.locator('.dv-scene[data-id="'+photo+'"]').boundingBox());dest=await p.locator('#dvLayerStack [data-stack=base]').boundingBox();await drag(p,from,{x:dest.x+60,y:dest.y+4},/Superponer/);assert.equal(await p.locator('.dv-layer-bar').count(),1);
++ await p.locator('[data-dv=tool][data-tool=layers]').click();from=center(await p.locator('.dv-scene[data-id="'+photo+'"]').boundingBox());dest=await p.locator('#dvLayerStack [data-stack=base]').boundingBox();await drag(p,from,{x:dest.x+60,y:dest.y+4},/Superponer/);assert.equal(await p.locator('.dv-layer-bar').count(),1);
+@@ -34 +34 @@ try{
+- await p.setViewportSize({width:390,height:844});await p.locator('#dvToSequence').click();await ready(p);await p.locator('[data-dv=panel][data-panel=preview]').click();await p.locator('#dvTimelineScroll').evaluate(e=>e.scrollTop=0);
++ await p.setViewportSize({width:390,height:844});await tool(p,'clip');await p.locator('#dvToSequence').click();await ready(p);if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();await p.locator('#dvTimelineScroll').evaluate(e=>e.scrollTop=0);
+@@ -37 +37 @@ try{
+- await p.locator('[data-dv=panel][data-panel=preview]').click();await p.locator('[data-dv=asBackground]').click();await ready(p);await p.locator('[data-dv=panel][data-panel=preview]').click();
++ if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();await p.locator('[data-dv=asBackground]').click();await ready(p);if(await p.locator('[data-dv=closeInspector]').isVisible())await p.locator('[data-dv=closeInspector]').click();
+@@ -48 +48 @@ try{
+- let event=p.waitForEvent('download');await p.locator('[data-dv=backup]').click();await (await event).saveAs(path.join(out,'v43.divasvideo'));
++ await tool(p,'media');let event=p.waitForEvent('download');await p.locator('[data-dv=backup]').click();await (await event).saveAs(path.join(out,'v43.divasvideo'));
+diff --git a/tests/video-v44-effects.mjs b/tests/video-v44-effects.mjs
+new file mode 100644
+index 0000000..b2bd27f
+--- /dev/null
++++ b/tests/video-v44-effects.mjs
+@@ -0,0 +1,17 @@
++import assert from 'node:assert/strict';
++import {processPixels} from '../assets/divas-video-render.mjs';
++import M from '../assets/divas-video-model.js';
++const w=120,h=100,source=new Uint8ClampedArray(w*h*4).fill(255);
++// Solid gold enclosure with a white highlight inside: identical RGB to the outside.
++for(let y=20;y<80;y++)for(let x=30;x<90;x++){const i=(y*w+x)*4;source[i]=195;source[i+1]=132;source[i+2]=27;}
++for(let y=40;y<60;y++)for(let x=50;x<70;x++){const i=(y*w+x)*4;source[i]=source[i+1]=source[i+2]=255;}
++const key={enabled:true,color:'#ffffff',tolerance:.08,softness:.035,spill:.65,scope:'exterior'};
++const outside=source.slice();processPixels(outside,key,{}, {width:w,height:h});
++assert.equal(outside[3],0);assert.equal(outside[(50*w+60)*4+3],255);assert.deepEqual([...outside.slice((50*w+60)*4,(50*w+60)*4+4)],[255,255,255,255]);
++assert.deepEqual([...outside.slice((25*w+35)*4,(25*w+35)*4+4)],[195,132,27,255]);
++const global=source.slice();processPixels(global,{...key,scope:'all'}, {},{width:w,height:h});assert.equal(global[(50*w+60)*4+3],0);
++const disabled=source.slice();processPixels(disabled,{...key,enabled:false},{},{width:w,height:h});assert.deepEqual(disabled,source);
++// A gap really connected to the outside remains removable; no per-frame history leaks.
++const open=source.slice();for(let y=0;y<50;y++){const n=(y*w+60)*4;open[n]=open[n+1]=open[n+2]=255;}processPixels(open,key,{},{width:w,height:h});assert.equal(open[(50*w+60)*4+3],0);
++const a={id:'a',kind:'image',type:'image/png',size:100,width:w,height:h,name:'Logo'},p=M.blank();p.scenes=[M.scene(a)];p.scenes[0].keyer=key;assert.deepEqual(M.normalize(p,[a]).scenes[0].keyer,key);delete p.scenes[0].keyer.scope;assert.equal(M.normalize(p,[a]).scenes[0].keyer.scope,'all');
++console.log('PASS exterior removal preserves enclosed white/gold, chroma removes all matching pixels, open connectivity, original alpha, saved scope and legacy compatibility');
+diff --git a/tests/video-v44.cjs b/tests/video-v44.cjs
+new file mode 100644
+index 0000000..d569efc
+--- /dev/null
++++ b/tests/video-v44.cjs
+@@ -0,0 +1,22 @@
++'use strict';
++const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs'),path=require('node:path');
++const root=path.resolve(__dirname,'..'),fixtures=path.join(__dirname,'fixtures/video'),out=path.join(root,'test-output/video-v44');fs.mkdirSync(out,{recursive:true});
++const server=http.createServer((req,res)=>{const file=path.join(root,new URL(req.url,'http://localhost').pathname.replace(/^\/$/,'/index.html'));try{res.setHeader('Content-Type',/\.m?js$/.test(file)?'application/javascript':file.endsWith('.css')?'text/css':file.endsWith('.png')?'image/png':'text/html');res.end(fs.readFileSync(file));}catch{res.writeHead(404);res.end();}});
++const ready=p=>p.waitForFunction(()=>!document.getElementById('dvBody').inert);
++const pixel=(p,x,y)=>p.locator('#dvCanvas').evaluate((c,[x,y])=>[...c.getContext('2d').getImageData(c.width*x,c.height*y,1,1).data],[x,y]);
++const tool=(p,n)=>p.locator('[data-dv=tool][data-tool='+n+']').click();
++(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const b=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage']}),p=await b.newPage({viewport:{width:1440,height:1000},acceptDownloads:true}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.route(/supabase\.(co|in)|fonts\.googleapis\.com|fonts\.gstatic\.com/,r=>r.abort());
++try{
++ await p.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded'});await p.locator('.projects-shortcuts [data-dv-new]').click();await ready(p);await p.locator('#dvName').fill('Estudio v44 · fondo protegido');await p.locator('#dvFiles').setInputFiles(path.join(fixtures,'white-detail.png'));await ready(p);await p.waitForFunction(()=>document.querySelectorAll('.dv-scene').length===1);await p.locator('#dvRatio').selectOption('1:1');await p.locator('[data-dv=frame][data-fit=contain]').click();await ready(p);
++ await p.locator('[data-dv=cutout]').click();await p.locator('[data-dv=keyColor][data-color="#ffffff"]').click();assert.equal(await p.locator('#dvKeyScope').inputValue(),'exterior');await p.locator('[data-dv=compareAfter]').click();assert.deepEqual((await pixel(p,.5,.5)).slice(0,3),[255,255,255]);assert.notDeepEqual((await pixel(p,.05,.05)).slice(0,3),[255,255,255]);
++ await p.locator('#dvKeyScope').selectOption('all');await p.locator('[data-dv=compareAfter]').click();assert.notDeepEqual((await pixel(p,.5,.5)).slice(0,3),[255,255,255]);await p.locator('#dvKeyScope').selectOption('exterior');await p.locator('[data-dv=confirmKey]').click();assert.deepEqual((await pixel(p,.5,.5)).slice(0,3),[255,255,255]);assert.ok((await pixel(p,.05,.05))[0]<80);console.log('PASS actual preview removes exterior white and preserves enclosed highlight, mode comparison and confirmation');
++ await p.locator('[data-dv=endCutout]').click();await tool(p,'transform');await p.locator('#dvName').focus();await p.keyboard.press('End');await p.keyboard.press('Backspace');assert.equal(await p.locator('.dv-scene').count(),1);await p.locator('#dvCanvas').click({position:{x:100,y:100}});await p.locator('.dv-scene').click();await p.keyboard.press('Control+d');await ready(p);assert.equal(await p.locator('.dv-scene').count(),2);await p.keyboard.press('Delete');await ready(p);assert.equal(await p.locator('.dv-scene').count(),1);await p.keyboard.press('Control+z');await ready(p);assert.equal(await p.locator('.dv-scene').count(),2);await p.keyboard.press('Control+Shift+z');await ready(p);assert.equal(await p.locator('.dv-scene').count(),1);
++ await p.locator('.dv-scene').click();await p.locator('[data-dv=lock]').click();await p.keyboard.press('Delete');await ready(p);assert.equal(await p.locator('.dv-scene').count(),1);await p.locator('[data-dv=lock]').click();await p.locator('.dv-scene').click();await p.keyboard.press('Shift+ArrowRight');await p.keyboard.press('Control+s');await p.waitForFunction(()=>document.getElementById('dvSaveStatus').textContent==='En este dispositivo');console.log('PASS delete/duplicate/undo/redo, locked layer protection, nudge and save, text field Backspace safe');
++ await tool(p,'text');await p.locator('#dvTitle').fill('BRILLA EN DIVAS');await p.keyboard.press('Control+a');await p.keyboard.press('Backspace');assert.equal(await p.locator('.dv-scene').count(),1);assert.equal(await p.locator('#dvTitle').inputValue(),'');await p.locator('#dvCanvas').click();await p.keyboard.press('Escape');assert.equal(await p.locator('#dvCanvasTools').isVisible(),false);await p.locator('.dv-scene').click();await tool(p,'transform');
++ await p.screenshot({path:path.join(out,'desktop.png'),animations:'disabled'});
++ for(const width of [390,360,320]){await p.setViewportSize({width,height:844});await p.locator('[data-dv=closeInspector]').click();await p.waitForFunction(()=>document.getElementById('dvCanvas').getBoundingClientRect().height>=230);let box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=230,`mobile ${width} canvas ${box.height}`);const more=p.locator('[data-dv=moreTools]'),mb=await more.boundingBox();assert.ok(mb.x+mb.width<=width+1,'More tools stays visible');await more.click();await p.waitForTimeout(300);await tool(p,'layers');assert.ok(await p.locator('#dvLayerStack').isVisible());await p.locator('[data-dv=closeInspector]').click();await more.click();await p.waitForTimeout(300);await p.screenshot({path:path.join(out,'mobile-'+width+'.png'),animations:'disabled'});await p.locator('[data-dv=cutout]').click();box=await p.locator('#dvCanvas').boundingBox();assert.ok(box.height>=190,`cutout ${width} canvas ${box.height}`);assert.ok(await p.locator('#dvKeyScope').isVisible());assert.equal(await p.locator('.dv-tool-rail').isVisible(),false);await p.screenshot({path:path.join(out,'cutout-'+width+'.png'),animations:'disabled'});await p.locator('[data-dv=endCutout]').click();}
++ console.log('PASS responsive tools, visible scope and canvas at 320/360/390 px');
++ await p.setViewportSize({width:1440,height:1000});await tool(p,'media');const event=p.waitForEvent('download');await p.locator('[data-dv=backup]').click();const file=await event;await file.saveAs(path.join(out,'v44.divasvideo'));await ready(p);
++ const movieEvent=p.waitForEvent('download',{timeout:180000});await p.locator('[data-dv=export]').click();const movie=await movieEvent;await movie.saveAs(path.join(out,movie.suggestedFilename()));await ready(p);console.log('PASS backup and real video export',movie.suggestedFilename());assert.deepEqual(errors,[]);
++}catch(e){console.error('Page errors',errors);console.error('Message',await p.locator('#dvMessage').textContent());await p.screenshot({path:path.join(out,'failure.png'),timeout:5000}).catch(()=>{});throw e;}finally{await b.close();server.close();}
++})().catch(e=>{console.error(e);server.close();process.exitCode=1;});

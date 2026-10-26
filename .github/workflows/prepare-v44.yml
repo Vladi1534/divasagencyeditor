@@ -1,0 +1,20 @@
+name: Prepare verified Divas video v44
+on:
+  push:
+    branches: [codex/transport-divas-video-v44]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          path: transfer
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 2c8710089ad8ee4e9fbe2db45f1d1413c3626e75
+          path: release
+      - run: python3 transfer/.codex-upload/apply-release.py release
